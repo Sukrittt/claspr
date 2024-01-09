@@ -71,6 +71,7 @@ model ClassRoom {
   id         String  @id @default(cuid())
   title      String
   coverImage String?
+  classCode  String  @unique
 
   teacherId String
   teacher   User   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
