@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 
 import { getAuthSession } from "@/lib/auth";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+
+export const fetchCache = "force-no-store";
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const session = await getAuthSession();

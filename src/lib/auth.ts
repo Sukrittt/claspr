@@ -1,9 +1,12 @@
+import bcrypt from "bcrypt";
+import { TRPCError } from "@trpc/server";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { NextAuthOptions, getServerSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import { NextAuthOptions, getServerSession } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-import { db } from "./db";
+import { db } from "@/lib/db";
 
 function getGoogleCredentials() {
   const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -40,6 +43,8 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  debug: process.env.NODE_ENV === "development",
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/sign-in",
   },
@@ -51,6 +56,38 @@ export const authOptions: NextAuthOptions = {
     GithubProvider({
       clientId: getGithubCredentials().clientId,
       clientSecret: getGithubCredentials().clientSecret,
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "jadonsmith@gmail.com",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "********",
+        },
+      },
+      async authorize(credentials) {
+        if (!credentials || !credentials.email || !credentials.password) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "The email and password fields are required.",
+          });
+        }
+
+        const credObject = {
+          email: credentials.email,
+          password: credentials.password,
+        };
+
+        const authorizedUser = await getAuthorizedUser(credObject);
+
+        return authorizedUser;
+      },
     }),
   ],
   callbacks: {
@@ -75,6 +112,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user!.id;
         return token;
       }
+
       return {
         id: dbUser.id,
         name: dbUser.name,
@@ -82,10 +120,42 @@ export const authOptions: NextAuthOptions = {
         picture: dbUser.image,
       };
     },
-    redirect() {
-      return "/";
+    redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      return baseUrl;
     },
   },
 };
 
 export const getAuthSession = () => getServerSession(authOptions);
+
+type Credentials = {
+  email: string;
+  password: string;
+};
+
+const getAuthorizedUser = async ({ email, password }: Credentials) => {
+  const existingUser = await db.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!existingUser || !existingUser.password) return null;
+
+  const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+
+  if (!isPasswordValid) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "The email and password combination is incorrect.",
+    });
+  }
+
+  return {
+    id: existingUser.id,
+    name: existingUser.name,
+    email: existingUser.email,
+    picture: existingUser.image,
+  };
+};
