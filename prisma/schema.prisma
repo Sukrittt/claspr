@@ -6,13 +6,14 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  // provider     = "mysql"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // relationMode = "prisma"
 }
 
 model Account {
-  id                 String  @id @default(cuid())
+  id                 String  @id @unique @default(cuid())
   userId             String  @unique
   type               String
   provider           String
@@ -33,7 +34,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @unique @default(cuid())
   sessionToken String   @unique
   userId       String   @unique
   expires      DateTime
@@ -46,14 +47,14 @@ enum UserType {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @unique @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
 
   role       UserType @default(STUDENT)
-  university String
+  university String?
 
   createdAt DateTime @default(now())
 
@@ -68,7 +69,7 @@ model User {
 }
 
 model ClassRoom {
-  id         String  @id @default(cuid())
+  id         String  @id @unique @default(cuid())
   title      String
   coverImage String?
   classCode  String  @unique
@@ -89,7 +90,7 @@ model ClassRoom {
 }
 
 model Member {
-  id String @id @default(cuid())
+  id String @id @unique @default(cuid())
 
   studentId String
   student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
@@ -102,7 +103,7 @@ model Member {
 }
 
 model Question {
-  id         String  @id @default(cuid())
+  id         String  @id @unique @default(cuid())
   message    String
   isAnswered Boolean @default(false)
 
@@ -119,7 +120,7 @@ model Question {
 }
 
 model Answer {
-  id      String @id @default(cuid())
+  id      String @id @unique @default(cuid())
   message String
 
   userId String
@@ -135,7 +136,7 @@ model Answer {
 }
 
 model Announcement {
-  id          String  @id @default(cuid())
+  id          String  @id @unique @default(cuid())
   title       String
   description String?
 
@@ -153,7 +154,7 @@ model Announcement {
 }
 
 model Submission {
-  id String @id @default(cuid())
+  id String @id @unique @default(cuid())
 
   announcementId String
   announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
@@ -166,7 +167,7 @@ model Submission {
 }
 
 model Unit {
-  id   String @id @default(cuid())
+  id   String @id @unique @default(cuid())
   name String
 
   classRoomId String
@@ -179,7 +180,7 @@ model Unit {
 }
 
 model Topic {
-  id   String @id @default(cuid())
+  id   String @id @unique @default(cuid())
   name String
 
   unitId String
@@ -195,7 +196,7 @@ model Topic {
 }
 
 model StudyMaterial {
-  id    String  @id @default(cuid())
+  id    String  @id @unique @default(cuid())
   title String?
 
   creatorId String
@@ -217,7 +218,7 @@ model StudyMaterial {
 }
 
 model Link {
-  id String @id @default(cuid())
+  id String @id @unique @default(cuid())
 
   studyMaterialId String?
   studyMaterial   StudyMaterial? @relation(fields: [studyMaterialId], references: [id], onDelete: Cascade)
@@ -232,7 +233,7 @@ model Link {
 }
 
 model Document {
-  id String @id @default(cuid())
+  id String @id @unique @default(cuid())
 
   studyMaterialId String?
   studyMaterial   StudyMaterial? @relation(fields: [studyMaterialId], references: [id], onDelete: Cascade)
@@ -247,7 +248,7 @@ model Document {
 }
 
 model Event {
-  id String @id @default(cuid())
+  id String @id @unique @default(cuid())
 
   title       String
   description String?

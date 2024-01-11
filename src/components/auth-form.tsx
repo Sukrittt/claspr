@@ -1,49 +1,55 @@
 "use client";
 import { toast } from "sonner";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { Loader, LucideProps } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-type LoadingState = "google" | "github";
+const oauthProviders = [
+  { name: "Google", strategy: "google" as const, icon: "google" },
+  { name: "GitHub", strategy: "github" as const, icon: "github" },
+];
+
+type Strategy = (typeof oauthProviders)[number]["strategy"];
 
 export const AuthForm = () => {
-  const [isLoading, setIsLoading] = useState<LoadingState | null>(null);
+  const [isLoading, setIsLoading] = useState<Strategy | null>(null);
+
+  const handleOAuthLogin = async (strategy: Strategy) => {
+    try {
+      setIsLoading(strategy);
+      await signIn(strategy);
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(null);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-y-2 w-1/2">
-      <Button
-        className="tracking-wide"
-        onClick={() => {
-          toast.success("Coming soon!");
-          setIsLoading("google");
-        }}
-      >
-        {isLoading === "google" ? (
-          <Loader className="h-4 w-4 animate-spin" />
-        ) : (
-          <>
-            <GoogleIcon className="w-5 h-5 mr-2" />
-            Continue with Google
-          </>
-        )}
-      </Button>
-      <Button
-        className="tracking-wide"
-        onClick={() => {
-          toast.success("Coming soon!");
-          setIsLoading("github");
-        }}
-      >
-        {isLoading === "github" ? (
-          <Loader className="h-4 w-4 animate-spin" />
-        ) : (
-          <>
-            <GitHubIcon className="w-5 h-5 mr-2" />
-            Continue with Github
-          </>
-        )}
-      </Button>
+      {oauthProviders.map((provider, index) => {
+        const Icon = OAuthIcon[provider.strategy];
+
+        return (
+          <Button
+            key={index}
+            disabled={isLoading === provider.strategy}
+            className="tracking-wide"
+            onClick={() => handleOAuthLogin(provider.strategy)}
+          >
+            {isLoading === provider.strategy ? (
+              <Loader className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <Icon className="w-5 h-5 mr-2" />
+                Continue with {provider.name}
+              </>
+            )}
+          </Button>
+        );
+      })}
     </div>
   );
 };
@@ -85,4 +91,9 @@ const GitHubIcon = (props: LucideProps) => {
       ></path>
     </svg>
   );
+};
+
+const OAuthIcon = {
+  google: GoogleIcon,
+  github: GitHubIcon,
 };
