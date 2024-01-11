@@ -141,7 +141,12 @@ const getAuthorizedUser = async ({ email, password }: Credentials) => {
     },
   });
 
-  if (!existingUser || !existingUser.password) return null;
+  if (!existingUser || !existingUser.password) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "You have not created an account with this email.",
+    });
+  }
 
   const isPasswordValid = await bcrypt.compare(password, existingUser.password);
 

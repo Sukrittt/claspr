@@ -54,6 +54,18 @@ export const AuthForm: React.FC<AuthFormProps> = ({ authType }) => {
     },
   });
 
+  const { mutate: handleRouting } = trpc.user.getUserRoleByEmail.useMutation({
+    onSuccess: async (userRole) => {
+      let url = "/dashboard";
+
+      if (!userRole) {
+        url = "/onboarding";
+      }
+
+      router.push(url);
+    },
+  });
+
   const handleSignIn = async (data: Inputs) => {
     try {
       setIsLoading(true);
@@ -70,7 +82,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ authType }) => {
       }
 
       if (res?.ok) {
-        router.push("/");
+        handleRouting({ email: data.email });
       } else {
         toast.error("Something went wrong");
       }
@@ -78,6 +90,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ authType }) => {
       setIsLoading(false);
     }
   };
+
+  const handleRedirection = (email: string) => {};
 
   const { mutate: registerUser, isLoading: isRegistering } =
     trpc.user.registerUser.useMutation({

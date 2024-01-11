@@ -54,7 +54,7 @@ model User {
   image         String?
   password      String?
 
-  role       UserType @default(STUDENT)
+  role       UserType?
   university String?
 
   createdAt DateTime @default(now())
