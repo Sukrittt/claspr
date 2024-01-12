@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
-import { publicProcedure } from "@/server/trpc";
+import { privateProcedure, publicProcedure } from "@/server/trpc";
 
 /**
  * Creates a new user in the database.
@@ -77,4 +77,34 @@ export const getUserRoleByEmail = publicProcedure
     }
 
     return existingUser.role;
+  });
+
+/**
+ * To update the user role and university.
+ *
+ * @param {object} input - The input parameters for updating the user details.
+ * @param {string} input.role - The role of the user.
+ * @param {string} input.university - The university of the user.
+ */
+export const updateUserDetails = privateProcedure
+  .input(
+    z.object({
+      role: z.enum(["STUDENT", "TEACHER"]),
+      university: z.string().min(3, {
+        message: "University name should be atleast 3 characters long",
+      }),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { role, university } = input;
+
+    await db.user.update({
+      data: {
+        role,
+        university,
+      },
+      where: {
+        id: ctx.userId,
+      },
+    });
   });

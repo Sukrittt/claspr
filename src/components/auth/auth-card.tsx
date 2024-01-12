@@ -20,7 +20,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ authType }) => {
   return (
     <div className="h-screen flex">
       <div className="w-[35%]">
-        <Card className="border border-red-500 h-full flex flex-col justify-center px-20">
+        <Card className="h-full flex flex-col justify-center px-20">
           <CardHeader className="space-y-1 px-0">
             <CardTitle className="text-2xl">
               {authType === "signin" ? "Welcome Back" : "Sign up"}
