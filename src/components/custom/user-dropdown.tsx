@@ -1,7 +1,7 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState } from "react";
+import { User } from "next-auth";
 import { Loader, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 import {
   DropdownMenu,
@@ -12,22 +12,37 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const UserDropdown = ({ children }: { children: React.ReactNode }) => {
+export const UserDropdown = ({
+  children,
+  user,
+}: {
+  children: React.ReactNode;
+  user: User;
+}) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        {isLoggingOut ? <Loader className="h-5 w-5 " /> : children}
+        {isLoggingOut ? <Loader className="h-4 w-4 animate-spin" /> : children}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[200px]">
+      <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          asChild
-          className="p-0"
-          onClick={() => setIsLoggingOut(true)}
-        >
+
+        <div className="flex items-center justify-start gap-2 p-2 text-sm">
+          <div className="flex flex-col space-y-1 leading-none">
+            {user.name && <p className="font-medium">{user.name}</p>}
+            {user.email && (
+              <p className="w-[200px] truncate text-sm text-muted-foreground">
+                {user.email}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => setIsLoggingOut(true)}>
           <LogOut className="h-5 w-5 mr-2" /> Log Out
         </DropdownMenuItem>
       </DropdownMenuContent>

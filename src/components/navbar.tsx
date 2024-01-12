@@ -24,7 +24,7 @@ export const Navbar = async () => {
         Scribe.
       </Link>
       {session && userWithRole ? (
-        <UserDropdown>
+        <UserDropdown user={session.user}>
           <UserAvatar user={session.user} userRole={userWithRole.role} />
         </UserDropdown>
       ) : (

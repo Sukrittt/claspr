@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
+import { OnboardForm } from "@/components/onboarding/onboard-form";
 
 export default async function page() {
   const session = await getAuthSession();
@@ -16,7 +17,5 @@ export default async function page() {
 
   if (dbUser.role) redirect("/dashboard");
 
-  return (
-    <div className="h-screen flex items-center justify-center">Onboarding</div>
-  );
+  return <OnboardForm />;
 }

@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { User } from "next-auth";
 import { UserType } from "@prisma/client";
 import { User as UserIcon } from "lucide-react";
@@ -11,21 +10,21 @@ interface UserAvatarProps extends AvatarProps {
   userRole: UserType | null;
 }
 
-export const UserAvatar: FC<UserAvatarProps> = ({
+export const UserAvatar: React.FC<UserAvatarProps> = ({
   user,
   userRole,
   ...props
 }) => {
   const imageByRole = {
-    [UserType.STUDENT]: "/images/student.png",
-    [UserType.TEACHER]: "/images/teacher.png",
-    DEFAULT: "/images/user.png",
+    [UserType.STUDENT]: "/student.png",
+    [UserType.TEACHER]: "/teacher.png",
+    DEFAULT: "/user.png",
   };
 
   return (
     <Avatar {...props}>
       <AvatarImage
-        src={imageByRole[userRole ?? "DEFAULT"]}
+        src={user.image ?? imageByRole[userRole ?? "DEFAULT"]}
         alt={user?.name ?? "user avatar"}
         className="cursor-pointer"
       />

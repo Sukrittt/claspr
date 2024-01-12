@@ -80,13 +80,13 @@ export const getUserRoleByEmail = publicProcedure
   });
 
 /**
- * To update the user role and university.
+ * To update the user role and university and onboard the user.
  *
  * @param {object} input - The input parameters for updating the user details.
  * @param {string} input.role - The role of the user.
  * @param {string} input.university - The university of the user.
  */
-export const updateUserDetails = privateProcedure
+export const onBoardUser = privateProcedure
   .input(
     z.object({
       role: z.enum(["STUDENT", "TEACHER"]),

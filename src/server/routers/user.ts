@@ -2,11 +2,11 @@ import { createTRPCRouter } from "@/server/trpc";
 import {
   getUserRoleByEmail,
   registerUser,
-  updateUserDetails,
+  onBoardUser,
 } from "@/server/user/routes";
 
 export const userRouter = createTRPCRouter({
   registerUser,
   getUserRoleByEmail,
-  updateUserDetails,
+  onBoardUser,
 });
