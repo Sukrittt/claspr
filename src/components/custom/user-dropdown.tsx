@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { User } from "next-auth";
+import { signOut } from "next-auth/react";
 import { Loader, LogOut } from "lucide-react";
 
 import {
@@ -20,6 +21,13 @@ export const UserDropdown = ({
   user: User;
 }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+    signOut({
+      callbackUrl: `${window.location.origin}`,
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -42,7 +50,7 @@ export const UserDropdown = ({
         </div>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => setIsLoggingOut(true)}>
+        <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="h-5 w-5 mr-2" /> Log Out
         </DropdownMenuItem>
       </DropdownMenuContent>
