@@ -68,3 +68,102 @@ function generateRandomCode(length: number) {
 
   return code;
 }
+
+/**
+ * To get a list of all classes created by the teacher.
+ *
+ * @param {object} input - The input parameters for getting classes created by a user.
+ * @param {string} input.title - The title for the classroom.
+ * @param {string} input.coverImage - An optional cover image for the classroom.
+ * @returns {Promise<Object[]>} - A list of classRoom objects from the database.
+ */
+export const getClassesCreated = privateProcedure.query(async ({ ctx }) => {
+  const classRooms = await db.classRoom.findMany({
+    where: { teacherId: ctx.userId },
+    include: {
+      students: true,
+    },
+  });
+
+  return classRooms;
+});
+
+/**
+ * To get a list of all classes joined by the student/teacher.
+ *
+ * @param {object} input - The input parameters for getting classes joined by the user.
+ * @param {string} input.coverImage - An optional cover image for the classroom.
+ * @returns {Promise<Object[]>} - A list of classRoom objects from the database.
+ */
+export const getClassesJoined = privateProcedure.query(async ({ ctx }) => {
+  const memberships = await db.member.findMany({
+    where: { userId: ctx.userId },
+    include: {
+      classRoom: true,
+    },
+  });
+
+  return memberships;
+});
+
+/**
+ * To join a class created by a teacher.
+ *
+ * @param {object} input - The input parameters joining a class.
+ * @param {string} input.classCode - The class code for the classroom.
+ */
+export const joinClass = privateProcedure
+  .input(
+    z.object({
+      classCode: z.string(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { classCode } = input;
+
+    const user = await db.user.findFirst({
+      where: {
+        id: ctx.userId,
+      },
+    });
+
+    if (!user) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Your account does not exist",
+      });
+    }
+
+    const existingMember = await db.member.findFirst({
+      where: {
+        userId: ctx.userId,
+      },
+    });
+
+    if (existingMember) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "You are already a member of this class",
+      });
+    }
+
+    const classRoom = await db.classRoom.findUnique({
+      where: {
+        classCode,
+      },
+    });
+
+    if (!classRoom) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The classroom you are trying to join does not exist",
+      });
+    }
+
+    await db.member.create({
+      data: {
+        classRoomId: classRoom.id,
+        userId: ctx.userId,
+      },
+    });
+  });

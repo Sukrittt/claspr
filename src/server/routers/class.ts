@@ -1,6 +1,14 @@
 import { createTRPCRouter } from "@/server/trpc";
-import { createClass } from "@/server/class/routes";
+import {
+  createClass,
+  getClassesCreated,
+  getClassesJoined,
+  joinClass,
+} from "@/server/class/routes";
 
 export const classRouter = createTRPCRouter({
   createClass,
+  joinClass,
+  getClassesCreated,
+  getClassesJoined,
 });
