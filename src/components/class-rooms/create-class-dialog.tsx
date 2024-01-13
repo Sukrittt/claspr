@@ -27,7 +27,7 @@ export const CreateClassDialog = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create a class</DialogTitle>
-          {/* <DialogDescription>Create a class for the students</DialogDescription> */}
+          <DialogDescription>Create a class to get started</DialogDescription>
         </DialogHeader>
 
         <CreateClassForm />

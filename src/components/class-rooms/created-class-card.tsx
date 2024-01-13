@@ -4,7 +4,6 @@ import { MoreVertical } from "lucide-react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -28,7 +27,7 @@ export const CreatedClassGridView: React.FC<ClassCardProps> = ({
             <CardTitle>{getShortenedText(classRoom.title, 25)}</CardTitle>
             <MoreVertical className="h-4 w-4" />
           </div>
-          <CardDescription>
+          <div className="text-muted-foreground text-sm">
             <div className="flex gap-x-2 items-center">
               <span>Created by</span>
               <div className="flex items-center gap-x-1">
@@ -36,7 +35,7 @@ export const CreatedClassGridView: React.FC<ClassCardProps> = ({
                 <span>{classRoom.teacher.name}</span>
               </div>
             </div>
-          </CardDescription>
+          </div>
         </CardHeader>
         {/* <CardContent>Show upcoming events</CardContent> */}
         <CardFooter className="flex justify-end text-xs font-medium text-muted-foreground">

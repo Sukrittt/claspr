@@ -133,30 +133,48 @@ export const joinClass = privateProcedure
       });
     }
 
-    const classRoom = await db.classRoom.findUnique({
+    const existingUser = await db.user.findUnique({
+      where: {
+        id: ctx.userId,
+      },
+    });
+
+    if (!existingUser) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find your account",
+      });
+    }
+
+    const isTeacher = existingUser.role === "TEACHER";
+
+    const existingClassRoom = await db.classRoom.findUnique({
       where: {
         classCode,
       },
     });
 
-    if (!classRoom) {
+    if (!existingClassRoom) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "The classroom you are trying to join does not exist",
+        message: "We couldn't find the class you are trying to join",
       });
     }
 
-    if (classRoom.teacherId === ctx.userId) {
+    if (existingClassRoom.teacherId === ctx.userId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "You cannot join a class that you created",
+        message: "You are not allowed to join a class that you have created.",
       });
     }
 
     await db.member.create({
       data: {
-        classRoomId: classRoom.id,
+        classRoomId: existingClassRoom.id,
         userId: ctx.userId,
+        isTeacher,
       },
     });
+
+    return existingClassRoom;
   });

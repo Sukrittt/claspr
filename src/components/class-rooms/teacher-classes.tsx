@@ -53,7 +53,7 @@ export const TeacherClasses = () => {
             <Loader className="w-4 h-4 animate-spin" />
             <p>Just a moment</p>
           </div>
-        ) : !classesCreated || classesCreated?.length === 0 ? (
+        ) : !classesCreated || classesCreated.length === 0 ? (
           <div className="h-[200px] grid place-items-center">
             <p className="text-center text-muted-foreground text-sm">
               No classes created
@@ -61,7 +61,7 @@ export const TeacherClasses = () => {
           </div>
         ) : createdView.view === "grid" ? (
           <ScrollArea className="h-[200px]">
-            <div className="grid grid-cols-3 gap-4 pt-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
               {classesCreated.map((classRoom) => (
                 <CreatedClassGridView
                   key={classRoom.id}
@@ -98,14 +98,14 @@ export const TeacherClasses = () => {
             <Loader className="w-4 h-4 animate-spin" />
             <p>Just a moment</p>
           </div>
-        ) : classesJoined?.length === 0 ? (
+        ) : !classesJoined || classesJoined.length === 0 ? (
           <div className="h-[200px] grid place-items-center">
             <p className="text-center text-muted-foreground text-sm">
               No classes joined
             </p>
           </div>
         ) : (
-          <p>Classes joined</p>
+          <p>Classes joined - {classesJoined.length}</p>
         )}
         {/* Display classes joined */}
       </div>
