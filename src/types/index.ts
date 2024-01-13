@@ -5,6 +5,6 @@ export type ExtendedClassRoomsCreated = ClassRoom & {
   teacher: User;
 };
 
-export type ExtendedClassRoomsJoined = Member & {
+export type ExtendedClassRoomsJoined = {
   classRoom: ClassRoom;
-};
+} & Member;

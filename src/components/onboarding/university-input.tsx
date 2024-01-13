@@ -36,7 +36,7 @@ const universityInputSchema = z.object({
     })
     .refine((val) => {
       return val.trim().length > 0;
-    }),
+    },{message:"University name cannot be empty"}),
 });
 
 type Inputs = z.infer<typeof universityInputSchema>;

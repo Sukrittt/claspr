@@ -18,7 +18,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const classCreationSchema = z.object({
-  title: z.string().min(3).max(50),
+  title: z
+    .string()
+    .min(3)
+    .max(50)
+    .refine(
+      (val) => {
+        return val.trim().length > 0;
+      },
+      { message: "Class name cannot be empty" }
+    ),
 });
 
 type Inputs = z.infer<typeof classCreationSchema>;

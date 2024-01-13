@@ -25,9 +25,12 @@ const classCreationSchema = z.object({
     .regex(/^[a-zA-Z0-9 ]+$/, {
       message: "The code must be alphanumeric.",
     })
-    .refine((val) => {
-      return val.trim().length > 0;
-    }),
+    .refine(
+      (val) => {
+        return val.trim().length > 0;
+      },
+      { message: "Class code cannot be empty" }
+    ),
 });
 
 type Inputs = z.infer<typeof classCreationSchema>;

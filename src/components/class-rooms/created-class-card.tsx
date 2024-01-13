@@ -31,7 +31,7 @@ export const CreatedClassGridView: React.FC<ClassCardProps> = ({
             <div className="flex gap-x-2 items-center">
               <span>Created by</span>
               <div className="flex items-center gap-x-1">
-                <UserAvatar user={classRoom.teacher} className="h-6 w-6" />
+                <UserAvatar user={classRoom.teacher} className="h-5 w-5" />
                 <span>{classRoom.teacher.name}</span>
               </div>
             </div>

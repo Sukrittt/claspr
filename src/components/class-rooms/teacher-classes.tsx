@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+import { Loader } from "lucide-react";
 
 import {
   CreatedClassGridView,
@@ -8,9 +9,9 @@ import {
 import { trpc } from "@/trpc/client";
 import { ViewSelector } from "./view-selector";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { JoinedClassGridView, JoinedClassListView } from "./joined-class-card";
 import { classesCreatedAtom, classesJoinedAtom } from "@/atoms";
 import { useCreatedView, useJoinedView } from "@/hooks/use-view";
-import { Loader } from "lucide-react";
 
 export const TeacherClasses = () => {
   const [createdView, setCreatedView] = useCreatedView();
@@ -60,7 +61,7 @@ export const TeacherClasses = () => {
             </p>
           </div>
         ) : createdView.view === "grid" ? (
-          <ScrollArea className="h-[200px]">
+          <ScrollArea className="h-[300px]">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
               {classesCreated.map((classRoom) => (
                 <CreatedClassGridView
@@ -77,14 +78,16 @@ export const TeacherClasses = () => {
               <p>Created By</p>
               <p>Updated At</p>
             </div>
-            <div className="flex flex-col gap-y-2">
-              {classesCreated.map((classRoom) => (
-                <CreatedClassListView
-                  key={classRoom.id}
-                  classRoom={classRoom}
-                />
-              ))}
-            </div>
+            <ScrollArea className="h-[300px]">
+              <div className="flex flex-col gap-y-2">
+                {classesCreated.map((classRoom) => (
+                  <CreatedClassListView
+                    key={classRoom.id}
+                    classRoom={classRoom}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
           </div>
         )}
       </div>
@@ -104,10 +107,36 @@ export const TeacherClasses = () => {
               No classes joined
             </p>
           </div>
+        ) : joinedView.view === "grid" ? (
+          <ScrollArea className="h-[300px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+              {classesJoined.map((classRoom) => (
+                <JoinedClassGridView
+                  key={classRoom.id}
+                  membership={classRoom}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         ) : (
-          <p>Classes joined - {classesJoined.length}</p>
+          <div className="space-y-1 pt-2">
+            <div className="px-3 py-1 text-xs font-semibold text-muted-foreground grid grid-cols-5 gap-x-2 items-center">
+              <p className="col-span-3">Name</p>
+              <p>Created By</p>
+              <p>Updated At</p>
+            </div>
+            <ScrollArea className="h-[300px]">
+              <div className="flex flex-col gap-y-2">
+                {classesJoined.map((classRoom) => (
+                  <JoinedClassListView
+                    key={classRoom.id}
+                    membership={classRoom}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+          </div>
         )}
-        {/* Display classes joined */}
       </div>
     </div>
   );

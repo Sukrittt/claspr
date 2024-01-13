@@ -36,9 +36,12 @@ const authSchema = z.object({
     .refine((val) => {
       return val.trim().length > 0;
     })
-    .refine((val) => {
-      return val.trim().length > 0;
-    }),
+    .refine(
+      (val) => {
+        return val.trim().length > 0;
+      },
+      { message: "Password cannot be empty" }
+    ),
 });
 
 type Inputs = z.infer<typeof authSchema>;
