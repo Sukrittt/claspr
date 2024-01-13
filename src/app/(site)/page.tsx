@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { Balancer } from "react-wrap-balancer";
 
-import { Navbar } from "@/components/navbar";
 import { buttonVariants } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div className="h-screen flex flex-col">
-      <Navbar />
+    <div>
       <section
         id="hero"
         aria-labelledby="hero-heading"
@@ -22,8 +20,9 @@ export default function Home() {
           </h1>
         </div>
         <Balancer className="max-w-[46rem] text-lg text-muted-foreground sm:text-xl">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. In rem eum
-          qui, aspernatur laudantium repellat explicabo numquam eos quod et.
+          The only classroom companion you&rsquo;ll ever need, ensuring
+          comprehensive support and seamless learning experiences across various
+          subjects.
         </Balancer>
         <Link href="/sign-in" className={buttonVariants()}>
           Get Started

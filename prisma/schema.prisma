@@ -93,8 +93,9 @@ model ClassRoom {
 model Member {
   id String @id @unique @default(cuid())
 
-  userId String //can be both teacher or student
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String //can be both teacher or student
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isTeacher Boolean @default(false)
 
   classRoomId String
   classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)

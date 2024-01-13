@@ -10,12 +10,12 @@ export const Navbar = async () => {
 
   return (
     <nav className="py-3 border-b border-slate-300 px-8 lg:px-28 flex items-center justify-between">
-      <Link href="/" className="font-semibold">
+      <Link href="/" className="font-semibold text-lg">
         Scribe.
       </Link>
       {session ? (
         <UserDropdown user={session.user}>
-          <UserAvatar user={session.user} />
+          <UserAvatar user={session.user} className="h-8 w-8" />
         </UserDropdown>
       ) : (
         <Link href="/sign-in" className={buttonVariants()}>

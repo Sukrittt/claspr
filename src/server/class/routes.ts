@@ -1,8 +1,13 @@
 import { z } from "zod";
+import { customAlphabet } from "nanoid";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
+
+const CODE_LENGTH = 6;
+const CODE_CHARACTERS =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 /**
  * To create a class initiated by a teacher.
@@ -32,21 +37,22 @@ export const createClass = privateProcedure
       });
     }
 
-    let classCode = generateRandomCode(6);
+    const nanoid = customAlphabet(CODE_CHARACTERS, CODE_LENGTH);
+    let classCode = nanoid();
 
     let existingClass = await db.classRoom.findUnique({
       where: { classCode },
     });
 
     while (existingClass) {
-      classCode = generateRandomCode(6);
+      classCode = nanoid();
 
       existingClass = await db.classRoom.findUnique({
         where: { classCode },
       });
     }
 
-    await db.classRoom.create({
+    const classRoom = await db.classRoom.create({
       data: {
         title,
         classCode,
@@ -54,27 +60,13 @@ export const createClass = privateProcedure
         coverImage,
       },
     });
+
+    return classRoom;
   });
-
-function generateRandomCode(length: number) {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let code = "";
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    code += characters.charAt(randomIndex);
-  }
-
-  return code;
-}
 
 /**
  * To get a list of all classes created by the teacher.
  *
- * @param {object} input - The input parameters for getting classes created by a user.
- * @param {string} input.title - The title for the classroom.
- * @param {string} input.coverImage - An optional cover image for the classroom.
  * @returns {Promise<Object[]>} - A list of classRoom objects from the database.
  */
 export const getClassesCreated = privateProcedure.query(async ({ ctx }) => {
@@ -92,19 +84,25 @@ export const getClassesCreated = privateProcedure.query(async ({ ctx }) => {
  * To get a list of all classes joined by the student/teacher.
  *
  * @param {object} input - The input parameters for getting classes joined by the user.
- * @param {string} input.coverImage - An optional cover image for the classroom.
+ * @param {string} input.isTeacher - An optional parameter to fetch classes joined by a teacher.
  * @returns {Promise<Object[]>} - A list of classRoom objects from the database.
  */
-export const getClassesJoined = privateProcedure.query(async ({ ctx }) => {
-  const memberships = await db.member.findMany({
-    where: { userId: ctx.userId },
-    include: {
-      classRoom: true,
-    },
-  });
+export const getClassesJoined = privateProcedure
+  .input(
+    z.object({
+      isTeacher: z.boolean().optional().default(false),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const memberships = await db.member.findMany({
+      where: { userId: ctx.userId, isTeacher: input.isTeacher },
+      include: {
+        classRoom: true,
+      },
+    });
 
-  return memberships;
-});
+    return memberships;
+  });
 
 /**
  * To join a class created by a teacher.

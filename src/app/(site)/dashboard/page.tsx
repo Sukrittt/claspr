@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
+import { DashboardLayout } from "@/components/dashboard-layout";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
@@ -19,7 +20,5 @@ export default async function page() {
 
   if (!dbUser.role) redirect("/onboarding");
 
-  return (
-    <div className="h-full flex items-center justify-center">Dashboard</div>
-  );
+  return <DashboardLayout role={dbUser.role} />;
 }

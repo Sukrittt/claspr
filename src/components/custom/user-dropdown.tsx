@@ -32,7 +32,13 @@ export const UserDropdown = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        {isLoggingOut ? <Loader className="h-4 w-4 animate-spin" /> : children}
+        {isLoggingOut ? (
+          <div className="py-2">
+            <Loader className="h-4 w-4 animate-spin" />
+          </div>
+        ) : (
+          children
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
