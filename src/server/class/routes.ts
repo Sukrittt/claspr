@@ -74,6 +74,7 @@ export const getClassesCreated = privateProcedure.query(async ({ ctx }) => {
     where: { teacherId: ctx.userId },
     include: {
       students: true,
+      teacher: true,
     },
   });
 
@@ -119,19 +120,6 @@ export const joinClass = privateProcedure
   .mutation(async ({ ctx, input }) => {
     const { classCode } = input;
 
-    const user = await db.user.findFirst({
-      where: {
-        id: ctx.userId,
-      },
-    });
-
-    if (!user) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Your account does not exist",
-      });
-    }
-
     const existingMember = await db.member.findFirst({
       where: {
         userId: ctx.userId,
@@ -155,6 +143,13 @@ export const joinClass = privateProcedure
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "The classroom you are trying to join does not exist",
+      });
+    }
+
+    if (classRoom.teacherId === ctx.userId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "You cannot join a class that you created",
       });
     }
 
