@@ -6,5 +6,5 @@ export type ExtendedClassRoomsCreated = ClassRoom & {
 };
 
 export type ExtendedClassRoomsJoined = {
-  classRoom: ClassRoom;
+  classRoom: ExtendedClassRoomsCreated;
 } & Member;

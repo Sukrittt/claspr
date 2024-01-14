@@ -98,7 +98,12 @@ export const getClassesJoined = privateProcedure
     const memberships = await db.member.findMany({
       where: { userId: ctx.userId, isTeacher: input.isTeacher },
       include: {
-        classRoom: true,
+        classRoom: {
+          include: {
+            teacher: true,
+            students: true,
+          },
+        },
       },
     });
 
