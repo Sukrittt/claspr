@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useAtom } from "jotai";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bookmark, ChevronRight, MoreHorizontal } from "lucide-react";
+import {
+  Bookmark,
+  ChevronRight,
+  GripVertical,
+  MoreHorizontal,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { isCloseAllMembershipToggle } from "@/atoms";
 import { ContainerVariants, MemberCardVariants } from "@/lib/motion";
 import { ExtendedMembership, ExtendedSectionWithMemberships } from "@/types";
 import { JoinClassDialog } from "@/components/class-rooms/join-class-dialog";
@@ -17,6 +24,11 @@ export const MembershipSectionCard: React.FC<SectionCardProps> = ({
   section,
 }) => {
   const [showClassrooms, setShowClassrooms] = useState(section.isDefault);
+  const [closeAllToggle] = useAtom(isCloseAllMembershipToggle);
+
+  useEffect(() => {
+    setShowClassrooms(false);
+  }, [closeAllToggle]);
 
   return (
     <AnimatePresence mode="wait">
@@ -69,42 +81,60 @@ interface ClassroomListsProps {
 }
 
 const ClassroomLists: React.FC<ClassroomListsProps> = ({ memberships }) => {
-  if (memberships.length === 0) return null;
-
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
+  if (memberships.length === 0) {
+    return (
+      <motion.p
         variants={MemberCardVariants}
         initial="initial"
         animate="animate"
         exit="exit"
+        className="text-gray-800 pl-[52px] text-sm"
+      >
+        No classrooms in this section.
+      </motion.p>
+    );
+  }
+
+  return (
+    <AnimatePresence mode="wait">
+      <div
         className="flex flex-col pl-[52px] text-sm"
         onClick={() =>
           toast.loading("Getting your data together...", { duration: 2000 })
         }
       >
         {memberships.map((membership) => (
-          <Link
-            href={`/class/${membership.id}`}
+          <motion.div
             key={membership.id}
-            className="text-gray-800 tracking-tight group hover:bg-neutral-300 transition rounded-md py-1 px-2 flex items-center justify-between"
+            variants={MemberCardVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
           >
-            <p>{membership.classRoom.title}</p>
-            <div
-              className="hidden group-hover:block"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-              }}
+            <Link
+              href={`/class/${membership.id}`}
+              className="text-gray-800 tracking-tight group hover:bg-neutral-300 transition rounded-md py-1 px-2 flex items-center justify-between"
             >
-              <MoreHorizontal
-                className="w-4 h-4"
-                onClick={() => toast.message("Coming Soon")}
-              />
-            </div>
-          </Link>
+              <div className="flex items-center gap-x-1">
+                <GripVertical className="w-4 h-4 text-gray-800" />
+                <p>{membership.classRoom.title}</p>
+              </div>
+              <div
+                className="hidden group-hover:block"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
+              >
+                <MoreHorizontal
+                  className="w-4 h-4"
+                  onClick={() => toast.message("Coming Soon")}
+                />
+              </div>
+            </Link>
+          </motion.div>
         ))}
-      </motion.div>
+      </div>
     </AnimatePresence>
   );
 };

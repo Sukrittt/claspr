@@ -1,11 +1,18 @@
 import Link from "next/link";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bookmark, ChevronRight, MoreHorizontal } from "lucide-react";
+import {
+  Bookmark,
+  ChevronRight,
+  GripVertical,
+  MoreHorizontal,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
+import { isCloseAllCreationToggle } from "@/atoms";
 import { ExtendedClassroom, ExtendedSectionWithClassrooms } from "@/types";
 import { CreateClassDialog } from "@/components/class-rooms/create-class-dialog";
 
@@ -15,6 +22,15 @@ interface SectionCardProps {
 
 export const SectionCard: React.FC<SectionCardProps> = ({ section }) => {
   const [showClassrooms, setShowClassrooms] = useState(section.isDefault);
+  const [closeAllToggle] = useAtom(isCloseAllCreationToggle);
+
+  useEffect(() => {
+    setShowClassrooms(false);
+  }, [closeAllToggle]);
+
+  const handleShowClassrooms = () => {
+    setShowClassrooms((prev) => !prev);
+  };
 
   return (
     <AnimatePresence mode="wait">
@@ -26,7 +42,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({ section }) => {
       >
         <div
           className="flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-300 py-1 px-2 rounded-md transition group"
-          onClick={() => setShowClassrooms((prev) => !prev)}
+          onClick={handleShowClassrooms}
         >
           <div className="flex items-center gap-x-1">
             <ChevronRight
@@ -67,7 +83,19 @@ interface ClassroomListsProps {
 }
 
 const ClassroomLists: React.FC<ClassroomListsProps> = ({ classrooms }) => {
-  if (classrooms.length === 0) return null;
+  if (classrooms.length === 0) {
+    return (
+      <motion.p
+        variants={ContainerVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className="text-gray-800 pl-[52px] text-sm"
+      >
+        No classrooms in this section.
+      </motion.p>
+    );
+  }
 
   return (
     <AnimatePresence mode="wait">
@@ -87,7 +115,10 @@ const ClassroomLists: React.FC<ClassroomListsProps> = ({ classrooms }) => {
             key={classroom.id}
             className="text-gray-800 tracking-tight group hover:bg-neutral-300 transition rounded-md py-1 px-2 flex items-center justify-between"
           >
-            <p>{classroom.title}</p>
+            <div className="flex items-center gap-x-1">
+              <GripVertical className="w-4 h-4 text-gray-800" />
+              <p>{classroom.title}</p>
+            </div>
             <div
               className="hidden group-hover:block"
               onClick={(e) => {

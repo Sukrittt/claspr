@@ -1,13 +1,23 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+import { CopyMinus } from "lucide-react";
 
 import { trpc } from "@/trpc/client";
 import { SectionCard } from "./section-card";
 import { CreateSectionDialog } from "./create-section-dialog";
 import { MembershipSectionCard } from "./membership-section-card";
-import { createdClassSections, joinedClassSections } from "@/atoms";
+import {
+  createdClassSections,
+  isCloseAllMembershipToggle,
+  isCloseAllCreationToggle,
+  joinedClassSections,
+} from "@/atoms";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 export const TeacherSection = () => {
+  const [, setCloseAllCreationToggle] = useAtom(isCloseAllCreationToggle);
+  const [, setCloseAllMembershipToggle] = useAtom(isCloseAllMembershipToggle);
+
   const [sectionsForCreatedClassrooms, setCreatedClassSections] =
     useAtom(createdClassSections);
   const [sectionsForJoinedClassrooms, setJoinedClassSections] =
@@ -45,7 +55,17 @@ export const TeacherSection = () => {
               These sections will contain the classrooms you have created.
             </p>
           </div>
-          <CreateSectionDialog sectionType="CREATION" />
+          <div className="flex items-center">
+            <CustomTooltip text="Collapse All">
+              <div
+                className="p-2 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-300"
+                onClick={() => setCloseAllCreationToggle((prev) => !prev)}
+              >
+                <CopyMinus className="w-4 h-4" />
+              </div>
+            </CustomTooltip>
+            <CreateSectionDialog sectionType="CREATION" />
+          </div>
         </div>
         <div className="flex flex-col gap-y-2">
           {isFetchingFirstSection ? (
@@ -68,7 +88,17 @@ export const TeacherSection = () => {
               These sections will contain the classrooms you have joined.
             </p>
           </div>
-          <CreateSectionDialog sectionType="MEMBERSHIP" />
+          <div className="flex items-center">
+            <CustomTooltip text="Collapse All">
+              <div
+                className="p-2 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-300"
+                onClick={() => setCloseAllMembershipToggle((prev) => !prev)}
+              >
+                <CopyMinus className="w-4 h-4" />
+              </div>
+            </CustomTooltip>
+            <CreateSectionDialog sectionType="MEMBERSHIP" />
+          </div>
         </div>
         <div className="flex flex-col gap-y-2">
           {isFetchingSecondSection ? (

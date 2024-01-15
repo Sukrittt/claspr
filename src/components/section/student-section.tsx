@@ -1,12 +1,16 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+import { CopyMinus } from "lucide-react";
 
 import { trpc } from "@/trpc/client";
-import { joinedClassSections } from "@/atoms";
 import { CreateSectionDialog } from "./create-section-dialog";
 import { MembershipSectionCard } from "./membership-section-card";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { isCloseAllMembershipToggle, joinedClassSections } from "@/atoms";
 
 export const StudentSection = () => {
+  const [, setCloseAllMembershipToggle] = useAtom(isCloseAllMembershipToggle);
+
   const [sectionsForJoinedClassrooms, setJoinedClassSections] =
     useAtom(joinedClassSections);
 
@@ -30,7 +34,17 @@ export const StudentSection = () => {
             These sections will contain the classrooms you have joined.
           </p>
         </div>
-        <CreateSectionDialog sectionType="MEMBERSHIP" />
+        <div className="flex items-center">
+          <CustomTooltip text="Collapse All">
+            <div
+              className="p-2 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-300"
+              onClick={() => setCloseAllMembershipToggle((prev) => !prev)}
+            >
+              <CopyMinus className="w-4 h-4" />
+            </div>
+          </CustomTooltip>
+          <CreateSectionDialog sectionType="MEMBERSHIP" />
+        </div>
       </div>
       <div className="flex flex-col gap-y-2">
         {isFetchingSecondSection ? (
