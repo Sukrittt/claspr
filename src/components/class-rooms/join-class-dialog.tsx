@@ -11,14 +11,14 @@ import {
 import { JoinClassForm } from "./join-class-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
-export const JoinClassDialog = () => {
+export const JoinClassDialog = ({ sectionId }: { sectionId: string }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <div>
           <CustomTooltip text="Join Class">
-            <div className="p-2 flex items-center justify-center rounded-md hover:bg-accent cursor-pointer hover:text-gray-700 transition">
-              <Plus className="h-4 w-4" />
+            <div className="flex items-center justify-center rounded-md relative top-[2px] hover:bg-neutral-300 cursor-pointer hover:text-gray-700 transition">
+              <Plus className="h-3.5 w-3.5" />
               <div className="sr-only">Join Class</div>
             </div>
           </CustomTooltip>
@@ -32,7 +32,7 @@ export const JoinClassDialog = () => {
           </DialogDescription>
         </DialogHeader>
 
-        <JoinClassForm />
+        <JoinClassForm sectionId={sectionId} />
       </DialogContent>
     </Dialog>
   );

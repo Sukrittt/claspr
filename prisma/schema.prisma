@@ -61,12 +61,37 @@ model User {
 
   accounts       Account[]
   sessions       Session[]
+  sections       Section[]
   classrooms     ClassRoom[] //only teachers will have this
-  memberships    Member[] //only students will have this
+  memberships    Membership[] //only students will have this
   questions      Question[]
   answers        Answer[]
   studyMaterials StudyMaterial[]
   events         Event[]
+}
+
+enum SectionType {
+  CREATION
+  MEMBERSHIP
+}
+
+model Section {
+  id String @id @unique @default(cuid())
+
+  name      String
+  isDefault Boolean @default(false)
+  emoji     String?
+
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  sectionType SectionType
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  classrooms  ClassRoom[]
+  memberships Membership[]
 }
 
 model ClassRoom {
@@ -75,13 +100,16 @@ model ClassRoom {
   coverImage String?
   classCode  String  @unique
 
+  sectionId String
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
   teacherId String
   teacher   User   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  students       Member[]
+  students       Membership[]
   questions      Question[]
   announcements  Announcement[]
   units          Unit[]
@@ -90,12 +118,15 @@ model ClassRoom {
   events         Event[]
 }
 
-model Member {
+model Membership {
   id String @id @unique @default(cuid())
 
   userId    String //can be both teacher or student
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   isTeacher Boolean @default(false)
+
+  sectionId String
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
   classRoomId String
   classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)

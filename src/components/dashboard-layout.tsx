@@ -1,8 +1,8 @@
 "use client";
 import { UserType } from "@prisma/client";
 
-import { StudentClasses } from "./class-rooms/student-classes";
-import { TeacherClasses } from "./class-rooms/teacher-classes";
+import { TeacherSection } from "@/components/section/teacher-section";
+import { StudentSection } from "@/components/section/student-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface DashboardLayoutProps {
@@ -18,7 +18,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
           <TabsTrigger value="studyMaterials">Study Materials</TabsTrigger>
         </TabsList>
         <TabsContent value="classrooms">
-          {role === "STUDENT" ? <StudentClasses /> : <TeacherClasses />}
+          {role === "STUDENT" ? <StudentSection /> : <TeacherSection />}
         </TabsContent>
         <TabsContent value="studyMaterials">Your study materials</TabsContent>
       </Tabs>

@@ -62,7 +62,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ authType }) => {
           </CardFooter>
         </Card>
       </div>
-      <div className="flex-1 relative bg-[#0a0e19] flex items-center justify-center">
+      <div className="flex-1 relative bg-primary flex items-center justify-center">
         <div className="space-y-2 w-1/2">
           <div className="h-10 w-10 absolute -ml-10">
             <Image src="/image.png" alt="quotes" fill priority />

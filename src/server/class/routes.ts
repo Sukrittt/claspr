@@ -14,17 +14,19 @@ const CODE_CHARACTERS =
  *
  * @param {object} input - The input parameters for creating class.
  * @param {string} input.title - The title for the classroom.
+ * @param {string} input.sectionId - The id of the section under which the classroom will fall under.
  * @param {string} input.coverImage - An optional cover image for the classroom.
  */
 export const createClass = privateProcedure
   .input(
     z.object({
       title: z.string(),
+      sectionId: z.string(),
       coverImage: z.string().optional(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { title, coverImage } = input;
+    const { title, coverImage, sectionId } = input;
 
     const existingTeacher = await db.user.findUnique({
       where: { id: ctx.userId },
@@ -58,6 +60,7 @@ export const createClass = privateProcedure
         classCode,
         teacherId: ctx.userId,
         coverImage,
+        sectionId,
       },
     });
 
@@ -85,7 +88,7 @@ export const getClassesCreated = privateProcedure.query(async ({ ctx }) => {
  * To get a list of all classes joined by the student/teacher.
  *
  * @param {object} input - The input parameters for getting classes joined by the user.
- * @param {string} input.isTeacher - An optional parameter to fetch classes joined by a teacher.
+ * @param {boolean} input.isTeacher - An optional parameter to fetch classes joined by a teacher.
  * @returns {Promise<Object[]>} - A list of classRoom objects from the database.
  */
 export const getClassesJoined = privateProcedure
@@ -95,7 +98,7 @@ export const getClassesJoined = privateProcedure
     })
   )
   .query(async ({ ctx, input }) => {
-    const memberships = await db.member.findMany({
+    const memberships = await db.membership.findMany({
       where: { userId: ctx.userId, isTeacher: input.isTeacher },
       include: {
         classRoom: {
@@ -114,20 +117,25 @@ export const getClassesJoined = privateProcedure
  * To join a class created by a teacher.
  *
  * @param {object} input - The input parameters joining a class.
+ * @param {string} input.sectionId - The id of the section under which the classroom membership will fall under
  * @param {string} input.classCode - The class code for the classroom.
  */
 export const joinClass = privateProcedure
   .input(
     z.object({
       classCode: z.string(),
+      sectionId: z.string(),
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const { classCode } = input;
+    const { classCode, sectionId } = input;
 
-    const existingMember = await db.member.findFirst({
+    const existingMember = await db.membership.findFirst({
       where: {
         userId: ctx.userId,
+        classRoom: {
+          classCode,
+        },
       },
     });
 
@@ -173,11 +181,12 @@ export const joinClass = privateProcedure
       });
     }
 
-    await db.member.create({
+    await db.membership.create({
       data: {
         classRoomId: existingClassRoom.id,
         userId: ctx.userId,
         isTeacher,
+        sectionId,
       },
     });
 

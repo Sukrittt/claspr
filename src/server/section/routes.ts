@@ -1,0 +1,244 @@
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+
+import { db } from "@/lib/db";
+import { privateProcedure } from "@/server/trpc";
+
+/**
+ * To create a new section for the user to store their classrooms.
+ *
+ * @param {object} input - The input parameters for getting classes joined by the user.
+ * @param {string} input.name - The name of the section.
+ * @param {string} input.sectionType - The type of section to be created.
+ */
+export const createSection = privateProcedure
+  .input(
+    z.object({
+      name: z.string().min(3).max(80),
+      sectionType: z.enum(["CREATION", "MEMBERSHIP"]),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const section = await db.section.create({
+      data: {
+        name: input.name,
+        creatorId: ctx.userId,
+        sectionType: input.sectionType,
+      },
+      include: {
+        classrooms: {
+          include: {
+            teacher: true,
+            students: true,
+          },
+        },
+      },
+    });
+
+    if (input.sectionType === "MEMBERSHIP") {
+      const sections = await db.section.findFirst({
+        where: {
+          id: section.id,
+          creatorId: ctx.userId,
+          sectionType: "MEMBERSHIP",
+        },
+        include: {
+          memberships: {
+            include: {
+              classRoom: {
+                include: {
+                  teacher: true,
+                  students: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return sections;
+    }
+
+    return section;
+  });
+
+/**
+ * To update the section a classroom belongs to.
+ *
+ * @param {object} input - The input parameters for getting classes joined by the user.
+ * @param {string} input.sectionId - The id of the section where the container is to be moved.
+ * @param {string} input.containerType - The type of container to update.
+ * @param {string} input.classContainerId - The id of the class container to update.
+ */
+export const moveSection = privateProcedure
+  .input(
+    z.object({
+      sectionId: z.string(),
+      containerType: z.enum(["CREATION", "MEMBERSHIP"]),
+      classContainerId: z.string(), //id of classroom or membership
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    if (input.containerType === "CREATION") {
+      await db.classRoom.update({
+        where: {
+          id: input.classContainerId,
+          teacherId: ctx.userId,
+        },
+        data: {
+          sectionId: input.sectionId,
+        },
+      });
+    } else {
+      await db.membership.update({
+        where: {
+          id: input.classContainerId,
+          userId: ctx.userId,
+        },
+        data: {
+          sectionId: input.sectionId,
+        },
+      });
+    }
+  });
+
+/**
+ * To remove a section created by the user.
+ *
+ * @param {object} input - The input parameters for remoing a section.
+ * @param {string} input.sectionId - The id of the section to remove.
+ */
+export const removeSection = privateProcedure
+  .input(
+    z.object({
+      sectionId: z.string(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const existingSection = await db.section.findFirst({
+      where: {
+        id: input.sectionId,
+        creatorId: ctx.userId,
+      },
+      include: {
+        classrooms: true,
+        memberships: true,
+      },
+    });
+
+    if (!existingSection) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Section you are trying to remove was not found",
+      });
+    }
+
+    if (
+      existingSection.classrooms.length > 0 ||
+      existingSection.memberships.length > 0
+    ) {
+      const existingDefaultSection = await db.section.findFirst({
+        where: {
+          creatorId: ctx.userId,
+          sectionType: existingSection.sectionType,
+          isDefault: true,
+        },
+      });
+
+      if (!existingDefaultSection) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Your default section was not found",
+        });
+      }
+
+      if (existingSection.classrooms.length > 0) {
+        await db.classRoom.updateMany({
+          where: {
+            id: {
+              in: existingSection.classrooms.map((classroom) => classroom.id),
+            },
+          },
+          data: {
+            sectionId: existingDefaultSection.id,
+          },
+        });
+      } else if (existingSection.memberships.length > 0) {
+        await db.membership.updateMany({
+          where: {
+            id: {
+              in: existingSection.memberships.map(
+                (membership) => membership.id
+              ),
+            },
+          },
+          data: {
+            sectionId: existingDefaultSection.id,
+          },
+        });
+      }
+    }
+
+    await db.section.delete({
+      where: {
+        id: input.sectionId,
+        creatorId: ctx.userId,
+      },
+    });
+  });
+
+/**
+ * To get a list of all sections created under the creation classrooms.
+ *
+ * @returns {Promise<Object[]>} - A list of section objects from the database.
+ */
+export const getSectionsForCreatedClassrooms = privateProcedure.query(
+  async ({ ctx }) => {
+    const sectionsForCreatedClassrooms = await db.section.findMany({
+      where: {
+        creatorId: ctx.userId,
+        sectionType: "CREATION",
+      },
+      include: {
+        classrooms: {
+          include: {
+            teacher: true,
+            students: true,
+          },
+        },
+      },
+    });
+
+    return sectionsForCreatedClassrooms;
+  }
+);
+
+/**
+ * To get a list of all sections created under the joined classrooms.
+ *
+ * @returns {Promise<Object[]>} - A list of section objects from the database.
+ */
+export const getSectionsForJoinedClassrooms = privateProcedure.query(
+  async ({ ctx }) => {
+    const sectionsForJoinedClassrooms = await db.section.findMany({
+      where: {
+        creatorId: ctx.userId,
+        sectionType: "MEMBERSHIP",
+      },
+      include: {
+        memberships: {
+          include: {
+            classRoom: {
+              include: {
+                teacher: true,
+                students: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return sectionsForJoinedClassrooms;
+  }
+);

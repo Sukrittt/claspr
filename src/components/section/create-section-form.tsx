@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { toast } from "sonner";
+import { useAtom } from "jotai";
 import { Loader } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { SectionType } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -16,9 +16,14 @@ import {
 import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { createdClassSections, joinedClassSections } from "@/atoms";
+import {
+  ExtendedSectionWithClassrooms,
+  ExtendedSectionWithMemberships,
+} from "@/types";
 
-const classCreationSchema = z.object({
-  title: z
+const sectionCreationSchema = z.object({
+  name: z
     .string()
     .min(3)
     .max(50)
@@ -26,43 +31,60 @@ const classCreationSchema = z.object({
       (val) => {
         return val.trim().length > 0;
       },
-      { message: "Class name cannot be empty" }
+      { message: "Section name cannot be empty" }
     ),
 });
 
-type Inputs = z.infer<typeof classCreationSchema>;
+type Inputs = z.infer<typeof sectionCreationSchema>;
 
-export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
-  const router = useRouter();
+interface CreateSectionFormProps {
+  closeModal: () => void;
+  sectionType: SectionType;
+}
+
+export const CreateSectionForm: React.FC<CreateSectionFormProps> = ({
+  closeModal,
+  sectionType,
+}) => {
+  const [, setCreatedClassSections] = useAtom(createdClassSections);
+  const [, setJoinedClassSections] = useAtom(joinedClassSections);
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(classCreationSchema),
+    resolver: zodResolver(sectionCreationSchema),
     defaultValues: {
-      title: "",
+      name: "",
     },
   });
 
-  const { mutate: createClass, isLoading } = trpc.class.createClass.useMutation(
-    {
-      onSuccess: (classRoom) => {
-        router.push(`/class/${classRoom.id}`);
-      },
-      onMutate: () => {
-        toast.loading("Just a moment...", { duration: 1000 });
-      },
-    }
-  );
+  const { mutate: createSection, isLoading } =
+    trpc.section.createSection.useMutation({
+      onSuccess: (section) => {
+        closeModal();
 
-  function handleCreateClass(data: Inputs) {
-    createClass({
-      title: data.title,
-      sectionId,
+        if (sectionType === "CREATION") {
+          setCreatedClassSections((prev) => [
+            ...prev,
+            section as ExtendedSectionWithClassrooms,
+          ]);
+        } else {
+          setJoinedClassSections((prev) => [
+            ...prev,
+            section as ExtendedSectionWithMemberships,
+          ]);
+        }
+      },
+    });
+
+  function handleCreateSection(data: Inputs) {
+    createSection({
+      name: data.name,
+      sectionType,
     });
   }
 
   function onSubmit(data: Inputs) {
-    handleCreateClass(data);
+    handleCreateSection(data);
   }
 
   return (
@@ -74,14 +96,14 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
         >
           <FormField
             control={form.control}
-            name="title"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="E.g: Science Class"
+                    placeholder="E.g: First Semester"
                     {...field}
                   />
                 </FormControl>
@@ -99,8 +121,8 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
         {isLoading && (
           <Loader className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
         )}
-        Create Class
-        <span className="sr-only">Create Class</span>
+        Create Section
+        <span className="sr-only">Create Section</span>
       </Button>
     </div>
   );

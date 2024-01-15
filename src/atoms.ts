@@ -1,6 +1,9 @@
 import { atom } from "jotai";
 
-import { ExtendedClassRoomsCreated, ExtendedClassRoomsJoined } from "./types";
+import {
+  ExtendedSectionWithClassrooms,
+  ExtendedSectionWithMemberships,
+} from "@/types";
 
-export const classesCreatedAtom = atom<ExtendedClassRoomsCreated[]>([]);
-export const classesJoinedAtom = atom<ExtendedClassRoomsJoined[]>([]);
+export const createdClassSections = atom<ExtendedSectionWithClassrooms[]>([]);
+export const joinedClassSections = atom<ExtendedSectionWithMemberships[]>([]);

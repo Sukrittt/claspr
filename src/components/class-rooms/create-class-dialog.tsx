@@ -11,26 +11,28 @@ import {
 import { CreateClassForm } from "./create-class-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
-export const CreateClassDialog = () => {
+export const CreateClassDialog = ({ sectionId }: { sectionId: string }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
         <div>
-          <CustomTooltip text="Create Class">
-            <div className="p-2 flex items-center justify-center rounded-md hover:bg-accent cursor-pointer hover:text-gray-700 transition">
-              <Plus className="h-4 w-4" />
-              <div className="sr-only">Create Class</div>
+          <CustomTooltip text="Create Classroom">
+            <div className="flex items-center relative top-[2px] justify-center rounded-md hover:bg-neutral-300 cursor-pointer hover:text-gray-700 transition">
+              <Plus className="h-3.5 w-3.5" />
+              <div className="sr-only">Create Classroom</div>
             </div>
           </CustomTooltip>
         </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create a class</DialogTitle>
-          <DialogDescription>Create a class to get started</DialogDescription>
+          <DialogTitle>Create a classroom</DialogTitle>
+          <DialogDescription>
+            Start a new class by providing essential details.
+          </DialogDescription>
         </DialogHeader>
 
-        <CreateClassForm />
+        <CreateClassForm sectionId={sectionId} />
       </DialogContent>
     </Dialog>
   );

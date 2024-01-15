@@ -98,6 +98,58 @@ export const onBoardUser = privateProcedure
   .mutation(async ({ input, ctx }) => {
     const { role, university } = input;
 
+    const existingUser = await db.user.findUnique({
+      where: { id: ctx.userId },
+    });
+
+    if (!existingUser) {
+      return new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Your account does not exist.",
+      });
+    }
+
+    const defaultSection = await db.section.findFirst({
+      where: {
+        creatorId: ctx.userId,
+        isDefault: true,
+      },
+    });
+
+    if (!defaultSection) {
+      if (existingUser.role === "STUDENT") {
+        await db.section.create({
+          data: {
+            creatorId: ctx.userId,
+            name: "Default Section",
+            isDefault: true,
+            sectionType: "MEMBERSHIP",
+          },
+        });
+      } else {
+        const promises = [
+          db.section.create({
+            data: {
+              creatorId: ctx.userId,
+              name: "Default Section",
+              isDefault: true,
+              sectionType: "MEMBERSHIP",
+            },
+          }),
+          db.section.create({
+            data: {
+              creatorId: ctx.userId,
+              name: "Default Section",
+              isDefault: true,
+              sectionType: "CREATION",
+            },
+          }),
+        ];
+
+        await Promise.all(promises);
+      }
+    }
+
     await db.user.update({
       data: {
         role,

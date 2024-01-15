@@ -35,7 +35,7 @@ const classCreationSchema = z.object({
 
 type Inputs = z.infer<typeof classCreationSchema>;
 
-export const JoinClassForm = () => {
+export const JoinClassForm = ({ sectionId }: { sectionId: string }) => {
   const router = useRouter();
 
   // react-hook-form
@@ -51,11 +51,15 @@ export const JoinClassForm = () => {
       toast.success("You are now a member of this class");
       router.push(`/class/${classRoom.id}`);
     },
+    onMutate: () => {
+      toast.loading("Just a moment...", { duration: 1000 });
+    },
   });
 
   function handleJoinClass(data: Inputs) {
     joinClass({
       classCode: data.classCode,
+      sectionId,
     });
   }
 
