@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Bookmark, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { ContainerVariants } from "@/lib/motion";
+import { ContainerVariants, MemberCardVariants } from "@/lib/motion";
 import { ExtendedMembership, ExtendedSectionWithMemberships } from "@/types";
 import { JoinClassDialog } from "@/components/class-rooms/join-class-dialog";
 
@@ -74,7 +74,7 @@ const ClassroomLists: React.FC<ClassroomListsProps> = ({ memberships }) => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        variants={ContainerVariants}
+        variants={MemberCardVariants}
         initial="initial"
         animate="animate"
         exit="exit"
