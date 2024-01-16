@@ -20,7 +20,7 @@ const CODE_CHARACTERS =
 export const createClass = privateProcedure
   .input(
     z.object({
-      title: z.string(),
+      title: z.string().min(3).max(80),
       sectionId: z.string(),
       coverImage: z.string().optional(),
     })
@@ -65,6 +65,85 @@ export const createClass = privateProcedure
     });
 
     return classRoom;
+  });
+
+/**
+ * To rename a class.
+ *
+ * @param {object} input - The input parameters for renaming a class.
+ * @param {string} input.title - The updated title for the classroom.
+ * @param {string} input.classroomId - The id of the classroom to update.
+ */
+export const renameClass = privateProcedure
+  .input(
+    z.object({
+      title: z.string().min(3).max(80),
+      classroomId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { classroomId, title } = input;
+
+    const existingClass = await db.classRoom.findFirst({
+      where: { id: classroomId },
+    });
+
+    if (!existingClass) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The class you are trying to rename doesn't exist.",
+      });
+    }
+
+    if (existingClass.teacherId !== ctx.userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not allowed to edit this class",
+      });
+    }
+
+    await db.classRoom.update({
+      where: { id: classroomId },
+      data: { title },
+    });
+  });
+
+/**
+ * To remove a class.
+ *
+ * @param {object} input - The input parameters for removing a class.
+ * @param {string} input.classroomId - The id of the classroom to delete.
+ */
+export const removeClass = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { classroomId } = input;
+
+    const existingClass = await db.classRoom.findFirst({
+      where: { id: classroomId },
+    });
+
+    if (!existingClass) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The class you are trying to remove doesn't exist",
+      });
+    }
+
+    if (existingClass.teacherId !== ctx.userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not allowed to edit this class",
+      });
+    }
+
+    await db.classRoom.delete({
+      where: { id: classroomId },
+    });
   });
 
 /**

@@ -65,8 +65,8 @@ export const createSection = privateProcedure
 /**
  * To update the section a classroom belongs to.
  *
- * @param {object} input - The input parameters for getting classes joined by the user.
- * @param {string} input.sectionId - The id of the section where the container is to be moved.
+ * @param {object} input - The input parameters for moving classes to another section.
+ * @param {string} input.sectionId - The id of the section where the container is dropped.
  * @param {string} input.containerType - The type of container to update.
  * @param {string} input.classContainerId - The id of the class container to update.
  */
@@ -75,7 +75,7 @@ export const moveSection = privateProcedure
     z.object({
       sectionId: z.string(),
       containerType: z.enum(["CREATION", "MEMBERSHIP"]),
-      classContainerId: z.string(), //id of classroom or membership
+      classContainerId: z.string(), //id of classroom or membership which is being drag and dropped
     })
   )
   .mutation(async ({ ctx, input }) => {
@@ -100,6 +100,54 @@ export const moveSection = privateProcedure
         },
       });
     }
+  });
+
+/**
+ * To update a section by it's id.
+ *
+ * @param {object} input - The input parameters for update a section.
+ * @param {string} input.sectionId - The id of the section to update.
+ * @param {string} input.name - The updated name of the section.
+ * @param {string} input.emoji - The updated emoji of the section.
+ */
+export const updateSection = privateProcedure
+  .input(
+    z.object({
+      sectionId: z.string(),
+      name: z.string().min(3).max(80).optional(),
+      emoji: z.string().optional(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { sectionId, name, emoji } = input;
+
+    const existingSection = await db.section.findFirst({
+      where: {
+        id: sectionId,
+      },
+    });
+
+    if (!existingSection) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The section you are trying to edit doesn't exist",
+      });
+    }
+
+    if (existingSection.creatorId !== ctx.userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not allowed to edit this section",
+      });
+    }
+
+    await db.section.update({
+      where: { id: sectionId },
+      data: {
+        name,
+        emoji,
+      },
+    });
   });
 
 /**

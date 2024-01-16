@@ -4,6 +4,7 @@ import {
   getSectionsForCreatedClassrooms,
   getSectionsForJoinedClassrooms,
   moveSection,
+  updateSection,
   removeSection,
 } from "@/server/section/routes";
 
@@ -13,4 +14,5 @@ export const sectionRouter = createTRPCRouter({
   getSectionsForJoinedClassrooms,
   moveSection,
   removeSection,
+  updateSection,
 });
