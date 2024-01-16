@@ -63,46 +63,6 @@ export const createSection = privateProcedure
   });
 
 /**
- * To update the section a classroom belongs to.
- *
- * @param {object} input - The input parameters for moving classes to another section.
- * @param {string} input.sectionId - The id of the section where the container is dropped.
- * @param {string} input.containerType - The type of container to update.
- * @param {string} input.classContainerId - The id of the class container to update.
- */
-export const moveSection = privateProcedure
-  .input(
-    z.object({
-      sectionId: z.string(),
-      containerType: z.enum(["CREATION", "MEMBERSHIP"]),
-      classContainerId: z.string(), //id of classroom or membership which is being drag and dropped
-    })
-  )
-  .mutation(async ({ ctx, input }) => {
-    if (input.containerType === "CREATION") {
-      await db.classRoom.update({
-        where: {
-          id: input.classContainerId,
-          teacherId: ctx.userId,
-        },
-        data: {
-          sectionId: input.sectionId,
-        },
-      });
-    } else {
-      await db.membership.update({
-        where: {
-          id: input.classContainerId,
-          userId: ctx.userId,
-        },
-        data: {
-          sectionId: input.sectionId,
-        },
-      });
-    }
-  });
-
-/**
  * To update a section by it's id.
  *
  * @param {object} input - The input parameters for update a section.

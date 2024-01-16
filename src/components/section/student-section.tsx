@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { CopyMinus } from "lucide-react";
 
 import { trpc } from "@/trpc/client";
+import { MembershipContext } from "./membership-context";
 import { CreateSectionDialog } from "./create-section-dialog";
 import { MembershipSectionCard } from "./membership-section-card";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
@@ -38,7 +39,7 @@ export const StudentSection = () => {
           <CustomTooltip text="Collapse All">
             <div
               className="p-2 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-300"
-              onClick={() => setCloseAllMembershipToggle((prev) => !prev)}
+              onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
             >
               <CopyMinus className="w-4 h-4" />
             </div>
@@ -53,9 +54,7 @@ export const StudentSection = () => {
           sectionsForJoinedClassrooms.length === 0 ? (
           <p>No results</p>
         ) : (
-          sectionsForJoinedClassrooms.map((section) => (
-            <MembershipSectionCard key={section.id} section={section} />
-          ))
+          <MembershipContext />
         )}
       </div>
     </div>

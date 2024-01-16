@@ -3,15 +3,15 @@ import { useEffect } from "react";
 import { CopyMinus } from "lucide-react";
 
 import { trpc } from "@/trpc/client";
-import { SectionCard } from "./section-card";
 import { CreateSectionDialog } from "./create-section-dialog";
-import { MembershipSectionCard } from "./membership-section-card";
 import {
   createdClassSections,
   isCloseAllMembershipToggle,
   isCloseAllCreationToggle,
   joinedClassSections,
 } from "@/atoms";
+import { MembershipContext } from "./membership-context";
+import { CreatedClassContext } from "./created-class-context";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 export const TeacherSection = () => {
@@ -59,7 +59,7 @@ export const TeacherSection = () => {
             <CustomTooltip text="Collapse All">
               <div
                 className="p-2 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-300"
-                onClick={() => setCloseAllCreationToggle((prev) => !prev)}
+                onClick={() => setCloseAllCreationToggle((prev) => !!!prev)}
               >
                 <CopyMinus className="w-4 h-4" />
               </div>
@@ -74,9 +74,7 @@ export const TeacherSection = () => {
             sectionsForCreatedClassrooms.length === 0 ? (
             <p>No results</p>
           ) : (
-            sectionsForCreatedClassrooms.map((section) => (
-              <SectionCard key={section.id} section={section} />
-            ))
+            <CreatedClassContext />
           )}
         </div>
       </div>
@@ -92,7 +90,7 @@ export const TeacherSection = () => {
             <CustomTooltip text="Collapse All">
               <div
                 className="p-2 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-300"
-                onClick={() => setCloseAllMembershipToggle((prev) => !prev)}
+                onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
               >
                 <CopyMinus className="w-4 h-4" />
               </div>
@@ -107,9 +105,7 @@ export const TeacherSection = () => {
             sectionsForJoinedClassrooms.length === 0 ? (
             <p>No results</p>
           ) : (
-            sectionsForJoinedClassrooms.map((section) => (
-              <MembershipSectionCard key={section.id} section={section} />
-            ))
+            <MembershipContext />
           )}
         </div>
       </div>

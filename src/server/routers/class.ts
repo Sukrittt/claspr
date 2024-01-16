@@ -5,6 +5,7 @@ import {
   getClassesJoined,
   joinClass,
   removeClass,
+  moveClass,
   renameClass,
 } from "@/server/class/routes";
 
@@ -14,5 +15,6 @@ export const classRouter = createTRPCRouter({
   getClassesCreated,
   getClassesJoined,
   removeClass,
+  moveClass,
   renameClass,
 });

@@ -8,5 +8,5 @@ import {
 export const createdClassSections = atom<ExtendedSectionWithClassrooms[]>([]);
 export const joinedClassSections = atom<ExtendedSectionWithMemberships[]>([]);
 
-export const isCloseAllCreationToggle = atom(false);
-export const isCloseAllMembershipToggle = atom(false);
+export const isCloseAllCreationToggle = atom<boolean | null>(null);
+export const isCloseAllMembershipToggle = atom<boolean | null>(null);
