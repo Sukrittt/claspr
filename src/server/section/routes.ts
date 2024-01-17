@@ -68,18 +68,18 @@ export const createSection = privateProcedure
  * @param {object} input - The input parameters for update a section.
  * @param {string} input.sectionId - The id of the section to update.
  * @param {string} input.name - The updated name of the section.
- * @param {string} input.emoji - The updated emoji of the section.
+ * @param {string} input.emojiUrl - The updated emojiUrl of the section.
  */
 export const updateSection = privateProcedure
   .input(
     z.object({
       sectionId: z.string(),
       name: z.string().min(3).max(80).optional(),
-      emoji: z.string().optional(),
+      emojiUrl: z.string().optional(),
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const { sectionId, name, emoji } = input;
+    const { sectionId, name, emojiUrl } = input;
 
     const existingSection = await db.section.findFirst({
       where: {
@@ -105,7 +105,7 @@ export const updateSection = privateProcedure
       where: { id: sectionId },
       data: {
         name,
-        emoji,
+        emojiUrl,
       },
     });
   });
@@ -225,6 +225,9 @@ export const getSectionsForCreatedClassrooms = privateProcedure.query(
           },
         },
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
 
     return sectionsForCreatedClassrooms;
@@ -254,6 +257,9 @@ export const getSectionsForJoinedClassrooms = privateProcedure.query(
             },
           },
         },
+      },
+      orderBy: {
+        createdAt: "asc",
       },
     });
 

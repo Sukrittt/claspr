@@ -11,6 +11,7 @@ import { isCloseAllCreationToggle } from "@/atoms";
 import { ClassroomListsWithCreation } from "./classroom-lists";
 import { ExtendedSectionWithClassrooms } from "@/types";
 import { CreateClassDialog } from "@/components/class-rooms/create-class-dialog";
+import { EmojiPopover } from "./emoji-popover";
 
 interface SectionCardProps {
   section: ExtendedSectionWithClassrooms;
@@ -75,11 +76,7 @@ const SectionItem = ({
             })}
           />
           <div className="flex items-center gap-x-2">
-            {section.emoji ? (
-              <span>{section.emoji}</span>
-            ) : (
-              <Bookmark className="w-4 h-4" />
-            )}
+            <EmojiPopover emojiUrl={section.emojiUrl} sectionId={section.id} />
             <p>{section.name}</p>
           </div>
         </div>

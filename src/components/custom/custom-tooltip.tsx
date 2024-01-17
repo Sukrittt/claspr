@@ -19,7 +19,7 @@ export const CustomTooltip: React.FC<CustomToolTipProps> = ({
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger>{children}</TooltipTrigger>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent>
           <p className="text-xs" {...props}>
             {text}

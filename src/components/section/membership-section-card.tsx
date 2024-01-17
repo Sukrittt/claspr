@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Bookmark, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { EmojiPopover } from "./emoji-popover";
 import { ContainerVariants } from "@/lib/motion";
 import { isCloseAllMembershipToggle } from "@/atoms";
 import { ExtendedSectionWithMemberships } from "@/types";
@@ -77,11 +78,7 @@ const MembershipItem = ({
             })}
           />
           <div className="flex items-center gap-x-2">
-            {section.emoji ? (
-              <span>{section.emoji}</span>
-            ) : (
-              <Bookmark className="w-4 h-4" />
-            )}
+            <EmojiPopover emojiUrl={section.emojiUrl} sectionId={section.id} />
             <p>{section.name}</p>
           </div>
         </div>

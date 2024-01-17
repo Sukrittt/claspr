@@ -80,7 +80,7 @@ model Section {
 
   name      String
   isDefault Boolean @default(false)
-  emoji     String?
+  emojiUrl  String?
 
   creatorId String
   creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
