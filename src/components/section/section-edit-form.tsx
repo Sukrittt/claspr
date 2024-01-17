@@ -17,12 +17,8 @@ import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createdClassSections, joinedClassSections } from "@/atoms";
-import {
-  ExtendedSectionWithClassrooms,
-  ExtendedSectionWithMemberships,
-} from "@/types";
 
-const sectionCreationSchema = z.object({
+const sectionUpdationSchema = z.object({
   name: z
     .string()
     .min(3)
@@ -35,15 +31,19 @@ const sectionCreationSchema = z.object({
     ),
 });
 
-type Inputs = z.infer<typeof sectionCreationSchema>;
+type Inputs = z.infer<typeof sectionUpdationSchema>;
 
 interface CreateSectionFormProps {
   closeModal: () => void;
+  sectionId: string;
+  sectionName: string;
   sectionType: SectionType;
 }
 
-export const CreateSectionForm: React.FC<CreateSectionFormProps> = ({
+export const SectionEditForm: React.FC<CreateSectionFormProps> = ({
   closeModal,
+  sectionId,
+  sectionName,
   sectionType,
 }) => {
   const [, setCreatedClassSections] = useAtom(createdClassSections);
@@ -51,47 +51,74 @@ export const CreateSectionForm: React.FC<CreateSectionFormProps> = ({
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(sectionCreationSchema),
+    resolver: zodResolver(sectionUpdationSchema),
     defaultValues: {
-      name: "",
+      name: sectionName,
     },
   });
 
-  const { mutate: createSection, isLoading } =
-    trpc.section.createSection.useMutation({
-      onSuccess: (section) => {
+  const { mutate: updateSection, isLoading } =
+    trpc.section.updateSection.useMutation({
+      onSuccess: (_, { name }) => {
         closeModal();
-
-        if (sectionType === "CREATION") {
-          setCreatedClassSections((prev) => [
-            ...prev,
-            section as ExtendedSectionWithClassrooms,
-          ]);
-        } else {
-          setJoinedClassSections((prev) => [
-            ...prev,
-            section as ExtendedSectionWithMemberships,
-          ]);
-        }
+        handleOptimisticUpdate(name ?? "");
       },
     });
 
-  function handleCreateSection(data: Inputs) {
-    createSection({
+  const handleOptimisticUpdate = (updatedName: string) => {
+    if (sectionType === "CREATION") {
+      setCreatedClassSections((prev) => {
+        const index = prev.findIndex((section) => section.id === sectionId);
+
+        if (index !== -1) {
+          const updatedSections = [...prev];
+
+          updatedSections[index] = {
+            ...updatedSections[index],
+            name: updatedName,
+          };
+
+          return updatedSections;
+        }
+
+        return prev;
+      });
+    } else {
+      setJoinedClassSections((prev) => {
+        const index = prev.findIndex((section) => section.id === sectionId);
+
+        if (index !== -1) {
+          const updatedSections = [...prev];
+
+          updatedSections[index] = {
+            ...updatedSections[index],
+            name: updatedName,
+          };
+
+          return updatedSections;
+        }
+
+        return prev;
+      });
+    }
+  };
+
+  function handleEditSection(data: Inputs) {
+    updateSection({
+      sectionId,
       name: data.name,
-      sectionType,
     });
   }
 
   function onSubmit(data: Inputs) {
-    handleCreateSection(data);
+    handleEditSection(data);
   }
 
   return (
     <div className="space-y-2">
       <Form {...form}>
         <form
-          id="section-creation-form"
+          id="section-edit-form"
           onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
         >
           <FormField
@@ -115,14 +142,14 @@ export const CreateSectionForm: React.FC<CreateSectionFormProps> = ({
       </Form>
       <Button
         className="my-1 w-full"
-        form="section-creation-form"
+        form="section-edit-form"
         disabled={isLoading}
       >
         {isLoading && (
           <Loader className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
         )}
-        Create Section
-        <span className="sr-only">Create Section</span>
+        Edit
+        <span className="sr-only">Edit Section</span>
       </Button>
     </div>
   );

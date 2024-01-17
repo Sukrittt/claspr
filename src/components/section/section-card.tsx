@@ -1,17 +1,17 @@
-import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
+import { ChevronRight } from "lucide-react";
 import { useDroppable } from "@dnd-kit/core";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bookmark, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { EmojiPopover } from "./emoji-popover";
 import { ContainerVariants } from "@/lib/motion";
 import { isCloseAllCreationToggle } from "@/atoms";
-import { ClassroomListsWithCreation } from "./classroom-lists";
+import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithClassrooms } from "@/types";
+import { ClassroomListsWithCreation } from "./classroom-lists";
 import { CreateClassDialog } from "@/components/class-rooms/create-class-dialog";
-import { EmojiPopover } from "./emoji-popover";
 
 interface SectionCardProps {
   section: ExtendedSectionWithClassrooms;
@@ -37,8 +37,10 @@ const SectionItem = ({
 }: {
   section: ExtendedSectionWithClassrooms;
 }) => {
-  const [showClassrooms, setShowClassrooms] = useState(section.isDefault);
   const [closeAllToggle] = useAtom(isCloseAllCreationToggle);
+  const [showClassrooms, setShowClassrooms] = useState(section.isDefault);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const { setNodeRef, isOver } = useDroppable({
     id: section.id,
@@ -81,15 +83,25 @@ const SectionItem = ({
           </div>
         </div>
         <div
-          className="items-center gap-x-2 hidden group-hover:flex transition"
+          className={cn(
+            "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
+            {
+              "opacity-100": isDropdownOpen,
+            }
+          )}
           onClick={(e) => {
             e.stopPropagation();
           }}
         >
-          <MoreHorizontal
-            className="w-4 h-4"
-            onClick={() => toast.message("Coming Soon")}
-          />
+          {!section.isDefault && (
+            <SectionDropdown
+              sectionId={section.id}
+              sectionName={section.name}
+              isDropdownOpen={isDropdownOpen}
+              setIsDropdownOpen={setIsDropdownOpen}
+              sectionType={section.sectionType}
+            />
+          )}
           <CreateClassDialog sectionId={section.id} />
         </div>
       </div>

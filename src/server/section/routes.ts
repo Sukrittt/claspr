@@ -101,6 +101,14 @@ export const updateSection = privateProcedure
       });
     }
 
+    //cannot edit name of default section
+    if (existingSection.isDefault && !emojiUrl) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "You cannot edit your default section.",
+      });
+    }
+
     await db.section.update({
       where: { id: sectionId },
       data: {
@@ -163,7 +171,8 @@ export const removeSection = privateProcedure
       if (!existingDefaultSection) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Your default section was not found",
+          message:
+            "Cannot move your classrooms to default section. Please try again later.",
         });
       }
 

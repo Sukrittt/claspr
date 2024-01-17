@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { EmojiPopover } from "./emoji-popover";
 import { ContainerVariants } from "@/lib/motion";
 import { isCloseAllMembershipToggle } from "@/atoms";
+import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithMemberships } from "@/types";
 import { ClassroomListsWithMembership } from "./classroom-lists";
 import { JoinClassDialog } from "@/components/class-rooms/join-class-dialog";
@@ -41,6 +42,8 @@ const MembershipItem = ({
 }) => {
   const [showClassrooms, setShowClassrooms] = useState(section.isDefault);
   const [closeAllToggle] = useAtom(isCloseAllMembershipToggle);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const { setNodeRef, isOver } = useDroppable({
     id: section.id,
@@ -83,15 +86,25 @@ const MembershipItem = ({
           </div>
         </div>
         <div
-          className="items-center gap-x-2 hidden group-hover:flex transition"
+          className={cn(
+            "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
+            {
+              "opacity-100": isDropdownOpen,
+            }
+          )}
           onClick={(e) => {
             e.stopPropagation();
           }}
         >
-          <MoreHorizontal
-            className="w-4 h-4"
-            onClick={() => toast.message("Coming Soon")}
-          />
+          {!section.isDefault && (
+            <SectionDropdown
+              sectionId={section.id}
+              sectionName={section.name}
+              isDropdownOpen={isDropdownOpen}
+              setIsDropdownOpen={setIsDropdownOpen}
+              sectionType={section.sectionType}
+            />
+          )}
           <JoinClassDialog sectionId={section.id} />
         </div>
       </div>
