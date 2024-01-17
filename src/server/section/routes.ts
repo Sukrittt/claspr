@@ -141,6 +141,13 @@ export const removeSection = privateProcedure
       });
     }
 
+    if (existingSection.isDefault) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "You cannot delete your default section.",
+      });
+    }
+
     if (
       existingSection.classrooms.length > 0 ||
       existingSection.memberships.length > 0
@@ -160,6 +167,7 @@ export const removeSection = privateProcedure
         });
       }
 
+      //if there are created classrooms inside this section
       if (existingSection.classrooms.length > 0) {
         await db.classRoom.updateMany({
           where: {
@@ -171,7 +179,9 @@ export const removeSection = privateProcedure
             sectionId: existingDefaultSection.id,
           },
         });
-      } else if (existingSection.memberships.length > 0) {
+      }
+      //if there are joined classrooms inside this section
+      else if (existingSection.memberships.length > 0) {
         await db.membership.updateMany({
           where: {
             id: {

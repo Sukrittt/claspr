@@ -95,10 +95,11 @@ model Section {
 }
 
 model ClassRoom {
-  id         String  @id @unique @default(cuid())
-  title      String
-  coverImage String?
-  classCode  String  @unique
+  id          String  @id @unique @default(cuid())
+  title       String
+  description String?
+  coverImage  String?
+  classCode   String  @unique
 
   sectionId String
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
@@ -169,9 +170,9 @@ model Answer {
 }
 
 model Announcement {
-  id          String  @id @unique @default(cuid())
+  id          String @id @unique @default(cuid())
   title       String
-  description String?
+  description Json?
 
   classRoomId String
   classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
