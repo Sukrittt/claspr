@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { toast } from "sonner";
 import { useAtom } from "jotai";
-import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { SectionType } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -58,18 +57,15 @@ export const SectionEditForm: React.FC<CreateSectionFormProps> = ({
     },
   });
 
-  const { mutate: updateSection, isLoading } =
-    trpc.section.updateSection.useMutation({
-      onSuccess: () => {
-        closeModal();
-      },
-      onMutate: ({ name }) => {
-        handleOptimisticUpdate(name ?? "");
-      },
-      onError: () => {
-        toast.error("Your changes were not saved. Please refresh your page.");
-      },
-    });
+  const { mutate: updateSection } = trpc.section.updateSection.useMutation({
+    onMutate: ({ name }) => {
+      closeModal();
+      handleOptimisticUpdate(name ?? "");
+    },
+    onError: () => {
+      toast.error("Your changes were not saved. Please refresh your page.");
+    },
+  });
 
   const handleOptimisticUpdate = (updatedName: string) => {
     if (sectionType === "CREATION") {
@@ -146,14 +142,7 @@ export const SectionEditForm: React.FC<CreateSectionFormProps> = ({
           />
         </form>
       </Form>
-      <Button
-        className="my-1 w-full"
-        form="section-edit-form"
-        disabled={isLoading}
-      >
-        {isLoading && (
-          <Loader className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-        )}
+      <Button className="my-1 w-full" form="section-edit-form">
         Edit
         <span className="sr-only">Edit Section</span>
       </Button>

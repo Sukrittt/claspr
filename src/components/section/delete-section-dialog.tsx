@@ -148,8 +148,6 @@ export const DeleteSectionDialog = ({
 
   const { mutate: deleteFolder } = trpc.section.removeSection.useMutation({
     onSuccess: (isMoved) => {
-      closeModal();
-
       if (isMoved) {
         toast.message("Your classrooms were moved to your default section.");
       } else {
@@ -157,6 +155,7 @@ export const DeleteSectionDialog = ({
       }
     },
     onMutate: () => {
+      closeModal();
       handleOptimisticUpdates();
     },
     onError: () => {
