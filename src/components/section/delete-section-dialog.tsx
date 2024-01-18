@@ -147,8 +147,14 @@ export const DeleteSectionDialog = ({
   };
 
   const { mutate: deleteFolder } = trpc.section.removeSection.useMutation({
-    onSuccess: () => {
+    onSuccess: (isMoved) => {
       closeModal();
+
+      if (isMoved) {
+        toast.message("Your classrooms were moved to your default section.");
+      } else {
+        toast.success("Your section was removed successfully.");
+      }
     },
     onMutate: () => {
       handleOptimisticUpdates();

@@ -90,14 +90,14 @@ export const updateSection = privateProcedure
     if (!existingSection) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "The section you are trying to edit doesn't exist",
+        message: "The section you are trying to edit doesn't exist.",
       });
     }
 
     if (existingSection.creatorId !== ctx.userId) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "You are not allowed to edit this section",
+        message: "You are not allowed to edit this section.",
       });
     }
 
@@ -105,7 +105,7 @@ export const updateSection = privateProcedure
     if (existingSection.isDefault && !emojiUrl) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "You cannot edit your default section.",
+        message: "You cannot rename your default section.",
       });
     }
 
@@ -145,7 +145,7 @@ export const removeSection = privateProcedure
     if (!existingSection) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Section you are trying to remove was not found",
+        message: "Section you are trying to remove was not found.",
       });
     }
 
@@ -156,10 +156,14 @@ export const removeSection = privateProcedure
       });
     }
 
+    let movedClassrooms = false;
+
     if (
       existingSection.classrooms.length > 0 ||
       existingSection.memberships.length > 0
     ) {
+      movedClassrooms = true;
+
       const existingDefaultSection = await db.section.findFirst({
         where: {
           creatorId: ctx.userId,
@@ -212,6 +216,8 @@ export const removeSection = privateProcedure
         creatorId: ctx.userId,
       },
     });
+
+    return movedClassrooms;
   });
 
 /**

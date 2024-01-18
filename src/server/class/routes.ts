@@ -35,7 +35,7 @@ export const createClass = privateProcedure
     if (!existingTeacher || existingTeacher.role !== "TEACHER") {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "You need to be a teacher to create a class",
+        message: "You need to be a teacher to create a class.",
       });
     }
 
@@ -98,7 +98,7 @@ export const renameClass = privateProcedure
     if (existingClass.teacherId !== ctx.userId) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "You are not allowed to edit this class",
+        message: "You are not authorized to edit this class.",
       });
     }
 
@@ -130,14 +130,14 @@ export const removeClass = privateProcedure
     if (!existingClass) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "The class you are trying to remove doesn't exist",
+        message: "The class you are trying to remove doesn't exist.",
       });
     }
 
     if (existingClass.teacherId !== ctx.userId) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "You are not allowed to edit this class",
+        message: "You are not authorized to edit this class.",
       });
     }
 
@@ -221,7 +221,7 @@ export const joinClass = privateProcedure
     if (existingMember) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "You are already a member of this class",
+        message: "You are already a member of this class.",
       });
     }
 
@@ -234,7 +234,7 @@ export const joinClass = privateProcedure
     if (!existingUser) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "We couldn't find your account",
+        message: "We couldn't find your account.",
       });
     }
 
@@ -249,7 +249,7 @@ export const joinClass = privateProcedure
     if (!existingClassRoom) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "We couldn't find the class you are trying to join",
+        message: "We couldn't find the class you are trying to join.",
       });
     }
 

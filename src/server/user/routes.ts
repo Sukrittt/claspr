@@ -91,7 +91,7 @@ export const onBoardUser = privateProcedure
     z.object({
       role: z.enum(["STUDENT", "TEACHER"]),
       university: z.string().min(3, {
-        message: "University name should be atleast 3 characters long",
+        message: "University name should be atleast 3 characters long.",
       }),
     })
   )
@@ -105,7 +105,7 @@ export const onBoardUser = privateProcedure
     if (!existingUser) {
       return new TRPCError({
         code: "BAD_REQUEST",
-        message: "Your account does not exist.",
+        message: "We couldn't find your account.",
       });
     }
 
