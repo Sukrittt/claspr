@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { ContainerVariants } from "@/lib/motion";
@@ -35,9 +34,6 @@ export const ClassroomListsWithCreation: React.FC<
         animate="animate"
         exit="exit"
         className="flex flex-col pl-[52px] text-sm"
-        onClick={() =>
-          toast.loading("Getting your data together...", { duration: 2000 })
-        }
       >
         {classrooms.map((classroom) => (
           <CreatedClassroom classroom={classroom} key={classroom.id} />
@@ -70,12 +66,7 @@ export const ClassroomListsWithMembership: React.FC<
 
   return (
     <AnimatePresence mode="wait">
-      <div
-        className="flex flex-col pl-[52px] text-sm"
-        onClick={() =>
-          toast.loading("Getting your data together...", { duration: 2000 })
-        }
-      >
+      <div className="flex flex-col pl-[52px] text-sm">
         <motion.div
           variants={ContainerVariants}
           initial="initial"
