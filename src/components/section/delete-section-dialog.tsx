@@ -15,8 +15,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { createdClassSections, joinedClassSections } from "@/atoms";
 import { trpc } from "@/trpc/client";
+import { createdClassSections, joinedClassSections } from "@/atoms";
 
 type DeleteSectionDialogProps = {
   sectionId: string;
@@ -149,10 +149,12 @@ export const DeleteSectionDialog = ({
   const { mutate: deleteFolder } = trpc.section.removeSection.useMutation({
     onSuccess: () => {
       closeModal();
-      handleOptimisticUpdates();
     },
     onMutate: () => {
-      toast.loading("Just a moment...", { duration: 1500 });
+      handleOptimisticUpdates();
+    },
+    onError: () => {
+      toast.error("Your changes were not saved. Please refresh your page.");
     },
   });
 

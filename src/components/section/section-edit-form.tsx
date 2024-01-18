@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -59,9 +60,14 @@ export const SectionEditForm: React.FC<CreateSectionFormProps> = ({
 
   const { mutate: updateSection, isLoading } =
     trpc.section.updateSection.useMutation({
-      onSuccess: (_, { name }) => {
+      onSuccess: () => {
         closeModal();
+      },
+      onMutate: ({ name }) => {
         handleOptimisticUpdate(name ?? "");
+      },
+      onError: () => {
+        toast.error("Your changes were not saved. Please refresh your page.");
       },
     });
 
