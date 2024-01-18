@@ -13,6 +13,7 @@ import {
 import { MembershipContext } from "./membership-context";
 import { CreatedClassContext } from "./created-class-context";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
 
 export const TeacherSection = () => {
   const [, setCloseAllCreationToggle] = useAtom(isCloseAllCreationToggle);
@@ -69,7 +70,7 @@ export const TeacherSection = () => {
         </div>
         <div className="flex flex-col gap-y-2">
           {isFetchingFirstSection ? (
-            <p>Loading...</p>
+            <SectionSkeleton />
           ) : !sectionsForCreatedClassrooms ||
             sectionsForCreatedClassrooms.length === 0 ? (
             <p>No results</p>
@@ -100,7 +101,7 @@ export const TeacherSection = () => {
         </div>
         <div className="flex flex-col gap-y-2">
           {isFetchingSecondSection ? (
-            <p>Loading...</p>
+            <SectionSkeleton />
           ) : !sectionsForJoinedClassrooms ||
             sectionsForJoinedClassrooms.length === 0 ? (
             <p>No results</p>
