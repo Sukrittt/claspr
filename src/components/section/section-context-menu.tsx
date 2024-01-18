@@ -1,13 +1,7 @@
 import { useState } from "react";
+import { Pen, Trash } from "lucide-react";
 import { SectionType } from "@prisma/client";
-import { MoreHorizontal, Pen, Trash } from "lucide-react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -16,7 +10,6 @@ import {
 } from "@/components/ui/context-menu";
 import { EditSectionDialog } from "./edit-section-dialog";
 import { DeleteSectionDialog } from "./delete-section-dialog";
-import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface SectionDropdownProps {
   sectionId: string;

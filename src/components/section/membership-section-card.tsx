@@ -1,9 +1,8 @@
-import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { useDroppable } from "@dnd-kit/core";
+import { ChevronRight, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bookmark, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { EmojiPopover } from "./emoji-popover";
@@ -13,6 +12,7 @@ import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithMemberships } from "@/types";
 import { SectionContextMenu } from "./section-context-menu";
 import { ClassroomListsWithMembership } from "./classroom-lists";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { JoinClassDialog } from "@/components/class-rooms/join-class-dialog";
 
 interface SectionCardProps {
@@ -105,7 +105,11 @@ const MembershipItem = ({
               e.stopPropagation();
             }}
           >
-            {!section.isDefault && (
+            {section.isDefault ? (
+              <CustomTooltip text="Immutable storage for classrooms.">
+                <Info className="h-3.5 w-3.5" />
+              </CustomTooltip>
+            ) : (
               <SectionDropdown
                 sectionId={section.id}
                 sectionName={section.name}
