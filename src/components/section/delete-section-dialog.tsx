@@ -146,7 +146,7 @@ export const DeleteSectionDialog = ({
     });
   };
 
-  const { mutate: deleteFolder } = trpc.section.removeSection.useMutation({
+  const { mutate: deleteSection } = trpc.section.removeSection.useMutation({
     onMutate: () => {
       closeModal();
       handleOptimisticUpdates();
@@ -172,7 +172,7 @@ export const DeleteSectionDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => deleteFolder({ sectionId })}
+            onClick={() => deleteSection({ sectionId })}
             className="pt-2"
           >
             Continue
