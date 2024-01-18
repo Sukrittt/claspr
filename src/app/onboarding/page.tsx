@@ -1,21 +1,12 @@
-import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
-import { db } from "@/lib/db";
-import { getAuthSession } from "@/lib/auth";
-import { OnboardForm } from "@/components/onboarding/onboard-form";
+import { Onboarding } from "@/components/server-components/Onboarding";
+import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
-export default async function page() {
-  const session = await getAuthSession();
-
-  const dbUser = await db.user.findFirst({
-    where: {
-      id: session?.user.id,
-    },
-  });
-
-  if (!session || !dbUser) redirect("/sign-in");
-
-  if (dbUser.role) redirect("/dashboard");
-
-  return <OnboardForm />;
+export default function page() {
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <Onboarding />
+    </Suspense>
+  );
 }
