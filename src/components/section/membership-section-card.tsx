@@ -11,6 +11,7 @@ import { ContainerVariants } from "@/lib/motion";
 import { isCloseAllMembershipToggle } from "@/atoms";
 import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithMemberships } from "@/types";
+import { SectionContextMenu } from "./section-context-menu";
 import { ClassroomListsWithMembership } from "./classroom-lists";
 import { JoinClassDialog } from "@/components/class-rooms/join-class-dialog";
 
@@ -64,50 +65,59 @@ const MembershipItem = ({
 
   return (
     <>
-      <div
-        className={cn(
-          "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-300 py-1 px-2 rounded-md transition group",
-          {
-            "bg-neutral-300 duration-500": isOver,
-          }
-        )}
-        ref={setNodeRef}
-        onClick={handleShowClassrooms}
+      <SectionContextMenu
+        sectionId={section.id}
+        sectionName={section.name}
+        sectionType={section.sectionType}
       >
-        <div className="flex items-center gap-x-1">
-          <ChevronRight
-            className={cn("w-4 h-4 transition", {
-              "rotate-90": showClassrooms,
-            })}
-          />
-          <div className="flex items-center gap-x-2">
-            <EmojiPopover emojiUrl={section.emojiUrl} sectionId={section.id} />
-            <p>{section.name}</p>
-          </div>
-        </div>
         <div
           className={cn(
-            "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
+            "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-300 py-1 px-2 rounded-md transition group",
             {
-              "opacity-100": isDropdownOpen,
+              "bg-neutral-300 duration-500": isOver,
             }
           )}
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
+          ref={setNodeRef}
+          onClick={handleShowClassrooms}
         >
-          {!section.isDefault && (
-            <SectionDropdown
-              sectionId={section.id}
-              sectionName={section.name}
-              isDropdownOpen={isDropdownOpen}
-              setIsDropdownOpen={setIsDropdownOpen}
-              sectionType={section.sectionType}
+          <div className="flex items-center gap-x-1">
+            <ChevronRight
+              className={cn("w-4 h-4 transition", {
+                "rotate-90": showClassrooms,
+              })}
             />
-          )}
-          <JoinClassDialog sectionId={section.id} />
+            <div className="flex items-center gap-x-2">
+              <EmojiPopover
+                emojiUrl={section.emojiUrl}
+                sectionId={section.id}
+              />
+              <p>{section.name}</p>
+            </div>
+          </div>
+          <div
+            className={cn(
+              "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
+              {
+                "opacity-100": isDropdownOpen,
+              }
+            )}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            {!section.isDefault && (
+              <SectionDropdown
+                sectionId={section.id}
+                sectionName={section.name}
+                isDropdownOpen={isDropdownOpen}
+                setIsDropdownOpen={setIsDropdownOpen}
+                sectionType={section.sectionType}
+              />
+            )}
+            <JoinClassDialog sectionId={section.id} />
+          </div>
         </div>
-      </div>
+      </SectionContextMenu>
       {showClassrooms && (
         <ClassroomListsWithMembership memberships={section.memberships} />
       )}

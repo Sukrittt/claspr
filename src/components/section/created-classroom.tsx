@@ -35,7 +35,7 @@ export const CreatedClassroom = ({
 
   if (isDragging) {
     return (
-      <div className="flex items-center gap-x-1 py-1 px-2 tracking-tight text-gray-800">
+      <div className="flex items-center gap-x-1 py-1.5 opacity-60 px-2 tracking-tight text-gray-800">
         <GripVertical className="w-4 h-4 text-gray-800" />
         <p>{classroom.title}</p>
       </div>
