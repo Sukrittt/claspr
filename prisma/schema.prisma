@@ -122,9 +122,10 @@ model ClassRoom {
 model Membership {
   id String @id @unique @default(cuid())
 
-  userId    String //can be both teacher or student
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  isTeacher Boolean @default(false)
+  userId           String //can be both teacher or student
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isTeacher        Boolean @default(false)
+  renamedClassroom String?
 
   sectionId String
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)

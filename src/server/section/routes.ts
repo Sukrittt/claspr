@@ -156,14 +156,10 @@ export const removeSection = privateProcedure
       });
     }
 
-    let movedClassrooms = false;
-
     if (
       existingSection.classrooms.length > 0 ||
       existingSection.memberships.length > 0
     ) {
-      movedClassrooms = true;
-
       const existingDefaultSection = await db.section.findFirst({
         where: {
           creatorId: ctx.userId,
@@ -216,8 +212,6 @@ export const removeSection = privateProcedure
         creatorId: ctx.userId,
       },
     });
-
-    return movedClassrooms;
   });
 
 /**

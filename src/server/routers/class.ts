@@ -7,6 +7,7 @@ import {
   removeClass,
   moveClass,
   renameClass,
+  setNickName,
 } from "@/server/class/routes";
 
 export const classRouter = createTRPCRouter({
@@ -17,4 +18,5 @@ export const classRouter = createTRPCRouter({
   removeClass,
   moveClass,
   renameClass,
+  setNickName,
 });

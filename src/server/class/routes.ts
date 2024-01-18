@@ -109,6 +109,42 @@ export const renameClass = privateProcedure
   });
 
 /**
+ * To give a nickname to a class by a member.
+ *
+ * @param {object} input - The input parameters for renaming a class.
+ * @param {string} input.title - The updated title for the classroom.
+ * @param {string} input.classroomId - The id of the classroom to update.
+ */
+export const setNickName = privateProcedure
+  .input(
+    z.object({
+      title: z.string().min(3).max(80),
+      membershipId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { membershipId, title } = input;
+
+    const existingMembership = await db.membership.findFirst({
+      where: { id: membershipId, userId: ctx.userId },
+    });
+
+    if (!existingMembership) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the classroom you are trying to edit.",
+      });
+    }
+
+    await db.membership.update({
+      where: { id: membershipId, userId: ctx.userId },
+      data: {
+        renamedClassroom: title,
+      },
+    });
+  });
+
+/**
  * To remove a class.
  *
  * @param {object} input - The input parameters for removing a class.
@@ -124,25 +160,49 @@ export const removeClass = privateProcedure
     const { classroomId } = input;
 
     const existingClass = await db.classRoom.findFirst({
-      where: { id: classroomId },
+      where: { id: classroomId, teacherId: ctx.userId },
     });
 
     if (!existingClass) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "The class you are trying to remove doesn't exist.",
-      });
-    }
-
-    if (existingClass.teacherId !== ctx.userId) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "You are not authorized to edit this class.",
+        message: "We couldn't find the class you are trying to remove.",
       });
     }
 
     await db.classRoom.delete({
-      where: { id: classroomId },
+      where: { id: classroomId, teacherId: ctx.userId },
+    });
+  });
+
+/**
+ * To leave a class.
+ *
+ * @param {object} input - The input parameters for leaving a class.
+ * @param {string} input.membershipId - The id of the membership to remove.
+ */
+export const leaveClass = privateProcedure
+  .input(
+    z.object({
+      membershipId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { membershipId } = input;
+
+    const existingMembership = await db.membership.findFirst({
+      where: { id: membershipId, userId: ctx.userId },
+    });
+
+    if (!existingMembership) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "You are not a member of this classroom.",
+      });
+    }
+
+    await db.membership.delete({
+      where: { id: membershipId, userId: ctx.userId },
     });
   });
 
