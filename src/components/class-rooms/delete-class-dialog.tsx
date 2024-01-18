@@ -1,5 +1,6 @@
 "use client";
 import { toast } from "sonner";
+import { useAtom } from "jotai";
 import { useState } from "react";
 
 import {
@@ -14,19 +15,23 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { trpc } from "@/trpc/client";
+import { createdClassSections } from "@/atoms";
 
 type DeleteClassDialogProps = {
+  sectionId: string;
   classroomId: string;
   isOpen: boolean;
   setIsDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const DeleteSectionDialog = ({
+export const DeleteClassDialog = ({
+  sectionId,
   classroomId,
   setIsDeleteOpen,
   isOpen,
 }: DeleteClassDialogProps) => {
   const [open, setOpen] = useState(isOpen);
+  const [, setCreatedClassSections] = useAtom(createdClassSections);
 
   const closeModal = () => {
     setOpen(false);
@@ -39,7 +44,27 @@ export const DeleteSectionDialog = ({
   };
 
   const handleOptimisticUpdates = () => {
-    //optimistic updates
+    setCreatedClassSections((prev) => {
+      const currentSections = [...prev];
+
+      const sectionToUpdate = currentSections.find((s) => s.id === sectionId);
+      if (!sectionToUpdate) return currentSections;
+
+      const updatedClassrooms = sectionToUpdate.classrooms.filter(
+        (c) => c.id !== classroomId
+      );
+
+      const updatedSection = {
+        ...sectionToUpdate,
+        classrooms: updatedClassrooms,
+      };
+
+      const updatedSections = currentSections.map((s) =>
+        s.id === sectionId ? updatedSection : s
+      );
+
+      return updatedSections;
+    });
   };
 
   const { mutate: deleteClassroom } = trpc.class.removeClass.useMutation({
@@ -61,8 +86,8 @@ export const DeleteSectionDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action is irreversible. It will permanently delete this class
-            and all the members will lose their progress.
+            This action is irreversible. It will permanently delete this
+            classroom and all the members will lose their progress.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

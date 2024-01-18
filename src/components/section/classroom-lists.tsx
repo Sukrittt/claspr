@@ -1,10 +1,10 @@
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { ContainerVariants } from "@/lib/motion";
 import { CreatedClassroom } from "./created-classroom";
 import { JoinedMembership } from "./joined-membership";
 import { ExtendedMembership, ExtendedClassroom } from "@/types";
-import { ContainerVariants, MemberCardVariants } from "@/lib/motion";
 
 interface ClassroomListsWithCreationProps {
   classrooms: ExtendedClassroom[];
@@ -57,7 +57,7 @@ export const ClassroomListsWithMembership: React.FC<
   if (memberships.length === 0) {
     return (
       <motion.p
-        variants={MemberCardVariants}
+        variants={ContainerVariants}
         initial="initial"
         animate="animate"
         exit="exit"
@@ -77,7 +77,7 @@ export const ClassroomListsWithMembership: React.FC<
         }
       >
         <motion.div
-          variants={MemberCardVariants}
+          variants={ContainerVariants}
           initial="initial"
           animate="animate"
           exit="exit"

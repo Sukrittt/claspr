@@ -1,6 +1,7 @@
 "use client";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useAtom } from "jotai";
 
 import {
   AlertDialog,
@@ -14,18 +15,23 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { trpc } from "@/trpc/client";
+import { joinedClassSections } from "@/atoms";
 
 type LeaveClassDialogProps = {
   isOpen: boolean;
   membershipId: string;
+  sectionId: string;
   setIsDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const LeaveSectionDialog = ({
+export const LeaveClassDialog = ({
   membershipId,
   setIsDeleteOpen,
+  sectionId,
   isOpen,
 }: LeaveClassDialogProps) => {
+  const [, setJoinedClassSections] = useAtom(joinedClassSections);
+
   const [open, setOpen] = useState(isOpen);
 
   const closeModal = () => {
@@ -39,7 +45,27 @@ export const LeaveSectionDialog = ({
   };
 
   const handleOptimisticUpdates = () => {
-    //optimistic updates
+    setJoinedClassSections((prev) => {
+      const currentSections = [...prev];
+
+      const sectionToUpdate = currentSections.find((s) => s.id === sectionId);
+      if (!sectionToUpdate) return currentSections;
+
+      const updatedClassrooms = sectionToUpdate.memberships.filter(
+        (m) => m.id !== membershipId
+      );
+
+      const updatedSection = {
+        ...sectionToUpdate,
+        memberships: updatedClassrooms,
+      };
+
+      const updatedSections = currentSections.map((s) =>
+        s.id === sectionId ? updatedSection : s
+      );
+
+      return updatedSections;
+    });
   };
 
   const { mutate: leaveClassroom } = trpc.class.leaveClass.useMutation({
@@ -62,7 +88,7 @@ export const LeaveSectionDialog = ({
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action is irreversible. It will permanently remove you from
-            this class and you will lose all your progress.
+            this classroom and you will lose all your progress.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

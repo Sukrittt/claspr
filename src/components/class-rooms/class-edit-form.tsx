@@ -2,7 +2,6 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { useForm } from "react-hook-form";
-import { SectionType } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -16,7 +15,7 @@ import {
 import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createdClassSections, joinedClassSections } from "@/atoms";
+import { createdClassSections } from "@/atoms";
 
 const sectionUpdationSchema = z.object({
   name: z
@@ -33,34 +32,33 @@ const sectionUpdationSchema = z.object({
 
 type Inputs = z.infer<typeof sectionUpdationSchema>;
 
-interface EditSectionFormProps {
+interface EditClassFormProps {
   closeModal: () => void;
   sectionId: string;
-  sectionName: string;
-  sectionType: SectionType;
+  classroomId: string;
+  classroomName: string;
 }
 
-export const SectionEditForm: React.FC<EditSectionFormProps> = ({
+export const ClassEditForm: React.FC<EditClassFormProps> = ({
   closeModal,
   sectionId,
-  sectionName,
-  sectionType,
+  classroomId,
+  classroomName,
 }) => {
   const [, setCreatedClassSections] = useAtom(createdClassSections);
-  const [, setJoinedClassSections] = useAtom(joinedClassSections);
 
   // react-hook-form
   const form = useForm<Inputs>({
     resolver: zodResolver(sectionUpdationSchema),
     defaultValues: {
-      name: sectionName,
+      name: classroomName,
     },
   });
 
-  const { mutate: updateSection } = trpc.section.updateSection.useMutation({
-    onMutate: ({ name }) => {
+  const { mutate: renameClass } = trpc.class.renameClass.useMutation({
+    onMutate: ({ title }) => {
       closeModal();
-      handleOptimisticUpdate(name ?? "");
+      handleOptimisticUpdate(title);
     },
     onError: () => {
       toast.error("Your changes were not saved. Please refresh your page.");
@@ -68,59 +66,47 @@ export const SectionEditForm: React.FC<EditSectionFormProps> = ({
   });
 
   const handleOptimisticUpdate = (updatedName: string) => {
-    if (sectionType === "CREATION") {
-      setCreatedClassSections((prev) => {
-        const index = prev.findIndex((section) => section.id === sectionId);
+    setCreatedClassSections((prev) => {
+      const currentSection = [...prev];
 
-        if (index !== -1) {
-          const updatedSections = [...prev];
+      const sectionToUpdate = currentSection.find((s) => s.id === sectionId);
+      if (!sectionToUpdate) return currentSection;
 
-          updatedSections[index] = {
-            ...updatedSections[index],
-            name: updatedName,
-          };
+      const classroomToUpdate = sectionToUpdate.classrooms.find(
+        (c) => c.id === classroomId
+      );
+      if (!classroomToUpdate) return currentSection;
 
-          return updatedSections;
-        }
+      classroomToUpdate.title = updatedName;
 
-        return prev;
-      });
-    } else {
-      setJoinedClassSections((prev) => {
-        const index = prev.findIndex((section) => section.id === sectionId);
+      const classroomIndex = sectionToUpdate.classrooms.findIndex(
+        (c) => c.id === classroomId
+      );
+      sectionToUpdate.classrooms[classroomIndex] = classroomToUpdate;
 
-        if (index !== -1) {
-          const updatedSections = [...prev];
+      const sectionIndex = currentSection.findIndex((s) => s.id === sectionId);
+      currentSection[sectionIndex] = sectionToUpdate;
 
-          updatedSections[index] = {
-            ...updatedSections[index],
-            name: updatedName,
-          };
-
-          return updatedSections;
-        }
-
-        return prev;
-      });
-    }
+      return currentSection;
+    });
   };
 
-  function handleEditSection(data: Inputs) {
-    updateSection({
-      sectionId,
-      name: data.name,
+  function handleEditClass(data: Inputs) {
+    renameClass({
+      classroomId,
+      title: data.name,
     });
   }
 
   function onSubmit(data: Inputs) {
-    handleEditSection(data);
+    handleEditClass(data);
   }
 
   return (
     <div className="space-y-2">
       <Form {...form}>
         <form
-          id="section-edit-form"
+          id="class-rename-form"
           onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
         >
           <FormField
@@ -132,7 +118,7 @@ export const SectionEditForm: React.FC<EditSectionFormProps> = ({
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="E.g: First Semester"
+                    placeholder="E.g: Science Class"
                     {...field}
                   />
                 </FormControl>
@@ -142,7 +128,7 @@ export const SectionEditForm: React.FC<EditSectionFormProps> = ({
           />
         </form>
       </Form>
-      <Button className="my-1 w-full" form="section-edit-form">
+      <Button className="my-1 w-full" form="class-rename-form">
         Edit
         <span className="sr-only">Edit Section</span>
       </Button>

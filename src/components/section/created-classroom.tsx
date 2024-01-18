@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { toast } from "sonner";
+import { useState } from "react";
+import { GripVertical } from "lucide-react";
 import { useDraggable } from "@dnd-kit/core";
-import { GripVertical, MoreHorizontal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ExtendedClassroom } from "@/types";
+import { ClassDropdown } from "@/components/class-rooms/class-dropdown";
 
 export const CreatedClassroom = ({
   classroom,
@@ -13,6 +14,8 @@ export const CreatedClassroom = ({
   classroom: ExtendedClassroom;
   isHolding?: boolean;
 }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: classroom.id,
@@ -53,15 +56,20 @@ export const CreatedClassroom = ({
           <p>{classroom.title}</p>
         </div>
         <div
-          className="hidden group-hover:block"
+          className={cn("opacity-0 group-hover:opacity-100", {
+            "opacity-100": isDropdownOpen,
+          })}
           onClick={(e) => {
             e.stopPropagation();
-            e.preventDefault();
           }}
         >
-          <MoreHorizontal
-            className="w-4 h-4"
-            onClick={() => toast.message("Coming Soon")}
+          <ClassDropdown
+            containerId={classroom.id}
+            sectionType="CREATION"
+            sectionId={classroom.sectionId}
+            classroomName={classroom.title}
+            isDropdownOpen={isDropdownOpen}
+            setIsDropdownOpen={setIsDropdownOpen}
           />
         </div>
       </Link>
