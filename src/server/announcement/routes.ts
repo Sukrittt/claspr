@@ -29,13 +29,14 @@ export const createAnnouncement = privateProcedure
       input;
 
     const existingClassroom = await db.classRoom.findFirst({
-      where: { id: classRoomId },
+      where: { id: classRoomId, teacherId: ctx.userId },
     });
 
     if (!existingClassroom) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "The classroom does not exist. Please create a new classroom.",
+        message:
+          "The classroom no longer exists. Please create a new classroom.",
       });
     }
 

@@ -69,6 +69,8 @@ export const createSection = privateProcedure
  * @param {string} input.sectionId - The id of the section to update.
  * @param {string} input.name - The updated name of the section.
  * @param {string} input.emojiUrl - The updated emojiUrl of the section.
+ * @param {boolean} input.isDefault - Whether to mark the section as default.
+ * @param {boolean} input.sectionType - To find the type of section it should be updated.
  */
 export const updateSection = privateProcedure
   .input(
@@ -76,10 +78,12 @@ export const updateSection = privateProcedure
       sectionId: z.string(),
       name: z.string().min(3).max(80).optional(),
       emojiUrl: z.string().optional(),
+      isDefault: z.boolean().optional(),
+      sectionType: z.enum(["CREATION", "MEMBERSHIP"]).optional(),
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const { sectionId, name, emojiUrl } = input;
+    const { sectionId, name, emojiUrl, isDefault, sectionType } = input;
 
     const existingSection = await db.section.findFirst({
       where: {
@@ -109,11 +113,37 @@ export const updateSection = privateProcedure
       });
     }
 
+    //mark the existing default section as false
+    if (isDefault && sectionType) {
+      const userDefaultSection = await db.section.findFirst({
+        where: { creatorId: ctx.userId, isDefault: true, sectionType },
+        select: { id: true },
+      });
+
+      if (!userDefaultSection) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "We couldn't find your current default section.",
+        });
+      }
+
+      await db.section.update({
+        where: {
+          id: userDefaultSection.id,
+          creatorId: ctx.userId,
+        },
+        data: {
+          isDefault: false,
+        },
+      });
+    }
+
     await db.section.update({
       where: { id: sectionId },
       data: {
         name,
         emojiUrl,
+        isDefault,
       },
     });
   });

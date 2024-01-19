@@ -121,7 +121,7 @@ export const onBoardUser = privateProcedure
         await db.section.create({
           data: {
             creatorId: ctx.userId,
-            name: "Default Section",
+            name: "Getting Started",
             isDefault: true,
             sectionType: "MEMBERSHIP",
           },
@@ -131,7 +131,7 @@ export const onBoardUser = privateProcedure
           db.section.create({
             data: {
               creatorId: ctx.userId,
-              name: "Default Section",
+              name: "Getting Started",
               isDefault: true,
               sectionType: "MEMBERSHIP",
             },
@@ -139,7 +139,7 @@ export const onBoardUser = privateProcedure
           db.section.create({
             data: {
               creatorId: ctx.userId,
-              name: "Default Section",
+              name: "Getting Started",
               isDefault: true,
               sectionType: "CREATION",
             },

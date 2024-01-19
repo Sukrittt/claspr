@@ -5,9 +5,9 @@ import { CopyMinus } from "lucide-react";
 import { trpc } from "@/trpc/client";
 import { MembershipContext } from "./membership-context";
 import { CreateSectionDialog } from "./create-section-dialog";
-import { MembershipSectionCard } from "./membership-section-card";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { isCloseAllMembershipToggle, joinedClassSections } from "@/atoms";
+import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
 
 export const StudentSection = () => {
   const [, setCloseAllMembershipToggle] = useAtom(isCloseAllMembershipToggle);
@@ -49,7 +49,7 @@ export const StudentSection = () => {
       </div>
       <div className="flex flex-col gap-y-2">
         {isFetchingSecondSection ? (
-          <p>Loading...</p>
+          <SectionSkeleton />
         ) : !sectionsForJoinedClassrooms ||
           sectionsForJoinedClassrooms.length === 0 ? (
           <p>No results</p>

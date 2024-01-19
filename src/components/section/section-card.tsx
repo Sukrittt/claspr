@@ -67,6 +67,7 @@ const SectionItem = ({
         sectionId={section.id}
         sectionName={section.name}
         sectionType={section.sectionType}
+        isDefault={section.isDefault}
       >
         <div
           className={cn(
@@ -99,22 +100,25 @@ const SectionItem = ({
                 "opacity-100": isDropdownOpen,
               }
             )}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
           >
             {section.isDefault ? (
-              <CustomTooltip text="Immutable storage for classrooms.">
-                <Info className="h-3.5 w-3.5" />
+              <CustomTooltip text="Default Hub for all your classrooms.">
+                <Info className="h-3.5 w-3.5 text-gray-700" />
               </CustomTooltip>
             ) : (
-              <SectionDropdown
-                sectionId={section.id}
-                sectionName={section.name}
-                isDropdownOpen={isDropdownOpen}
-                setIsDropdownOpen={setIsDropdownOpen}
-                sectionType={section.sectionType}
-              />
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <SectionDropdown
+                  sectionId={section.id}
+                  sectionName={section.name}
+                  isDropdownOpen={isDropdownOpen}
+                  setIsDropdownOpen={setIsDropdownOpen}
+                  sectionType={section.sectionType}
+                />
+              </div>
             )}
             <CreateClassDialog sectionId={section.id} />
           </div>
