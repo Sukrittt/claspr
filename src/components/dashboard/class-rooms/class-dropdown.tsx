@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SectionType } from "@prisma/client";
-import { MoreHorizontal, Pen, Trash } from "lucide-react";
+import { DoorOpen, MoreHorizontal, Pen, Trash } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -48,7 +48,7 @@ export const ClassDropdown: React.FC<ClassDropdownProps> = ({
             </CustomTooltip>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="min-w-40">
+        <DropdownMenuContent className="min-w-40 mr-2">
           <DropdownMenuItem
             className="text-gray-700 text-[13px]"
             onClick={() => setIsEditOpen(true)}
@@ -60,8 +60,17 @@ export const ClassDropdown: React.FC<ClassDropdownProps> = ({
             className="text-gray-700 text-[13px]"
             onClick={() => setIsDeleteOpen(true)}
           >
-            <Trash className="h-3.5 w-3.5 mr-2" />
-            Delete
+            {sectionType === "CREATION" ? (
+              <>
+                <Trash className="h-3.5 w-3.5 mr-2" />
+                Delete
+              </>
+            ) : (
+              <>
+                <DoorOpen className="h-3.5 w-3.5 mr-2" />
+                Leave
+              </>
+            )}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

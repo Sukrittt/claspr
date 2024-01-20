@@ -140,14 +140,23 @@ export const MembershipItem = ({
               })}
             />
             <div className="flex items-center gap-x-2">
-              <EmojiPopover
-                emojiUrl={section.emojiUrl}
-                sectionId={section.id}
-              />
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <EmojiPopover
+                  emojiUrl={section.emojiUrl}
+                  sectionId={section.id}
+                />
+              </div>
               <p>{section.name}</p>
             </div>
           </div>
           <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
             className={cn(
               "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
               {
@@ -160,19 +169,13 @@ export const MembershipItem = ({
                 <Info className="h-3.5 w-3.5" />
               </CustomTooltip>
             ) : (
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <SectionDropdown
-                  sectionId={section.id}
-                  sectionName={section.name}
-                  isDropdownOpen={isDropdownOpen}
-                  setIsDropdownOpen={setIsDropdownOpen}
-                  sectionType={section.sectionType}
-                />
-              </div>
+              <SectionDropdown
+                sectionId={section.id}
+                sectionName={section.name}
+                isDropdownOpen={isDropdownOpen}
+                setIsDropdownOpen={setIsDropdownOpen}
+                sectionType={section.sectionType}
+              />
             )}
             <JoinClassDialog sectionId={section.id} />
           </div>
