@@ -124,6 +124,7 @@ export const onBoardUser = privateProcedure
             name: "Getting Started",
             isDefault: true,
             sectionType: "MEMBERSHIP",
+            order: 1, // This section will be the first section
           },
         });
       } else {
@@ -134,6 +135,7 @@ export const onBoardUser = privateProcedure
               name: "Getting Started",
               isDefault: true,
               sectionType: "MEMBERSHIP",
+              order: 1, // This section will be the first section
             },
           }),
           db.section.create({
@@ -142,6 +144,7 @@ export const onBoardUser = privateProcedure
               name: "Getting Started",
               isDefault: true,
               sectionType: "CREATION",
+              order: 1, // This section will be the first section
             },
           }),
         ];

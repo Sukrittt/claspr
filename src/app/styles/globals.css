@@ -80,3 +80,11 @@
     @apply bg-background text-foreground svg-pattern;
   }
 }
+
+#always-on-show {
+  opacity: 1 !important;
+}
+
+#portal-item {
+  opacity: 0.6 !important;
+}

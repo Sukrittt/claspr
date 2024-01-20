@@ -22,7 +22,7 @@ export const JoinedMembership = ({
     useDraggable({
       id: membership.id,
       data: {
-        type: "MEMBERSHIP" as const,
+        dragType: "CLASSROOM",
         content: membership,
       },
     });
@@ -35,15 +35,23 @@ export const JoinedMembership = ({
 
   if (isDragging) {
     return (
-      <div className="flex items-center gap-x-1 py-1 px-2 tracking-tight text-gray-800">
-        <GripVertical className="w-4 h-4 text-gray-800" />
-        <p>{membership.classRoom.title}</p>
+      <div id="portal-item">
+        <div className="flex items-center gap-x-1 py-1.5 px-2 tracking-tight text-gray-800">
+          <GripVertical className="w-4 h-4 text-gray-800" />
+          <p>{membership.classRoom.title}</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={style} ref={setNodeRef} {...attributes} {...listeners}>
+    <div
+      style={style}
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      id="always-on-show"
+    >
       <ClassContextMenu
         containerId={membership.id}
         sectionType="MEMBERSHIP"

@@ -19,11 +19,21 @@ export const createSection = privateProcedure
     })
   )
   .mutation(async ({ ctx, input }) => {
+    const userSections = await db.section.findMany({
+      where: {
+        creatorId: ctx.userId,
+        sectionType: input.sectionType,
+      },
+    });
+
+    const nextOrder = userSections.length + 1;
+
     const section = await db.section.create({
       data: {
         name: input.name,
         creatorId: ctx.userId,
         sectionType: input.sectionType,
+        order: nextOrder,
       },
       include: {
         classrooms: {
@@ -213,6 +223,7 @@ export const removeSection = privateProcedure
             id: {
               in: existingSection.classrooms.map((classroom) => classroom.id),
             },
+            teacherId: ctx.userId,
           },
           data: {
             sectionId: existingDefaultSection.id,
@@ -228,6 +239,7 @@ export const removeSection = privateProcedure
                 (membership) => membership.id
               ),
             },
+            userId: ctx.userId,
           },
           data: {
             sectionId: existingDefaultSection.id,
@@ -242,6 +254,94 @@ export const removeSection = privateProcedure
         creatorId: ctx.userId,
       },
     });
+  });
+
+/**
+ * To remove a section created by the user.
+ *
+ * @param {object} input - The input parameters for remoing a section.
+ * @param {string} input.activeSectionId - The id of the section which is being dragged.
+ * @param {string} input.overSectionId - The id of the section where it was dropped.
+ * @param {string[]} input.shiftSectionIds - The list of section ids to shift.
+ * @param {enum} input.shiftDirection - The direction in which the shifting should happen.
+ */
+export const moveSection = privateProcedure
+  .input(
+    z.object({
+      activeSectionId: z.string(),
+      overSectionId: z.string(),
+      shiftSections: z.array(
+        z.object({
+          sectionId: z.string(),
+          order: z.number(),
+        })
+      ),
+      shiftDirection: z.enum(["UP", "DOWN"]),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { activeSectionId, shiftSections, shiftDirection, overSectionId } =
+      input;
+
+    const activeOrderSection = await db.section.findFirst({
+      where: {
+        id: activeSectionId,
+        creatorId: ctx.userId,
+      },
+    });
+
+    if (!activeOrderSection) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Section you are trying to move was not found.",
+      });
+    }
+
+    const existingOverSection = await db.section.findFirst({
+      where: {
+        id: overSectionId,
+        creatorId: ctx.userId,
+      },
+    });
+
+    if (!existingOverSection) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Section you are trying to move was not found.",
+      });
+    }
+
+    // NOTE: I'm not using Promise.all because of the order of execution
+
+    //update the order of the active section
+    await db.section.update({
+      where: {
+        id: activeSectionId,
+        creatorId: ctx.userId,
+      },
+      data: {
+        order: existingOverSection.order,
+      },
+    });
+
+    if (shiftSections.length > 0) {
+      //shifting the order of the sections in between
+      const shiftUpdatePromise = shiftSections.map(
+        async ({ sectionId, order }) => {
+          return db.section.update({
+            where: {
+              id: sectionId,
+              creatorId: ctx.userId,
+            },
+            data: {
+              order: shiftDirection === "UP" ? order - 1 : order + 1,
+            },
+          });
+        }
+      );
+
+      await Promise.all(shiftUpdatePromise);
+    }
   });
 
 /**
@@ -265,7 +365,7 @@ export const getSectionsForCreatedClassrooms = privateProcedure.query(
         },
       },
       orderBy: {
-        createdAt: "asc",
+        order: "asc",
       },
     });
 
@@ -298,7 +398,7 @@ export const getSectionsForJoinedClassrooms = privateProcedure.query(
         },
       },
       orderBy: {
-        createdAt: "asc",
+        order: "asc",
       },
     });
 

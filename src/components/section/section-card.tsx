@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { useDroppable } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
 import { ChevronRight, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -20,31 +21,59 @@ interface SectionCardProps {
 }
 
 export const SectionCard: React.FC<SectionCardProps> = ({ section }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: section.id,
+    data: { dragType: "SECTION", content: section },
+  });
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        transition,
+      }
+    : undefined;
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
+        ref={setNodeRef}
+        style={style}
+        {...listeners}
+        {...attributes}
+        id="always-on-show"
         variants={ContainerVariants}
         initial="initial"
         animate="animate"
         exit="exit"
       >
-        <SectionItem section={section} />
+        <SectionItem section={section} isDragging={isDragging} />
       </motion.div>
     </AnimatePresence>
   );
 };
 
-const SectionItem = ({
+export const SectionItem = ({
   section,
+  isHolding = false,
+  isDragging = false,
 }: {
   section: ExtendedSectionWithClassrooms;
+  isHolding?: boolean;
+  isDragging?: boolean;
 }) => {
   const [closeAllToggle] = useAtom(isCloseAllCreationToggle);
   const [showClassrooms, setShowClassrooms] = useState(section.isDefault);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const { setNodeRef, isOver } = useDroppable({
+  const { setNodeRef, isOver, active } = useDroppable({
     id: section.id,
     data: {
       content: section,
@@ -57,12 +86,39 @@ const SectionItem = ({
     }
   }, [closeAllToggle]);
 
-  const handleShowClassrooms = () => {
+  const handleToggleOpenClassrooms = () => {
     setShowClassrooms((prev) => !prev);
   };
 
+  if (isDragging) {
+    return (
+      <>
+        <div className="flex items-center gap-x-1 text-sm font-medium py-1 px-2 opacity-60">
+          <ChevronRight
+            className={cn("w-4 h-4 transition", {
+              "rotate-90": showClassrooms,
+            })}
+          />
+          <div className="flex items-center gap-x-2">
+            <EmojiPopover emojiUrl={section.emojiUrl} sectionId={section.id} />
+            <p>{section.name}</p>
+          </div>
+        </div>
+        {showClassrooms && (
+          <div
+            className={cn({
+              "opacity-60": isHolding,
+            })}
+          >
+            <ClassroomListsWithCreation classrooms={section.classrooms} />
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
-    <>
+    <div ref={setNodeRef}>
       <SectionContextMenu
         sectionId={section.id}
         sectionName={section.name}
@@ -73,16 +129,17 @@ const SectionItem = ({
           className={cn(
             "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-300 py-1 px-2 rounded-md transition group",
             {
-              "bg-neutral-300 duration-500": isOver,
+              "bg-neutral-300 duration-500":
+                isOver && active?.data.current?.dragType === "CLASSROOM",
+              "bg-neutral-300 text-sm opacity-60 cursor-grabbing": isHolding,
             }
           )}
-          ref={setNodeRef}
-          onClick={handleShowClassrooms}
+          onClick={handleToggleOpenClassrooms}
         >
           <div className="flex items-center gap-x-1">
             <ChevronRight
               className={cn("w-4 h-4 transition", {
-                "rotate-90": showClassrooms,
+                "rotate-90": showClassrooms || isHolding,
               })}
             />
             <div className="flex items-center gap-x-2">
@@ -124,9 +181,15 @@ const SectionItem = ({
           </div>
         </div>
       </SectionContextMenu>
-      {showClassrooms && (
-        <ClassroomListsWithCreation classrooms={section.classrooms} />
+      {(showClassrooms || isHolding) && (
+        <div
+          className={cn({
+            "opacity-60": isHolding,
+          })}
+        >
+          <ClassroomListsWithCreation classrooms={section.classrooms} />
+        </div>
       )}
-    </>
+    </div>
   );
 };

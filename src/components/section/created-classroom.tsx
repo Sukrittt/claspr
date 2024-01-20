@@ -22,7 +22,7 @@ export const CreatedClassroom = ({
     useDraggable({
       id: classroom.id,
       data: {
-        type: "CREATION" as const,
+        dragType: "CLASSROOM",
         content: classroom,
       },
     });
@@ -35,15 +35,23 @@ export const CreatedClassroom = ({
 
   if (isDragging) {
     return (
-      <div className="flex items-center gap-x-1 py-1.5 opacity-60 px-2 tracking-tight text-gray-800">
-        <GripVertical className="w-4 h-4 text-gray-800" />
-        <p>{classroom.title}</p>
+      <div id="portal-item">
+        <div className="flex items-center gap-x-1 opacity-60 py-1.5 px-2 tracking-tight text-gray-800 class-item">
+          <GripVertical className="w-4 h-4 text-gray-800" />
+          <p>{classroom.title}</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={style} ref={setNodeRef} {...attributes} {...listeners}>
+    <div
+      style={style}
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      id="always-on-show"
+    >
       <ClassContextMenu
         containerId={classroom.id}
         sectionType="CREATION"

@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useAtom } from "jotai";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   DndContext,
@@ -12,16 +12,29 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 import { trpc } from "@/trpc/client";
-import { ExtendedMembership } from "@/types";
 import { joinedClassSections } from "@/atoms";
 import { JoinedMembership } from "./joined-membership";
-import { MembershipSectionCard } from "./membership-section-card";
+import {
+  MembershipItem,
+  MembershipSectionCard,
+} from "./membership-section-card";
+import { getSortedSectionsByOrder } from "@/lib/utils";
+import { ExtendedMembership, ExtendedSectionWithMemberships } from "@/types";
 
 export const MembershipContext = () => {
   const [sectionsForJoinedClassrooms, setJoinedClassSections] =
     useAtom(joinedClassSections);
+
+  const listOfSectionIds = useMemo(
+    () => sectionsForJoinedClassrooms?.map((section) => section.id),
+    [sectionsForJoinedClassrooms]
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -31,15 +44,11 @@ export const MembershipContext = () => {
     })
   );
 
-  const [activeDocEl, setActiveDocEl] = useState<ExtendedMembership | null>(
+  const [activeClassEl, setActiveClassEl] = useState<ExtendedMembership | null>(
     null
   );
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-
-    setActiveDocEl(active.data.current?.content as ExtendedMembership);
-  };
+  const [activeSectionEl, setActiveSectionEl] =
+    useState<ExtendedSectionWithMemberships | null>(null);
 
   const { mutate: moveClass } = trpc.class.moveClass.useMutation({
     onError: () => {
@@ -47,26 +56,61 @@ export const MembershipContext = () => {
     },
   });
 
+  const { mutate: moveSection } = trpc.section.moveSection.useMutation({
+    onError: () => {
+      toast.error("Your changes were not saved. Please refresh your page.");
+    },
+  });
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+
+    const dragType = active.data.current?.dragType;
+
+    if (dragType === "SECTION") {
+      setActiveClassEl(null);
+      setActiveSectionEl(
+        active.data.current?.content as ExtendedSectionWithMemberships
+      );
+    } else if (dragType === "CLASSROOM") {
+      setActiveSectionEl(null);
+      setActiveClassEl(active.data.current?.content as ExtendedMembership);
+    }
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     const oldSectionId = active.data.current?.content?.sectionId;
-    const activeMembershipId = active.data.current?.content?.id;
+    const activeElementId = active.data.current?.content?.id;
+    const dragType = active.data.current?.dragType; //type of element being dragged
 
     if (!over || oldSectionId === over.id) return;
 
-    //SERVER UPDATE
-    moveClass({
-      containerType: "MEMBERSHIP",
-      classContainerId: activeMembershipId,
-      sectionId: over.id as string,
-    });
+    if (dragType === "SECTION") {
+      const overId = over.id as string;
 
-    //CLIENT UPDATE
-    handleOptimisticUpdate(activeMembershipId, oldSectionId, over.id as string);
+      if (activeElementId === overId) return;
+
+      handleReorderingOfSections(activeElementId, overId);
+    } else {
+      //SERVER UPDATE
+      moveClass({
+        containerType: "MEMBERSHIP",
+        classContainerId: activeElementId,
+        sectionId: over.id as string,
+      });
+
+      //CLIENT UPDATE
+      handleOptimisticUpdateForClass(
+        activeElementId,
+        oldSectionId,
+        over.id as string
+      );
+    }
   };
 
-  const handleOptimisticUpdate = (
+  const handleOptimisticUpdateForClass = (
     activeMembershipId: string,
     oldSectionId: string,
     newSectionId: string
@@ -92,14 +136,14 @@ export const MembershipContext = () => {
       (section) => section.id === newSectionId
     );
 
-    if (!recentNewSection || !activeDocEl) return;
+    if (!recentNewSection || !activeClassEl) return;
 
     const newRecentNewSection = {
       ...recentNewSection,
       memberships: [
         ...recentNewSection.memberships,
         {
-          ...activeDocEl,
+          ...activeClassEl,
           sectionId: newSectionId,
         },
       ],
@@ -119,6 +163,101 @@ export const MembershipContext = () => {
     setJoinedClassSections(newSections);
   };
 
+  const handleReorderingOfSections = (
+    activeSectionId: string,
+    overSectionId: string
+  ) => {
+    setJoinedClassSections((prevSections) => {
+      const currentSections = [...prevSections];
+
+      const activeSectionIndex = currentSections.findIndex(
+        (section) => section.id === activeSectionId
+      );
+
+      const overSectionIndex = currentSections.findIndex(
+        (section) => section.id === overSectionId
+      );
+
+      if (activeSectionIndex === -1 || overSectionIndex === -1)
+        return prevSections;
+
+      const { shiftSections, reversed } = getShiftSections(
+        activeSectionIndex,
+        overSectionIndex,
+        currentSections
+      );
+
+      const shiftSectionPayload = shiftSections.map((section) => {
+        return {
+          sectionId: section.id,
+          order: section.order,
+        };
+      });
+
+      //SERVER UPDATE
+      moveSection({
+        activeSectionId,
+        overSectionId,
+        shiftSections: shiftSectionPayload,
+        shiftDirection: reversed ? "DOWN" : "UP",
+      });
+
+      //updating the order of the active section
+      const updatedActiveSection = {
+        ...currentSections[activeSectionIndex],
+        order: currentSections[overSectionIndex].order,
+      };
+
+      currentSections[activeSectionIndex] = updatedActiveSection;
+
+      //updating the order of the shifted sections
+      const updatedShiftedSections = shiftSections.map((section) => {
+        return {
+          ...section,
+          order: reversed ? section.order + 1 : section.order - 1,
+        };
+      });
+
+      updatedShiftedSections.forEach((section) => {
+        const shiftSectionIndex = currentSections.findIndex(
+          (s) => s.id === section.id
+        );
+
+        currentSections[shiftSectionIndex] = section;
+      });
+
+      const sortedSections = getSortedSectionsByOrder(
+        currentSections
+      ) as ExtendedSectionWithMemberships[];
+
+      return sortedSections;
+    });
+  };
+
+  //To get the sections that need to be shifted in between the active and over sections
+  const getShiftSections = (
+    activeSectionIndex: number,
+    overSectionIndex: number,
+    currentSections: ExtendedSectionWithMemberships[]
+  ) => {
+    let sliceIndexOne: number, sliceIndexTwo: number;
+    let reversed = false;
+
+    if (activeSectionIndex < overSectionIndex) {
+      sliceIndexOne = activeSectionIndex + 1;
+      sliceIndexTwo = overSectionIndex + 1;
+    } else {
+      sliceIndexOne = overSectionIndex;
+      sliceIndexTwo = activeSectionIndex;
+
+      reversed = true;
+    }
+
+    const shiftSections = currentSections.slice(sliceIndexOne, sliceIndexTwo);
+
+    return { shiftSections, reversed };
+  };
+
   return (
     <DndContext
       sensors={sensors}
@@ -126,17 +265,30 @@ export const MembershipContext = () => {
       onDragEnd={handleDragEnd}
       collisionDetection={closestCenter}
     >
-      {sectionsForJoinedClassrooms.map((section) => (
-        <MembershipSectionCard key={section.id} section={section} />
-      ))}
-      {createPortal(
-        <DragOverlay>
-          {activeDocEl && (
-            <JoinedMembership membership={activeDocEl} isHolding />
-          )}
-        </DragOverlay>,
-        document.body
-      )}
+      <SortableContext
+        items={listOfSectionIds ?? []}
+        strategy={verticalListSortingStrategy}
+      >
+        {sectionsForJoinedClassrooms.map((section) => (
+          <MembershipSectionCard key={section.id} section={section} />
+        ))}
+        {createPortal(
+          <DragOverlay>
+            {activeClassEl && (
+              <JoinedMembership membership={activeClassEl} isHolding />
+            )}
+          </DragOverlay>,
+          document.body
+        )}
+        {createPortal(
+          <DragOverlay>
+            {activeSectionEl && (
+              <MembershipItem section={activeSectionEl} isHolding />
+            )}
+          </DragOverlay>,
+          document.body
+        )}
+      </SortableContext>
     </DndContext>
   );
 };

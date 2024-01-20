@@ -86,6 +86,7 @@ model Section {
   creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   sectionType SectionType
+  order       Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

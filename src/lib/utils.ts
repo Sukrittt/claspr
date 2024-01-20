@@ -1,6 +1,12 @@
 import moment from "moment";
 import { twMerge } from "tailwind-merge";
 import { type ClassValue, clsx } from "clsx";
+import { SectionType } from "@prisma/client";
+
+import {
+  ExtendedSectionWithClassrooms,
+  ExtendedSectionWithMemberships,
+} from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -36,3 +42,9 @@ export function getShortenedText(text: string, maxLength: number) {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
 }
+
+export const getSortedSectionsByOrder = (
+  sections: ExtendedSectionWithClassrooms[] | ExtendedSectionWithMemberships[]
+) => {
+  return sections.sort((a, b) => a.order - b.order);
+};
