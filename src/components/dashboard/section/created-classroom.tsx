@@ -6,8 +6,8 @@ import { useDraggable } from "@dnd-kit/core";
 
 import { cn } from "@/lib/utils";
 import { ExtendedClassroom } from "@/types";
-import { ClassDropdown } from "@/components/class-rooms/class-dropdown";
-import { ClassContextMenu } from "@/components/class-rooms/class-context-menu";
+import { ClassDropdown } from "@/components/dashboard/class-rooms/class-dropdown";
+import { ClassContextMenu } from "@/components/dashboard/class-rooms/class-context-menu";
 
 export const CreatedClassroom = ({
   classroom,

@@ -6,8 +6,8 @@ import { useDraggable } from "@dnd-kit/core";
 
 import { cn } from "@/lib/utils";
 import { ExtendedMembership } from "@/types";
-import { ClassDropdown } from "@/components/class-rooms/class-dropdown";
-import { ClassContextMenu } from "@/components/class-rooms/class-context-menu";
+import { ClassDropdown } from "@/components/dashboard/class-rooms/class-dropdown";
+import { ClassContextMenu } from "@/components/dashboard/class-rooms/class-context-menu";
 
 export const JoinedMembership = ({
   membership,
@@ -64,7 +64,7 @@ export const JoinedMembership = ({
           onClick={() =>
             toast.loading("Getting your data together...", { duration: 2000 })
           }
-          href={`/class/${membership.id}`}
+          href={`/class/${membership.classRoom.id}`}
           className={cn(
             "text-gray-800 tracking-tight group hover:bg-neutral-300 transition rounded-md py-1 px-2 flex items-center justify-between",
             {

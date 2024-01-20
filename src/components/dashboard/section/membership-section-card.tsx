@@ -14,7 +14,7 @@ import { ExtendedSectionWithMemberships } from "@/types";
 import { SectionContextMenu } from "./section-context-menu";
 import { ClassroomListsWithMembership } from "./classroom-lists";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { JoinClassDialog } from "@/components/class-rooms/join-class-dialog";
+import { JoinClassDialog } from "@/components/dashboard/class-rooms/join-class-dialog";
 
 interface SectionCardProps {
   section: ExtendedSectionWithMemberships;

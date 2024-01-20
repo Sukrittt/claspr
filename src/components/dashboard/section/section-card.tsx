@@ -14,7 +14,7 @@ import { ExtendedSectionWithClassrooms } from "@/types";
 import { SectionContextMenu } from "./section-context-menu";
 import { ClassroomListsWithCreation } from "./classroom-lists";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { CreateClassDialog } from "@/components/class-rooms/create-class-dialog";
+import { CreateClassDialog } from "@/components/dashboard/class-rooms/create-class-dialog";
 
 interface SectionCardProps {
   section: ExtendedSectionWithClassrooms;

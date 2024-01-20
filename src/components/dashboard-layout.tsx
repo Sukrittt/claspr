@@ -1,8 +1,8 @@
 "use client";
 import { UserType } from "@prisma/client";
 
-import { TeacherSection } from "@/components/section/teacher-section";
-import { StudentSection } from "@/components/section/student-section";
+import { TeacherSection } from "@/components/dashboard/section/teacher-section";
+import { StudentSection } from "@/components/dashboard/section/student-section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface DashboardLayoutProps {

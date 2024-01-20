@@ -207,6 +207,73 @@ export const leaveClass = privateProcedure
   });
 
 /**
+ * To update the view count of the user's classroom/membership.
+ *
+ * @param {object} input - The input parameters for updating the view count of a classroom/membership.
+ * @param {string} input.classroomId - The id of classroomId to update.
+ */
+export const updateViewCount = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { classroomId } = input;
+
+    const existingClassroom = await db.classRoom.findFirst({
+      where: { id: classroomId },
+    });
+
+    if (!existingClassroom) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Something went wrong. Please refresh your page.",
+      });
+    }
+
+    if (existingClassroom.teacherId === ctx.userId) {
+      await db.classRoom.update({
+        where: {
+          id: classroomId,
+          teacherId: ctx.userId,
+        },
+        data: {
+          viewCount: {
+            increment: 1,
+          },
+        },
+      });
+    } else {
+      const existingMembership = await db.membership.findFirst({
+        where: {
+          classRoomId: classroomId,
+          userId: ctx.userId,
+        },
+      });
+
+      if (!existingMembership) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Something went wrong. Please refresh your page.",
+        });
+      }
+
+      await db.membership.update({
+        where: {
+          id: existingMembership.id,
+          userId: ctx.userId,
+        },
+        data: {
+          viewCount: {
+            increment: 1,
+          },
+        },
+      });
+    }
+  });
+
+/**
  * To get a list of all classes created by the teacher.
  *
  * @returns {Promise<Object[]>} - A list of classRoom objects from the database.

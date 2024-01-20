@@ -108,6 +108,8 @@ model ClassRoom {
   teacherId String
   teacher   User   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
+  viewCount Int? @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -130,6 +132,7 @@ model Membership {
 
   sectionId String
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  viewCount Int?    @default(0)
 
   classRoomId String
   classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)

@@ -1,3 +1,5 @@
+import { ClassroomContent } from "@/components/classroom/classroom-content";
+
 interface ClassPageProps {
   params: {
     classId: string;
@@ -7,5 +9,5 @@ interface ClassPageProps {
 export default async function page({ params }: ClassPageProps) {
   const { classId } = params;
 
-  return <div>{classId}</div>;
+  return <ClassroomContent classroomId={classId} />;
 }

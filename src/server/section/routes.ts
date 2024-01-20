@@ -161,7 +161,7 @@ export const updateSection = privateProcedure
 /**
  * To remove a section created by the user.
  *
- * @param {object} input - The input parameters for remoing a section.
+ * @param {object} input - The input parameters for removing a section.
  * @param {string} input.sectionId - The id of the section to remove.
  */
 export const removeSection = privateProcedure
@@ -257,9 +257,9 @@ export const removeSection = privateProcedure
   });
 
 /**
- * To remove a section created by the user.
+ * To reorder a section created by the user.
  *
- * @param {object} input - The input parameters for remoing a section.
+ * @param {object} input - The input parameters for reordering a section.
  * @param {string} input.activeSectionId - The id of the section which is being dragged.
  * @param {string} input.overSectionId - The id of the section where it was dropped.
  * @param {string[]} input.shiftSectionIds - The list of section ids to shift.
@@ -362,6 +362,9 @@ export const getSectionsForCreatedClassrooms = privateProcedure.query(
             teacher: true,
             students: true,
           },
+          orderBy: {
+            viewCount: "desc",
+          },
         },
       },
       orderBy: {
@@ -394,6 +397,9 @@ export const getSectionsForJoinedClassrooms = privateProcedure.query(
                 students: true,
               },
             },
+          },
+          orderBy: {
+            viewCount: "desc",
           },
         },
       },
