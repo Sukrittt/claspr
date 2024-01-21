@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { AddDescriptionForm } from "./add-description-form";
 
-interface AddescriptionDialogProps {
+interface AddDescriptionDialogProps {
   classroomId: string;
   children: React.ReactNode;
   description?: string;
 }
 
-export const AddDescriptionDialog: React.FC<AddescriptionDialogProps> = ({
+export const AddDescriptionDialog: React.FC<AddDescriptionDialogProps> = ({
   children,
   classroomId,
   description,
