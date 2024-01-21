@@ -464,3 +464,49 @@ export const getClassroom = privateProcedure
 
     return classroom;
   });
+
+/**
+ * To add a descripton to a class by a teacher.
+ *
+ * @param {object} input - The input parameters for creating class.
+ * @param {string} input.description - The title for the classroom.
+ * @param {string} input.classroomId - The id of the classroom.
+ * @param {string} input.membershipId - The id of the member to allow joined teachers for updation.
+ */
+export const addDescription = privateProcedure
+  .input(
+    z.object({
+      description: z.string().min(3).max(200),
+      classroomId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { classroomId, description } = input;
+
+    const existingMember = await db.membership.findFirst({
+      where: {
+        userId: ctx.userId,
+        classRoomId: classroomId,
+      },
+    });
+
+    const existingClass = await db.classRoom.findFirst({
+      where: {
+        id: classroomId,
+        teacherId: ctx.userId,
+      },
+    });
+
+    if (!existingClass && (!existingMember || !existingMember.isTeacher)) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message:
+          "You are not authorized to update the description of this class.",
+      });
+    }
+
+    await db.classRoom.update({
+      where: { id: classroomId },
+      data: { description },
+    });
+  });

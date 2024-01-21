@@ -22,7 +22,9 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
           Your upcoming events for the next 7 days{" "}
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-6 text-sm">Coming Soon</CardContent>
+      <CardContent className="pt-6 text-sm text-muted-foreground">
+        Coming Soon...
+      </CardContent>
     </Card>
   );
 };

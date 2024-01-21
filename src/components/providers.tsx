@@ -2,6 +2,7 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import superjson from "superjson";
+import { Provider as JotaiProvider } from "jotai";
 import { httpBatchLink } from "@trpc/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -45,7 +46,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <JotaiProvider>{children}</JotaiProvider>
+      </QueryClientProvider>
     </trpc.Provider>
   );
 }

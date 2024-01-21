@@ -26,7 +26,7 @@ const sectionUpdationSchema = z.object({
       (val) => {
         return val.trim().length > 0;
       },
-      { message: "Section name cannot be empty" }
+      { message: "Class name cannot be empty" }
     ),
 });
 

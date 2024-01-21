@@ -2,7 +2,8 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import { format } from "date-fns";
-import { Check, Copy, Info } from "lucide-react";
+import { useAtom } from "jotai";
+import { Check, Copy, Info, Pencil } from "lucide-react";
 
 import {
   Card,
@@ -13,9 +14,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn, timeAgo } from "@/lib/utils";
+import { descriptionAtom } from "@/atoms";
 import { ExtendedClassroom } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { AddDescriptionDialog } from "./add-description-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface ClassroomCardProps {
@@ -28,6 +31,7 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
   sessionId,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [description] = useAtom(descriptionAtom);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classroom.classCode);
@@ -66,7 +70,7 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
 
   return (
     <Card className="overflow-hidden border border-neutral-300 bg-neutral-100">
-      <CardHeader className="bg-neutral-200 py-3 space-y-0">
+      <CardHeader className="bg-neutral-200 py-3 space-y-1">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">
             {studentDetails?.renamedClassroom ?? classroom.title}
@@ -85,18 +89,25 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
             </CustomTooltip>
           )}
         </div>
-        {classroom.description ? (
-          <CardDescription>{classroom.description}</CardDescription>
+        {description || classroom.description ? (
+          <div className="text-sm text-muted-foreground flex items-center gap-x-1">
+            {description ?? classroom.description}
+            <AddDescriptionDialog
+              classroomId={classroom.id}
+              description={description ?? classroom.description ?? ""}
+            >
+              <Pencil className="w-3 h-3 hover:text-neutral-800 cursor-pointer transition" />
+            </AddDescriptionDialog>
+          </div>
         ) : (
           isTeacher && (
             <CardDescription className="text-[13px] flex gap-x-1 items-center">
-              <span
-                className="hover:underline underline-offset-4 cursor-pointer"
-                onClick={() => toast.message("Coming Soon.")}
-              >
-                Click to add a description.
-              </span>
-              <CustomTooltip text="It will help us to provide more context to the AI.">
+              <AddDescriptionDialog classroomId={classroom.id}>
+                <span className="hover:underline underline-offset-4 cursor-pointer">
+                  Click to add a description
+                </span>
+              </AddDescriptionDialog>
+              <CustomTooltip text="It will help us provide more context to the AI.">
                 <Info className="w-3 h-3" />
               </CustomTooltip>
             </CardDescription>
@@ -114,18 +125,22 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
                 })}
                 onClick={details.action}
               >
-                {details.action && (
-                  <span className="opacity-0 group-hover:opacity-100 transition">
-                    <CustomTooltip text="Click to copy">
-                      {copied ? (
-                        <Check className="w-2.5 h-2.5 duration-500" />
-                      ) : (
-                        <Copy className="w-2.5 h-2.5" />
-                      )}
-                    </CustomTooltip>
-                  </span>
+                {details.action ? (
+                  <CustomTooltip text="Click to copy">
+                    <div className="flex items-center gap-x-2">
+                      <span className="opacity-0 group-hover:opacity-100 transition">
+                        {copied ? (
+                          <Check className="w-2.5 h-2.5 duration-500" />
+                        ) : (
+                          <Copy className="w-2.5 h-2.5" />
+                        )}
+                      </span>
+                      <p className="text-[13px]">{details.description}</p>
+                    </div>
+                  </CustomTooltip>
+                ) : (
+                  <p className="text-[13px]">{details.description}</p>
                 )}
-                <p className="text-[13px]">{details.description}</p>
               </div>
             </div>
           ))}

@@ -1,9 +1,4 @@
-import {
-  ClassRoom,
-  Membership,
-  Section, User
-} from "@prisma/client";
-
+import { ClassRoom, Membership, Section, User } from "@prisma/client";
 
 export type ExtendedClassroom = ClassRoom & {
   teacher: User;
