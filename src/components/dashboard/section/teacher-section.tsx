@@ -27,11 +27,13 @@ export const TeacherSection = () => {
   const {
     data: sectionsForCreatedClassroomsData,
     isLoading: isFetchingFirstSection,
+    isFetching: isFetchingFirstSectionRefetch,
   } = trpc.section.getSectionsForCreatedClassrooms.useQuery();
 
   const {
     data: sectionsForJoinedClassroomsData,
     isLoading: isFetchingSecondSection,
+    isFetching: isFetchingSecondSectionRefetch,
   } = trpc.section.getSectionsForJoinedClassrooms.useQuery();
 
   useEffect(() => {
@@ -69,7 +71,7 @@ export const TeacherSection = () => {
           </div>
         </div>
         <div className="flex flex-col gap-y-2">
-          {isFetchingFirstSection ? (
+          {isFetchingFirstSection || isFetchingFirstSectionRefetch ? (
             <SectionSkeleton />
           ) : !sectionsForCreatedClassrooms ||
             sectionsForCreatedClassrooms.length === 0 ? (
@@ -100,7 +102,7 @@ export const TeacherSection = () => {
           </div>
         </div>
         <div className="flex flex-col gap-y-2">
-          {isFetchingSecondSection ? (
+          {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
             <SectionSkeleton />
           ) : !sectionsForJoinedClassrooms ||
             sectionsForJoinedClassrooms.length === 0 ? (

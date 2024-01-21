@@ -18,6 +18,7 @@ export const StudentSection = () => {
   const {
     data: sectionsForJoinedClassroomsData,
     isLoading: isFetchingSecondSection,
+    isFetching: isFetchingSecondSectionRefetch,
   } = trpc.section.getSectionsForJoinedClassrooms.useQuery();
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export const StudentSection = () => {
         </div>
       </div>
       <div className="flex flex-col gap-y-2">
-        {isFetchingSecondSection ? (
+        {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
           <SectionSkeleton />
         ) : !sectionsForJoinedClassrooms ||
           sectionsForJoinedClassrooms.length === 0 ? (
