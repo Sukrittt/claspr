@@ -117,6 +117,7 @@ model ClassRoom {
   students       Membership[]
   questions      Question[]
   announcements  Announcement[]
+  conversations  Conversation[]
   units          Unit[]
   topics         Topic[]
   studyMaterials StudyMaterial[]
@@ -148,6 +149,9 @@ model Conversation {
 
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  classRoomId String
+  classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
