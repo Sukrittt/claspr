@@ -15,18 +15,16 @@ const CODE_CHARACTERS =
  * @param {object} input - The input parameters for creating class.
  * @param {string} input.title - The title for the classroom.
  * @param {string} input.sectionId - The id of the section under which the classroom will fall under.
- * @param {string} input.coverImage - An optional cover image for the classroom.
  */
 export const createClass = privateProcedure
   .input(
     z.object({
       title: z.string().min(3).max(80),
       sectionId: z.string(),
-      coverImage: z.string().optional(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { title, coverImage, sectionId } = input;
+    const { title, sectionId } = input;
 
     const existingTeacher = await db.user.findUnique({
       where: { id: ctx.userId },
@@ -59,7 +57,6 @@ export const createClass = privateProcedure
         title,
         classCode,
         teacherId: ctx.userId,
-        coverImage,
         sectionId,
       },
     });
@@ -437,4 +434,33 @@ export const moveClass = privateProcedure
         },
       });
     }
+  });
+
+/**
+ * To get the classroom details.
+ *
+ * @param {object} input - The input parameters for getting classroom details.
+ * @param {boolean} input.classroomId - The id of the classroom to fetch.
+ * @returns {Promise<Object>} - The classroom object returned from the database.
+ */
+export const getClassroom = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .query(async ({ input }) => {
+    const { classroomId } = input;
+
+    const classroom = await db.classRoom.findFirst({
+      where: {
+        id: classroomId,
+      },
+      include: {
+        students: true,
+        teacher: true,
+      },
+    });
+
+    return classroom;
   });

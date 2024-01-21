@@ -46,7 +46,7 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
   const { mutate: createClass, isLoading } = trpc.class.createClass.useMutation(
     {
       onSuccess: (classRoom) => {
-        router.push(`/class/${classRoom.id}`);
+        router.push(`/c/${classRoom.id}`);
       },
       onMutate: () => {
         toast.loading("Just a moment...", { duration: 1000 });

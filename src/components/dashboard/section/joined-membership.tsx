@@ -64,7 +64,7 @@ export const JoinedMembership = ({
           onClick={() =>
             toast.loading("Getting your data together...", { duration: 2000 })
           }
-          href={`/class/${membership.classRoom.id}`}
+          href={`/c/${membership.classRoom.id}`}
           className={cn(
             "text-gray-800 tracking-tight group hover:bg-neutral-300 transition rounded-md py-1 px-2 flex items-center justify-between",
             {

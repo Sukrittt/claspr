@@ -18,6 +18,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
+            //remove this
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
           },

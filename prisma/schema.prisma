@@ -63,7 +63,9 @@ model User {
   sessions       Session[]
   sections       Section[]
   classrooms     ClassRoom[] //only teachers will have this
+  announcements  Announcement[]
   memberships    Membership[] //only students will have this
+  conversations  Conversation[]
   questions      Question[]
   answers        Answer[]
   studyMaterials StudyMaterial[]
@@ -99,7 +101,6 @@ model ClassRoom {
   id          String  @id @unique @default(cuid())
   title       String
   description String?
-  coverImage  String?
   classCode   String  @unique
 
   sectionId String
@@ -136,6 +137,17 @@ model Membership {
 
   classRoomId String
   classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Conversation {
+  id   String @id @unique @default(cuid())
+  text String
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -178,6 +190,9 @@ model Announcement {
   id          String @id @unique @default(cuid())
   title       String
   description Json?
+
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   classRoomId String
   classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)

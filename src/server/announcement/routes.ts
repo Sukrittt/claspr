@@ -47,6 +47,65 @@ export const createAnnouncement = privateProcedure
         dueDate,
         hasSubmission,
         lateSubmission,
+        creatorId: ctx.userId,
       },
     });
+  });
+
+/**
+ * To get announcements of a classroom.
+ *
+ * @param {object} input - The input parameters for getting annoucements of a classroom.
+ * @param {boolean} input.classroomId - The id of the classroom.
+ * @returns {Promise<Object[]>} - A list of announcement objects.
+ */
+export const getAnnouncements = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .query(async ({ input }) => {
+    const { classroomId } = input;
+
+    const announcements = await db.announcement.findMany({
+      where: {
+        classRoomId: classroomId,
+      },
+      include: {
+        creator: true,
+        submissions: true,
+      },
+    });
+
+    return announcements;
+  });
+
+/**
+ * To get announcement details.
+ *
+ * @param {object} input - The input parameters for getting annoucement details.
+ * @param {boolean} input.announcementId - The id of the announcement to be fetched.
+ * @returns {Promise<Object[]>} - A list of announcement objects.
+ */
+export const getAnnouncementById = privateProcedure
+  .input(
+    z.object({
+      announcementId: z.string(),
+    })
+  )
+  .query(async ({ input }) => {
+    const { announcementId } = input;
+
+    const announcement = await db.announcement.findFirst({
+      where: {
+        id: announcementId,
+      },
+      include: {
+        creator: true,
+        submissions: true,
+      },
+    });
+
+    return announcement;
   });

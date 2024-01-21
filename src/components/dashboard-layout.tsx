@@ -14,7 +14,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
     <div className="pt-8 px-12 space-y-4">
       <Tabs defaultValue="classrooms">
         <TabsList className="mb-2">
-          <TabsTrigger value="classrooms">Classrooms</TabsTrigger>
+          <TabsTrigger value="classrooms" className="ml-0">
+            Classrooms
+          </TabsTrigger>
           <TabsTrigger value="studyMaterials">Study Materials</TabsTrigger>
         </TabsList>
         <TabsContent value="classrooms">
