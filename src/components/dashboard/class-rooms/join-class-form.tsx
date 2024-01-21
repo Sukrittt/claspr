@@ -49,7 +49,7 @@ export const JoinClassForm = ({ sectionId }: { sectionId: string }) => {
   const { mutate: joinClass, isLoading } = trpc.class.joinClass.useMutation({
     onSuccess: (classRoom) => {
       toast.success("You are now a member of this class");
-      router.push(`/class/${classRoom.id}`);
+      router.push(`/c/${classRoom.id}`);
     },
     onMutate: () => {
       toast.loading("Just a moment...", { duration: 1000 });

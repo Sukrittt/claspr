@@ -1,8 +1,9 @@
-import { ExtendedClassroom } from "@/types";
+import { ClassMembers } from "./class-members";
+import { ExtendedClassroomDetails } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ClassroomContainerProps {
-  classroom: ExtendedClassroom;
+  classroom: ExtendedClassroomDetails;
 }
 
 export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
@@ -14,12 +15,14 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
         <TabsTrigger className="ml-0" value="announcements">
           Announcements
         </TabsTrigger>
-        <TabsTrigger value="members">Members</TabsTrigger>
         <TabsTrigger value="questionnaires">Questionnaires</TabsTrigger>
+        <TabsTrigger value="members">Members</TabsTrigger>
       </TabsList>
       <TabsContent value="announcements">Announcements</TabsContent>
-      <TabsContent value="members">Members</TabsContent>
       <TabsContent value="questionnaires">Questionnaires</TabsContent>
+      <TabsContent value="members">
+        <ClassMembers members={classroom.students} />
+      </TabsContent>
     </Tabs>
   );
 };

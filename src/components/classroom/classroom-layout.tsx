@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 
 import { trpc } from "@/trpc/client";
 import { descriptionAtom } from "@/atoms";
-import { ExtendedClassroom } from "@/types";
+import { ExtendedClassroomDetails } from "@/types";
 import { useMounted } from "@/hooks/use-mounted";
 import { ClassroomCard } from "./classroom-card";
 import { ClassAIDialog } from "./class-ai-dialog";
@@ -13,7 +13,7 @@ import { UpcomingEvents } from "./upcoming-events";
 import { ClassroomContainer } from "./classroom-container";
 
 interface ClassroomLayoutProps {
-  classroom: ExtendedClassroom;
+  classroom: ExtendedClassroomDetails;
   session: Session;
 }
 

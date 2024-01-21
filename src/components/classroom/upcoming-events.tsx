@@ -1,4 +1,4 @@
-import { ExtendedClassroom } from "@/types";
+import { ExtendedClassroomDetails } from "@/types";
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 
 interface UpcomingEventsProps {
-  classroom: ExtendedClassroom;
+  classroom: ExtendedClassroomDetails;
 }
 
 export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({

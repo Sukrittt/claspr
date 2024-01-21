@@ -15,14 +15,14 @@ import {
 } from "@/components/ui/card";
 import { cn, timeAgo } from "@/lib/utils";
 import { descriptionAtom } from "@/atoms";
-import { ExtendedClassroom } from "@/types";
+import { ExtendedClassroomDetails } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AddDescriptionDialog } from "./add-description-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface ClassroomCardProps {
-  classroom: ExtendedClassroom;
+  classroom: ExtendedClassroomDetails;
   sessionId: string;
 }
 

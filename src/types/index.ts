@@ -16,3 +16,12 @@ export type ExtendedMembership = Membership & {
 export type ExtendedSectionWithMemberships = Section & {
   memberships: ExtendedMembership[];
 };
+
+export type ExtendedClassroomDetails = ClassRoom & {
+  teacher: User;
+  students: ExtendedMembershipDetails[];
+};
+
+export type ExtendedMembershipDetails = Membership & {
+  user: User;
+};

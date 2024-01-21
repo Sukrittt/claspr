@@ -11,15 +11,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ExtendedClassroom } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ExtendedClassroomDetails } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface ClassAIDialogProps {
-  classroom: ExtendedClassroom;
+  classroom: ExtendedClassroomDetails;
 }
 
 type Payload = {

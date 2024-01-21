@@ -457,7 +457,11 @@ export const getClassroom = privateProcedure
         id: classroomId,
       },
       include: {
-        students: true,
+        students: {
+          include: {
+            user: true,
+          },
+        },
         teacher: true,
       },
     });
