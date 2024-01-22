@@ -1,6 +1,8 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
+import { PromptValidator } from "@/types/validator";
+
 // Create an OpenAI API client (that's edge friendly!)
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
@@ -20,63 +22,44 @@ export async function POST(req: Request): Promise<Response> {
     );
   }
 
-  //   const session = await getAuthSession();
-  const { prompt, classroomId } = await req.json();
+  const body = await req.json();
+  const { prompt, classDescription, prevConversations } =
+    PromptValidator.parse(body);
 
-  //   if (!session) {
-  //     return new Response("Unauthorized", { status: 401 });
-  //   }
+  const formattedPrevConversations = prevConversations
+    .map((c, index) => {
+      if (index === 0) return `\n${index + 1}. ${c.prompt}`;
 
-  //   const classroom = await db.classRoom.findFirst({
-  //     where: {
-  //       id: classroomId,
-  //     },
-  //     include: {
-  //       conversations: true,
-  //     },
-  //   });
+      return `${index + 1}. ${c.prompt}`;
+    })
+    .join("\n\n");
 
-  //   if (!classroom) {
-  //     return new Response("Classroom not found", { status: 404 });
-  //   }
+  const validDescription = classDescription && classDescription !== "";
 
-  //   const prevConversations = classroom.conversations
-  //     .map((c) => c.text)
-  //     .join("\n\n");
-
-  //   await db.conversation.create({
-  //     data: {
-  //       text: prompt,
-  //       classRoomId: classroomId,
-  //       userId: session.user.id,
-  //     },
-  //   });
-
-  //   const validDescription =
-  //     classroom.description && classroom.description !== "";
+  const content =
+    "You are an experienced teacher providing insightful answers to student queries. " +
+    "Please keep your responses under 800 characters, ensuring clarity and correctness.\n" +
+    (validDescription
+      ? `This is the classroom description provided by the teacher: ${classDescription}`
+      : "") +
+    (formattedPrevConversations.length > 0
+      ? "Also, here are some previous questions asked by this person to help you out:\n" +
+        formattedPrevConversations.slice(0, 30)
+      : "");
 
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
       {
         role: "system",
-        content:
-          "You are an experienced teacher providing insightful answers to student queries. " +
-          "Please keep your responses under 800 characters, ensuring clarity and correctness.\n",
-        //   (validDescription
-        //     ? `This is the classroom description provided by the teacher: ${classroom.description}`
-        //     : "") +
-        //   (prevConversations.length > 0
-        //     ? "Also, here are some previous conversations asked by this person to help you out:\n" +
-        //       prevConversations
-        //     : ""),
+        content,
       },
       {
         role: "user",
         content: prompt,
       },
     ],
-    temperature: 0.7,
+    temperature: 0.2,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
