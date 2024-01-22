@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,6 @@ import { PromptValidatorType } from "@/types/validator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
-import { cn } from "@/lib/utils";
 
 interface ClassAIDialogProps {
   classroom: ExtendedClassroomDetails;
@@ -36,13 +36,19 @@ export const ClassAIDialog: React.FC<ClassAIDialogProps> = ({ classroom }) => {
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const utils = trpc.useUtils();
+
   const { data: prevConversations, isLoading: isFetchingConversations } =
     trpc.conversation.getPreviousConversations.useQuery({
       classroomId: classroom.id,
     });
 
   const { mutate: createConversation } =
-    trpc.conversation.createConversation.useMutation();
+    trpc.conversation.createConversation.useMutation({
+      onSuccess: () => {
+        utils.conversation.getPreviousConversations.invalidate();
+      },
+    });
 
   const { mutate: handleSubmission, isLoading } = useMutation({
     mutationFn: async (userQuery: string) => {

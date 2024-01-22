@@ -48,6 +48,7 @@ export const getPreviousConversations = privateProcedure
   .query(async ({ ctx, input }) => {
     const conversations = await db.conversation.findMany({
       where: { userId: ctx.userId, classRoomId: input.classroomId },
+      orderBy: { createdAt: "desc" },
     });
 
     return conversations;
