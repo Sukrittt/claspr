@@ -184,15 +184,17 @@ export const SectionItem = ({
           </div>
         </div>
       </SectionContextMenu>
-      {(showClassrooms || isHolding) && (
-        <div
-          className={cn({
-            "opacity-60": isHolding,
-          })}
-        >
-          <ClassroomListsWithCreation classrooms={section.classrooms} />
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {(showClassrooms || isHolding) && (
+          <div
+            className={cn({
+              "opacity-60": isHolding,
+            })}
+          >
+            <ClassroomListsWithCreation classrooms={section.classrooms} />
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

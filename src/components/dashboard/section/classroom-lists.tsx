@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
-import { ContainerVariants } from "@/lib/motion";
+import { ContainerHeightVariants, ContainerVariants } from "@/lib/motion";
 import { CreatedClassroom } from "./created-classroom";
 import { JoinedMembership } from "./joined-membership";
 import { ExtendedMembership, ExtendedClassroom } from "@/types";
@@ -15,7 +15,7 @@ export const ClassroomListsWithCreation: React.FC<
   if (classrooms.length === 0) {
     return (
       <motion.p
-        variants={ContainerVariants}
+        variants={ContainerHeightVariants}
         initial="initial"
         animate="animate"
         exit="exit"
@@ -27,19 +27,17 @@ export const ClassroomListsWithCreation: React.FC<
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        variants={ContainerVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        className="flex flex-col pl-[52px] text-sm"
-      >
-        {classrooms.map((classroom) => (
-          <CreatedClassroom classroom={classroom} key={classroom.id} />
-        ))}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      variants={ContainerHeightVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="flex flex-col pl-[52px] text-sm"
+    >
+      {classrooms.map((classroom) => (
+        <CreatedClassroom classroom={classroom} key={classroom.id} />
+      ))}
+    </motion.div>
   );
 };
 
@@ -53,7 +51,7 @@ export const ClassroomListsWithMembership: React.FC<
   if (memberships.length === 0) {
     return (
       <motion.p
-        variants={ContainerVariants}
+        variants={ContainerHeightVariants}
         initial="initial"
         animate="animate"
         exit="exit"
@@ -65,19 +63,17 @@ export const ClassroomListsWithMembership: React.FC<
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <div className="flex flex-col pl-[52px] text-sm">
-        <motion.div
-          variants={ContainerVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-        >
-          {memberships.map((membership) => (
-            <JoinedMembership key={membership.id} membership={membership} />
-          ))}
-        </motion.div>
-      </div>
-    </AnimatePresence>
+    <div className="flex flex-col pl-[52px] text-sm">
+      <motion.div
+        variants={ContainerHeightVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
+        {memberships.map((membership) => (
+          <JoinedMembership key={membership.id} membership={membership} />
+        ))}
+      </motion.div>
+    </div>
   );
 };
