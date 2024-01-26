@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import Markdown from "react-markdown";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy, MoreHorizontal } from "lucide-react";
 import { Conversation } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -12,8 +12,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ClearConversation } from "./clear-conversation";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ConversationDropdown } from "./conversation-dropdown";
+import { cn } from "@/lib/utils";
 
-export const ChatHistory = ({ classroomId }: { classroomId: string }) => {
+export const ConversationHistory = ({
+  classroomId,
+}: {
+  classroomId: string;
+}) => {
   const { data: conversations, isLoading } = useConversation(classroomId);
 
   return (
@@ -64,6 +70,7 @@ export const ChatHistory = ({ classroomId }: { classroomId: string }) => {
 
 const ConversationCard = ({ conversation }: { conversation: Conversation }) => {
   const [copied, setCopied] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleCopyOutput = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -74,25 +81,38 @@ const ConversationCard = ({ conversation }: { conversation: Conversation }) => {
   };
 
   return (
-    <Card className="bg-neutral-100 shadow-none border border-border relative group">
-      <CardHeader className="bg-neutral-200 py-3">
-        <CardTitle className="text-lg">{conversation.prompt}</CardTitle>
+    <Card className="bg-neutral-100 shadow-none border border-border relative">
+      <CardHeader className="bg-neutral-200 py-3 group">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">{conversation.prompt}</CardTitle>
+          <div
+            className={cn("group-hover:opacity-100 opacity-0 transition", {
+              "opacity-100": isDropdownOpen,
+            })}
+          >
+            <ConversationDropdown
+              isDropdownOpen={isDropdownOpen}
+              setIsDropdownOpen={setIsDropdownOpen}
+              conversation={conversation}
+            />
+          </div>
+        </div>
       </CardHeader>
       <CardContent
-        className="py-3 text-gray-800 text-[15px] cursor-pointer"
+        className="py-3 text-gray-800 text-[15px] cursor-pointer group"
         onClick={() => handleCopyOutput(conversation.answer)}
       >
         <Markdown>{conversation.answer}</Markdown>
+        <div className="opacity-0 group-hover:opacity-100 transition absolute bottom-2.5 right-3.5">
+          <CustomTooltip text="Click to copy">
+            {copied ? (
+              <Check className="w-3 h-3" />
+            ) : (
+              <Copy className="w-3 h-3" />
+            )}
+          </CustomTooltip>
+        </div>
       </CardContent>
-      <div className="opacity-0 group-hover:opacity-100 transition absolute bottom-2.5 right-3">
-        <CustomTooltip text="Click to copy">
-          {copied ? (
-            <Check className="w-3 h-3" />
-          ) : (
-            <Copy className="w-3 h-3" />
-          )}
-        </CustomTooltip>
-      </div>
     </Card>
   );
 };

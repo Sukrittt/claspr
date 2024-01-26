@@ -90,9 +90,9 @@ export const clearConversation = privateProcedure
   });
 
 /**
- * To clear the conversation between the user and the AI in a particular classroom.
+ * To remove a conversation between the user and the AI in a particular classroom.
  *
- * @param {object} input - The input parameters for clearing conversation with AI.
+ * @param {object} input - The input parameters for removing a conversation with AI.
  * @param {string} input.conversationId - The id of the conversation to remove.
  */
 export const removeConversation = privateProcedure

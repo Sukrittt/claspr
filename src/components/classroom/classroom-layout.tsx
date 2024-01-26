@@ -1,16 +1,16 @@
 "use client";
+import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { Session } from "next-auth";
-import { useAtom } from "jotai";
 
 import { trpc } from "@/trpc/client";
 import { descriptionAtom } from "@/atoms";
-import { ExtendedClassroomDetails } from "@/types";
 import { useMounted } from "@/hooks/use-mounted";
 import { ClassroomCard } from "./classroom-card";
-import { ClassAIDialog } from "./class-ai-dialog";
 import { UpcomingEvents } from "./upcoming-events";
+import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomContainer } from "./classroom-container";
+import { ClassAIDialog } from "../conversation/class-ai-dialog";
 
 interface ClassroomLayoutProps {
   classroom: ExtendedClassroomDetails;

@@ -1,7 +1,7 @@
 import { ClassMembers } from "./class-members";
 import { ExtendedClassroomDetails } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChatHistory } from "./chat-history";
+import { ConversationHistory } from "@/components/conversation/conversation-history";
 
 interface ClassroomContainerProps {
   classroom: ExtendedClassroomDetails;
@@ -26,7 +26,7 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
         <ClassMembers members={classroom.students} />
       </TabsContent>
       <TabsContent value="chat-history">
-        <ChatHistory classroomId={classroom.id} />
+        <ConversationHistory classroomId={classroom.id} />
       </TabsContent>
     </Tabs>
   );

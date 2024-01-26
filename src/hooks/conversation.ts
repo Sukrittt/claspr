@@ -44,7 +44,42 @@ export const useClearConversation = () => {
   });
 };
 
-export const useRemoveConversation = () => {
-  //perform optimistic update
-  return trpc.conversation.removeConversation.useMutation();
+export const useRemoveConversation = ({
+  closeModal,
+  classroomId,
+}: {
+  closeModal: () => void;
+  classroomId: string;
+}) => {
+  const utils = trpc.useUtils();
+
+  return trpc.conversation.removeConversation.useMutation({
+    onMutate: async ({ conversationId }) => {
+      closeModal();
+
+      await utils.conversation.getPreviousConversations.cancel({ classroomId });
+
+      const prevConversations =
+        utils.conversation.getPreviousConversations.getData();
+
+      utils.conversation.getPreviousConversations.setData(
+        { classroomId },
+        (prev) =>
+          prev?.filter((conversation) => conversation.id !== conversationId)
+      );
+
+      return { prevConversations };
+    },
+    onError: (error, data, ctx) => {
+      toast.error(error.message);
+
+      utils.conversation.getPreviousConversations.setData(
+        { classroomId },
+        ctx?.prevConversations
+      );
+    },
+    onSettled: () => {
+      utils.conversation.getPreviousConversations.invalidate({ classroomId });
+    },
+  });
 };
