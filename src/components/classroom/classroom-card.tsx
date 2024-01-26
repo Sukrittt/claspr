@@ -63,6 +63,11 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
       action: handleCopyCode,
     },
     {
+      title: "Pending Assignments",
+      description: "0", //change this
+      isStudent: true,
+    },
+    {
       title: "Joined",
       description: timeAgo(studentDetails?.createdAt ?? classroom.createdAt),
     },
@@ -116,34 +121,39 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
       </CardHeader>
       <CardContent className="pt-6 text-sm">
         <div className="grid grid-cols-2 gap-4 text-gray-800">
-          {classDetails.map((details, index) => (
-            <div key={index} className="flex justify-between items-center">
-              <p className="text-muted-foreground">{details.title}</p>
-              <div
-                className={cn("flex items-center gap-x-1.5 group", {
-                  "cursor-pointer": !!details.action,
-                })}
-                onClick={details.action}
-              >
-                {details.action ? (
-                  <CustomTooltip text="Click to copy">
-                    <div className="flex items-center gap-x-2">
-                      <span className="opacity-0 group-hover:opacity-100 transition">
-                        {copied ? (
-                          <Check className="w-2.5 h-2.5 duration-500" />
-                        ) : (
-                          <Copy className="w-2.5 h-2.5" />
-                        )}
-                      </span>
-                      <p className="text-[13px]">{details.description}</p>
-                    </div>
-                  </CustomTooltip>
-                ) : (
-                  <p className="text-[13px]">{details.description}</p>
-                )}
+          {classDetails.map((details, index) => {
+            if (details.isStudent && isTeacher) return null;
+            if (details.action && !isTeacher) return null;
+
+            return (
+              <div key={index} className="flex justify-between items-center">
+                <p className="text-muted-foreground">{details.title}</p>
+                <div
+                  className={cn("flex items-center gap-x-1.5 group", {
+                    "cursor-pointer": !!details.action,
+                  })}
+                  onClick={details.action}
+                >
+                  {details.action ? (
+                    <CustomTooltip text="Click to copy">
+                      <div className="flex items-center gap-x-2">
+                        <span className="opacity-0 group-hover:opacity-100 transition">
+                          {copied ? (
+                            <Check className="w-2.5 h-2.5 duration-500" />
+                          ) : (
+                            <Copy className="w-2.5 h-2.5" />
+                          )}
+                        </span>
+                        <p className="text-[13px]">{details.description}</p>
+                      </div>
+                    </CustomTooltip>
+                  ) : (
+                    <p className="text-[13px]">{details.description}</p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
       <CardFooter>

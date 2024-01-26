@@ -21,6 +21,7 @@ import { ContainerVariants } from "@/lib/motion";
 import { ExtendedClassroomDetails } from "@/types";
 import { PromptValidatorType } from "@/types/validator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useCreateConversation } from "@/hooks/conversation";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
 
@@ -36,19 +37,12 @@ export const ClassAIDialog: React.FC<ClassAIDialogProps> = ({ classroom }) => {
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const utils = trpc.useUtils();
-
   const { data: prevConversations, isLoading: isFetchingConversations } =
     trpc.conversation.getPreviousConversations.useQuery({
       classroomId: classroom.id,
     });
 
-  const { mutate: createConversation } =
-    trpc.conversation.createConversation.useMutation({
-      onSuccess: () => {
-        utils.conversation.getPreviousConversations.invalidate();
-      },
-    });
+  const { mutate: createConversation } = useCreateConversation();
 
   const { mutate: handleSubmission, isLoading } = useMutation({
     mutationFn: async (userQuery: string) => {
@@ -199,8 +193,9 @@ export const ClassAIDialog: React.FC<ClassAIDialogProps> = ({ classroom }) => {
             exit="exit"
           >
             <ScrollArea
+              onClick={() => handleCopyOutput(res)}
               className={cn(
-                "transition-[height] opacity-0 border border-border rounded-md",
+                "transition-[height] opacity-0 border border-border rounded-md cursor-pointer",
                 {
                   "h-[300px] p-5 opacity-100": res.length !== 0,
                   "h-0": res.length === 0,
@@ -212,16 +207,11 @@ export const ClassAIDialog: React.FC<ClassAIDialogProps> = ({ classroom }) => {
                   {prevInput}
                 </h3>
                 <CustomTooltip text="Click to copy">
-                  <span
-                    className="cursor-pointer"
-                    onClick={() => handleCopyOutput(res)}
-                  >
-                    {copied ? (
-                      <Check className="w-3.5 h-3.5 cursor-pointer" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5 cursor-pointer" />
-                    )}
-                  </span>
+                  {copied ? (
+                    <Check className="w-3.5 h-3.5" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
                 </CustomTooltip>
               </div>
               <Markdown className="text-[15px] text-gray-800">{res}</Markdown>
