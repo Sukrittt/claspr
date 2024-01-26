@@ -16,16 +16,18 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
         <TabsTrigger className="ml-0" value="announcements">
           Announcements
         </TabsTrigger>
+        <TabsTrigger value="study-materials">Study Materials</TabsTrigger>
         <TabsTrigger value="questionnaires">Questionnaires</TabsTrigger>
         <TabsTrigger value="members">Members</TabsTrigger>
-        <TabsTrigger value="chat-history">Chat History</TabsTrigger>
+        <TabsTrigger value="conversations">Conversations</TabsTrigger>
       </TabsList>
       <TabsContent value="announcements">Announcements</TabsContent>
+      <TabsContent value="study-materials">Study Materials</TabsContent>
       <TabsContent value="questionnaires">Questionnaires</TabsContent>
       <TabsContent value="members">
         <ClassMembers members={classroom.students} />
       </TabsContent>
-      <TabsContent value="chat-history">
+      <TabsContent value="conversations">
         <ConversationHistory classroomId={classroom.id} />
       </TabsContent>
     </Tabs>

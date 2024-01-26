@@ -9,7 +9,7 @@ export const Navbar = async () => {
   const session = await getAuthSession();
 
   return (
-    <nav className="py-3 border-b border-slate-300 px-8 lg:px-20 flex items-center justify-between">
+    <nav className="py-3 border-b border-slate-300 px-8 lg:px-20 h-[8vh] flex items-center justify-between">
       <Link href="/" className="font-semibold text-lg">
         Scribe.
       </Link>

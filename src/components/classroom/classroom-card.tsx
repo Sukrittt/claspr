@@ -1,8 +1,9 @@
 "use client";
+import Link from "next/link";
 import { toast } from "sonner";
+import { useAtom } from "jotai";
 import { useState } from "react";
 import { format } from "date-fns";
-import { useAtom } from "jotai";
 import { Check, Copy, Info, Pencil } from "lucide-react";
 
 import {
@@ -17,7 +18,7 @@ import { cn, timeAgo } from "@/lib/utils";
 import { descriptionAtom } from "@/atoms";
 import { ExtendedClassroomDetails } from "@/types";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { AddDescriptionDialog } from "./add-description-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
@@ -156,14 +157,19 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
           })}
         </div>
       </CardContent>
-      <CardFooter>
-        <Button
-          className="w-full"
-          onClick={() => toast.message("Coming Soon.")}
-        >
-          Make Announcement
-        </Button>
-      </CardFooter>
+      {isTeacher && (
+        <CardFooter>
+          <Link
+            href={`/c/${classroom.id}/create`}
+            className={cn(buttonVariants(), "w-full")}
+            onClick={() =>
+              toast.loading("Just a moment...", { duration: 1000 })
+            }
+          >
+            Make Announcement
+          </Link>
+        </CardFooter>
+      )}
     </Card>
   );
 };

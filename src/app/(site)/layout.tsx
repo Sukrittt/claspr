@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <main>
       <ScrollArea className="h-screen flex flex-col">
         <Navbar />
-        <div className="flex-1">{children}</div>
+        <div className="h-[92vh]">{children}</div>
       </ScrollArea>
     </main>
   );
