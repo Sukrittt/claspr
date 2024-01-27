@@ -17,12 +17,12 @@ import {
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ContainerVariants } from "@/lib/motion";
-import { type AiPersonalType } from "@/config/ai";
+import { AiPersonal, type AiPersonalType } from "@/config/ai";
 import { ExtendedClassroomDetails } from "@/types";
 import { PromptValidatorType } from "@/types/validator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { AiDialogVariants, ContainerVariants } from "@/lib/motion";
 import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
 import { useConversation, useCreateConversation } from "@/hooks/conversation";
 
@@ -72,7 +72,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
         prompt,
         classDescription: classroom.description,
         prevConversations: prevConvo ?? [],
-        personal,
+        personal: AiPersonal[personal ?? "TEACHER"],
         temperature,
       };
 
@@ -158,7 +158,13 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
       <DialogTrigger asChild>
-        <div className="absolute bottom-8 right-10 group">
+        <motion.div
+          variants={AiDialogVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          className="absolute bottom-8 right-10 group"
+        >
           <CustomTooltip text="Ask AI">
             <div>
               <Button className="rounded-full p-2 h-12 w-12">
@@ -166,7 +172,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
               </Button>
             </div>
           </CustomTooltip>
-        </div>
+        </motion.div>
       </DialogTrigger>
       <DialogContent
         className={cn("max-w-2xl", {

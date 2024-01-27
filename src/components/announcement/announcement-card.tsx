@@ -34,7 +34,7 @@ export const AnnouncementCard = ({ classroom }: { classroom: ClassRoom }) => {
             </span>
           </div>
         </CardHeader>
-        <CardContent className="pt-3 pb-5">
+        <CardContent className="pt-3 pb-0">
           <AnnouncementFlow
             classroom={classroom}
             setStepNumber={setStepNumber}

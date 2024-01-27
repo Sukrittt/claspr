@@ -10,7 +10,6 @@ import { ContainerHeightVariants } from "@/lib/motion";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AIDialog } from "@/components/conversation/ai-dialog";
-import { AiPersonal } from "@/config/ai";
 
 interface EditorProps {
   classroom: ClassRoom;

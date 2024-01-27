@@ -12,6 +12,7 @@ import { AnnouncementForm } from "./announcement-form";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { useCreateAnnouncement } from "@/hooks/announcement";
 import { ContainerHeightVariants, ContainerVariants } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 export type AnnouncementStep = "title-input" | "content-input";
 
@@ -109,7 +110,14 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
         </AnimatePresence>
       )}
 
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
+      <div
+        className={cn(
+          "flex items-center justify-between text-xs text-muted-foreground transition-all",
+          {
+            "pb-5": step === "content-input",
+          }
+        )}
+      >
         {step !== "title-input" && (
           <span
             className="hover:underline underline-offset-4 cursor-pointer hover:text-neutral-500 transition"

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { format } from "date-fns";
 import { Session } from "next-auth";
 import { CalendarCheck, CalendarClock, CalendarX2 } from "lucide-react";
@@ -11,7 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGetAnnouncements } from "@/hooks/announcement";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import Link from "next/link";
+import { AnnouncementSkeleton } from "@/components/skeletons/announcement-skeleton";
 
 interface AnnouncementsProps {
   classroomId: string;
@@ -34,7 +35,7 @@ export const Announcements: React.FC<AnnouncementsProps> = ({
         className="pt-6 space-y-4"
       >
         {isLoading ? (
-          <p>Loading...</p>
+          <AnnouncementSkeleton />
         ) : (!announcements || announcements.length === 0) && !isLoading ? (
           <p>No announcements yet.</p>
         ) : (
