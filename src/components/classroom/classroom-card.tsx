@@ -97,12 +97,13 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
         </div>
         {description || classroom.description ? (
           <div className="text-sm text-muted-foreground flex items-center gap-x-1">
-            {description ?? classroom.description}
             <AddDescriptionDialog
               classroomId={classroom.id}
               description={description ?? classroom.description ?? ""}
             >
-              <Pencil className="w-3 h-3 hover:text-neutral-800 cursor-pointer transition" />
+              <span className="hover:underline underline-offset-4 cursor-pointer">
+                {description ?? classroom.description}
+              </span>
             </AddDescriptionDialog>
           </div>
         ) : (

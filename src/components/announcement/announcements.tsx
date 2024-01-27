@@ -8,6 +8,7 @@ import { cn, timeAgo } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ExtendedAnnouncement } from "@/types";
 import { ContainerVariants } from "@/lib/motion";
+import { useMounted } from "@/hooks/use-mounted";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGetAnnouncements } from "@/hooks/announcement";
 import { UserAvatar } from "@/components/custom/user-avatar";
@@ -23,7 +24,16 @@ export const Announcements: React.FC<AnnouncementsProps> = ({
   classroomId,
   session,
 }) => {
+  const mounted = useMounted();
   const { data: announcements, isLoading } = useGetAnnouncements(classroomId);
+
+  if (!mounted) {
+    return (
+      <div className="pt-6">
+        <AnnouncementSkeleton />
+      </div>
+    );
+  }
 
   return (
     <AnimatePresence mode="wait">

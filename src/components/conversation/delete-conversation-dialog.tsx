@@ -1,5 +1,4 @@
 "use client";
-import { useAtom } from "jotai";
 import { useState } from "react";
 
 import {
@@ -13,7 +12,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { createdClassSections } from "@/atoms";
 import { useRemoveConversation } from "@/hooks/conversation";
 
 type DeleteConversationDialogProps = {

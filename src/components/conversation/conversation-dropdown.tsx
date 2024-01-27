@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { InfoConversationDialog } from "./info-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { DeleteConversationDialog } from "./delete-conversation-dialog";
 
@@ -57,8 +58,13 @@ export const ConversationDropdown: React.FC<ConversationDropdownProps> = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {/* {isInfoOpen && (
-      )} */}
+      {isInfoOpen && (
+        <InfoConversationDialog
+          conversation={conversation}
+          isOpen={isInfoOpen}
+          setIsInfoOpen={setIsInfoOpen}
+        />
+      )}
 
       {isDeleteOpen && (
         <DeleteConversationDialog

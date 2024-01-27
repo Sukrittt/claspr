@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
+import { useMounted } from "@/hooks/use-mounted";
 import { Separator } from "@/components/ui/separator";
 import { useConversation } from "@/hooks/conversation";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -21,7 +22,16 @@ export const ConversationHistory = ({
 }: {
   classroomId: string;
 }) => {
+  const mounted = useMounted();
   const { data: conversations, isLoading } = useConversation(classroomId);
+
+  if (!mounted) {
+    return (
+      <div className="pt-6">
+        <ConversationSkeleton />
+      </div>
+    );
+  }
 
   return (
     <AnimatePresence mode="wait">
