@@ -1,4 +1,7 @@
-import { AnnouncementCard } from "@/components/announcement/announcement-card";
+import { Suspense } from "react";
+
+import { LoadingScreen } from "@/components/skeletons/loading-screen";
+import { CreateAnnouncement } from "@/components/server-components/CreateAnnouncement";
 
 interface CreateAnnouncementPageProps {
   params: {
@@ -9,5 +12,9 @@ interface CreateAnnouncementPageProps {
 export default function page({ params }: CreateAnnouncementPageProps) {
   const { classId } = params;
 
-  return <AnnouncementCard classroomId={classId} />;
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <CreateAnnouncement classroomId={classId} />
+    </Suspense>
+  );
 }

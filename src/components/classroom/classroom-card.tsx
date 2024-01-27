@@ -166,7 +166,7 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
               toast.loading("Just a moment...", { duration: 1000 })
             }
           >
-            Make Announcement
+            Create Assignment
           </Link>
         </CardFooter>
       )}

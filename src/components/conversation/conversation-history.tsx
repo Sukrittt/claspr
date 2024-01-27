@@ -1,19 +1,19 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import Markdown from "react-markdown";
-import { Check, Copy, MoreHorizontal } from "lucide-react";
 import { Conversation } from "@prisma/client";
+import { Check, Copy, MoreHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { cn } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
 import { Separator } from "@/components/ui/separator";
 import { useConversation } from "@/hooks/conversation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ClearConversation } from "./clear-conversation";
+import { ConversationDropdown } from "./conversation-dropdown";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ConversationDropdown } from "./conversation-dropdown";
-import { cn } from "@/lib/utils";
 
 export const ConversationHistory = ({
   classroomId,

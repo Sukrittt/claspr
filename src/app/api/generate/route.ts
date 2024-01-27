@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
+import { AiPersonal } from "@/config/ai";
 import { PromptValidator } from "@/types/validator";
 
 // Create an OpenAI API client (that's edge friendly!)
@@ -23,7 +24,7 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const body = await req.json();
-  const { prompt, classDescription, prevConversations } =
+  const { prompt, classDescription, prevConversations, personal, temperature } =
     PromptValidator.parse(body);
 
   const formattedPrevConversations = prevConversations
@@ -34,16 +35,17 @@ export async function POST(req: Request): Promise<Response> {
     })
     .join("\n\n");
 
+  const customTemperature = temperature ?? 0.2;
   const validDescription = classDescription && classDescription !== "";
+  const predefinedPrompt = personal ?? AiPersonal.TEACHER;
 
   const content =
-    "You are an experienced teacher providing insightful answers to student queries. " +
-    "Please keep your responses under 800 characters, ensuring clarity and correctness.\n" +
+    `${predefinedPrompt} ` +
     (validDescription
       ? `This is the classroom description provided by the teacher: ${classDescription}`
       : "") +
     (formattedPrevConversations.length > 0
-      ? "Also, here are some previous questions asked by this person to help you out:\n" +
+      ? "Also, here are some previous questions asked by this user to help you out:\n" +
         formattedPrevConversations.slice(0, 30)
       : "");
 
@@ -59,7 +61,7 @@ export async function POST(req: Request): Promise<Response> {
         content: prompt,
       },
     ],
-    temperature: 0.2,
+    temperature: customTemperature,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,

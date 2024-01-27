@@ -10,7 +10,7 @@ import { ClassroomCard } from "./classroom-card";
 import { UpcomingEvents } from "./upcoming-events";
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomContainer } from "./classroom-container";
-import { ClassAIDialog } from "../conversation/class-ai-dialog";
+import { AIDialog } from "@/components/conversation/ai-dialog";
 
 interface ClassroomLayoutProps {
   classroom: ExtendedClassroomDetails;
@@ -37,13 +37,13 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
   return (
     <div className="grid grid-cols-6 gap-4 p-12">
       <div className="col-span-4">
-        <ClassroomContainer classroom={classroom} />
+        <ClassroomContainer classroom={classroom} session={session} />
       </div>
       <div className="col-span-2 flex flex-col gap-y-4">
         <ClassroomCard classroom={classroom} sessionId={session.user.id} />
         <UpcomingEvents classroom={classroom} />
       </div>
-      <ClassAIDialog classroom={classroom} />
+      <AIDialog classroom={classroom} />
     </div>
   );
 };

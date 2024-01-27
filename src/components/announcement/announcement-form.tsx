@@ -14,15 +14,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ContainerVariants } from "@/lib/motion";
 import { useMounted } from "@/hooks/use-mounted";
+import { ContainerInputVariants, ContainerVariants } from "@/lib/motion";
 import { TitleInputSkeleton } from "@/components/skeletons/title-input";
 
 const announcementSchema = z.object({
   title: z
     .string()
     .min(3)
-    .max(50)
+    .max(100)
     .refine(
       (val) => {
         return val.trim().length > 0;
@@ -37,7 +37,7 @@ interface AnnouncementFormProps {
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setStep: React.Dispatch<
-    React.SetStateAction<"title-input" | "content-input" | "ask-submission">
+    React.SetStateAction<"title-input" | "content-input">
   >;
 }
 
@@ -66,7 +66,7 @@ export const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        variants={ContainerVariants}
+        variants={ContainerInputVariants}
         initial="initial"
         animate="animate"
         exit="exit"

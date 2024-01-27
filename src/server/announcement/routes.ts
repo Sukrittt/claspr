@@ -9,9 +9,9 @@ import { privateProcedure } from "@/server/trpc";
  *
  * @param {object} input - The input parameters for creating announcement.
  * @param {string} input.title - The title for the announcement.
- * @param {string} input.classroomId - The id of the classroom where the announcement is to be created.
- * @param {string} input.hasSubmission - Annoucement has a submission or not.
  * @param {string} input.dueDate - Due date for the submission.
+ * @param {string} input.classroomId - The id of the classroom where the announcement is to be created.
+ * @param {string} input.content - The announcement description in a Json format.
  * @param {string} input.lateSubmission - If late submission is allowed or not.
  */
 export const createAnnouncement = privateProcedure
@@ -19,17 +19,16 @@ export const createAnnouncement = privateProcedure
     z.object({
       title: z.string().min(3).max(80),
       classRoomId: z.string(),
-      hasSubmission: z.boolean().optional().default(false),
-      dueDate: z.date().optional(),
+      content: z.any(),
+      dueDate: z.date(),
       lateSubmission: z.boolean().optional().default(false),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { classRoomId, hasSubmission, lateSubmission, title, dueDate } =
-      input;
+    const { classRoomId, lateSubmission, title, dueDate, content } = input;
 
     const existingClassroom = await db.classRoom.findFirst({
-      where: { id: classRoomId, teacherId: ctx.userId },
+      where: { id: classRoomId },
     });
 
     if (!existingClassroom) {
@@ -40,16 +39,28 @@ export const createAnnouncement = privateProcedure
       });
     }
 
-    await db.announcement.create({
-      data: {
-        title,
-        classRoomId,
-        dueDate,
-        hasSubmission,
-        lateSubmission,
-        creatorId: ctx.userId,
-      },
-    });
+    const promises = [
+      db.event.create({
+        data: {
+          classRoomId,
+          title,
+          teacherId: ctx.userId,
+          eventDate: dueDate,
+        },
+      }),
+      db.announcement.create({
+        data: {
+          title,
+          description: content,
+          classRoomId,
+          dueDate,
+          lateSubmission,
+          creatorId: ctx.userId,
+        },
+      }),
+    ];
+
+    await Promise.all(promises);
   });
 
 /**
@@ -74,7 +85,14 @@ export const getAnnouncements = privateProcedure
       },
       include: {
         creator: true,
-        submissions: true,
+        submissions: {
+          include: {
+            member: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 

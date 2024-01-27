@@ -1,9 +1,10 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import Markdown from "react-markdown";
+import { ClassRoom } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Copy, Loader, Sparkles } from "lucide-react";
+import { ArrowUpLeft, Check, Copy, Loader, Sparkles } from "lucide-react";
 
 import {
   Dialog,
@@ -14,22 +15,34 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ContainerVariants } from "@/lib/motion";
+import { type AiPersonalType } from "@/config/ai";
 import { ExtendedClassroomDetails } from "@/types";
 import { PromptValidatorType } from "@/types/validator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useCreateConversation } from "@/hooks/conversation";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
+import { useConversation, useCreateConversation } from "@/hooks/conversation";
 
 interface ClassAIDialogProps {
-  classroom: ExtendedClassroomDetails;
+  classroom: ExtendedClassroomDetails | ClassRoom;
+  moveToEditor?: (text: string) => void;
+  personal?: AiPersonalType;
+  temperature?: number;
+  addInfo?: string;
 }
 
-export const ClassAIDialog: React.FC<ClassAIDialogProps> = ({ classroom }) => {
+export const AIDialog: React.FC<ClassAIDialogProps> = ({
+  classroom,
+  moveToEditor,
+  personal,
+  temperature,
+  addInfo,
+}) => {
+  const [open, setOpen] = useState(false);
+
   const [input, setInput] = useState("");
   const [res, setRes] = useState("");
   const [prevInput, setPrevInput] = useState("");
@@ -38,9 +51,7 @@ export const ClassAIDialog: React.FC<ClassAIDialogProps> = ({ classroom }) => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const { data: prevConversations, isLoading: isFetchingConversations } =
-    trpc.conversation.getPreviousConversations.useQuery({
-      classroomId: classroom.id,
-    });
+    useConversation(classroom.id, 30);
 
   const { mutate: createConversation } = useCreateConversation();
 
@@ -53,10 +64,16 @@ export const ClassAIDialog: React.FC<ClassAIDialogProps> = ({ classroom }) => {
         };
       });
 
+      const prompt = addInfo
+        ? `This is the title given by the teacher for this assignment: ${addInfo}. Generate prompt based on this query: ${userQuery}`
+        : userQuery;
+
       const payload: PromptValidatorType = {
-        prompt: userQuery,
+        prompt,
         classDescription: classroom.description,
         prevConversations: prevConvo ?? [],
+        personal,
+        temperature,
       };
 
       const response = await fetch("/api/generate", {
@@ -132,8 +149,14 @@ export const ClassAIDialog: React.FC<ClassAIDialogProps> = ({ classroom }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleMoveToEditor = (text: string) => {
+    moveToEditor?.(text);
+    toast.success("Moved to editor.");
+    setOpen(false);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
       <DialogTrigger asChild>
         <div className="absolute bottom-8 right-10 group">
           <CustomTooltip text="Ask AI">
@@ -206,13 +229,26 @@ export const ClassAIDialog: React.FC<ClassAIDialogProps> = ({ classroom }) => {
                 <h3 className="font-semibold text-[17px] tracking-tight pb-1.5">
                   {prevInput}
                 </h3>
-                <CustomTooltip text="Click to copy">
-                  {copied ? (
-                    <Check className="w-3.5 h-3.5" />
-                  ) : (
-                    <Copy className="w-3.5 h-3.5" />
+                <div className="flex gap-x-3 items-center">
+                  <CustomTooltip text="Click to copy">
+                    {copied ? (
+                      <Check className="w-3.5 h-3.5 hover:text-gray-800 transition" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5 hover:text-gray-800 transition" />
+                    )}
+                  </CustomTooltip>
+                  {moveToEditor && !isLoading && (
+                    <CustomTooltip text="Move to editor">
+                      <ArrowUpLeft
+                        className="w-4 h-4 hover:text-gray-800 transition"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMoveToEditor(res);
+                        }}
+                      />
+                    </CustomTooltip>
                   )}
-                </CustomTooltip>
+                </div>
               </div>
               <Markdown className="text-[15px] text-gray-800">{res}</Markdown>
             </ScrollArea>

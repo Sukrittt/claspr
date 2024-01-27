@@ -1,30 +1,60 @@
-import { motion } from "framer-motion";
+import { useAtom } from "jotai";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
+import { ClassRoom } from "@prisma/client";
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
-import { ContainerVariants } from "@/lib/motion";
-import { AnnouncementForm } from "./announcement-form";
+import { Editor } from "@/components/editor/Editor";
 import { SubmissionStatus } from "./submission-status";
+import { AnnouncementForm } from "./announcement-form";
+import { contentAtom, isSubmittingAtom } from "@/atoms";
+import { useCreateAnnouncement } from "@/hooks/announcement";
+import { ContainerHeightVariants, ContainerVariants } from "@/lib/motion";
 
-export type AnnouncementStep =
-  | "title-input"
-  | "content-input"
-  | "ask-submission";
+export type AnnouncementStep = "title-input" | "content-input";
 
 interface AnnouncementFlowProps {
-  classroomId: string;
+  classroom: ClassRoom;
   setStepNumber: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
-  classroomId,
+  classroom,
   setStepNumber,
 }) => {
   const [step, setStep] = useState<AnnouncementStep>("title-input");
   const [title, setTitle] = useState("");
-  const [isSubmission, setIsSubmission] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [allowLateSubmission, setAllowLateSubmission] = useState(true);
+
+  const [content] = useAtom(contentAtom);
+  const [, setIsSubmitting] = useAtom(isSubmittingAtom);
+
+  const { mutate: createAnnouncement, isLoading } = useCreateAnnouncement();
+
+  const handleCreateAnnouncement = () => {
+    setIsSubmitting(true);
+
+    if (!date) {
+      toast.error("Please select a due date for this assignment.");
+      return;
+    }
+
+    if (!content) {
+      toast.error("Please provide some instructions for better understanding.");
+      return;
+    }
+
+    createAnnouncement({
+      classRoomId: classroom.id,
+      title,
+      content,
+      dueDate: date,
+      lateSubmission: allowLateSubmission,
+    });
+  };
 
   const getCurrentStepNumber = () => {
     switch (step) {
@@ -32,8 +62,6 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
         return 1;
       case "content-input":
         return 2;
-      case "ask-submission":
-        return 3;
       default:
         return 1;
     }
@@ -50,9 +78,6 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
       case "content-input":
         setStep("title-input");
         break;
-      case "ask-submission":
-        setStep("content-input");
-        break;
       default:
         return 1;
     }
@@ -65,18 +90,23 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
       )}
 
       {step === "content-input" && (
-        <div onClick={() => setStep("ask-submission")}>Next</div>
-      )}
-
-      {step === "ask-submission" && (
-        <SubmissionStatus
-          date={date}
-          setDate={setDate}
-          allowLateSubmission={allowLateSubmission}
-          setAllowLateSubmission={setAllowLateSubmission}
-          isSubmission={isSubmission}
-          setIsSubmission={setIsSubmission}
-        />
+        <AnimatePresence mode="wait">
+          <motion.div
+            variants={ContainerHeightVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="flex flex-col gap-y-4"
+          >
+            <Editor title={title} classroom={classroom} />
+            <SubmissionStatus
+              date={date}
+              setDate={setDate}
+              allowLateSubmission={allowLateSubmission}
+              setAllowLateSubmission={setAllowLateSubmission}
+            />
+          </motion.div>
+        </AnimatePresence>
       )}
 
       <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -89,14 +119,24 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
           </span>
         )}
 
-        {step === "ask-submission" && (
+        {step === "content-input" && (
           <motion.div
             variants={ContainerVariants}
             initial="initial"
             animate="animate"
             exit="exit"
           >
-            <Button className="h-6 text-[11px]">Create</Button>
+            <Button
+              disabled={isLoading}
+              onClick={handleCreateAnnouncement}
+              className="h-7 text-[11px]"
+            >
+              {isLoading ? (
+                <Loader className="h-3 w-8 animate-spin" />
+              ) : (
+                "Create"
+              )}
+            </Button>
           </motion.div>
         )}
       </div>

@@ -44,12 +44,14 @@ export const getPreviousConversations = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
+      limit: z.optional(z.number()),
     })
   )
   .query(async ({ ctx, input }) => {
     const conversations = await db.conversation.findMany({
       where: { userId: ctx.userId, classRoomId: input.classroomId },
       orderBy: { createdAt: "desc" },
+      take: input.limit ?? undefined,
     });
 
     return conversations;

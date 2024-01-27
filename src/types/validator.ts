@@ -9,6 +9,9 @@ export const PromptValidator = z.object({
       answer: z.string(),
     })
   ),
+  personal: z.optional(z.string()),
+  temperature: z.optional(z.number()),
+  addInfo: z.optional(z.string()),
 });
 
 export type PromptValidatorType = z.infer<typeof PromptValidator>;

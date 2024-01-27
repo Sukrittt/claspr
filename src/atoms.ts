@@ -12,3 +12,6 @@ export const isCloseAllCreationToggle = atom<boolean | null>(null);
 export const isCloseAllMembershipToggle = atom<boolean | null>(null);
 
 export const descriptionAtom = atom<string | null>(null);
+
+export const isSubmittingAtom = atom(false);
+export const contentAtom = atom<undefined | any>(undefined);
