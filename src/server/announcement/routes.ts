@@ -104,26 +104,44 @@ export const getAnnouncements = privateProcedure
  *
  * @param {object} input - The input parameters for getting annoucement details.
  * @param {boolean} input.announcementId - The id of the announcement to be fetched.
+ * @param {boolean} input.classroomId - The id of the classroom where the announcement belongs.
  * @returns {Promise<Object[]>} - A list of announcement objects.
  */
 export const getAnnouncementById = privateProcedure
   .input(
     z.object({
       announcementId: z.string(),
+      classroomId: z.string(),
     })
   )
-  .query(async ({ input }) => {
-    const { announcementId } = input;
+  .query(async ({ input, ctx }) => {
+    const { announcementId, classroomId } = input;
 
     const announcement = await db.announcement.findFirst({
       where: {
         id: announcementId,
+        classRoomId: classroomId,
       },
       include: {
         creator: true,
-        submissions: true,
+        submissions: {
+          include: {
+            member: true,
+          },
+        },
       },
     });
 
-    return announcement;
+    const memberAsTeacher = await db.membership.findFirst({
+      where: {
+        classRoomId: classroomId,
+        userId: ctx.userId,
+        isTeacher: true,
+      },
+      select: { id: true },
+    });
+
+    const isJoinedAsTeacher = !!memberAsTeacher;
+
+    return { announcement, isJoinedAsTeacher };
   });

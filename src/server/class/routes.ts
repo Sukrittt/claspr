@@ -514,3 +514,41 @@ export const addDescription = privateProcedure
       data: { description },
     });
   });
+
+/**
+ * To check if the user is a part of the classroom.
+ *
+ * @param {object} input - The input parameters for creating class.
+ * @param {string} input.classroomId - The id of the classroom.
+ */
+export const getIsPartOfClass = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { classroomId } = input;
+
+    const teacher = await db.classRoom.findFirst({
+      where: {
+        id: classroomId,
+        teacherId: ctx.userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const member = await db.membership.findFirst({
+      where: {
+        classRoomId: classroomId,
+        userId: ctx.userId,
+      },
+      select: { id: true },
+    });
+
+    const isPartOfClass = !!member || !!teacher;
+
+    return isPartOfClass;
+  });

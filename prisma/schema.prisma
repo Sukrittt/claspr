@@ -118,8 +118,6 @@ model ClassRoom {
   questions      Question[]
   announcements  Announcement[]
   conversations  Conversation[]
-  units          Unit[]
-  topics         Topic[]
   studyMaterials StudyMaterial[]
   events         Event[]
 }
@@ -230,35 +228,6 @@ model Submission {
   documents Document[]
 }
 
-model Unit {
-  id   String @id @unique @default(cuid())
-  name String
-
-  classRoomId String
-  classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  topics Topic[]
-}
-
-model Topic {
-  id   String @id @unique @default(cuid())
-  name String
-
-  unitId String
-  unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
-
-  classRoomId String
-  classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  studyMaterials StudyMaterial[]
-}
-
 model StudyMaterial {
   id    String  @id @unique @default(cuid())
   title String?
@@ -271,8 +240,19 @@ model StudyMaterial {
   classRoomId String?
   classRoom   ClassRoom? @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
 
-  topicId String?
-  topic   Topic?  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topics Topic[]
+}
+
+model Topic {
+  id String @id @unique @default(cuid())
+
+  name String
+
+  studyMaterialId String
+  studyMaterial   StudyMaterial @relation(fields: [studyMaterialId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -284,7 +264,8 @@ model Link {
   submissionId String?
   submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
 
-  linkUrl String
+  linkLabel String? @default("Untitled Link")
+  linkUrl   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -296,7 +277,8 @@ model Document {
   submissionId String?
   submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
 
-  documentUrl String
+  documentLabel String? @default("Untitled Document")
+  documentUrl   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

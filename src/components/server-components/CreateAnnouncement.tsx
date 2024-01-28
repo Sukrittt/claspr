@@ -22,6 +22,8 @@ export const CreateAnnouncement = async ({
   const isTeacher =
     classroom.teacherId === session.user.id || isMember?.isTeacher;
 
+  if (!isTeacher && !isMember) notFound();
+
   if (!isTeacher) redirect(`/c/${classroomId}`);
 
   return <AnnouncementCard classroom={classroom} />;

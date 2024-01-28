@@ -19,6 +19,7 @@ import { useGetAnnouncements } from "@/hooks/announcement";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AnnouncementSkeleton } from "@/components/skeletons/announcement-skeleton";
+import { toast } from "sonner";
 
 interface AnnouncementsProps {
   classroomId: string;
@@ -116,6 +117,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
     >
       <Link
         href={`/c/${announcement.classRoomId}/a/${announcement.id}`}
+        onClick={() => toast.loading("Just a moment...", { duration: 1000 })}
         className="bg-neutral-200 hover:bg-neutral-300/70 transition text-sm rounded-lg py-4 px-3 flex items-center gap-x-3 cursor-pointer"
       >
         <UserAvatar user={announcement.creator} className="h-8 w-8" />

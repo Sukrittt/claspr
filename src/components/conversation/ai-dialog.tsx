@@ -167,7 +167,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
         >
           <CustomTooltip text="Ask AI">
             <div>
-              <Button className="rounded-full p-2 h-12 w-12">
+              <Button className="rounded-full p-2 h-12 w-12 shadow-lg">
                 <Sparkles className="w-5 h-5 group-hover:rotate-90 transition duration-300" />
               </Button>
             </div>
