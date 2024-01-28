@@ -68,6 +68,7 @@ model User {
   conversations  Conversation[]
   questions      Question[]
   answers        Answer[]
+  media          Media[]
   studyMaterials StudyMaterial[]
   events         Event[]
 }
@@ -210,6 +211,7 @@ model Announcement {
   updatedAt DateTime @updatedAt
 
   submissions Submission[]
+  media       Media[]
 }
 
 model Submission {
@@ -224,8 +226,7 @@ model Submission {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  links     Link[]
-  documents Document[]
+  media Media[]
 }
 
 model StudyMaterial {
@@ -258,27 +259,27 @@ model Topic {
   updatedAt DateTime @updatedAt
 }
 
-model Link {
-  id String @id @unique @default(cuid())
-
-  submissionId String?
-  submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
-
-  linkLabel String? @default("Untitled Link")
-  linkUrl   String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum MediaType {
+  LINK
+  DOCUMENT
 }
 
-model Document {
+model Media {
   id String @id @unique @default(cuid())
+
+  announcementId String
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
 
   submissionId String?
   submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
 
-  documentLabel String? @default("Untitled Document")
-  documentUrl   String
+  mediaType MediaType
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  label String?
+  url   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

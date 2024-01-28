@@ -37,7 +37,7 @@ export const createConversation = privateProcedure
  * To get a list of all the previous conversations the user had with the AI in a particular classroom.
  *
  * @param {object} input - The input parameters for getting previous conversations.
- * @param {string} input.classroomId - The name of the section.
+ * @param {string} input.classroomId - The id of the classroom.
  * @returns {Promise<Object[]>} - A list of classRoom objects from the database.
  */
 export const getPreviousConversations = privateProcedure

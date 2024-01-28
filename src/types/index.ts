@@ -39,8 +39,3 @@ export type ExtendedAnnouncement = Announcement & {
     member: Membership;
   })[];
 };
-
-export type SubmissionAtomType = {
-  url: string;
-  label: string;
-};
