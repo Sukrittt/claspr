@@ -31,13 +31,11 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
   const [allowLateSubmission, setAllowLateSubmission] = useState(true);
 
   const [content] = useAtom(contentAtom);
-  const [, setIsSubmitting] = useAtom(isSubmittingAtom);
+  const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom);
 
   const { mutate: createAnnouncement, isLoading } = useCreateAnnouncement();
 
   const handleCreateAnnouncement = () => {
-    setIsSubmitting(true);
-
     if (!date) {
       toast.error("Please select a due date for this assignment.");
       return;
@@ -55,7 +53,15 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
       dueDate: date,
       lateSubmission: allowLateSubmission,
     });
+
+    setIsSubmitting(undefined);
   };
+
+  useEffect(() => {
+    if (isSubmitting !== undefined && !isSubmitting) {
+      handleCreateAnnouncement();
+    }
+  }, [isSubmitting]);
 
   const getCurrentStepNumber = () => {
     switch (step) {
@@ -136,7 +142,7 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
           >
             <Button
               disabled={isLoading}
-              onClick={handleCreateAnnouncement}
+              onClick={() => setIsSubmitting(true)}
               className="h-7 text-[11px]"
             >
               {isLoading ? (

@@ -26,12 +26,16 @@ export const SubmissionStatus: React.FC<SubmissionStatusProps> = ({
         </div>
         <div className="flex items-center justify-end gap-x-2">
           <Checkbox
+            id="late-submission"
             checked={allowLateSubmission}
             onCheckedChange={(val) => setAllowLateSubmission(val as boolean)}
           />
-          <h3 className="text-sm tracking-tight text-gray-800">
+          <label
+            htmlFor="late-submission"
+            className="text-sm tracking-tight text-gray-800 cursor-pointer"
+          >
             Allow late submission?
-          </h3>
+          </label>
         </div>
       </div>
     </div>
