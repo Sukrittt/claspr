@@ -16,7 +16,7 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
   session,
 }) => {
   return (
-    <Tabs defaultValue="assignments">
+    <Tabs defaultValue="assignments" className="h-full">
       <TabsList className="mb-2">
         <TabsTrigger className="ml-0" value="assignments">
           Assignments
@@ -26,15 +26,19 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
         <TabsTrigger value="members">Members</TabsTrigger>
         <TabsTrigger value="conversations">Conversations</TabsTrigger>
       </TabsList>
-      <TabsContent value="assignments">
+      <TabsContent value="assignments" className="h-full">
         <Announcements classroomId={classroom.id} session={session} />
       </TabsContent>
-      <TabsContent value="study-materials">Study Materials</TabsContent>
-      <TabsContent value="questionnaires">Questionnaires</TabsContent>
-      <TabsContent value="members">
+      <TabsContent className="h-full" value="study-materials">
+        Study Materials
+      </TabsContent>
+      <TabsContent className="h-full" value="questionnaires">
+        Questionnaires
+      </TabsContent>
+      <TabsContent className="h-full" value="members">
         <ClassMembers members={classroom.students} />
       </TabsContent>
-      <TabsContent value="conversations">
+      <TabsContent className="h-full" value="conversations">
         <ConversationHistory classroomId={classroom.id} />
       </TabsContent>
     </Tabs>

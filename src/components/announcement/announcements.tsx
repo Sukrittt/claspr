@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { format } from "date-fns";
 import { Session } from "next-auth";
-import { CalendarCheck, CalendarClock, CalendarX2 } from "lucide-react";
+import {
+  CalendarCheck,
+  CalendarClock,
+  CalendarX2,
+  NotebookPen,
+} from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { cn, timeAgo } from "@/lib/utils";
@@ -42,12 +47,17 @@ export const Announcements: React.FC<AnnouncementsProps> = ({
         initial="initial"
         animate="animate"
         exit="exit"
-        className="pt-6 space-y-4"
+        className="pt-6 space-y-4 h-full"
       >
         {isLoading ? (
           <AnnouncementSkeleton />
         ) : (!announcements || announcements.length === 0) && !isLoading ? (
-          <p>No announcements yet.</p>
+          <div className="h-full flex flex-col items-center justify-center gap-y-4">
+            <NotebookPen className="h-16 w-16 text-neutral-800" />
+            <p className="text-sm text-muted-foreground">
+              No assigments created yet.
+            </p>
+          </div>
         ) : (
           <AnimatePresence mode="wait">
             <ScrollArea className="h-[400px]">

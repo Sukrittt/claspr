@@ -1,3 +1,4 @@
+import { UsersRound } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,19 +14,34 @@ interface ClassMembersProps {
 
 export const ClassMembers: React.FC<ClassMembersProps> = ({ members }) => {
   return (
-    <ScrollArea className="h-[500px] pt-6">
-      <div className="flex flex-col gap-y-2">
+    <AnimatePresence mode="wait">
+      <motion.div
+        variants={ContainerVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className="pt-6 space-y-4 h-full"
+      >
         {members.length === 0 ? (
-          <p className="text-sm text-center text-muted-foreground">
-            No members joined yet.
-          </p>
+          <div className="h-full flex flex-col items-center justify-center gap-y-4">
+            <UsersRound className="h-16 w-16 text-neutral-800" />
+            <p className="text-sm text-muted-foreground">
+              No members joined yet.
+            </p>
+          </div>
         ) : (
-          members.map((member) => (
-            <MemberCard key={member.id} member={member} />
-          ))
+          <AnimatePresence mode="wait">
+            <ScrollArea className="h-[400px]">
+              <div className="flex flex-col gap-y-4">
+                {members.map((member) => (
+                  <MemberCard key={member.id} member={member} />
+                ))}
+              </div>
+            </ScrollArea>
+          </AnimatePresence>
         )}
-      </div>
-    </ScrollArea>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
