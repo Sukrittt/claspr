@@ -25,6 +25,7 @@ import {
 import { CreateSubmission } from "./create-submission";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MediaDropdown } from "@/components/media/media-dropdown";
+import { Unsubmit } from "./unsubmit";
 
 export const SubmissionCard = ({
   announcementId,
@@ -108,13 +109,10 @@ export const SubmissionCard = ({
         {isFetching ? (
           <SubmissionFooterSkeleton />
         ) : submission ? (
-          <Button
-            className="h-8 text-xs w-full"
-            variant="outline"
-            onClick={() => toast.message("Coming soon...")}
-          >
-            Unsubmit
-          </Button>
+          <Unsubmit
+            announcementId={announcementId}
+            submissionId={submission.id}
+          />
         ) : (
           <>
             <SubmissionDropdown announcementId={announcementId}>
