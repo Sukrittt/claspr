@@ -2,7 +2,7 @@ import moment from "moment";
 
 import { timeAgo } from "@/lib/utils";
 import { ExtendedAnnouncement } from "@/types";
-import { SubmissionCard } from "./submission-card";
+import { SubmissionCard } from "../../submission/submission-card";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";

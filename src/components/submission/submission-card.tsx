@@ -25,6 +25,7 @@ import {
 } from "@/components/skeletons/submission-skeleton";
 import { CreateSubmission } from "./create-submission";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { MediaDropdown } from "@/components/media/media-dropdown";
 
 export const SubmissionCard = ({
   announcementId,
@@ -55,6 +56,10 @@ export const SubmissionCard = ({
 
   const disabled = isFetching || isLoading || (!!media && media.length === 0);
 
+  const handleRedirect = (url: string) => {
+    window.open(url, "_blank");
+  };
+
   return (
     <Card className="overflow-hidden border border-neutral-300 bg-neutral-100">
       <CardHeader className="bg-neutral-200 py-3 space-y-0">
@@ -80,15 +85,19 @@ export const SubmissionCard = ({
                   className="flex flex-col gap-y-2"
                 >
                   {media?.map((m) => (
-                    <Link
-                      href={m.url}
-                      target="_blank"
+                    <div
+                      onClick={() => handleRedirect(m.url)}
                       key={m.id}
-                      className="flex items-center gap-x-2 border border-neutral-300 rounded-md py-1.5 px-1.5 text-neutral-500 hover:text-neutral-600 transition font-medium"
+                      className="flex items-center cursor-pointer justify-between border border-neutral-300 rounded-md py-1.5 px-1.5 text-neutral-500 hover:text-neutral-600 transition font-medium"
                     >
-                      {Icon[m.mediaType]}
-                      {getSubmissionLabel(m.label, m.mediaType)}
-                    </Link>
+                      <div className="flex items-center gap-x-2">
+                        {Icon[m.mediaType]}
+                        {getSubmissionLabel(m.label, m.mediaType)}
+                      </div>
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <MediaDropdown media={m} />
+                      </div>
+                    </div>
                   ))}
                 </motion.div>
               </AnimatePresence>

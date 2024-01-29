@@ -5,14 +5,14 @@ import { ClassRoom } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Editor } from "@/components/editor/Editor";
-import { SubmissionStatus } from "./submission-status";
 import { AnnouncementForm } from "./announcement-form";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { useCreateAnnouncement } from "@/hooks/announcement";
 import { ContainerHeightVariants, ContainerVariants } from "@/lib/motion";
-import { cn } from "@/lib/utils";
+import { SubmissionStatus } from "@/components/submission/submission-status";
 
 export type AnnouncementStep = "title-input" | "content-input";
 

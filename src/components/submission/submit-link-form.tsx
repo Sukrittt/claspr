@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -13,7 +14,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCreateMedia } from "@/hooks/media";
 import { Button } from "@/components/ui/button";
-import { Loader } from "lucide-react";
 
 const linkSubmissionSchema = z.object({
   label: z.string().max(50).optional(),

@@ -161,10 +161,19 @@ export const editLink = privateProcedure
       });
     }
 
+    if (existingMedia.mediaType === "DOCUMENT") {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message:
+          "You cannot edit this media. Please remove it and upload a new one.",
+      });
+    }
+
     await db.media.update({
       where: {
         id: mediaId,
         userId: ctx.userId,
+        announcementId,
       },
       data: {
         url,
@@ -250,6 +259,7 @@ export const removeMedia = privateProcedure
       where: {
         id: mediaId,
         userId: ctx.userId,
+        announcementId,
       },
     });
   });

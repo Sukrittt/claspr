@@ -7,6 +7,7 @@ import {
   CalendarX2,
   NotebookPen,
 } from "lucide-react";
+import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { cn, timeAgo } from "@/lib/utils";
@@ -19,7 +20,6 @@ import { useGetAnnouncements } from "@/hooks/announcement";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AnnouncementSkeleton } from "@/components/skeletons/announcement-skeleton";
-import { toast } from "sonner";
 
 interface AnnouncementsProps {
   classroomId: string;
@@ -93,7 +93,6 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
   );
 
   const currentDate = new Date();
-  currentDate.setDate(currentDate.getDate() + 1);
 
   const deadlinePassed = currentDate > announcement.dueDate;
 
