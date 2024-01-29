@@ -49,6 +49,8 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
     const Raw = (await import("@editorjs/raw")).default;
     //@ts-ignore
     const Attach = (await import("@editorjs/attaches")).default;
+    //@ts-ignore
+    const Warning = (await import("@editorjs/warning")).default;
 
     if (!ref.current) {
       const editor = new EditorJS({
@@ -72,6 +74,7 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
             class: ImageTool,
             shortcut: "CMD+I",
             config: {
+              types: "image/*",
               uploader: {
                 async uploadByFile(file: File) {
                   const res = await uploadByFile(file);
@@ -106,6 +109,7 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
           },
           checklist: CheckList,
           quote: Quote,
+          warning: Warning,
           delimiter: Delimiter,
           raw: Raw,
           list: {

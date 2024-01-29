@@ -53,6 +53,9 @@ dependencies:
   '@editorjs/table':
     specifier: ^2.3.0
     version: 2.3.0
+  '@editorjs/warning':
+    specifier: ^1.4.0
+    version: 1.4.0
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.49.3)
@@ -451,6 +454,12 @@ packages:
     resolution: {integrity: sha512-/dKE6A5FkukX/FpvIyQGsewwXglZk8YbXpEp9vkB6Ec4ETLeGJMxObCcYqbXqVod+IU/a1tFH+j3lsD8ASD41g==}
     dependencies:
       '@codexteam/icons': 0.0.6
+    dev: false
+
+  /@editorjs/warning@1.4.0:
+    resolution: {integrity: sha512-JMYm3hrmN4/S6aHBHzKsJab9+8AJRPaPh9wDGE6QrVF3dj2fCo/DZcc0MaT5TN4YI5Hu4GKBH52wOKFGOyAuoA==}
+    dependencies:
+      '@codexteam/icons': 0.0.4
     dev: false
 
   /@emotion/is-prop-valid@0.8.8:

@@ -1,8 +1,9 @@
 import { z } from "zod";
 
+import { TRPCError } from "@trpc/server";
+
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
-import { TRPCError } from "@trpc/server";
 
 /**
  * To facilitate improved context for future conversations, initiate a new dialogue between the user and the AI.
