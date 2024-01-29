@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { format } from "date-fns";
+import { format, isAfter } from "date-fns";
 import { Session } from "next-auth";
 import {
   CalendarCheck,
@@ -94,7 +94,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
 
   const currentDate = new Date();
 
-  const deadlinePassed = currentDate > announcement.dueDate;
+  const deadlinePassed = isAfter(currentDate, announcement.dueDate);
 
   const getToolTipText = () => {
     if (submissionDetails) {

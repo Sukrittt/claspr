@@ -1,8 +1,7 @@
 "use client";
-import Link from "next/link";
 import { toast } from "sonner";
 import { MediaType } from "@prisma/client";
-import { LinkIcon, File } from "lucide-react";
+import { LinkIcon, File, Check } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";

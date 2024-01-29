@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { EditorOutput } from "@/components/editor/EditorOutput";
+import { SubmissionDetails } from "@/components/submission/submission-details";
 
 interface StudentViewProps {
   announcement: ExtendedAnnouncement;
@@ -44,7 +45,9 @@ export const StudentView: React.FC<StudentViewProps> = ({ announcement }) => {
                 <span>Updated {timeAgo(announcement.updatedAt)}</span>
               </div>
 
-              <span className="font-semibold">{getModifiedDueDate()}</span>
+              <SubmissionDetails announcement={announcement}>
+                <span className="font-semibold">{getModifiedDueDate()}</span>
+              </SubmissionDetails>
             </div>
           </div>
 
