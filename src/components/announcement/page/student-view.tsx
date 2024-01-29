@@ -59,7 +59,7 @@ export const StudentView: React.FC<StudentViewProps> = ({ announcement }) => {
         </div>
       </div>
       <div className="col-span-3 xl:col-span-2 w-full">
-        <SubmissionCard announcementId={announcement.id} />
+        <SubmissionCard announcement={announcement} />
       </div>
     </div>
   );

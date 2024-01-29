@@ -96,7 +96,7 @@ function CustomTableRenderer({ data }: any) {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="border-neutral-300">
           {headings.map((heading, index) => (
             <TableHead key={index}>{heading}</TableHead>
           ))}
@@ -179,7 +179,7 @@ function CustomCheckListRenderer({ data }: any) {
 function CustomQuoteRenderer({ data }: any) {
   return (
     <div className="flex justify-center">
-      <blockquote className="text-center">
+      <blockquote>
         <p className="text-lg font-medium text-gray-800">{data.text}</p>
         <cite className="text-sm text-gray-500">{data.caption}</cite>
       </blockquote>

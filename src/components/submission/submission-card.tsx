@@ -1,7 +1,7 @@
 "use client";
-import { toast } from "sonner";
+import { isAfter } from "date-fns";
 import { MediaType } from "@prisma/client";
-import { LinkIcon, File, Check } from "lucide-react";
+import { LinkIcon, File } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Unsubmit } from "./unsubmit";
 import { useGetMedia } from "@/hooks/media";
 import { getShortenedText } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
@@ -25,16 +26,19 @@ import {
 import { CreateSubmission } from "./create-submission";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MediaDropdown } from "@/components/media/media-dropdown";
-import { Unsubmit } from "./unsubmit";
+import { ExtendedAnnouncement } from "@/types";
 
-export const SubmissionCard = ({
-  announcementId,
-}: {
-  announcementId: string;
+interface SubmissionCardProps {
+  announcement: ExtendedAnnouncement;
+}
+
+export const SubmissionCard: React.FC<SubmissionCardProps> = ({
+  announcement,
 }) => {
-  const { data: submission, isLoading: isFetching } =
-    useGetSubmission(announcementId);
-  const { data: media, isLoading } = useGetMedia(announcementId);
+  const { data: submission, isLoading: isFetching } = useGetSubmission(
+    announcement.id
+  );
+  const { data: media, isLoading } = useGetMedia(announcement.id);
 
   const getSubmissionLabel = (
     label: string | null,
@@ -49,12 +53,23 @@ export const SubmissionCard = ({
     return getShortenedText(label, 27);
   };
 
+  const deadlinePassed = isAfter(new Date(), announcement.dueDate);
+  const preventSubmission = !!(
+    announcement.lateSubmission &&
+    !submission &&
+    deadlinePassed
+  );
+
   const Icon = {
     [MediaType.LINK]: <LinkIcon className="h-4 w-4" />,
     [MediaType.DOCUMENT]: <File className="h-4 w-4" />,
   };
 
-  const disabled = isFetching || isLoading || (!!media && media.length === 0);
+  const disabled =
+    preventSubmission ||
+    isFetching ||
+    isLoading ||
+    (!!media && media.length === 0);
 
   const handleRedirect = (url: string) => {
     window.open(url, "_blank");
@@ -110,18 +125,22 @@ export const SubmissionCard = ({
           <SubmissionFooterSkeleton />
         ) : submission ? (
           <Unsubmit
-            announcementId={announcementId}
+            announcementId={announcement.id}
             submissionId={submission.id}
           />
         ) : (
           <>
-            <SubmissionDropdown announcementId={announcementId}>
-              <Button className="h-8 text-xs w-full" variant="outline">
+            <SubmissionDropdown announcementId={announcement.id}>
+              <Button
+                className="h-8 text-xs w-full"
+                variant="outline"
+                disabled={preventSubmission}
+              >
                 Attach Work
               </Button>
             </SubmissionDropdown>
             <CreateSubmission
-              announcementId={announcementId}
+              announcementId={announcement.id}
               disabled={disabled}
             />
           </>
