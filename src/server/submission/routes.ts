@@ -23,13 +23,20 @@ export const createSubmission = privateProcedure
       where: {
         id: announcementId,
       },
-      select: { classRoomId: true },
+      select: { classRoomId: true, lateSubmission: true, dueDate: true },
     });
 
     if (!announcement) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "We couldn't find the announcement you're looking for.",
+      });
+    }
+
+    if (!announcement.lateSubmission && announcement.dueDate < new Date()) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "The due date for this assignment has passed.",
       });
     }
 
@@ -96,86 +103,6 @@ export const createSubmission = privateProcedure
   });
 
 /**
- * Creates a new media for a submission.
- *
- * @param {object} input - The input parameters for creating a media for a submission.
- * @param {string} input.announcementId - The id of the announcement.
- * @param {string[]} input.media - An array of media objects containing the url and label.
- * @param {enum} input.mediaType - An enum for describing the type of media.
- */
-export const createMedia = privateProcedure
-  .input(
-    z.object({
-      announcementId: z.string(),
-      media: z.array(
-        z.object({
-          label: z.string().optional(),
-          url: z.string().regex(/^(ftp|http|https):\/\/[^ "]+$/),
-        })
-      ),
-      mediaType: z.enum(["LINK", "DOCUMENT"]),
-    })
-  )
-  .mutation(async ({ input, ctx }) => {
-    const { announcementId, media, mediaType } = input;
-
-    const announcement = await db.announcement.findUnique({
-      where: {
-        id: announcementId,
-      },
-    });
-
-    if (!announcement) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "We couldn't find the announcement you're looking for.",
-      });
-    }
-
-    if (announcement.creatorId === ctx.userId) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Teachers cannot submit media for their own announcements.",
-      });
-    }
-
-    await db.media.createMany({
-      data: media.map((media) => ({
-        announcementId,
-        label: media.label,
-        url: media.url,
-        mediaType,
-        userId: ctx.userId,
-      })),
-    });
-  });
-
-/**
- * To get the media uploaded by the user for a particular submission.
- *
- * @param {object} input - The input parameters for getting uploaded media.
- * @param {string} input.announcementId - The id of the announcement.
- * @returns {Promise<Object[]>} - A list of media objects from the database.
- */
-export const getUploadedMedia = privateProcedure
-  .input(
-    z.object({
-      announcementId: z.string(),
-    })
-  )
-  .query(async ({ ctx, input }) => {
-    const media = await db.media.findMany({
-      where: {
-        announcementId: input.announcementId,
-        userId: ctx.userId,
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    return media;
-  });
-
-/**
  * To get submission details for a particular submission
  *
  * @param {object} input - The input parameters to get submission details.
@@ -201,4 +128,56 @@ export const getSubmission = privateProcedure
     });
 
     return submission;
+  });
+
+/**
+ * To unsubmit a submission.
+ *
+ * @param {object} input - The input parameters for unsubmitting a submission.
+ * @param {string} input.announcementId - The id of the announcement.
+ * @param {string} input.submissionId - The id of the submission to update.
+ */
+export const unsubmit = privateProcedure
+  .input(
+    z.object({
+      announcementId: z.string(),
+      submissionId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { announcementId, submissionId } = input;
+
+    const existingAnnouncment = await db.announcement.findFirst({
+      where: {
+        id: announcementId,
+      },
+    });
+
+    if (!existingAnnouncment) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the announcement you're looking for.",
+      });
+    }
+
+    const existingSubmission = await db.submission.findFirst({
+      where: {
+        id: submissionId,
+        announcementId,
+      },
+    });
+
+    if (!existingSubmission) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "You have not submitted your work for this assignment.",
+      });
+    }
+
+    await db.submission.delete({
+      where: {
+        id: submissionId,
+        announcementId,
+      },
+    });
   });

@@ -92,7 +92,10 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
     (submission) => submission.member.userId === session.user.id
   );
 
-  const deadlinePassed = new Date() > announcement.dueDate;
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 1);
+
+  const deadlinePassed = currentDate > announcement.dueDate;
 
   const getToolTipText = () => {
     if (submissionDetails) {

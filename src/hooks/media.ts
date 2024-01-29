@@ -1,16 +1,16 @@
 import { trpc } from "@/trpc/client";
 
 export const useGetMedia = (announcementId: string) => {
-  return trpc.submission.getUploadedMedia.useQuery({ announcementId });
+  return trpc.media.getUploadedMedia.useQuery({ announcementId });
 };
 
 export const useCreateMedia = ({ closeModal }: { closeModal: () => void }) => {
   const utils = trpc.useUtils();
 
-  return trpc.submission.createMedia.useMutation({
+  return trpc.media.createMedia.useMutation({
     onSuccess: () => {
       closeModal();
-      utils.submission.getUploadedMedia.invalidate();
+      utils.media.getUploadedMedia.invalidate();
     },
   });
 };
