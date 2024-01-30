@@ -520,15 +520,17 @@ export const addDescription = privateProcedure
  *
  * @param {object} input - The input parameters for creating class.
  * @param {string} input.classroomId - The id of the classroom.
+ * @param {boolean} input.isTeacher - A boolean attribute to check if the user is a teacher or not.
  */
 export const getIsPartOfClass = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
+      isTeacher: z.boolean().optional(),
     })
   )
-  .mutation(async ({ input, ctx }) => {
-    const { classroomId } = input;
+  .query(async ({ input, ctx }) => {
+    const { classroomId, isTeacher } = input;
 
     const teacher = await db.classRoom.findFirst({
       where: {
@@ -544,6 +546,7 @@ export const getIsPartOfClass = privateProcedure
       where: {
         classRoomId: classroomId,
         userId: ctx.userId,
+        isTeacher,
       },
       select: { id: true },
     });

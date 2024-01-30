@@ -5,6 +5,7 @@ import {
   CalendarCheck,
   CalendarClock,
   CalendarX2,
+  Info,
   NotebookPen,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -15,6 +16,8 @@ import { Badge } from "@/components/ui/badge";
 import { ExtendedAnnouncement } from "@/types";
 import { ContainerVariants } from "@/lib/motion";
 import { useMounted } from "@/hooks/use-mounted";
+import { useGetPartOfClass } from "@/hooks/class";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGetAnnouncements } from "@/hooks/announcement";
 import { UserAvatar } from "@/components/custom/user-avatar";
@@ -88,12 +91,16 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
   announcement,
   session,
 }) => {
+  const { data: isTeacher, isLoading } = useGetPartOfClass({
+    classroomId: announcement.classRoomId,
+    isTeacher: true,
+  });
+
   const submissionDetails = announcement.submissions.find(
     (submission) => submission.member.userId === session.user.id
   );
 
   const currentDate = new Date();
-
   const deadlinePassed = isAfter(currentDate, announcement.dueDate);
 
   const getToolTipText = () => {
@@ -109,6 +116,7 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
   };
 
   const toolTipText = getToolTipText();
+  const noOfSubmissions = announcement.submissions.length;
 
   return (
     <motion.div
@@ -131,32 +139,44 @@ const AnnouncementCard: React.FC<AnnouncementCardProps> = ({
               <span>•</span>
               <span>{timeAgo(announcement.createdAt)}</span>
             </div>
-            <CustomTooltip text={toolTipText}>
-              <div>
-                <Badge
-                  className={cn("text-[10px] py-px", {
-                    "bg-green-600 hover:bg-green-600/80": submissionDetails,
-                    "bg-destructive hover:bg-destructive/80": deadlinePassed,
-                  })}
-                >
-                  {submissionDetails ? (
-                    <>
-                      <CalendarCheck className="h-3.5 w-3.5 mr-2" />
-                      {format(submissionDetails.createdAt, "dd, MMM")}
-                    </>
-                  ) : (
-                    <>
-                      {deadlinePassed ? (
-                        <CalendarX2 className="h-3.5 w-3.5 mr-2" />
-                      ) : (
-                        <CalendarClock className="h-3.5 w-3.5 mr-2" />
-                      )}
-                      {format(announcement.dueDate, "dd, MMM")}
-                    </>
-                  )}
-                </Badge>
-              </div>
-            </CustomTooltip>
+            {isLoading ? (
+              <Skeleton className="h-5 w-[4.5rem] rounded-full" />
+            ) : isTeacher ? (
+              <CustomTooltip
+                text={`${noOfSubmissions} submission${
+                  noOfSubmissions > 0 ? "s" : ""
+                }`}
+              >
+                <Info className="h-4 w-4" />
+              </CustomTooltip>
+            ) : (
+              <CustomTooltip text={toolTipText}>
+                <div>
+                  <Badge
+                    className={cn("text-[10px] py-px", {
+                      "bg-green-600 hover:bg-green-600/80": submissionDetails,
+                      "bg-destructive hover:bg-destructive/80": deadlinePassed,
+                    })}
+                  >
+                    {submissionDetails ? (
+                      <>
+                        <CalendarCheck className="h-3.5 w-3.5 mr-2" />
+                        {format(submissionDetails.createdAt, "dd, MMM")}
+                      </>
+                    ) : (
+                      <>
+                        {deadlinePassed ? (
+                          <CalendarX2 className="h-3.5 w-3.5 mr-2" />
+                        ) : (
+                          <CalendarClock className="h-3.5 w-3.5 mr-2" />
+                        )}
+                        {format(announcement.dueDate, "dd, MMM")}
+                      </>
+                    )}
+                  </Badge>
+                </div>
+              </CustomTooltip>
+            )}
           </div>
         </div>
       </Link>
