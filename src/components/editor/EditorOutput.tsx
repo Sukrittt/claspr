@@ -1,8 +1,10 @@
 "use client";
 import Link from "next/link";
+import { toast } from "sonner";
 import Image from "next/image";
+import { useState } from "react";
 import dynamic from "next/dynamic";
-import { AlertTriangle, ArrowUpRight, File } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, Check, Copy, File } from "lucide-react";
 
 import {
   Table,
@@ -14,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import { useMounted } from "@/hooks/use-mounted";
 import { Checkbox } from "@/components/ui/checkbox";
+import { NestedOrdererdList, NestedUnorderedList } from "./NestedLists";
 import { EditorSkeleton } from "@/components/skeletons/editor-skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -32,6 +35,7 @@ const style = {
 };
 
 const renderers = {
+  header: CustomHeadingRenderer,
   image: CustomImageRenderer,
   code: CustomCodeRenderer,
   attaches: CustomAttachmentRenderer,
@@ -58,15 +62,79 @@ function CustomImageRenderer({ data }: any) {
   const src = data.file.url;
 
   return (
-    <div className="relative w-full min-h-[15rem]">
+    <div className="relative w-full min-h-[15rem] my-4">
       <Image src={src} alt="editor-content" className="object-contain" fill />
     </div>
   );
 }
 
-function CustomCodeRenderer({ data }: any) {
+function CustomHeadingRenderer({ data }: any) {
+  const getFontSizeByLevel = (level: number) => {
+    let style = {};
+
+    switch (level) {
+      case 1:
+        style = {
+          fontSize: "2em",
+          fontWeight: "900",
+        };
+
+        return style;
+      case 2:
+        style = {
+          fontSize: "1.75em",
+          fontWeight: "800",
+        };
+
+        return style;
+      case 3:
+        style = {
+          fontSize: "1.5em",
+          fontWeight: "700",
+        };
+
+        return style;
+
+      case 4:
+        style = {
+          fontSize: "1.25em",
+          fontWeight: "600",
+        };
+
+        return style;
+    }
+  };
+
   return (
-    <pre className="bg-gray-800 rounded-md p-4">
+    <p className="py-1" style={getFontSizeByLevel(data.level)}>
+      {data.text}
+    </p>
+  );
+}
+
+function CustomCodeRenderer({ data }: any) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(data.code);
+    setCopied(true);
+
+    toast.success("Code copied to clipboard.");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <pre
+      className="bg-gray-800 rounded-md p-4 cursor-pointer relative group my-4"
+      onClick={handleCopyCode}
+    >
+      <div className="hidden group-hover:block absolute top-4 right-4 text-white">
+        {copied ? (
+          <Check className="w-2.5 h-2.5 duration-500" />
+        ) : (
+          <Copy className="w-2.5 h-2.5" />
+        )}
+      </div>
       <code className="text-gray-100 text-sm">{data.code}</code>
     </pre>
   );
@@ -94,7 +162,7 @@ function CustomTableRenderer({ data }: any) {
   const rows = content.slice(1) as string[][];
 
   return (
-    <Table>
+    <Table className="my-4">
       <TableHeader>
         <TableRow className="border-neutral-300">
           {headings.map((heading, index) => (
@@ -122,24 +190,43 @@ function CustomLinkRenderer({ data }: any) {
 }
 
 function CustomListRenderer({ data }: any) {
+  const { items, style } = data;
+
   return (
-    <ol>
-      {data.items.map((item: any, index: number) => (
-        <li
-          key={index}
-          className="list-decimal list-inside font-medium text-gray-800 text-sm"
-        >
-          {item}
-        </li>
-      ))}
-    </ol>
+    <div className="my-4">
+      {style === "ordered" ? (
+        <NestedOrdererdList items={items} />
+      ) : (
+        <NestedUnorderedList items={items} />
+      )}
+    </div>
   );
 }
 
 function CustomRawRenderer({ data }: any) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(data.html);
+    setCopied(true);
+
+    toast.success("Code copied to clipboard.");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <pre className="bg-gray-800 rounded-md p-4">
-      <code className="text-gray-200 text-sm">{data.html}</code>
+    <pre
+      className="bg-gray-800 rounded-md p-4 cursor-pointer relative group my-4"
+      onClick={handleCopyCode}
+    >
+      <div className="hidden group-hover:block absolute top-4 right-4 text-white">
+        {copied ? (
+          <Check className="w-2.5 h-2.5 duration-500" />
+        ) : (
+          <Copy className="w-2.5 h-2.5" />
+        )}
+      </div>
+      <code className="text-gray-100 text-sm">{data.html}</code>
     </pre>
   );
 }

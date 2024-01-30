@@ -19,10 +19,11 @@
     "@editorjs/delimiter": "^1.4.0",
     "@editorjs/editorjs": "^2.29.0",
     "@editorjs/embed": "^2.7.0",
+    "@editorjs/header": "^2.8.1",
     "@editorjs/image": "^2.9.0",
     "@editorjs/inline-code": "^1.5.0",
     "@editorjs/link": "^2.6.2",
-    "@editorjs/list": "^1.9.0",
+    "@editorjs/nested-list": "^1.4.2",
     "@editorjs/quote": "^2.6.0",
     "@editorjs/raw": "^2.5.0",
     "@editorjs/table": "^2.3.0",
@@ -79,6 +80,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",

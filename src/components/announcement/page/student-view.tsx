@@ -53,7 +53,7 @@ export const StudentView: React.FC<StudentViewProps> = ({ announcement }) => {
 
           <Separator />
 
-          <ScrollArea className="h-[480px]">
+          <ScrollArea className="h-[480px] pb-10">
             <EditorOutput content={announcement.description} />
           </ScrollArea>
         </div>

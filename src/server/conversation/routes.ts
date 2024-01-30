@@ -24,17 +24,12 @@ export const createConversation = privateProcedure
   .mutation(async ({ ctx, input }) => {
     const { prompt, classroomId, answer } = input;
 
-    const existingMembership = await getMembershipDetails(
-      ctx.userId,
-      input.classroomId
-    );
-
     await db.conversation.create({
       data: {
         prompt,
         answer,
         classRoomId: classroomId,
-        memberId: existingMembership.id,
+        userId: ctx.userId,
       },
     });
   });
@@ -54,14 +49,9 @@ export const getPreviousConversations = privateProcedure
     })
   )
   .query(async ({ ctx, input }) => {
-    const existingMembership = await getMembershipDetails(
-      ctx.userId,
-      input.classroomId
-    );
-
     const conversations = await db.conversation.findMany({
       where: {
-        memberId: existingMembership.id,
+        userId: ctx.userId,
         classRoomId: input.classroomId,
       },
       orderBy: { createdAt: "desc" },
@@ -85,13 +75,9 @@ export const clearConversation = privateProcedure
   )
   .mutation(async ({ ctx, input }) => {
     const { classroomId } = input;
-    const existingMembership = await getMembershipDetails(
-      ctx.userId,
-      input.classroomId
-    );
 
     const existingConversation = await db.conversation.findFirst({
-      where: { classRoomId: classroomId, memberId: existingMembership.id },
+      where: { classRoomId: classroomId, userId: ctx.userId },
     });
 
     if (!existingConversation) {
@@ -103,7 +89,7 @@ export const clearConversation = privateProcedure
 
     await db.conversation.deleteMany({
       where: {
-        memberId: existingMembership.id,
+        userId: ctx.userId,
         classRoomId: existingConversation.classRoomId,
       },
     });
@@ -120,18 +106,13 @@ export const removeConversation = privateProcedure
   .input(
     z.object({
       conversationId: z.string(),
-      classroomId: z.string(),
     })
   )
   .mutation(async ({ ctx, input }) => {
     const { conversationId } = input;
-    const existingMembership = await getMembershipDetails(
-      ctx.userId,
-      input.classroomId
-    );
 
     const existingConversation = await db.conversation.findFirst({
-      where: { id: conversationId, memberId: existingMembership.id },
+      where: { id: conversationId, userId: ctx.userId },
     });
 
     if (!existingConversation) {
@@ -144,24 +125,8 @@ export const removeConversation = privateProcedure
     await db.conversation.delete({
       where: {
         id: conversationId,
-        memberId: existingMembership.id,
+        userId: ctx.userId,
         classRoomId: existingConversation.classRoomId,
       },
     });
   });
-
-const getMembershipDetails = async (userId: string, classroomId: string) => {
-  const existingMembership = await db.membership.findFirst({
-    where: { userId, classRoomId: classroomId },
-    select: { id: true },
-  });
-
-  if (!existingMembership) {
-    throw new TRPCError({
-      code: "NOT_FOUND",
-      message: "You are not a member of this classroom.",
-    });
-  }
-
-  return existingMembership;
-};

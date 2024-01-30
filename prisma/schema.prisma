@@ -65,6 +65,7 @@ model User {
   classrooms     ClassRoom[] //only teachers will have this
   announcements  Announcement[]
   memberships    Membership[] //only students will have this
+  conversations  Conversation[]
   questions      Question[]
   answers        Answer[]
   media          Media[]
@@ -139,8 +140,7 @@ model Membership {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  submissions   Submission[]
-  conversations Conversation[]
+  submissions Submission[]
 }
 
 model Conversation {
@@ -149,8 +149,8 @@ model Conversation {
   prompt String
   answer String
 
-  memberId String
-  member   Membership @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   classRoomId String
   classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)

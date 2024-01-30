@@ -49,13 +49,15 @@ export const useClearConversation = () => {
 
 export const useRemoveConversation = ({
   closeModal,
+  classroomId,
 }: {
   closeModal: () => void;
+  classroomId: string;
 }) => {
   const utils = trpc.useUtils();
 
   return trpc.conversation.removeConversation.useMutation({
-    onMutate: async ({ conversationId, classroomId }) => {
+    onMutate: async ({ conversationId }) => {
       closeModal();
 
       await utils.conversation.getPreviousConversations.cancel({ classroomId });
@@ -71,7 +73,7 @@ export const useRemoveConversation = ({
 
       return { prevConversations };
     },
-    onError: (error, { classroomId }, ctx) => {
+    onError: (error, data, ctx) => {
       toast.error(error.message);
 
       utils.conversation.getPreviousConversations.setData(
@@ -79,7 +81,7 @@ export const useRemoveConversation = ({
         ctx?.prevConversations
       );
     },
-    onSettled: (_, err, { classroomId }) => {
+    onSettled: () => {
       utils.conversation.getPreviousConversations.invalidate({ classroomId });
     },
   });

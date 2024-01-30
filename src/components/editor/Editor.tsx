@@ -26,11 +26,13 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
   const initializeEditor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
     //@ts-ignore
+    const Header = (await import("@editorjs/header")).default;
+    //@ts-ignore
     const Embed = (await import("@editorjs/embed")).default;
     //@ts-ignore
     const Table = (await import("@editorjs/table")).default;
     //@ts-ignore
-    const List = (await import("@editorjs/list")).default;
+    const NestedList = (await import("@editorjs/nested-list")).default;
     //@ts-ignore
     const Code = (await import("@editorjs/code")).default;
     //@ts-ignore
@@ -58,11 +60,21 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
         onReady() {
           ref.current = editor;
         },
+        autofocus: true,
+
         placeholder:
           "Provide concise instructions and details for your assignment here.",
         inlineToolbar: true,
         data: { blocks: [] },
         tools: {
+          header: {
+            class: Header,
+            config: {
+              levels: [1, 2, 3, 4],
+              defaultLevel: 2,
+              shortcut: "CMD+H",
+            },
+          },
           linkTool: {
             class: LinkTool,
             shortcut: "CMD+L",
@@ -113,8 +125,11 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
           delimiter: Delimiter,
           raw: Raw,
           list: {
-            class: List,
-            shortcut: "CMD+SHIFT+L",
+            class: NestedList,
+            inlineToolbar: true,
+            config: {
+              defaultStyle: "ordered",
+            },
           },
           code: Code,
           inlineCode: {
@@ -134,6 +149,7 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
   const insertBlock = (text: string) => {
     const formattedText = text.replace(/\n/g, "<br>");
 
+    ref.current?.caret.setToNextBlock();
     ref.current?.blocks.insert("paragraph", { text: formattedText });
   };
 
@@ -182,14 +198,14 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
 
   return (
     <>
-      <ScrollArea className="h-[400px] border rounded-md p-2">
+      <ScrollArea className="h-[400px] p-2">
         <motion.div
           variants={ContainerHeightVariants}
           initial="initial"
           animate="animate"
           exit="exit"
           id="editor"
-          className="px-4"
+          className="px-4 typography-styles"
         />
       </ScrollArea>
 
