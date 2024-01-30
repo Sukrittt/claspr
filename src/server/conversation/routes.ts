@@ -24,12 +24,17 @@ export const createConversation = privateProcedure
   .mutation(async ({ ctx, input }) => {
     const { prompt, classroomId, answer } = input;
 
+    const existingMembership = await getMembershipDetails(
+      ctx.userId,
+      input.classroomId
+    );
+
     await db.conversation.create({
       data: {
         prompt,
         answer,
         classRoomId: classroomId,
-        userId: ctx.userId,
+        memberId: existingMembership.id,
       },
     });
   });
@@ -49,8 +54,16 @@ export const getPreviousConversations = privateProcedure
     })
   )
   .query(async ({ ctx, input }) => {
+    const existingMembership = await getMembershipDetails(
+      ctx.userId,
+      input.classroomId
+    );
+
     const conversations = await db.conversation.findMany({
-      where: { userId: ctx.userId, classRoomId: input.classroomId },
+      where: {
+        memberId: existingMembership.id,
+        classRoomId: input.classroomId,
+      },
       orderBy: { createdAt: "desc" },
       take: input.limit ?? undefined,
     });
@@ -72,9 +85,13 @@ export const clearConversation = privateProcedure
   )
   .mutation(async ({ ctx, input }) => {
     const { classroomId } = input;
+    const existingMembership = await getMembershipDetails(
+      ctx.userId,
+      input.classroomId
+    );
 
     const existingConversation = await db.conversation.findFirst({
-      where: { classRoomId: classroomId, userId: ctx.userId },
+      where: { classRoomId: classroomId, memberId: existingMembership.id },
     });
 
     if (!existingConversation) {
@@ -86,7 +103,7 @@ export const clearConversation = privateProcedure
 
     await db.conversation.deleteMany({
       where: {
-        userId: ctx.userId,
+        memberId: existingMembership.id,
         classRoomId: existingConversation.classRoomId,
       },
     });
@@ -97,18 +114,24 @@ export const clearConversation = privateProcedure
  *
  * @param {object} input - The input parameters for removing a conversation with AI.
  * @param {string} input.conversationId - The id of the conversation to remove.
+ * @param {string} input.classroomId - The id of the classroom to remove the conversation from.
  */
 export const removeConversation = privateProcedure
   .input(
     z.object({
       conversationId: z.string(),
+      classroomId: z.string(),
     })
   )
   .mutation(async ({ ctx, input }) => {
     const { conversationId } = input;
+    const existingMembership = await getMembershipDetails(
+      ctx.userId,
+      input.classroomId
+    );
 
     const existingConversation = await db.conversation.findFirst({
-      where: { id: conversationId, userId: ctx.userId },
+      where: { id: conversationId, memberId: existingMembership.id },
     });
 
     if (!existingConversation) {
@@ -121,8 +144,24 @@ export const removeConversation = privateProcedure
     await db.conversation.delete({
       where: {
         id: conversationId,
-        userId: ctx.userId,
+        memberId: existingMembership.id,
         classRoomId: existingConversation.classRoomId,
       },
     });
   });
+
+const getMembershipDetails = async (userId: string, classroomId: string) => {
+  const existingMembership = await db.membership.findFirst({
+    where: { userId, classRoomId: classroomId },
+    select: { id: true },
+  });
+
+  if (!existingMembership) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "You are not a member of this classroom.",
+    });
+  }
+
+  return existingMembership;
+};

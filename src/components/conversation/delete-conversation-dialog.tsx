@@ -41,7 +41,6 @@ export const DeleteConversationDialog = ({
 
   const { mutate: removeConversation } = useRemoveConversation({
     closeModal,
-    classroomId,
   });
 
   return (
@@ -60,7 +59,7 @@ export const DeleteConversationDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => removeConversation({ conversationId })}
+            onClick={() => removeConversation({ conversationId, classroomId })}
             className="pt-2"
           >
             Continue
