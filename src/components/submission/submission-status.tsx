@@ -21,7 +21,7 @@ export const SubmissionStatus: React.FC<SubmissionStatusProps> = ({
           <DatePicker
             value={date}
             setValue={setDate}
-            disabled={[{ before: new Date() }]}
+            disabled={[{ before: new Date() }, new Date()]}
           />
         </div>
         <div className="flex items-center justify-end gap-x-2">

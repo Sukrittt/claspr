@@ -120,7 +120,6 @@ model ClassRoom {
   announcements  Announcement[]
   conversations  Conversation[]
   studyMaterials StudyMaterial[]
-  events         Event[]
 }
 
 model Membership {
@@ -212,6 +211,7 @@ model Announcement {
 
   submissions Submission[]
   media       Media[]
+  events      Event[] // one-to-one relationship with event
 }
 
 model Submission {
@@ -292,11 +292,11 @@ model Event {
   description String?
   eventDate   DateTime
 
-  classRoomId String
-  classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
+  announcementId String?
+  announcement   Announcement? @relation(fields: [announcementId], references: [id])
 
-  teacherId String
-  teacher   User   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

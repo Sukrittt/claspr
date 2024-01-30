@@ -20,7 +20,7 @@ export const createAnnouncement = privateProcedure
       title: z.string().min(3).max(80),
       classRoomId: z.string(),
       content: z.any(),
-      dueDate: z.date(),
+      dueDate: z.date().min(new Date()),
       lateSubmission: z.boolean().optional().default(false),
     })
   )
@@ -39,28 +39,25 @@ export const createAnnouncement = privateProcedure
       });
     }
 
-    const promises = [
-      db.event.create({
-        data: {
-          classRoomId,
-          title,
-          teacherId: ctx.userId,
-          eventDate: dueDate,
-        },
-      }),
-      db.announcement.create({
-        data: {
-          title,
-          description: content,
-          classRoomId,
-          dueDate,
-          lateSubmission,
-          creatorId: ctx.userId,
-        },
-      }),
-    ];
+    const createdAnnouncement = await db.announcement.create({
+      data: {
+        title,
+        description: content,
+        classRoomId,
+        dueDate,
+        lateSubmission,
+        creatorId: ctx.userId,
+      },
+    });
 
-    await Promise.all(promises);
+    await db.event.create({
+      data: {
+        title,
+        announcementId: createdAnnouncement.id,
+        userId: ctx.userId,
+        eventDate: dueDate,
+      },
+    });
   });
 
 /**

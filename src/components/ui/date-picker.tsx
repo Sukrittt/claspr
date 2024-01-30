@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { format } from "date-fns";
+import { addDays, format } from "date-fns";
 import { Matcher } from "react-day-picker";
+import { useEffect, useState } from "react";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import {
@@ -11,8 +11,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Button, buttonVariants } from "@/components/ui/button";
 
 interface DatePickerProps {
   value: Date | undefined;
@@ -22,6 +22,8 @@ interface DatePickerProps {
 
 export function DatePicker({ setValue, value, disabled }: DatePickerProps) {
   const [date, setDate] = useState<Date>();
+
+  const tomorrow = addDays(new Date(), 1);
 
   useEffect(() => {
     if (!date) return;
@@ -50,7 +52,7 @@ export function DatePicker({ setValue, value, disabled }: DatePickerProps) {
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          today={value || new Date()}
+          today={value || tomorrow}
           selected={date}
           onSelect={setDate}
           initialFocus
