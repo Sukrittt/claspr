@@ -34,6 +34,8 @@ interface ClassAIDialogProps {
   addInfo?: string;
 }
 
+const followUpInstructions = AiPersonal["FOLLOW_UP"];
+
 export const AIDialog: React.FC<ClassAIDialogProps> = ({
   classroom,
   moveToEditor,
@@ -49,6 +51,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
 
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [followUpQuestion, setFollowUpQuestion] = useState("");
 
   const { data: prevConversations, isLoading: isFetchingConversations } =
     useConversation(classroom.id, 30);
@@ -65,11 +68,12 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
       });
 
       const prompt = addInfo
-        ? `This is the title given by the teacher for this assignment: ${addInfo}. Generate prompt based on this query: ${userQuery}`
+        ? `This is the title given by the teacher for this assignment: ${addInfo}. Generate content based on this query: ${userQuery}`
         : userQuery;
 
       const payload: PromptValidatorType = {
-        prompt,
+        prompt: prompt + "\n\n" + followUpInstructions,
+        classTitle: classroom.title,
         classDescription: classroom.description,
         prevConversations: prevConvo ?? [],
         personal: AiPersonal[personal ?? "TEACHER"],
@@ -97,6 +101,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
         });
       } else {
         setInput("");
+        setFollowUpQuestion("");
         setPrevInput(input);
 
         const reader = stream.getReader();
@@ -114,6 +119,13 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           accResponse += chunkValue;
           setRes(accResponse);
         }
+
+        // To extract the follow up question using the ^^ symbol
+        const lastIndex = accResponse.lastIndexOf("^^");
+        const nextQuestion =
+          lastIndex === -1 ? "" : accResponse.substring(lastIndex + 2);
+
+        setFollowUpQuestion(nextQuestion);
 
         // Create a conversation with the AI
         createConversation({
@@ -142,6 +154,8 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
   };
 
   const handleCopyOutput = (text: string) => {
+    if (!text) return;
+
     navigator.clipboard.writeText(text);
     setCopied(true);
 
@@ -153,6 +167,14 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
     moveToEditor?.(text);
     toast.success("Moved to editor.");
     setOpen(false);
+  };
+
+  const getFilteredResponse = (text: string) => {
+    const underscoreIndex = text.lastIndexOf("^^");
+    const result =
+      underscoreIndex !== -1 ? text.substring(0, underscoreIndex) : text;
+
+    return result;
   };
 
   return (
@@ -174,46 +196,13 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           </CustomTooltip>
         </motion.div>
       </DialogTrigger>
-      <DialogContent
-        className={cn("max-w-2xl", {
-          "pb-2": res.length === 0,
-        })}
-      >
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Ask me anything</DialogTitle>
           <DialogDescription>
-            Unlock personalized insights with AI&rsquo;s prompt memory.
+            Unlock personalized insights with AI&rsquo;s prompt memory
           </DialogDescription>
         </DialogHeader>
-        {isFetchingConversations ? (
-          <AiInputSkeleton />
-        ) : (
-          <div className="flex gap-x-2">
-            <Input
-              placeholder="Type your prompt here."
-              disabled={isLoading || isGenerating}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleAskAI(input);
-                }
-              }}
-            />
-            <Button
-              disabled={isLoading || isGenerating || input.length === 0}
-              onClick={() => handleAskAI(input)}
-            >
-              {isLoading ? (
-                <div className="h-5 w-6 flex items-center justify-center">
-                  <Loader className="w-4 h-4 animate-spin" />
-                </div>
-              ) : (
-                "Ask"
-              )}
-            </Button>
-          </div>
-        )}
         <AnimatePresence mode="wait">
           <motion.div
             variants={ContainerVariants}
@@ -222,25 +211,27 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
             exit="exit"
           >
             <ScrollArea
-              onClick={() => handleCopyOutput(res)}
               className={cn(
-                "transition-[height] opacity-0 border border-border rounded-md cursor-pointer",
+                "transition-[height] opacity-0 border border-border rounded-md relative",
                 {
                   "h-[300px] p-5 opacity-100": res.length !== 0,
-                  "h-0": res.length === 0,
+                  "h-0 cursor-default": res.length === 0,
                 }
               )}
             >
-              <div className="flex items-center justify-between">
+              <div
+                onClick={() => handleCopyOutput(res)}
+                className="cursor-pointer group"
+              >
                 <h3 className="font-semibold text-[17px] tracking-tight pb-1.5">
                   {prevInput}
                 </h3>
-                <div className="flex gap-x-3 items-center">
+                <div className="hidden group-hover:flex gap-x-3 items-center absolute bottom-3 right-3">
                   <CustomTooltip text="Click to copy">
                     {copied ? (
-                      <Check className="w-3.5 h-3.5 hover:text-gray-800 transition" />
+                      <Check className="w-3 h-3 hover:text-gray-800 transition" />
                     ) : (
-                      <Copy className="w-3.5 h-3.5 hover:text-gray-800 transition" />
+                      <Copy className="w-3 h-3 hover:text-gray-800 transition" />
                     )}
                   </CustomTooltip>
                   {moveToEditor && !isLoading && (
@@ -255,11 +246,75 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
                     </CustomTooltip>
                   )}
                 </div>
+                <Markdown className="text-[15px] text-gray-800">
+                  {getFilteredResponse(res)}
+                </Markdown>
               </div>
-              <Markdown className="text-[15px] text-gray-800">{res}</Markdown>
+              <AnimatePresence mode="wait">
+                {followUpQuestion && (
+                  <motion.div
+                    variants={ContainerVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="space-y-1 mt-4"
+                  >
+                    <h5 className="font-semibold text-sm text-neutral-800 tracking-tight">
+                      Next Up
+                    </h5>
+                    <p className="text-[15px] text-gray-800">
+                      {followUpQuestion}{" "}
+                      <span
+                        onClick={() => {
+                          setInput(followUpQuestion);
+                          handleAskAI(followUpQuestion);
+                        }}
+                        className="font-medium text-muted-foreground text-sm hover:underline underline-offset-4 cursor-pointer"
+                      >
+                        Continue.
+                      </span>
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </ScrollArea>
           </motion.div>
         </AnimatePresence>
+        <div
+          className={cn({
+            "-mt-4": res.length === 0,
+          })}
+        >
+          {isFetchingConversations ? (
+            <AiInputSkeleton />
+          ) : (
+            <div className="flex gap-x-2">
+              <Input
+                placeholder="Type your prompt here."
+                disabled={isLoading || isGenerating}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleAskAI(input);
+                  }
+                }}
+              />
+              <Button
+                disabled={isLoading || isGenerating || input.length === 0}
+                onClick={() => handleAskAI(input)}
+              >
+                {isLoading ? (
+                  <div className="h-5 w-6 flex items-center justify-center">
+                    <Loader className="w-4 h-4 animate-spin" />
+                  </div>
+                ) : (
+                  "Ask"
+                )}
+              </Button>
+            </div>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

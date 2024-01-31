@@ -24,8 +24,14 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const body = await req.json();
-  const { prompt, classDescription, prevConversations, personal, temperature } =
-    PromptValidator.parse(body);
+  const {
+    prompt,
+    classDescription,
+    prevConversations,
+    personal,
+    temperature,
+    classTitle,
+  } = PromptValidator.parse(body);
 
   const formattedPrevConversations = prevConversations
     .map((c, index) => {
@@ -37,12 +43,16 @@ export async function POST(req: Request): Promise<Response> {
 
   const customTemperature = temperature ?? 0.2;
   const validDescription = classDescription && classDescription !== "";
+  const validTitle = classTitle && classTitle !== "";
   const predefinedPrompt = personal ?? AiPersonal.TEACHER;
 
   const content =
     `${predefinedPrompt} ` +
+    (validTitle
+      ? `This is the classroom name provided by the teacher: ${classDescription} `
+      : "") +
     (validDescription
-      ? `This is the classroom description provided by the teacher: ${classDescription}`
+      ? `This is the classroom description provided by the teacher: ${classTitle} `
       : "") +
     (formattedPrevConversations.length > 0
       ? "Also, here are some previous questions asked by this user to help you out:\n" +

@@ -54,11 +54,9 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
   };
 
   const deadlinePassed = isAfter(new Date(), announcement.dueDate);
-  const preventSubmission = !!(
-    announcement.lateSubmission &&
-    !submission &&
-    deadlinePassed
-  );
+  const preventSubmission =
+    !!submission ||
+    !!(announcement.lateSubmission && !submission && deadlinePassed);
 
   const Icon = {
     [MediaType.LINK]: <LinkIcon className="h-4 w-4" />,
@@ -110,9 +108,11 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
                         {Icon[m.mediaType]}
                         {getSubmissionLabel(m.label, m.mediaType)}
                       </div>
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <MediaDropdown media={m} />
-                      </div>
+                      {!submission && (
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <MediaDropdown media={m} />
+                        </div>
+                      )}
                     </div>
                   ))}
                 </motion.div>
