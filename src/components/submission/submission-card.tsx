@@ -66,6 +66,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
   };
 
   const disabled =
+    !!submission ||
     preventSubmission ||
     isFetching ||
     isLoading ||

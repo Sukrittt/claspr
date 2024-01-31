@@ -130,3 +130,50 @@ export const removeConversation = privateProcedure
       },
     });
   });
+
+/**
+ * For giving a feedback to the AI for a particular conversation.
+ *
+ * @param {object} input - The input parameters for giving feedback to the AI.
+ * @param {string} input.conversationId - The id of the conversation to remove.
+ * @param {enum} input.feedback - The feedback given by the user.
+ */
+export const giveFeedback = privateProcedure
+  .input(
+    z.object({
+      conversationId: z.string(),
+      feedback: z.enum(["LIKE", "DISLIKE"]),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { conversationId, feedback } = input;
+
+    const existingConversation = await db.conversation.findFirst({
+      where: { id: conversationId, userId: ctx.userId },
+    });
+
+    if (!existingConversation) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the conversation you're looking for.",
+      });
+    }
+
+    if (existingConversation.feedback) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "You have already given your feedback for this conversation.",
+      });
+    }
+
+    await db.conversation.update({
+      where: {
+        id: conversationId,
+        userId: ctx.userId,
+        classRoomId: existingConversation.classRoomId,
+      },
+      data: {
+        feedback,
+      },
+    });
+  });

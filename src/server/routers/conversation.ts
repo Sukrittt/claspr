@@ -4,6 +4,7 @@ import {
   getPreviousConversations,
   removeConversation,
   clearConversation,
+  giveFeedback,
 } from "@/server/conversation/routes";
 
 export const conversationRouter = createTRPCRouter({
@@ -11,4 +12,5 @@ export const conversationRouter = createTRPCRouter({
   getPreviousConversations,
   removeConversation,
   clearConversation,
+  giveFeedback,
 });
