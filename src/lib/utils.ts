@@ -48,3 +48,11 @@ export const getSortedSectionsByOrder = (
 ) => {
   return sections.sort((a, b) => a.order - b.order);
 };
+
+export const getFilteredResponse = (text: string) => {
+  const underscoreIndex = text.lastIndexOf("^^");
+  const result =
+    underscoreIndex !== -1 ? text.substring(0, underscoreIndex) : text;
+
+  return result;
+};

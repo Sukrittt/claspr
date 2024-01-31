@@ -143,7 +143,7 @@ model Membership {
   submissions Submission[]
 }
 
-enum LIKE_STATUS {
+enum FEEDBACK_STATUS {
   LIKE
   DISLIKE
 }
@@ -154,7 +154,7 @@ model Conversation {
   prompt String
   answer String
 
-  feedback LIKE_STATUS?
+  feedback FEEDBACK_STATUS?
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

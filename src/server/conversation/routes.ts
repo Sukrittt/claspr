@@ -159,12 +159,7 @@ export const giveFeedback = privateProcedure
       });
     }
 
-    if (existingConversation.feedback) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "You have already given your feedback for this conversation.",
-      });
-    }
+    const removeVote = existingConversation.feedback === feedback;
 
     await db.conversation.update({
       where: {
@@ -173,7 +168,7 @@ export const giveFeedback = privateProcedure
         classRoomId: existingConversation.classRoomId,
       },
       data: {
-        feedback,
+        feedback: removeVote ? null : feedback,
       },
     });
   });

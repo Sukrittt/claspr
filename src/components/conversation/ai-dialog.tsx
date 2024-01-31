@@ -14,13 +14,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AiPersonal, type AiPersonalType } from "@/config/ai";
 import { ExtendedClassroomDetails } from "@/types";
+import { cn, getFilteredResponse } from "@/lib/utils";
 import { PromptValidatorType } from "@/types/validator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AiPersonal, type AiPersonalType } from "@/config/ai";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AiDialogVariants, ContainerVariants } from "@/lib/motion";
 import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
@@ -169,14 +169,6 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
     setOpen(false);
   };
 
-  const getFilteredResponse = (text: string) => {
-    const underscoreIndex = text.lastIndexOf("^^");
-    const result =
-      underscoreIndex !== -1 ? text.substring(0, underscoreIndex) : text;
-
-    return result;
-  };
-
   return (
     <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
       <DialogTrigger asChild>
@@ -226,7 +218,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
                 <h3 className="font-semibold text-[17px] tracking-tight pb-1.5">
                   {prevInput}
                 </h3>
-                <div className="hidden group-hover:flex gap-x-3 items-center absolute bottom-3 right-3">
+                <div className="opacity-0 group-hover:opacity-100 transition flex gap-x-3 items-center absolute bottom-3 right-3">
                   <CustomTooltip text="Click to copy">
                     {copied ? (
                       <Check className="w-3 h-3 hover:text-gray-800 transition" />

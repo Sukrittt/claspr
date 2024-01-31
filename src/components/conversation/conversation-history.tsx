@@ -1,14 +1,14 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import Markdown from "react-markdown";
-import { Check, Copy } from "lucide-react";
 import { Conversation } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
+import { Check, Copy, ThumbsDown, ThumbsUp } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
 import { useMounted } from "@/hooks/use-mounted";
 import { Separator } from "@/components/ui/separator";
+import { cn, getFilteredResponse } from "@/lib/utils";
 import { useConversation } from "@/hooks/conversation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ClearConversation } from "./clear-conversation";
@@ -16,6 +16,7 @@ import { ConversationDropdown } from "./conversation-dropdown";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConversationSkeleton } from "@/components/skeletons/conversation-skeleton";
+import { FeedbackConversation } from "./FeedbackConversation";
 
 export const ConversationHistory = ({
   classroomId,
@@ -121,15 +122,23 @@ const ConversationCard = ({ conversation }: { conversation: Conversation }) => {
           className="py-3 text-gray-800 text-[15px] cursor-pointer group"
           onClick={() => handleCopyOutput(conversation.answer)}
         >
-          <Markdown>{conversation.answer}</Markdown>
+          <Markdown>{getFilteredResponse(conversation.answer)}</Markdown>
           <div className="opacity-0 group-hover:opacity-100 transition absolute bottom-2.5 right-3.5">
-            <CustomTooltip text="Click to copy">
-              {copied ? (
-                <Check className="w-3 h-3" />
-              ) : (
-                <Copy className="w-3 h-3" />
-              )}
-            </CustomTooltip>
+            <div className="flex items-center gap-x-4">
+              <CustomTooltip text="Click to copy">
+                {copied ? (
+                  <Check className="w-3 h-3" />
+                ) : (
+                  <Copy className="w-3 h-3" />
+                )}
+              </CustomTooltip>
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-x-4"
+              >
+                <FeedbackConversation conversation={conversation} />
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

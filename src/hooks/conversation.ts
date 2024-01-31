@@ -86,3 +86,43 @@ export const useRemoveConversation = ({
     },
   });
 };
+
+export const useGiveFeedback = ({ classroomId }: { classroomId: string }) => {
+  const utils = trpc.useUtils();
+
+  return trpc.conversation.giveFeedback.useMutation({
+    onMutate: async ({ conversationId, feedback }) => {
+      await utils.conversation.getPreviousConversations.cancel({ classroomId });
+
+      const prevConversations =
+        utils.conversation.getPreviousConversations.getData();
+
+      utils.conversation.getPreviousConversations.setData(
+        { classroomId },
+        (prev) =>
+          prev?.map((conversation) =>
+            conversation.id === conversationId
+              ? {
+                  ...conversation,
+                  feedback:
+                    conversation.feedback === feedback ? null : feedback,
+                }
+              : conversation
+          )
+      );
+
+      return { prevConversations };
+    },
+    onError: (error, data, ctx) => {
+      toast.error(error.message);
+
+      utils.conversation.getPreviousConversations.setData(
+        { classroomId },
+        ctx?.prevConversations
+      );
+    },
+    onSettled: () => {
+      utils.conversation.getPreviousConversations.invalidate({ classroomId });
+    },
+  });
+};
