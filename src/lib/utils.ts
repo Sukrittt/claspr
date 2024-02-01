@@ -25,14 +25,14 @@ export function timeAgo(timestamp: Date) {
   time = time.replace("an ", "");
   time = time.replace("few seconds", "5s");
   time = time.replace(" seconds", "s");
-  time = time.replace(" minutes", "min");
-  time = time.replace("minute", "1min");
+  time = time.replace(" minutes", " min");
+  time = time.replace("minute", "1 min");
   time = time.replace(" hours", "hr");
   time = time.replace("hour", "1hr");
   time = time.replace(" days", "d");
   time = time.replace("day", "1d");
-  time = time.replace(" months", "m");
-  time = time.replace("month", "1m");
+  time = time.replace(" months", "months");
+  time = time.replace("month", "1 month");
   time = time.replace(" years", "y");
   time = time.replace("year", "1y");
   return time;

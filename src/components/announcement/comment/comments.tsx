@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { Session } from "next-auth";
 import { Inbox } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -13,9 +14,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { timeAgo } from "@/lib/utils";
 import { CommentInput } from "./comment-input";
 import { ContainerVariants } from "@/lib/motion";
+import { CommentDropdown } from "./comment-dropdown";
+import { cn, getShortenedText, timeAgo } from "@/lib/utils";
 import { UserAvatar } from "@/components/custom/user-avatar";
 
 interface CommentsProps {
@@ -31,13 +33,13 @@ export const Comments: React.FC<CommentsProps> = ({
 
   return (
     <Card className="border border-neutral-300 flex-1 flex flex-col overflow-hidden bg-neutral-100">
-      <CardHeader className="py-3 space-y-0.5 bg-neutral-200">
+      <CardHeader className="py-3 pl-4 pr-3 space-y-0.5 bg-neutral-200">
         <CardTitle className="text-[13px] text-neutral-700">Comments</CardTitle>
         <CardDescription className="text-[13px]">
           Visible only to you and your teacher
         </CardDescription>
       </CardHeader>
-      <CardContent className="py-3 flex-1 flex flex-col gap-y-2">
+      <CardContent className="py-3 flex-1 flex flex-col gap-y-2 pl-4 pr-3">
         <div className="flex-1 text-sm text-muted-foreground">
           {isLoading ? (
             <p>Loading...</p>
@@ -54,8 +56,8 @@ export const Comments: React.FC<CommentsProps> = ({
                 animate="animate"
                 exit="exit"
               >
-                <ScrollArea className="h-[200px]">
-                  <div className="flex flex-col gap-y-3 pt-2">
+                <ScrollArea className="h-[200px] pb-4">
+                  <div className="flex flex-col gap-y-4 pt-2">
                     {comments.map((comment) => (
                       <CommentCard comment={comment} key={comment.id} />
                     ))}
@@ -76,15 +78,41 @@ interface CommentCardProps {
 }
 
 const CommentCard: React.FC<CommentCardProps> = ({ comment }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   return (
-    <div className="flex gap-x-2">
+    <div className="flex gap-x-2 w-full group">
       <UserAvatar user={comment.user} className="h-5 w-5" />
-      <div className="space-y-2">
-        <div className="flex items-center tracking-tight text-xs gap-x-2">
-          <p className="font-semibold text-neutral-800">{comment.user.name}</p>
-          <p className="font-medium">{timeAgo(comment.createdAt)}</p>
+      <div className="space-y-1.5 w-full">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center tracking-tight text-xs gap-x-2">
+            <p className="font-semibold text-neutral-800">
+              {getShortenedText(comment.user.name ?? "", 20)}
+            </p>
+            <p className="font-medium">{timeAgo(comment.createdAt)}</p>
+          </div>
+
+          <div
+            className={cn("opacity-0 group-hover:opacity-100 transition", {
+              "opacity-100": isDropdownOpen,
+            })}
+          >
+            <CommentDropdown
+              isDropdownOpen={isDropdownOpen}
+              setIsDropdownOpen={setIsDropdownOpen}
+              comment={comment}
+            />
+          </div>
         </div>
-        <p className="text-[13px] text-neutral-700">{comment.message}</p>
+
+        <p className="text-[13px] text-neutral-700">
+          {comment.message}
+          {comment.isEdited && (
+            <span className="pl-1 font-semibold text-[11px] text-muted-foreground">
+              (Edited)
+            </span>
+          )}
+        </p>
       </div>
     </div>
   );

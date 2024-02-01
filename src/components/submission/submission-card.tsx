@@ -76,13 +76,13 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
 
   return (
     <Card className="overflow-hidden border border-neutral-300 bg-neutral-100">
-      <CardHeader className="bg-neutral-200 py-3 space-y-0">
+      <CardHeader className="bg-neutral-200 py-3 pl-4 pr-3 space-y-0">
         <CardTitle className="text-lg">Submit your work</CardTitle>
         <CardDescription>
           Attach files or links to submit your work.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-2 pt-5 pb-3">
+      <CardContent className="space-y-2 pt-5 pb-3 pl-4 pr-3">
         <div className="text-sm text-muted-foreground">
           <ScrollArea className="h-[90px]">
             {isLoading || isFetching ? (
@@ -124,7 +124,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
           </ScrollArea>
         </div>
       </CardContent>
-      <CardFooter className="py-3 flex gap-x-2">
+      <CardFooter className="py-3 pl-4 pr-3 flex gap-x-2">
         {isFetching ? (
           <SubmissionFooterSkeleton />
         ) : submission ? (

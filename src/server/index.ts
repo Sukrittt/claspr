@@ -7,6 +7,7 @@ import { sectionRouter } from "@/server/routers/section";
 import { submissionRouter } from "@/server/routers/submission";
 import { announcementRouter } from "@/server/routers/annoucement";
 import { conversationRouter } from "@/server/routers/conversation";
+import { commentRouter } from "@/server/routers/comment";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   submission: submissionRouter,
   media: mediaRouter,
   event: eventRouter,
+  comment: commentRouter,
 });
 
 export type AppRouter = typeof appRouter;
