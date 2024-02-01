@@ -8,6 +8,7 @@ export const PromptValidator = z.object({
     z.object({
       prompt: z.string(),
       answer: z.string(),
+      feedback: z.enum(["LIKE", "DISLIKE"]).nullable(),
     })
   ),
   personal: z.optional(z.string()),

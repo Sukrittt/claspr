@@ -35,9 +35,13 @@ export async function POST(req: Request): Promise<Response> {
 
   const formattedPrevConversations = prevConversations
     .map((c, index) => {
-      if (index === 0) return `\n${index + 1}. ${c.prompt}`;
-
-      return `${index + 1}. ${c.prompt}`;
+      return `\n${index + 1}. ${c.prompt}.${
+        c.feedback
+          ? ` The user has ${
+              c.feedback === "LIKE" ? "liked" : "disliked"
+            } this conversation.`
+          : ""
+      }`;
     })
     .join("\n\n");
 
@@ -55,7 +59,7 @@ export async function POST(req: Request): Promise<Response> {
       ? `This is the classroom description provided by the teacher: ${classTitle} `
       : "") +
     (formattedPrevConversations.length > 0
-      ? "Also, here are some previous questions asked by this user to help you out:\n" +
+      ? "Also, here are some previous questions asked by this user to give you more context of what the user has asked earlier. Additionally, consider the user's likes and dislikes based on the conversations. Note: Only consider the user's likes and dislikes when feedback has been provided. \n\n" +
         formattedPrevConversations.slice(0, 30)
       : "");
 

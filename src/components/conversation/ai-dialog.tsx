@@ -30,15 +30,15 @@ interface ClassAIDialogProps {
   classroom: ExtendedClassroomDetails | ClassRoom;
   moveToEditor?: (text: string) => void;
   personal?: AiPersonalType;
+  hasFollowUp?: boolean;
   temperature?: number;
   addInfo?: string;
 }
 
-const followUpInstructions = AiPersonal["FOLLOW_UP"];
-
 export const AIDialog: React.FC<ClassAIDialogProps> = ({
   classroom,
   moveToEditor,
+  hasFollowUp = false,
   personal,
   temperature,
   addInfo,
@@ -64,15 +64,18 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
         return {
           prompt: convo.prompt,
           answer: convo.answer,
+          feedback: convo.feedback,
         };
       });
 
       const prompt = addInfo
-        ? `This is the title given by the teacher for this assignment: ${addInfo}. Generate content based on this query: ${userQuery}`
+        ? `${addInfo}. Generate content based on this query: ${userQuery}`
         : userQuery;
 
       const payload: PromptValidatorType = {
-        prompt: prompt + "\n\n" + followUpInstructions,
+        prompt: hasFollowUp
+          ? prompt + "\n\n" + AiPersonal["FOLLOW_UP"]
+          : prompt,
         classTitle: classroom.title,
         classDescription: classroom.description,
         prevConversations: prevConvo ?? [],

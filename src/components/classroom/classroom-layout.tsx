@@ -43,7 +43,7 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
         <ClassroomCard classroom={classroom} sessionId={session.user.id} />
         <UpcomingEvents classroom={classroom} />
       </div>
-      <AIDialog classroom={classroom} />
+      <AIDialog classroom={classroom} hasFollowUp />
     </div>
   );
 };

@@ -196,6 +196,8 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
     return <p>Just a moment...</p>;
   }
 
+  const addInfo = `This is the title given by the teacher for this assignment: ${title}.`;
+
   return (
     <>
       <ScrollArea className="h-[400px] p-2">
@@ -214,7 +216,7 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
         classroom={classroom}
         moveToEditor={insertBlock}
         personal="QUESTION_EXPERT"
-        addInfo={title}
+        addInfo={addInfo}
       />
     </>
   );
