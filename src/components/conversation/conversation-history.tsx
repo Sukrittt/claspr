@@ -119,11 +119,11 @@ const ConversationCard = ({ conversation }: { conversation: Conversation }) => {
           </div>
         </CardHeader>
         <CardContent
-          className="py-3 text-gray-800 text-[15px] cursor-pointer group"
+          className="pt-3 pb-9 text-gray-800 text-[15px] cursor-pointer group"
           onClick={() => handleCopyOutput(conversation.answer)}
         >
           <Markdown>{getFilteredResponse(conversation.answer)}</Markdown>
-          <div className="opacity-0 group-hover:opacity-100 transition absolute bottom-2.5 right-3.5">
+          <div className="opacity-0 group-hover:opacity-100 transition absolute bottom-2 right-3.5">
             <div className="flex items-center gap-x-4">
               <CustomTooltip text="Click to copy">
                 {copied ? (
