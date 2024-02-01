@@ -1,9 +1,9 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import Markdown from "react-markdown";
+import { Check, Copy } from "lucide-react";
 import { Conversation } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Copy, ThumbsDown, ThumbsUp } from "lucide-react";
 
 import { ContainerVariants } from "@/lib/motion";
 import { useMounted } from "@/hooks/use-mounted";
@@ -12,11 +12,11 @@ import { cn, getFilteredResponse } from "@/lib/utils";
 import { useConversation } from "@/hooks/conversation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ClearConversation } from "./clear-conversation";
+import { FeedbackConversation } from "./FeedbackConversation";
 import { ConversationDropdown } from "./conversation-dropdown";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConversationSkeleton } from "@/components/skeletons/conversation-skeleton";
-import { FeedbackConversation } from "./FeedbackConversation";
 
 export const ConversationHistory = ({
   classroomId,
@@ -87,7 +87,7 @@ const ConversationCard = ({ conversation }: { conversation: Conversation }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleCopyOutput = (text: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(getFilteredResponse(text));
     setCopied(true);
 
     toast.success("Copied to clipboard.");

@@ -156,7 +156,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
   const handleCopyOutput = (text: string) => {
     if (!text) return;
 
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(getFilteredResponse(text));
     setCopied(true);
 
     toast.success("Copied to clipboard.");
