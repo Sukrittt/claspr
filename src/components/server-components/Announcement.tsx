@@ -36,7 +36,7 @@ export const Announcement: React.FC<AnnouncementProps> = async ({
       {isTeacher ? (
         <TeacherView />
       ) : (
-        <StudentView announcement={announcement} />
+        <StudentView announcement={announcement} session={session} />
       )}
     </PartOfClass>
   );

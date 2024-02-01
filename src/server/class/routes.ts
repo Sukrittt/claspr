@@ -532,24 +532,27 @@ export const getIsPartOfClass = privateProcedure
   .query(async ({ input, ctx }) => {
     const { classroomId, isTeacher } = input;
 
-    const teacher = await db.classRoom.findFirst({
-      where: {
-        id: classroomId,
-        teacherId: ctx.userId,
-      },
-      select: {
-        id: true,
-      },
-    });
+    const promises = [
+      db.classRoom.findFirst({
+        where: {
+          id: classroomId,
+          teacherId: ctx.userId,
+        },
+        select: {
+          id: true,
+        },
+      }),
+      db.membership.findFirst({
+        where: {
+          classRoomId: classroomId,
+          userId: ctx.userId,
+          isTeacher,
+        },
+        select: { id: true },
+      }),
+    ];
 
-    const member = await db.membership.findFirst({
-      where: {
-        classRoomId: classroomId,
-        userId: ctx.userId,
-        isTeacher,
-      },
-      select: { id: true },
-    });
+    const [teacher, member] = await Promise.all(promises);
 
     const isPartOfClass = !!member || !!teacher;
 

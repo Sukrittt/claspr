@@ -1,7 +1,7 @@
 "use client";
 import { isAfter } from "date-fns";
 import { MediaType } from "@prisma/client";
-import { LinkIcon, File } from "lucide-react";
+import { LinkIcon, File, FileX } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import {
 import { Unsubmit } from "./unsubmit";
 import { useGetMedia } from "@/hooks/media";
 import { getShortenedText } from "@/lib/utils";
+import { ExtendedAnnouncement } from "@/types";
 import { ContainerVariants } from "@/lib/motion";
 import { useGetSubmission } from "@/hooks/submission";
 import { SubmissionDropdown } from "./submission-dropdown";
@@ -26,7 +27,6 @@ import {
 import { CreateSubmission } from "./create-submission";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MediaDropdown } from "@/components/media/media-dropdown";
-import { ExtendedAnnouncement } from "@/types";
 
 interface SubmissionCardProps {
   announcement: ExtendedAnnouncement;
@@ -84,12 +84,15 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
       </CardHeader>
       <CardContent className="space-y-2 pt-5 pb-3">
         <div className="text-sm text-muted-foreground">
-          {isLoading || isFetching ? (
-            <SubmissionSkeleton />
-          ) : !media || media.length === 0 ? (
-            <p className="text-center">No media attached yet.</p>
-          ) : (
-            <ScrollArea className="h-[150px]">
+          <ScrollArea className="h-[90px]">
+            {isLoading || isFetching ? (
+              <SubmissionSkeleton />
+            ) : !media || media.length === 0 ? (
+              <div className="pt-10 flex justify-center items-center gap-x-2">
+                <FileX className="h-4 w-4" />
+                <p>No work attached yet.</p>
+              </div>
+            ) : (
               <AnimatePresence mode="wait">
                 <motion.div
                   variants={ContainerVariants}
@@ -117,8 +120,8 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
                   ))}
                 </motion.div>
               </AnimatePresence>
-            </ScrollArea>
-          )}
+            )}
+          </ScrollArea>
         </div>
       </CardContent>
       <CardFooter className="py-3 flex gap-x-2">

@@ -1,6 +1,7 @@
 import {
   Announcement,
   ClassRoom,
+  Comment,
   Membership,
   Section,
   Submission,
@@ -38,4 +39,8 @@ export type ExtendedAnnouncement = Announcement & {
   submissions: (Submission & {
     member: Membership;
   })[];
+};
+
+export type ExtendedComment = Comment & {
+  user: User;
 };

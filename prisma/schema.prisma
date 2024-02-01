@@ -231,7 +231,7 @@ model Comment {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  edited Boolean? @default(false)
+  isEdited Boolean? @default(false)
 
   announcementId String
   announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)

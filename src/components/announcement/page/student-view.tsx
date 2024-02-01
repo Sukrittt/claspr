@@ -1,19 +1,25 @@
 import moment from "moment";
+import { Session } from "next-auth";
 
 import { timeAgo } from "@/lib/utils";
 import { ExtendedAnnouncement } from "@/types";
-import { SubmissionCard } from "../../submission/submission-card";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
+import { Comments } from "@/components/announcement/comment/comments";
 import { EditorOutput } from "@/components/editor/EditorOutput";
+import { SubmissionCard } from "@/components/submission/submission-card";
 import { SubmissionDetails } from "@/components/submission/submission-details";
 
 interface StudentViewProps {
   announcement: ExtendedAnnouncement;
+  session: Session;
 }
 
-export const StudentView: React.FC<StudentViewProps> = ({ announcement }) => {
+export const StudentView: React.FC<StudentViewProps> = ({
+  announcement,
+  session,
+}) => {
   const getModifiedDueDate = () => {
     const parsedDueDate = moment(announcement.dueDate, "YYYY-MM-DD");
 
@@ -58,8 +64,9 @@ export const StudentView: React.FC<StudentViewProps> = ({ announcement }) => {
           </ScrollArea>
         </div>
       </div>
-      <div className="col-span-3 xl:col-span-2 w-full">
+      <div className="col-span-3 xl:col-span-2 w-full flex flex-col gap-y-4">
         <SubmissionCard announcement={announcement} />
+        <Comments announcement={announcement} session={session} />
       </div>
     </div>
   );
