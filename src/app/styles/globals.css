@@ -74,7 +74,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border min-w-0;
   }
   body {
     @apply bg-background text-foreground svg-pattern;
@@ -87,4 +87,9 @@
 
 #portal-item {
   opacity: 0.6 !important;
+}
+
+.break-format {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }

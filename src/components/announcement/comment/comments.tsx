@@ -105,7 +105,7 @@ const CommentCard: React.FC<CommentCardProps> = ({ comment }) => {
           </div>
         </div>
 
-        <p className="text-[13px] text-neutral-700">
+        <p className="text-[13px] break-format text-neutral-700">
           {comment.message}
           {comment.isEdited && (
             <span className="pl-1 font-semibold text-[11px] text-muted-foreground">
