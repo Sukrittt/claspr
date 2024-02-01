@@ -64,6 +64,7 @@ model User {
   sections       Section[]
   classrooms     ClassRoom[] //only teachers will have this
   announcements  Announcement[]
+  comments       Comment[]
   memberships    Membership[] //only students will have this
   conversations  Conversation[]
   questions      Question[]
@@ -219,6 +220,23 @@ model Announcement {
   submissions Submission[]
   media       Media[]
   events      Event[] // one-to-one relationship with event
+  comments    Comment[]
+}
+
+model Comment {
+  id String @id @unique @default(cuid())
+
+  message String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  edited Boolean? @default(false)
+
+  announcementId String
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }
 
 model Submission {

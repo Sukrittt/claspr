@@ -2,7 +2,7 @@ import { ChevronRight } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const SectionSkeleton = ({ length = 4 }: { length?: number }) => {
+export const SectionSkeleton = ({ length = 8 }: { length?: number }) => {
   return (
     <div className="w-full space-y-2">
       {Array.from({ length }).map((_, i) => (
