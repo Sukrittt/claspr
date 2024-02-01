@@ -19,6 +19,7 @@ import { ContainerVariants } from "@/lib/motion";
 import { CommentDropdown } from "./comment-dropdown";
 import { cn, getShortenedText, timeAgo } from "@/lib/utils";
 import { UserAvatar } from "@/components/custom/user-avatar";
+import { CommentSkeleton } from "@/components/skeletons/comment-skeleton";
 
 interface CommentsProps {
   announcement: ExtendedAnnouncement;
@@ -42,7 +43,7 @@ export const Comments: React.FC<CommentsProps> = ({
       <CardContent className="py-3 flex-1 flex flex-col gap-y-2 pl-4 pr-3">
         <div className="flex-1 text-sm text-muted-foreground">
           {isLoading ? (
-            <p>Loading...</p>
+            <CommentSkeleton />
           ) : !comments || comments.length === 0 ? (
             <div className="pt-16 flex justify-center items-center gap-x-2">
               <Inbox className="h-4 w-4" />
@@ -56,7 +57,7 @@ export const Comments: React.FC<CommentsProps> = ({
                 animate="animate"
                 exit="exit"
               >
-                <ScrollArea className="h-[200px] pb-4">
+                <ScrollArea className="h-[170px] pb-4">
                   <div className="flex flex-col gap-y-4 pt-2">
                     {comments.map((comment) => (
                       <CommentCard comment={comment} key={comment.id} />
