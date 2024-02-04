@@ -45,17 +45,17 @@ export const getEvents = privateProcedure
       throw new TRPCError({
         code: "NOT_FOUND",
         message:
-          "You are not a member of this classroom. Please join the classroom to view the events.",
+          "You are not a member of this classroom. Please join the classroom to view your upcoming events.",
       });
     }
 
     const currentDate = new Date();
     const sevenDaysLater = addDays(currentDate, 7);
 
-    let announcementClause = {};
+    let assignmentWhereClause = {};
 
     if (classroomId) {
-      announcementClause = {
+      assignmentWhereClause = {
         classRoomId: classroomId,
         submissions: {
           every: {
@@ -66,7 +66,7 @@ export const getEvents = privateProcedure
         },
       };
     } else {
-      announcementClause = {
+      assignmentWhereClause = {
         submissions: {
           every: {
             memberId: {
@@ -79,14 +79,14 @@ export const getEvents = privateProcedure
 
     const classEvents = await db.event.findMany({
       where: {
-        announcement: announcementClause,
+        assignment: assignmentWhereClause,
         eventDate: {
           gte: currentDate,
           lt: sevenDaysLater,
         },
       },
       include: {
-        announcement: true,
+        assignment: true,
         user: true,
       },
     });

@@ -8,14 +8,14 @@ import { privateProcedure } from "@/server/trpc";
  * Creates a new media for a submission.
  *
  * @param {object} input - The input parameters for creating a media for a submission.
- * @param {string} input.announcementId - The id of the announcement.
+ * @param {string} input.assignmentId - The id of the assignment.
  * @param {string[]} input.media - An array of media objects containing the url and label.
  * @param {enum} input.mediaType - An enum for describing the type of media.
  */
 export const createMedia = privateProcedure
   .input(
     z.object({
-      announcementId: z.string(),
+      assignmentId: z.string(),
       media: z.array(
         z.object({
           label: z.string().optional(),
@@ -26,31 +26,31 @@ export const createMedia = privateProcedure
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { announcementId, media, mediaType } = input;
+    const { assignmentId, media, mediaType } = input;
 
-    const announcement = await db.announcement.findUnique({
+    const assignment = await db.assignment.findUnique({
       where: {
-        id: announcementId,
+        id: assignmentId,
       },
     });
 
-    if (!announcement) {
+    if (!assignment) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "We couldn't find the announcement you're looking for.",
+        message: "We couldn't find the assignment you're looking for.",
       });
     }
 
-    if (announcement.creatorId === ctx.userId) {
+    if (assignment.creatorId === ctx.userId) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "Teachers cannot submit media for their own announcements.",
+        message: "Teachers cannot submit media for their own assignment.",
       });
     }
 
     await db.media.createMany({
       data: media.map((media) => ({
-        announcementId,
+        assignmentId,
         label: media.label,
         url: media.url,
         mediaType,
@@ -63,19 +63,19 @@ export const createMedia = privateProcedure
  * To get the media uploaded by the user for a particular submission.
  *
  * @param {object} input - The input parameters for getting uploaded media.
- * @param {string} input.announcementId - The id of the announcement.
+ * @param {string} input.assignmentId - The id of the assignment.
  * @returns {Promise<Object[]>} - A list of media objects from the database.
  */
 export const getUploadedMedia = privateProcedure
   .input(
     z.object({
-      announcementId: z.string(),
+      assignmentId: z.string(),
     })
   )
   .query(async ({ ctx, input }) => {
     const media = await db.media.findMany({
       where: {
-        announcementId: input.announcementId,
+        assignmentId: input.assignmentId,
         userId: ctx.userId,
       },
       orderBy: { createdAt: "desc" },
@@ -88,7 +88,7 @@ export const getUploadedMedia = privateProcedure
  * To edit the link of a media.
  *
  * @param {object} input - The input parameters for editing a media link.
- * @param {string} input.announcementId - The id of announcement where it belongs.
+ * @param {string} input.assignmentId - The id of assignment where it belongs.
  * @param {string} input.mediaId - The id of the media to update.
  * @param {string} input.url - The updated url.
  * @param {string} input.label - The updated label.
@@ -97,31 +97,31 @@ export const editLink = privateProcedure
   .input(
     z.object({
       mediaId: z.string(),
-      announcementId: z.string(),
+      assignmentId: z.string(),
       url: z.string().regex(/^(ftp|http|https):\/\/[^ "]+$/),
       label: z.string().optional(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { mediaId, announcementId, url, label } = input;
+    const { mediaId, assignmentId, url, label } = input;
 
-    const existingAnnouncment = await db.announcement.findFirst({
+    const existingAssignment = await db.assignment.findFirst({
       where: {
-        id: announcementId,
+        id: assignmentId,
       },
     });
 
-    if (!existingAnnouncment) {
+    if (!existingAssignment) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "We couldn't find the announcement you're looking for.",
+        message: "We couldn't find the assignment you're looking for.",
       });
     }
 
     const existingMembership = await db.membership.findFirst({
       where: {
         userId: ctx.userId,
-        classRoomId: existingAnnouncment.classRoomId,
+        classRoomId: existingAssignment.classRoomId,
       },
     });
 
@@ -134,7 +134,7 @@ export const editLink = privateProcedure
 
     const existingSubmission = await db.submission.findFirst({
       where: {
-        announcementId,
+        assignmentId,
         memberId: existingMembership.id,
       },
     });
@@ -173,7 +173,7 @@ export const editLink = privateProcedure
       where: {
         id: mediaId,
         userId: ctx.userId,
-        announcementId,
+        assignmentId,
       },
       data: {
         url,
@@ -183,39 +183,39 @@ export const editLink = privateProcedure
   });
 
 /**
- * To remove a media from an announcemnt.
+ * To remove a media from an assignment.
  *
  * @param {object} input - The input parameters for removing a media.
  * @param {string} input.mediaId - The id of the media to remove.
- * @param {string} input.announcementId - The id of the announcement where the media belongs.
+ * @param {string} input.assignmentId - The id of the assignment where the media belongs.
  */
 export const removeMedia = privateProcedure
   .input(
     z.object({
       mediaId: z.string(),
-      announcementId: z.string(),
+      assignmentId: z.string(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { mediaId, announcementId } = input;
+    const { mediaId, assignmentId } = input;
 
-    const existingAnnouncment = await db.announcement.findFirst({
+    const existingAssignment = await db.assignment.findFirst({
       where: {
-        id: announcementId,
+        id: assignmentId,
       },
     });
 
-    if (!existingAnnouncment) {
+    if (!existingAssignment) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "We couldn't find the announcement you're looking for.",
+        message: "We couldn't find the assignment you're looking for.",
       });
     }
 
     const existingMembership = await db.membership.findFirst({
       where: {
         userId: ctx.userId,
-        classRoomId: existingAnnouncment.classRoomId,
+        classRoomId: existingAssignment.classRoomId,
       },
     });
 
@@ -228,7 +228,7 @@ export const removeMedia = privateProcedure
 
     const existingSubmission = await db.submission.findFirst({
       where: {
-        announcementId,
+        assignmentId,
         memberId: existingMembership.id,
       },
     });
@@ -259,7 +259,7 @@ export const removeMedia = privateProcedure
       where: {
         id: mediaId,
         userId: ctx.userId,
-        announcementId,
+        assignmentId,
       },
     });
   });

@@ -16,7 +16,7 @@ import {
 import { Unsubmit } from "./unsubmit";
 import { useGetMedia } from "@/hooks/media";
 import { getShortenedText } from "@/lib/utils";
-import { ExtendedAnnouncement } from "@/types";
+import { ExtendedAssignment } from "@/types";
 import { ContainerVariants } from "@/lib/motion";
 import { useGetSubmission } from "@/hooks/submission";
 import { SubmissionDropdown } from "./submission-dropdown";
@@ -29,16 +29,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { MediaDropdown } from "@/components/media/media-dropdown";
 
 interface SubmissionCardProps {
-  announcement: ExtendedAnnouncement;
+  assignment: ExtendedAssignment;
 }
 
 export const SubmissionCard: React.FC<SubmissionCardProps> = ({
-  announcement,
+  assignment,
 }) => {
   const { data: submission, isLoading: isFetching } = useGetSubmission(
-    announcement.id
+    assignment.id
   );
-  const { data: media, isLoading } = useGetMedia(announcement.id);
+  const { data: media, isLoading } = useGetMedia(assignment.id);
 
   const getSubmissionLabel = (
     label: string | null,
@@ -53,10 +53,10 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
     return getShortenedText(label, 27);
   };
 
-  const deadlinePassed = isAfter(new Date(), announcement.dueDate);
+  const deadlinePassed = isAfter(new Date(), assignment.dueDate);
   const preventSubmission =
     !!submission ||
-    !!(announcement.lateSubmission && !submission && deadlinePassed);
+    !!(assignment.lateSubmission && !submission && deadlinePassed);
 
   const Icon = {
     [MediaType.LINK]: <LinkIcon className="h-4 w-4" />,
@@ -75,16 +75,16 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
   };
 
   return (
-    <Card className="overflow-hidden border border-neutral-300 bg-neutral-100">
-      <CardHeader className="bg-neutral-200 py-3 pl-4 pr-3 space-y-0">
-        <CardTitle className="text-lg">Submit your work</CardTitle>
+    <Card>
+      <CardHeader className="border-b py-2 pl-4 pr-3 space-y-0">
+        <CardTitle className="text-base">Submit your work</CardTitle>
         <CardDescription>
           Attach files or links to submit your work.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2 pt-5 pb-3 pl-4 pr-3">
         <div className="text-sm text-muted-foreground">
-          <ScrollArea className="h-[90px]">
+          <ScrollArea className="h-[125px]">
             {isLoading || isFetching ? (
               <SubmissionSkeleton />
             ) : !media || media.length === 0 ? (
@@ -128,13 +128,10 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
         {isFetching ? (
           <SubmissionFooterSkeleton />
         ) : submission ? (
-          <Unsubmit
-            announcementId={announcement.id}
-            submissionId={submission.id}
-          />
+          <Unsubmit assignmentId={assignment.id} submissionId={submission.id} />
         ) : (
           <>
-            <SubmissionDropdown announcementId={announcement.id}>
+            <SubmissionDropdown assignmentId={assignment.id}>
               <Button
                 className="h-8 text-xs w-full"
                 variant="outline"
@@ -144,7 +141,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
               </Button>
             </SubmissionDropdown>
             <CreateSubmission
-              announcementId={announcement.id}
+              assignmentId={assignment.id}
               disabled={disabled}
             />
           </>

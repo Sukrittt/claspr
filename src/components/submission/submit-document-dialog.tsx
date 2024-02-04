@@ -14,13 +14,13 @@ import { SubmitDocForm } from "./submit-doc-form";
 type SubmitDocumentDialogProps = {
   isOpen: boolean;
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  announcementId: string;
+  assignmentId: string;
 };
 
 export const SubmitDocumentDialog = ({
   setIsDialogOpen,
   isOpen,
-  announcementId,
+  assignmentId,
 }: SubmitDocumentDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -42,12 +42,9 @@ export const SubmitDocumentDialog = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add a document</DialogTitle>
-          <DialogDescription>Attach a document to your work.</DialogDescription>
+          <DialogDescription>Attach a document to your work</DialogDescription>
         </DialogHeader>
-        <SubmitDocForm
-          closeModal={closeModal}
-          announcementId={announcementId}
-        />
+        <SubmitDocForm closeModal={closeModal} assignmentId={assignmentId} />
       </DialogContent>
     </Dialog>
   );

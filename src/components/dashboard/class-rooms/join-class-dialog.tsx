@@ -17,7 +17,7 @@ export const JoinClassDialog = ({ sectionId }: { sectionId: string }) => {
       <DialogTrigger asChild>
         <div>
           <CustomTooltip text="Join Class">
-            <div className="flex items-center justify-center rounded-md hover:bg-neutral-400/70 p-1 cursor-pointer hover:text-gray-700 transition">
+            <div className="flex items-center justify-center rounded-md hover:bg-neutral-300 p-1 cursor-pointer hover:text-gray-700 transition">
               <Plus className="h-3.5 w-3.5" />
               <div className="sr-only">Join Class</div>
             </div>

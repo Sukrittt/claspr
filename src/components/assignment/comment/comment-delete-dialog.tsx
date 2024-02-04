@@ -17,14 +17,14 @@ import { useRemoveComment } from "@/hooks/comment";
 
 type CommentDeleteProps = {
   commentId: string;
-  announcementId: string;
+  assignmentId: string;
   isOpen: boolean;
   setIsDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const CommentDeleteDialog = ({
   commentId,
-  announcementId,
+  assignmentId,
   setIsDeleteOpen,
   isOpen,
 }: CommentDeleteProps) => {
@@ -42,7 +42,7 @@ export const CommentDeleteDialog = ({
 
   const { mutate: removeComment } = useRemoveComment({
     closeModal,
-    announcementId,
+    assignmentId,
   });
 
   return (

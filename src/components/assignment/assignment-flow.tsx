@@ -8,24 +8,24 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Editor } from "@/components/editor/Editor";
-import { AnnouncementForm } from "./announcement-form";
+import { AssignmentForm } from "./assignment-form";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
-import { useCreateAnnouncement } from "@/hooks/announcement";
+import { useCreateAssignment } from "@/hooks/assignment";
 import { ContainerHeightVariants, ContainerVariants } from "@/lib/motion";
 import { SubmissionStatus } from "@/components/submission/submission-status";
 
-export type AnnouncementStep = "title-input" | "content-input";
+export type AssignmentStep = "title-input" | "content-input";
 
-interface AnnouncementFlowProps {
+interface AssignmentFlowProps {
   classroom: ClassRoom;
   setStepNumber: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
+export const AssignmentFlow: React.FC<AssignmentFlowProps> = ({
   classroom,
   setStepNumber,
 }) => {
-  const [step, setStep] = useState<AnnouncementStep>("title-input");
+  const [step, setStep] = useState<AssignmentStep>("title-input");
   const [title, setTitle] = useState("");
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [allowLateSubmission, setAllowLateSubmission] = useState(true);
@@ -33,9 +33,9 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
   const [content] = useAtom(contentAtom);
   const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom);
 
-  const { mutate: createAnnouncement, isLoading } = useCreateAnnouncement();
+  const { mutate: createAssignment, isLoading } = useCreateAssignment();
 
-  const handleCreateAnnouncement = () => {
+  const handleCreateAssignment = () => {
     if (!date) {
       toast.error("Please select a due date for this assignment.");
       return;
@@ -46,7 +46,7 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
       return;
     }
 
-    createAnnouncement({
+    createAssignment({
       classRoomId: classroom.id,
       title,
       content,
@@ -59,7 +59,7 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
 
   useEffect(() => {
     if (isSubmitting !== undefined && !isSubmitting) {
-      handleCreateAnnouncement();
+      handleCreateAssignment();
     }
   }, [isSubmitting]);
 
@@ -93,7 +93,7 @@ export const AnnouncementFlow: React.FC<AnnouncementFlowProps> = ({
   return (
     <div className="space-y-6">
       {step === "title-input" && (
-        <AnnouncementForm title={title} setTitle={setTitle} setStep={setStep} />
+        <AssignmentForm title={title} setTitle={setTitle} setStep={setStep} />
       )}
 
       {step === "content-input" && (

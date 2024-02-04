@@ -63,7 +63,7 @@ model User {
   sessions       Session[]
   sections       Section[]
   classrooms     ClassRoom[] //only teachers will have this
-  announcements  Announcement[]
+  assignments    Assignment[]
   comments       Comment[]
   memberships    Membership[] //only students will have this
   conversations  Conversation[]
@@ -118,7 +118,7 @@ model ClassRoom {
 
   students       Membership[]
   questions      Question[]
-  announcements  Announcement[]
+  assignments    Assignment[]
   conversations  Conversation[]
   studyMaterials StudyMaterial[]
 }
@@ -200,7 +200,7 @@ model Answer {
   updatedAt DateTime @updatedAt
 }
 
-model Announcement {
+model Assignment {
   id          String @id @unique @default(cuid())
   title       String
   description Json?
@@ -233,8 +233,8 @@ model Comment {
 
   isEdited Boolean? @default(false)
 
-  announcementId String
-  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
@@ -245,8 +245,8 @@ model Submission {
   memberId String
   member   Membership @relation(fields: [memberId], references: [id], onDelete: Cascade)
 
-  announcementId String
-  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -292,8 +292,8 @@ enum MediaType {
 model Media {
   id String @id @unique @default(cuid())
 
-  announcementId String
-  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
 
   submissionId String?
   submission   Submission? @relation(fields: [submissionId], references: [id])
@@ -317,8 +317,8 @@ model Event {
   description String?
   eventDate   DateTime
 
-  announcementId String?
-  announcement   Announcement? @relation(fields: [announcementId], references: [id])
+  assignmentId String?
+  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

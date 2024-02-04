@@ -1,9 +1,9 @@
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { Conversation, FEEDBACK_STATUS } from "@prisma/client";
 
+import { cn } from "@/lib/utils";
 import { useGiveFeedback } from "@/hooks/conversation";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { cn } from "@/lib/utils";
 
 interface FeedbackConversationProps {
   conversation: Conversation;

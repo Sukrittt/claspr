@@ -48,7 +48,7 @@ export const MediaEditForm: React.FC<MediaEditFormProps> = ({
     editLink({
       ...data,
       mediaId: media.id,
-      announcementId: media.announcementId,
+      assignmentId: media.assignmentId,
     });
   }
 

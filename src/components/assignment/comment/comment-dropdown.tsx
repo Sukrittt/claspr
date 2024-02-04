@@ -70,7 +70,7 @@ export const CommentDropdown: React.FC<SectionDropdownProps> = ({
       {isDeleteOpen && (
         <CommentDeleteDialog
           commentId={comment.id}
-          announcementId={comment.announcementId}
+          assignmentId={comment.assignmentId}
           isOpen={isDeleteOpen}
           setIsDeleteOpen={setIsDeleteOpen}
         />

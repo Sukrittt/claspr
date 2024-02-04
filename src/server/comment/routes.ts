@@ -5,24 +5,24 @@ import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
 
 /**
- * To get comments associated with an announcement.
+ * To get comments associated with an assignment.
  *
- * @param {object} input - The input parameters for getting comments of an announcement.
- * @param {boolean} input.annnouncementId - The id of the announcement.
+ * @param {object} input - The input parameters for getting comments of an assignment.
+ * @param {boolean} input.annnouncementId - The id of the assignment.
  * @returns {Promise<Object[]>} - A list of comments object.
  */
 export const getComments = privateProcedure
   .input(
     z.object({
-      announcementId: z.string(),
+      assignmentId: z.string(),
     })
   )
   .query(async ({ input }) => {
-    const { announcementId } = input;
+    const { assignmentId } = input;
 
     const comments = await db.comment.findMany({
       where: {
-        announcementId,
+        assignmentId,
       },
       include: {
         user: true,
@@ -36,38 +36,38 @@ export const getComments = privateProcedure
   });
 
 /**
- * To create a comment to an announcement.
+ * To create a comment to an assignment.
  *
- * @param {object} input - The input parameters for creating announcement.
+ * @param {object} input - The input parameters for creating assignment.
  * @param {string} input.message - The message for the comment.
- * @param {string} input.announcementId - The id of the announcement.
+ * @param {string} input.assignmentId - The id of the assignment.
  */
 export const createComment = privateProcedure
   .input(
     z.object({
-      message: z.string().min(3).max(80),
-      announcementId: z.string(),
+      message: z.string().min(1).max(80),
+      assignmentId: z.string(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { announcementId, message } = input;
+    const { assignmentId, message } = input;
 
-    const existingAnnouncement = await db.announcement.findFirst({
-      where: { id: announcementId },
+    const existingAssignment = await db.assignment.findFirst({
+      where: { id: assignmentId },
     });
 
-    if (!existingAnnouncement) {
+    if (!existingAssignment) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message:
-          "We couldn't find the announcement you are trying to commennt on.",
+          "We couldn't find the assignment you are trying to commennt on.",
       });
     }
 
     const promises = [
       db.classRoom.findFirst({
         where: {
-          id: existingAnnouncement.classRoomId,
+          id: existingAssignment.classRoomId,
           teacherId: ctx.userId,
         },
         select: {
@@ -76,7 +76,7 @@ export const createComment = privateProcedure
       }),
       db.membership.findFirst({
         where: {
-          classRoomId: existingAnnouncement.classRoomId,
+          classRoomId: existingAssignment.classRoomId,
           userId: ctx.userId,
         },
         select: { id: true },
@@ -90,21 +90,21 @@ export const createComment = privateProcedure
     if (!isPartOfClass) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "You are not allowed to comment on this announcement.",
+        message: "You are not allowed to comment on this assignment.",
       });
     }
 
     await db.comment.create({
       data: {
         message,
-        announcementId,
+        assignmentId,
         userId: ctx.userId,
       },
     });
   });
 
 /**
- * To edit a comment of an announcement.
+ * To edit a comment of an assignment.
  *
  * @param {object} input - The input parameters for editing a comment.
  * @param {string} input.message - The message of the comment.
@@ -149,7 +149,7 @@ export const editComment = privateProcedure
   });
 
 /**
- * To remove a comment from an announcement.
+ * To remove a comment from an assignment.
  *
  * @param {object} input - The input parameters for removing a comment.
  * @param {string} input.commentId - The id of the comment to remove.

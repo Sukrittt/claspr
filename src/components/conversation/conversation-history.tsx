@@ -41,14 +41,14 @@ export const ConversationHistory = ({
         initial="initial"
         animate="animate"
         exit="exit"
-        className="pt-6 space-y-4"
+        className="space-y-4"
       >
         <div className="flex justify-between items-end pr-3">
           <div>
-            <h3 className="text-lg font-semibold tracking-tight">
+            <h3 className="text-base font-semibold tracking-tight">
               Previous Interactions with our AI
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Your recent <span className="font-semibold">30</span>{" "}
               conversations are used for providing better context to our AI
             </p>
@@ -66,7 +66,7 @@ export const ConversationHistory = ({
             Your conversations with our AI for this classroom will appear here.
           </p>
         ) : (
-          <ScrollArea className="h-[400px]">
+          <ScrollArea className="h-[450px]">
             <div className="flex flex-col gap-y-4">
               {conversations?.map((conversation) => (
                 <ConversationCard
@@ -101,10 +101,10 @@ const ConversationCard = ({ conversation }: { conversation: Conversation }) => {
       animate="animate"
       exit="exit"
     >
-      <Card className="bg-neutral-100 shadow-none border border-border relative">
-        <CardHeader className="bg-neutral-200 py-3 group">
+      <Card>
+        <CardHeader className="border-b py-1.5 group">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">{conversation.prompt}</CardTitle>
+            <CardTitle className="text-base">{conversation.prompt}</CardTitle>
             <div
               className={cn("group-hover:opacity-100 opacity-0 transition", {
                 "opacity-100": isDropdownOpen,
@@ -119,18 +119,20 @@ const ConversationCard = ({ conversation }: { conversation: Conversation }) => {
           </div>
         </CardHeader>
         <CardContent
-          className="pt-3 pb-9 text-gray-800 text-[15px] cursor-pointer group"
+          className="pt-3 pb-9 text-gray-800 text-[15px] cursor-pointer group relative"
           onClick={() => handleCopyOutput(conversation.answer)}
         >
           <Markdown>{getFilteredResponse(conversation.answer)}</Markdown>
           <div className="opacity-0 group-hover:opacity-100 transition absolute bottom-2 right-3.5">
             <div className="flex items-center gap-x-4">
               <CustomTooltip text="Click to copy">
-                {copied ? (
-                  <Check className="w-3 h-3" />
-                ) : (
-                  <Copy className="w-3 h-3" />
-                )}
+                <div className="p-1.5 rounded-md hover:bg-neutral-200 transition">
+                  {copied ? (
+                    <Check className="w-3 h-3" />
+                  ) : (
+                    <Copy className="w-3 h-3" />
+                  )}
+                </div>
               </CustomTooltip>
               <div
                 onClick={(e) => e.stopPropagation()}

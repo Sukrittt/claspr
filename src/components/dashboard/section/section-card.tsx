@@ -127,11 +127,11 @@ export const SectionItem = ({
       >
         <div
           className={cn(
-            "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-300 py-1 px-2 rounded-md transition group",
+            "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-200 py-1 px-2 rounded-md transition group",
             {
-              "bg-neutral-300 duration-500":
+              "bg-neutral-200 duration-500":
                 isOver && active?.data.current?.dragType === "CLASSROOM",
-              "bg-neutral-300 text-sm opacity-60 cursor-grabbing": isHolding,
+              "bg-neutral-200 text-sm opacity-60 cursor-grabbing": isHolding,
             }
           )}
           onClick={handleToggleOpenClassrooms}
@@ -168,7 +168,7 @@ export const SectionItem = ({
             )}
           >
             {section.isDefault ? (
-              <CustomTooltip text="Default Hub for all your classrooms.">
+              <CustomTooltip text="Default section for your classrooms">
                 <Info className="h-3.5 w-3.5 text-gray-700" />
               </CustomTooltip>
             ) : (

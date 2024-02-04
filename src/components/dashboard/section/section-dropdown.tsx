@@ -41,7 +41,7 @@ export const SectionDropdown: React.FC<SectionDropdownProps> = ({
         <DropdownMenuTrigger asChild>
           <div>
             <CustomTooltip text="More options">
-              <div className="text-gray-700 hover:bg-neutral-400/30 p-1 rounded-md transition">
+              <div className="text-gray-700 hover:bg-neutral-300 p-1 rounded-md transition">
                 <MoreHorizontal className="h-4 w-4" />
               </div>
             </CustomTooltip>

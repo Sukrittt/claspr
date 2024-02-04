@@ -1,24 +1,20 @@
 "use client";
-import Link from "next/link";
 import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { useState } from "react";
-import { format } from "date-fns";
-import { Check, Copy, Info, Pencil } from "lucide-react";
+import { Check, Copy, Info } from "lucide-react";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn, timeAgo } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { descriptionAtom } from "@/atoms";
 import { ExtendedClassroomDetails } from "@/types";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
 import { AddDescriptionDialog } from "./add-description-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
@@ -55,30 +51,30 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
       description: classroom.students.length,
     },
     {
-      title: "Created",
-      description: format(classroom.createdAt, "dd MMM, yy"),
-    },
-    {
       title: "Class Code",
       description: classroom.classCode,
       action: handleCopyCode,
     },
     {
-      title: "Pending Assignments",
+      title: "Assignments",
+      description: "2", //change this
+    },
+    {
+      title: "Pending",
       description: "0", //change this
       isStudent: true,
     },
     {
-      title: "Joined",
-      description: timeAgo(studentDetails?.createdAt ?? classroom.createdAt),
+      title: "Study Materials",
+      description: "5", //change this
     },
   ];
 
   return (
-    <Card className="overflow-hidden border border-neutral-300 bg-neutral-100">
-      <CardHeader className="bg-neutral-200 py-3 space-y-1">
+    <Card>
+      <CardHeader className="border-b py-2.5 space-y-0">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">
+          <CardTitle className="text-base">
             {studentDetails?.renamedClassroom ?? classroom.title}
           </CardTitle>
           {isTeacher ? (
@@ -138,15 +134,15 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
                 >
                   {details.action ? (
                     <CustomTooltip text="Click to copy">
-                      <div className="flex items-center gap-x-2">
-                        <span className="opacity-0 group-hover:opacity-100 transition">
+                      <div className="relative">
+                        <p className="text-[13px]">{details.description}</p>
+                        <span className="opacity-0 group-hover:opacity-100 transition absolute -right-3.5 top-[5px]">
                           {copied ? (
                             <Check className="w-2.5 h-2.5 duration-500" />
                           ) : (
                             <Copy className="w-2.5 h-2.5" />
                           )}
                         </span>
-                        <p className="text-[13px]">{details.description}</p>
                       </div>
                     </CustomTooltip>
                   ) : (
@@ -158,19 +154,6 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
           })}
         </div>
       </CardContent>
-      {isTeacher && (
-        <CardFooter>
-          <Link
-            href={`/c/${classroom.id}/create`}
-            className={cn(buttonVariants(), "w-full")}
-            onClick={() =>
-              toast.loading("Just a moment...", { duration: 1000 })
-            }
-          >
-            Create Assignment
-          </Link>
-        </CardFooter>
-      )}
     </Card>
   );
 };

@@ -180,12 +180,12 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           initial="initial"
           animate="animate"
           exit="exit"
-          className="absolute bottom-8 right-10 group"
+          className="absolute bottom-6 right-8 group"
         >
           <CustomTooltip text="Ask AI">
             <div>
-              <Button className="rounded-full p-2 h-12 w-12 shadow-lg">
-                <Sparkles className="w-5 h-5 group-hover:rotate-90 transition duration-300" />
+              <Button className="rounded-full p-2 h-10 w-10 shadow-lg">
+                <Sparkles className="w-[18px] h-[18px] group-hover:rotate-90 transition duration-300" />
               </Button>
             </div>
           </CustomTooltip>
@@ -285,6 +285,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           ) : (
             <div className="flex gap-x-2">
               <Input
+                className="focus-visible:ring-transparent h-9"
                 placeholder="Type your prompt here."
                 disabled={isLoading || isGenerating}
                 value={input}
@@ -296,6 +297,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
                 }}
               />
               <Button
+                className="h-9"
                 disabled={isLoading || isGenerating || input.length === 0}
                 onClick={() => handleAskAI(input)}
               >

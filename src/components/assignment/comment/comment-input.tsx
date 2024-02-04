@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ExtendedAnnouncement } from "@/types";
+import { ExtendedAssignment } from "@/types";
 import { Button } from "@/components/ui/button";
 import { useCreateComment } from "@/hooks/comment";
 import { UserAvatar } from "@/components/custom/user-avatar";
@@ -33,12 +33,12 @@ const commentCreationSchema = z.object({
 type Inputs = z.infer<typeof commentCreationSchema>;
 
 interface CommentInputProps {
-  announcement: ExtendedAnnouncement;
+  assignment: ExtendedAssignment;
   session: Session;
 }
 
 export const CommentInput: React.FC<CommentInputProps> = ({
-  announcement,
+  assignment,
   session,
 }) => {
   // react-hook-form
@@ -58,7 +58,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
   function handleCreateComment(data: Inputs) {
     createComment({
       ...data,
-      announcementId: announcement.id,
+      assignmentId: assignment.id,
     });
   }
 

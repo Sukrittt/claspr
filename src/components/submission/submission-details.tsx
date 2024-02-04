@@ -2,30 +2,30 @@
 import { format, isAfter } from "date-fns";
 
 import { Badge } from "@/components/ui/badge";
-import { ExtendedAnnouncement } from "@/types";
+import { ExtendedAssignment } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetSubmission } from "@/hooks/submission";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface SubmissionDetailsProps {
   children: React.ReactNode;
-  announcement: ExtendedAnnouncement;
+  assignment: ExtendedAssignment;
 }
 
 export const SubmissionDetails: React.FC<SubmissionDetailsProps> = ({
   children,
-  announcement,
+  assignment,
 }) => {
-  const { data: submission, isLoading } = useGetSubmission(announcement.id);
+  const { data: submission, isLoading } = useGetSubmission(assignment.id);
 
   const currentDate = new Date();
 
   if (isLoading) return <Skeleton className="h-4 w-16" />;
 
   // If the submission is handed in after the due date, it is considered late
-  const lateSubmission = isAfter(submission?.createdAt!, announcement.dueDate);
+  const lateSubmission = isAfter(submission?.createdAt!, assignment.dueDate);
 
-  const deadlinePassed = isAfter(currentDate, announcement.dueDate);
+  const deadlinePassed = isAfter(currentDate, assignment.dueDate);
 
   if (submission) {
     if (lateSubmission) {

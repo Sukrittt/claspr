@@ -4,16 +4,16 @@ import { mediaRouter } from "@/server/routers/media";
 import { eventRouter } from "@/server/routers/event";
 import { classRouter } from "@/server/routers/class";
 import { sectionRouter } from "@/server/routers/section";
-import { submissionRouter } from "@/server/routers/submission";
-import { announcementRouter } from "@/server/routers/annoucement";
-import { conversationRouter } from "@/server/routers/conversation";
 import { commentRouter } from "@/server/routers/comment";
+import { submissionRouter } from "@/server/routers/submission";
+import { assignmentRouter } from "@/server/routers/assignment";
+import { conversationRouter } from "@/server/routers/conversation";
 
 export const appRouter = createTRPCRouter({
   user: userRouter,
   class: classRouter,
   section: sectionRouter,
-  announcement: announcementRouter,
+  assignment: assignmentRouter,
   conversation: conversationRouter,
   submission: submissionRouter,
   media: mediaRouter,

@@ -6,8 +6,6 @@ import { Session } from "next-auth";
 import { trpc } from "@/trpc/client";
 import { descriptionAtom } from "@/atoms";
 import { useMounted } from "@/hooks/use-mounted";
-import { ClassroomCard } from "./classroom-card";
-import { UpcomingEvents } from "./upcoming-events";
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomContainer } from "./classroom-container";
 import { AIDialog } from "@/components/conversation/ai-dialog";
@@ -35,14 +33,8 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
   }, [mounted]);
 
   return (
-    <div className="grid grid-cols-6 gap-4 p-12">
-      <div className="col-span-4">
-        <ClassroomContainer classroom={classroom} session={session} />
-      </div>
-      <div className="col-span-2 flex flex-col gap-y-4">
-        <ClassroomCard classroom={classroom} sessionId={session.user.id} />
-        <UpcomingEvents classroom={classroom} />
-      </div>
+    <div className="px-20 py-6 h-[95%]">
+      <ClassroomContainer classroom={classroom} session={session} />
       <AIDialog classroom={classroom} hasFollowUp />
     </div>
   );

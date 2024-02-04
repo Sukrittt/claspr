@@ -48,7 +48,7 @@ export const CommentEditForm: React.FC<EditCommentFormProps> = ({
 
   const { mutate: editComment } = useEditComment({
     closeModal,
-    announcementId: comment.announcementId,
+    assignmentId: comment.assignmentId,
   });
 
   function handleEditComment(data: Inputs) {

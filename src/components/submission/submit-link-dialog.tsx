@@ -14,13 +14,13 @@ import { SubmitLinkForm } from "./submit-link-form";
 type SubmitLinkDialogProps = {
   isOpen: boolean;
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  announcementId: string;
+  assignmentId: string;
 };
 
 export const SubmitLinkDialog = ({
   setIsDialogOpen,
   isOpen,
-  announcementId,
+  assignmentId,
 }: SubmitLinkDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -42,12 +42,9 @@ export const SubmitLinkDialog = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add a link</DialogTitle>
-          <DialogDescription>Attach a link to your work.</DialogDescription>
+          <DialogDescription>Attach a link to your work</DialogDescription>
         </DialogHeader>
-        <SubmitLinkForm
-          announcementId={announcementId}
-          closeModal={closeModal}
-        />
+        <SubmitLinkForm assignmentId={assignmentId} closeModal={closeModal} />
       </DialogContent>
     </Dialog>
   );

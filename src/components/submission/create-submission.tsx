@@ -4,19 +4,19 @@ import { Button } from "@/components/ui/button";
 import { useCreateSubmission } from "@/hooks/submission";
 
 interface CreateSubmissionProps {
-  announcementId: string;
+  assignmentId: string;
   disabled: boolean;
 }
 
 export const CreateSubmission: React.FC<CreateSubmissionProps> = ({
   disabled,
-  announcementId,
+  assignmentId,
 }) => {
   const { mutate: createSubmission, isLoading } = useCreateSubmission();
 
   const handleCreateSubmission = () => {
     createSubmission({
-      announcementId,
+      assignmentId,
     });
   };
 

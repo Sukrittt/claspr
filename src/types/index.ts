@@ -1,5 +1,5 @@
 import {
-  Announcement,
+  Assignment,
   ClassRoom,
   Comment,
   Membership,
@@ -34,7 +34,7 @@ export type ExtendedMembershipDetails = Membership & {
   user: User;
 };
 
-export type ExtendedAnnouncement = Announcement & {
+export type ExtendedAssignment = Assignment & {
   creator: User;
   submissions: (Submission & {
     member: Membership;

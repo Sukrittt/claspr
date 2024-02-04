@@ -1,4 +1,4 @@
-import { UsersRound } from "lucide-react";
+import { User } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { Badge } from "@/components/ui/badge";
@@ -10,9 +10,13 @@ import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface ClassMembersProps {
   members: ExtendedMembershipDetails[];
+  creator: User;
 }
 
-export const ClassMembers: React.FC<ClassMembersProps> = ({ members }) => {
+export const ClassMembers: React.FC<ClassMembersProps> = ({
+  members,
+  creator,
+}) => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -20,26 +24,35 @@ export const ClassMembers: React.FC<ClassMembersProps> = ({ members }) => {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="pt-6 space-y-4 h-full"
+        className="space-y-4 h-full"
       >
-        {members.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center gap-y-4">
-            <UsersRound className="h-16 w-16 text-neutral-800" />
-            <p className="text-sm text-muted-foreground">
-              No members joined yet.
-            </p>
-          </div>
-        ) : (
-          <AnimatePresence mode="wait">
-            <ScrollArea className="h-[400px]">
-              <div className="flex flex-col gap-y-4">
-                {members.map((member) => (
-                  <MemberCard key={member.id} member={member} />
-                ))}
+        <AnimatePresence mode="wait">
+          <ScrollArea className="h-[500px]">
+            <div className="flex flex-col gap-y-4">
+              <div className="border-b border-neutral-300 flex justify-between p-2 pb-4 items-end">
+                <div className="flex items-center gap-x-4">
+                  <UserAvatar user={creator} className="h-8 w-8 rounded-md" />
+                  <div>
+                    <p className="font-medium text-neutral-700">
+                      {creator.name}
+                    </p>
+                    <p className="text-muted-foreground text-[11px]">
+                      {creator.email}
+                    </p>
+                  </div>
+                </div>
+                <CustomTooltip text="You created this classroom">
+                  <div>
+                    <Badge variant="outline">You</Badge>
+                  </div>
+                </CustomTooltip>
               </div>
-            </ScrollArea>
-          </AnimatePresence>
-        )}
+              {members.map((member) => (
+                <MemberCard key={member.id} member={member} />
+              ))}
+            </div>
+          </ScrollArea>
+        </AnimatePresence>
       </motion.div>
     </AnimatePresence>
   );
@@ -58,17 +71,17 @@ const MemberCard = ({ member }: { member: ExtendedMembershipDetails }) => {
       >
         <div className="border-b border-neutral-300 flex justify-between p-2 pb-4 items-end">
           <div className="flex items-center gap-x-4">
-            <UserAvatar user={member.user} />
-            <div className="space-y-1">
-              <h5 className="font-semibold">{member.user.name}</h5>
-              <p className="text-muted-foreground text-sm">
+            <UserAvatar user={member.user} className="h-8 w-8 rounded-md" />
+            <div>
+              <p className="font-medium text-neutral-700">{member.user.name}</p>
+              <p className="text-muted-foreground text-[11px]">
                 {member.user.email}
               </p>
             </div>
           </div>
           <CustomTooltip text={`Joined as a ${joinedAs.toLowerCase()}`}>
             <div>
-              <Badge>{joinedAs}</Badge>
+              <Badge variant="outline">{joinedAs}</Badge>
             </div>
           </CustomTooltip>
         </div>

@@ -2,8 +2,8 @@ import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
 
-export const useGetSubmission = (announcementId: string) => {
-  return trpc.submission.getSubmission.useQuery({ announcementId });
+export const useGetSubmission = (assignmentId: string) => {
+  return trpc.submission.getSubmission.useQuery({ assignmentId });
 };
 
 export const useCreateSubmission = () => {

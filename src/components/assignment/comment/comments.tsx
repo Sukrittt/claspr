@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { useGetComments } from "@/hooks/comment";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ExtendedAnnouncement, ExtendedComment } from "@/types";
+import { ExtendedAssignment, ExtendedComment } from "@/types";
 import {
   Card,
   CardContent,
@@ -22,19 +22,16 @@ import { UserAvatar } from "@/components/custom/user-avatar";
 import { CommentSkeleton } from "@/components/skeletons/comment-skeleton";
 
 interface CommentsProps {
-  announcement: ExtendedAnnouncement;
+  assignment: ExtendedAssignment;
   session: Session;
 }
 
-export const Comments: React.FC<CommentsProps> = ({
-  announcement,
-  session,
-}) => {
-  const { data: comments, isLoading } = useGetComments(announcement.id);
+export const Comments: React.FC<CommentsProps> = ({ assignment, session }) => {
+  const { data: comments, isLoading } = useGetComments(assignment.id);
 
   return (
-    <Card className="border border-neutral-300 flex-1 flex flex-col overflow-hidden bg-neutral-100">
-      <CardHeader className="py-3 pl-4 pr-3 space-y-0.5 bg-neutral-200">
+    <Card className="flex-1 flex flex-col">
+      <CardHeader className="border-b py-2 pl-4 pr-3 space-y-0.5">
         <CardTitle className="text-[13px] text-neutral-700">Comments</CardTitle>
         <CardDescription className="text-[13px]">
           Visible only to you and your teacher
@@ -68,7 +65,7 @@ export const Comments: React.FC<CommentsProps> = ({
             </AnimatePresence>
           )}
         </div>
-        <CommentInput announcement={announcement} session={session} />
+        <CommentInput assignment={assignment} session={session} />
       </CardContent>
     </Card>
   );

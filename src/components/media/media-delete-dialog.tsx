@@ -43,7 +43,7 @@ export const DeleteMediaDialog = ({
   const handleDeleteMedia = () => {
     deleteMedia({
       mediaId: media.id,
-      announcementId: media.announcementId,
+      assignmentId: media.assignmentId,
     });
   };
 

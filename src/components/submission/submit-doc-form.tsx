@@ -9,12 +9,12 @@ import { Button } from "@/components/ui/button";
 
 interface SubmitDocFormProps {
   closeModal: () => void;
-  announcementId: string;
+  assignmentId: string;
 }
 
 export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
   closeModal,
-  announcementId,
+  assignmentId,
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +63,7 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
 
       createMedia({
         media: fileObjs,
-        announcementId,
+        assignmentId,
         mediaType: "DOCUMENT",
       });
     } catch {

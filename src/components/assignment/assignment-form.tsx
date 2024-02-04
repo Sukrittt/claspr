@@ -18,7 +18,7 @@ import { useMounted } from "@/hooks/use-mounted";
 import { ContainerInputVariants, ContainerVariants } from "@/lib/motion";
 import { TitleInputSkeleton } from "@/components/skeletons/title-input";
 
-const announcementSchema = z.object({
+const createAssignmentSchema = z.object({
   title: z
     .string()
     .min(3)
@@ -27,13 +27,13 @@ const announcementSchema = z.object({
       (val) => {
         return val.trim().length > 0;
       },
-      { message: "Announcement name cannot be empty" }
+      { message: "Assignment name cannot be empty" }
     ),
 });
 
-type Inputs = z.infer<typeof announcementSchema>;
+type Inputs = z.infer<typeof createAssignmentSchema>;
 
-interface AnnouncementFormProps {
+interface AssignmentFormProps {
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setStep: React.Dispatch<
@@ -41,7 +41,7 @@ interface AnnouncementFormProps {
   >;
 }
 
-export const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
+export const AssignmentForm: React.FC<AssignmentFormProps> = ({
   title,
   setTitle,
   setStep,
@@ -50,7 +50,7 @@ export const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(announcementSchema),
+    resolver: zodResolver(createAssignmentSchema),
     defaultValues: {
       title,
     },

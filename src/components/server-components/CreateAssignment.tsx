@@ -2,9 +2,9 @@ import { notFound, redirect } from "next/navigation";
 
 import { getAuthSession } from "@/lib/auth";
 import { serverClient } from "@/trpc/server-client";
-import { AnnouncementCard } from "@/components/announcement/announcement-card";
+import { AssignmentCard } from "@/components/assignment/assignment-card";
 
-export const CreateAnnouncement = async ({
+export const CreateAssignment = async ({
   classroomId,
 }: {
   classroomId: string;
@@ -26,5 +26,5 @@ export const CreateAnnouncement = async ({
 
   if (!isTeacher) redirect(`/c/${classroomId}`);
 
-  return <AnnouncementCard classroom={classroom} />;
+  return <AssignmentCard classroom={classroom} />;
 };

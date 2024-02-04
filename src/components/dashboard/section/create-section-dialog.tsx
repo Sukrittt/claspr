@@ -25,7 +25,7 @@ export const CreateSectionDialog = ({
       <DialogTrigger asChild>
         <div>
           <CustomTooltip text="Create Section">
-            <div className="p-2 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-300">
+            <div className="p-2 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200">
               <Plus className="h-4 w-4" />
               <div className="sr-only">Create section</div>
             </div>

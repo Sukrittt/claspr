@@ -17,7 +17,7 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
   };
 
   const roleCardClass =
-    "flex flex-col gap-y-1 p-5 border border-slate-300 cursor-pointer hover:bg-slate-200 transition rounded-xl";
+    "flex flex-col gap-y-1 px-5 py-3 border cursor-pointer hover:bg-neutral-100 transition rounded-md";
 
   return (
     <AnimatePresence mode="wait">
@@ -45,15 +45,15 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
               <Image
                 className="object-cover"
                 src="/teacher.png"
-                width={50}
-                height={50}
+                width={40}
+                height={40}
                 alt="Teacher"
               />
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                   Teacher
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Create courses and interact with your students.
                 </p>
               </div>
@@ -65,12 +65,12 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
             onClick={() => handleRoleChange("STUDENT")}
           >
             <div className="flex items-center gap-x-3">
-              <Image src="/student.png" width={50} height={50} alt="Student" />
+              <Image src="/student.png" width={40} height={40} alt="Student" />
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
                   Student
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Access courses and engage with your peers.
                 </p>
               </div>

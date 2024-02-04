@@ -26,12 +26,12 @@ type Inputs = z.infer<typeof linkSubmissionSchema>;
 
 interface SubmitLinkFormProps {
   closeModal: () => void;
-  announcementId: string;
+  assignmentId: string;
 }
 
 export const SubmitLinkForm: React.FC<SubmitLinkFormProps> = ({
   closeModal,
-  announcementId,
+  assignmentId,
 }) => {
   // react-hook-form
   const form = useForm<Inputs>({
@@ -53,7 +53,7 @@ export const SubmitLinkForm: React.FC<SubmitLinkFormProps> = ({
           label,
         },
       ],
-      announcementId,
+      assignmentId,
       mediaType: "LINK",
     });
   };

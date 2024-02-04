@@ -12,12 +12,12 @@ import { SubmitDocumentDialog } from "./submit-document-dialog";
 
 interface SubmissionDropdownProps {
   children: React.ReactNode;
-  announcementId: string;
+  assignmentId: string;
 }
 
 export const SubmissionDropdown: React.FC<SubmissionDropdownProps> = ({
   children,
-  announcementId,
+  assignmentId,
 }) => {
   const [isLinkOpen, setIsLinkOpen] = useState(false);
   const [isDocumentOpen, setIsDocumentOpen] = useState(false);
@@ -45,14 +45,14 @@ export const SubmissionDropdown: React.FC<SubmissionDropdownProps> = ({
       </DropdownMenu>
       {isLinkOpen && (
         <SubmitLinkDialog
-          announcementId={announcementId}
+          assignmentId={assignmentId}
           isOpen={isLinkOpen}
           setIsDialogOpen={setIsLinkOpen}
         />
       )}
       {isDocumentOpen && (
         <SubmitDocumentDialog
-          announcementId={announcementId}
+          assignmentId={assignmentId}
           isOpen={isDocumentOpen}
           setIsDialogOpen={setIsDocumentOpen}
         />

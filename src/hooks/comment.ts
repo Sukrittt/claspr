@@ -2,38 +2,38 @@ import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
 
-export const useGetComments = (announcementId: string) => {
-  return trpc.comment.getComments.useQuery({ announcementId });
+export const useGetComments = (assignmentId: string) => {
+  return trpc.comment.getComments.useQuery({ assignmentId });
 };
 
 export const useCreateComment = ({ resetForm }: { resetForm: () => void }) => {
   const utils = trpc.useUtils();
 
   return trpc.comment.createComment.useMutation({
-    onSuccess: (_, { announcementId }) => {
+    onSuccess: (_, { assignmentId }) => {
       resetForm();
-      utils.comment.getComments.invalidate({ announcementId });
+      utils.comment.getComments.invalidate({ assignmentId });
     },
   });
 };
 
 export const useEditComment = ({
   closeModal,
-  announcementId,
+  assignmentId,
 }: {
   closeModal: () => void;
-  announcementId: string;
+  assignmentId: string;
 }) => {
   const utils = trpc.useUtils();
 
   return trpc.comment.editComment.useMutation({
     onMutate: async ({ commentId, message }) => {
       closeModal();
-      await utils.comment.getComments.cancel({ announcementId });
+      await utils.comment.getComments.cancel({ assignmentId });
 
       const prevComments = utils.comment.getComments.getData();
 
-      utils.comment.getComments.setData({ announcementId }, (prev) =>
+      utils.comment.getComments.setData({ assignmentId }, (prev) =>
         prev?.map((comment) =>
           comment.id === commentId
             ? {
@@ -50,31 +50,31 @@ export const useEditComment = ({
     onError: (err, data, ctx) => {
       toast.error(err.message);
 
-      utils.comment.getComments.setData({ announcementId }, ctx?.prevComments);
+      utils.comment.getComments.setData({ assignmentId }, ctx?.prevComments);
     },
     onSettled: () => {
-      utils.comment.getComments.invalidate({ announcementId });
+      utils.comment.getComments.invalidate({ assignmentId });
     },
   });
 };
 
 export const useRemoveComment = ({
   closeModal,
-  announcementId,
+  assignmentId,
 }: {
   closeModal: () => void;
-  announcementId: string;
+  assignmentId: string;
 }) => {
   const utils = trpc.useUtils();
 
   return trpc.comment.removeComment.useMutation({
     onMutate: async ({ commentId }) => {
       closeModal();
-      await utils.comment.getComments.cancel({ announcementId });
+      await utils.comment.getComments.cancel({ assignmentId });
 
       const prevComments = utils.comment.getComments.getData();
 
-      utils.comment.getComments.setData({ announcementId }, (prev) =>
+      utils.comment.getComments.setData({ assignmentId }, (prev) =>
         prev?.filter((comment) => comment.id !== commentId)
       );
 
@@ -83,10 +83,10 @@ export const useRemoveComment = ({
     onError: (err, data, ctx) => {
       toast.error(err.message);
 
-      utils.comment.getComments.setData({ announcementId }, ctx?.prevComments);
+      utils.comment.getComments.setData({ assignmentId }, ctx?.prevComments);
     },
     onSettled: () => {
-      utils.comment.getComments.invalidate({ announcementId });
+      utils.comment.getComments.invalidate({ assignmentId });
     },
   });
 };

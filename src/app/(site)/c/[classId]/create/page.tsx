@@ -1,20 +1,20 @@
 import { Suspense } from "react";
 
 import { LoadingScreen } from "@/components/skeletons/loading-screen";
-import { CreateAnnouncement } from "@/components/server-components/CreateAnnouncement";
+import { CreateAssignment } from "@/components/server-components/CreateAssignment";
 
-interface CreateAnnouncementPageProps {
+interface CreateAssignmentPageProps {
   params: {
     classId: string;
   };
 }
 
-export default function page({ params }: CreateAnnouncementPageProps) {
+export default function page({ params }: CreateAssignmentPageProps) {
   const { classId } = params;
 
   return (
     <Suspense fallback={<LoadingScreen />}>
-      <CreateAnnouncement classroomId={classId} />
+      <CreateAssignment classroomId={classId} />
     </Suspense>
   );
 }

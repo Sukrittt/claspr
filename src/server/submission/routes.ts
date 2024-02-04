@@ -8,32 +8,32 @@ import { privateProcedure } from "@/server/trpc";
  * Creates a new submission for an assignment.
  *
  * @param {object} input - The input parameters for creating a new submission.
- * @param {string} input.announcementId - The id of the announcement.
+ * @param {string} input.assignmentId - The id of the assignment.
  */
 export const createSubmission = privateProcedure
   .input(
     z.object({
-      announcementId: z.string(),
+      assignmentId: z.string(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { announcementId } = input;
+    const { assignmentId } = input;
 
-    const announcement = await db.announcement.findUnique({
+    const assignment = await db.assignment.findUnique({
       where: {
-        id: announcementId,
+        id: assignmentId,
       },
       select: { classRoomId: true, lateSubmission: true, dueDate: true },
     });
 
-    if (!announcement) {
+    if (!assignment) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "We couldn't find the announcement you're looking for.",
+        message: "We couldn't find the assignment you're looking for.",
       });
     }
 
-    if (!announcement.lateSubmission && announcement.dueDate < new Date()) {
+    if (!assignment.lateSubmission && assignment.dueDate < new Date()) {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "The due date for this assignment has passed.",
@@ -43,7 +43,7 @@ export const createSubmission = privateProcedure
     const member = await db.membership.findFirst({
       where: {
         userId: ctx.userId,
-        classRoomId: announcement.classRoomId,
+        classRoomId: assignment.classRoomId,
       },
       select: { id: true },
     });
@@ -57,7 +57,7 @@ export const createSubmission = privateProcedure
 
     const existingSubmission = await db.submission.findFirst({
       where: {
-        announcementId,
+        assignmentId,
         memberId: member.id,
       },
       select: { id: true },
@@ -72,7 +72,7 @@ export const createSubmission = privateProcedure
 
     const media = await db.media.findFirst({
       where: {
-        announcementId,
+        assignmentId,
         userId: ctx.userId,
       },
     });
@@ -86,14 +86,14 @@ export const createSubmission = privateProcedure
 
     const submission = await db.submission.create({
       data: {
-        announcementId,
+        assignmentId,
         memberId: member.id,
       },
     });
 
     await db.media.updateMany({
       where: {
-        announcementId,
+        assignmentId,
         userId: ctx.userId,
       },
       data: {
@@ -106,21 +106,21 @@ export const createSubmission = privateProcedure
  * To get submission details for a particular submission
  *
  * @param {object} input - The input parameters to get submission details.
- * @param {string} input.announcementId - The id of the announcement.
+ * @param {string} input.assignmentId - The id of the assignment.
  * @returns {Promise<Object>} - A submission object from the database.
  */
 export const getSubmission = privateProcedure
   .input(
     z.object({
-      announcementId: z.string(),
+      assignmentId: z.string(),
     })
   )
   .query(async ({ ctx, input }) => {
-    const { announcementId } = input;
+    const { assignmentId } = input;
 
     const submission = await db.submission.findFirst({
       where: {
-        announcementId,
+        assignmentId,
         member: {
           userId: ctx.userId,
         },
@@ -134,36 +134,36 @@ export const getSubmission = privateProcedure
  * To unsubmit a submission.
  *
  * @param {object} input - The input parameters for unsubmitting a submission.
- * @param {string} input.announcementId - The id of the announcement.
+ * @param {string} input.assignmentId - The id of the assignment.
  * @param {string} input.submissionId - The id of the submission to update.
  */
 export const unsubmit = privateProcedure
   .input(
     z.object({
-      announcementId: z.string(),
+      assignmentId: z.string(),
       submissionId: z.string(),
     })
   )
-  .mutation(async ({ input, ctx }) => {
-    const { announcementId, submissionId } = input;
+  .mutation(async ({ input }) => {
+    const { assignmentId, submissionId } = input;
 
-    const existingAnnouncment = await db.announcement.findFirst({
+    const existingAnnouncment = await db.assignment.findFirst({
       where: {
-        id: announcementId,
+        id: assignmentId,
       },
     });
 
     if (!existingAnnouncment) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "We couldn't find the announcement you're looking for.",
+        message: "We couldn't find the assignment you're looking for.",
       });
     }
 
     const existingSubmission = await db.submission.findFirst({
       where: {
         id: submissionId,
-        announcementId,
+        assignmentId,
       },
     });
 
@@ -177,7 +177,7 @@ export const unsubmit = privateProcedure
     await db.submission.delete({
       where: {
         id: submissionId,
-        announcementId,
+        assignmentId,
       },
     });
   });

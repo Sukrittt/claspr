@@ -5,16 +5,16 @@ import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
 
 /**
- * To create an announncement in a classroom.
+ * To create an assignment in a classroom.
  *
- * @param {object} input - The input parameters for creating announcement.
- * @param {string} input.title - The title for the announcement.
+ * @param {object} input - The input parameters for creating assignment.
+ * @param {string} input.title - The title for the assignment.
  * @param {string} input.dueDate - Due date for the submission.
- * @param {string} input.classroomId - The id of the classroom where the announcement is to be created.
- * @param {string} input.content - The announcement description in a Json format.
+ * @param {string} input.classroomId - The id of the classroom where the assignment is to be created.
+ * @param {string} input.content - The assignment description in a Json format.
  * @param {string} input.lateSubmission - If late submission is allowed or not.
  */
-export const createAnnouncement = privateProcedure
+export const createAssignment = privateProcedure
   .input(
     z.object({
       title: z.string().min(3).max(80),
@@ -39,7 +39,7 @@ export const createAnnouncement = privateProcedure
       });
     }
 
-    const createdAnnouncement = await db.announcement.create({
+    const createdAssignment = await db.assignment.create({
       data: {
         title,
         description: content,
@@ -53,7 +53,7 @@ export const createAnnouncement = privateProcedure
     await db.event.create({
       data: {
         title,
-        announcementId: createdAnnouncement.id,
+        assignmentId: createdAssignment.id,
         userId: ctx.userId,
         eventDate: dueDate,
       },
@@ -61,13 +61,13 @@ export const createAnnouncement = privateProcedure
   });
 
 /**
- * To get announcements of a classroom.
+ * To get assignments of a classroom.
  *
- * @param {object} input - The input parameters for getting annoucements of a classroom.
+ * @param {object} input - The input parameters for getting assignments of a classroom.
  * @param {boolean} input.classroomId - The id of the classroom.
- * @returns {Promise<Object[]>} - A list of announcement objects.
+ * @returns {Promise<Object[]>} - A list of assignment objects.
  */
-export const getAnnouncements = privateProcedure
+export const getAssignments = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
@@ -76,7 +76,7 @@ export const getAnnouncements = privateProcedure
   .query(async ({ input }) => {
     const { classroomId } = input;
 
-    const announcements = await db.announcement.findMany({
+    const assignments = await db.assignment.findMany({
       where: {
         classRoomId: classroomId,
       },
@@ -93,30 +93,30 @@ export const getAnnouncements = privateProcedure
       },
     });
 
-    return announcements;
+    return assignments;
   });
 
 /**
- * To get announcement details.
+ * To get assignment details.
  *
- * @param {object} input - The input parameters for getting annoucement details.
- * @param {boolean} input.announcementId - The id of the announcement to be fetched.
- * @param {boolean} input.classroomId - The id of the classroom where the announcement belongs.
- * @returns {Promise<Object[]>} - A list of announcement objects.
+ * @param {object} input - The input parameters for getting assignment details.
+ * @param {boolean} input.assignmentId - The id of the assignment to be fetched.
+ * @param {boolean} input.classroomId - The id of the classroom where the assignment belongs.
+ * @returns {Promise<Object[]>} - A list of assignment objects.
  */
-export const getAnnouncementById = privateProcedure
+export const getAssignment = privateProcedure
   .input(
     z.object({
-      announcementId: z.string(),
+      assignmentId: z.string(),
       classroomId: z.string(),
     })
   )
   .query(async ({ input, ctx }) => {
-    const { announcementId, classroomId } = input;
+    const { assignmentId, classroomId } = input;
 
-    const announcement = await db.announcement.findFirst({
+    const assignment = await db.assignment.findFirst({
       where: {
-        id: announcementId,
+        id: assignmentId,
         classRoomId: classroomId,
       },
       include: {
@@ -140,5 +140,5 @@ export const getAnnouncementById = privateProcedure
 
     const isJoinedAsTeacher = !!memberAsTeacher;
 
-    return { announcement, isJoinedAsTeacher };
+    return { assignment, isJoinedAsTeacher };
   });

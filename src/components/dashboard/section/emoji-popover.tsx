@@ -31,7 +31,7 @@ export const EmojiPopover: React.FC<EmojiPopoverProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <span className="p-1 rounded-md hover:bg-neutral-400/70 hover:text-gray-700 transition block">
+        <span className="p-1 rounded-md hover:bg-neutral-300 hover:text-gray-700 transition block">
           {selectedEmoji.url ? (
             <div className="h-4 w-4 relative">
               <Image

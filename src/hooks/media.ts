@@ -2,8 +2,8 @@ import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
 
-export const useGetMedia = (announcementId: string) => {
-  return trpc.media.getUploadedMedia.useQuery({ announcementId });
+export const useGetMedia = (assignmentId: string) => {
+  return trpc.media.getUploadedMedia.useQuery({ assignmentId });
 };
 
 export const useCreateMedia = ({ closeModal }: { closeModal: () => void }) => {
@@ -11,11 +11,11 @@ export const useCreateMedia = ({ closeModal }: { closeModal: () => void }) => {
 
   return trpc.media.createMedia.useMutation({
     onMutate: () => {
-      toast.loading("Just a moment...");
+      toast.loading("Adding your work...");
     },
     onSuccess: () => {
       closeModal();
-      toast.success("Media successfully uploaded!");
+      toast.success("Your work has been uploaded");
       utils.media.getUploadedMedia.invalidate();
     },
   });
@@ -26,15 +26,15 @@ export const useEditLink = ({ closeModal }: { closeModal: () => void }) => {
 
   return trpc.media.editLink.useMutation({
     onMutate: async (data) => {
-      const { announcementId, mediaId, url, label } = data;
+      const { assignmentId, mediaId, url, label } = data;
 
       closeModal();
 
-      await utils.media.getUploadedMedia.cancel({ announcementId });
+      await utils.media.getUploadedMedia.cancel({ assignmentId });
 
       const prevMedia = utils.media.getUploadedMedia.getData();
 
-      utils.media.getUploadedMedia.setData({ announcementId }, (prev) =>
+      utils.media.getUploadedMedia.setData({ assignmentId }, (prev) =>
         prev?.map((media) =>
           media.id !== mediaId ? media : { ...media, url, label: label ?? null }
         )
@@ -42,13 +42,13 @@ export const useEditLink = ({ closeModal }: { closeModal: () => void }) => {
 
       return { prevMedia };
     },
-    onError: (error, { announcementId }, ctx) => {
-      utils.media.getUploadedMedia.setData({ announcementId }, ctx?.prevMedia);
+    onError: (error, { assignmentId }, ctx) => {
+      utils.media.getUploadedMedia.setData({ assignmentId }, ctx?.prevMedia);
 
       toast.error(error.message);
     },
-    onSettled: (_, err, { announcementId }) => {
-      utils.media.getUploadedMedia.invalidate({ announcementId });
+    onSettled: (_, err, { assignmentId }) => {
+      utils.media.getUploadedMedia.invalidate({ assignmentId });
     },
   });
 };
@@ -58,25 +58,25 @@ export const useRemoveMedia = () => {
 
   return trpc.media.removeMedia.useMutation({
     onMutate: async (data) => {
-      const { announcementId, mediaId } = data;
+      const { assignmentId, mediaId } = data;
 
-      await utils.media.getUploadedMedia.cancel({ announcementId });
+      await utils.media.getUploadedMedia.cancel({ assignmentId });
 
       const prevMedia = utils.media.getUploadedMedia.getData();
 
-      utils.media.getUploadedMedia.setData({ announcementId }, (prev) =>
+      utils.media.getUploadedMedia.setData({ assignmentId }, (prev) =>
         prev?.filter((media) => media.id !== mediaId)
       );
 
       return { prevMedia };
     },
-    onError: (error, { announcementId }, ctx) => {
-      utils.media.getUploadedMedia.setData({ announcementId }, ctx?.prevMedia);
+    onError: (error, { assignmentId }, ctx) => {
+      utils.media.getUploadedMedia.setData({ assignmentId }, ctx?.prevMedia);
 
       toast.error(error.message);
     },
-    onSettled: (_, err, { announcementId }) => {
-      utils.media.getUploadedMedia.invalidate({ announcementId });
+    onSettled: (_, err, { assignmentId }) => {
+      utils.media.getUploadedMedia.invalidate({ assignmentId });
     },
   });
 };
