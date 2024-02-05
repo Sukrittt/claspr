@@ -25,7 +25,7 @@ import {
 const sectionCreationSchema = z.object({
   name: z
     .string()
-    .min(3)
+    .min(1)
     .max(50)
     .refine(
       (val) => {

@@ -21,7 +21,7 @@ import { createdClassSections, joinedClassSections } from "@/atoms";
 const sectionUpdationSchema = z.object({
   name: z
     .string()
-    .min(3)
+    .min(1)
     .max(50)
     .refine(
       (val) => {

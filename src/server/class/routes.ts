@@ -19,7 +19,7 @@ const CODE_CHARACTERS =
 export const createClass = privateProcedure
   .input(
     z.object({
-      title: z.string().min(3).max(80),
+      title: z.string().min(1).max(80),
       sectionId: z.string(),
     })
   )
@@ -74,7 +74,7 @@ export const createClass = privateProcedure
 export const renameClass = privateProcedure
   .input(
     z.object({
-      title: z.string().min(3).max(80),
+      title: z.string().min(1).max(80),
       classroomId: z.string(),
     })
   )
@@ -115,7 +115,7 @@ export const renameClass = privateProcedure
 export const setNickName = privateProcedure
   .input(
     z.object({
-      title: z.string().min(3).max(80),
+      title: z.string().min(1).max(80),
       membershipId: z.string(),
     })
   )

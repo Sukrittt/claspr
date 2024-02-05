@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 const classCreationSchema = z.object({
   title: z
     .string()
-    .min(3)
+    .min(1)
     .max(50)
     .refine(
       (val) => {

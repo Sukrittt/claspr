@@ -14,7 +14,7 @@ import { privateProcedure } from "@/server/trpc";
 export const createSection = privateProcedure
   .input(
     z.object({
-      name: z.string().min(3).max(80),
+      name: z.string().min(1).max(80),
       sectionType: z.enum(["CREATION", "MEMBERSHIP"]),
     })
   )
@@ -86,7 +86,7 @@ export const updateSection = privateProcedure
   .input(
     z.object({
       sectionId: z.string(),
-      name: z.string().min(3).max(80).optional(),
+      name: z.string().min(1).max(80).optional(),
       emojiUrl: z.string().optional(),
       isDefault: z.boolean().optional(),
       sectionType: z.enum(["CREATION", "MEMBERSHIP"]).optional(),
