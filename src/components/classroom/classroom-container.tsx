@@ -77,6 +77,7 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
             <ClassMembers
               members={classroom.students}
               creator={classroom.teacher}
+              sessionId={session.user.id}
             />
           </TabsContent>
           <TabsContent className="h-full" value="conversations">

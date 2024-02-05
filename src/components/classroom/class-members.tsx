@@ -11,11 +11,13 @@ import { CustomTooltip } from "@/components/custom/custom-tooltip";
 interface ClassMembersProps {
   members: ExtendedMembershipDetails[];
   creator: User;
+  sessionId: string;
 }
 
 export const ClassMembers: React.FC<ClassMembersProps> = ({
   members,
   creator,
+  sessionId,
 }) => {
   return (
     <AnimatePresence mode="wait">
@@ -41,14 +43,20 @@ export const ClassMembers: React.FC<ClassMembersProps> = ({
                     </p>
                   </div>
                 </div>
-                <CustomTooltip text="You created this classroom">
+                <CustomTooltip text="Created this classroom">
                   <div>
-                    <Badge variant="outline">You</Badge>
+                    <Badge variant="outline">
+                      {creator.id === sessionId ? "You" : "Teacher"}
+                    </Badge>
                   </div>
                 </CustomTooltip>
               </div>
               {members.map((member) => (
-                <MemberCard key={member.id} member={member} />
+                <MemberCard
+                  key={member.id}
+                  member={member}
+                  sessionId={sessionId}
+                />
               ))}
             </div>
           </ScrollArea>
@@ -58,7 +66,12 @@ export const ClassMembers: React.FC<ClassMembersProps> = ({
   );
 };
 
-const MemberCard = ({ member }: { member: ExtendedMembershipDetails }) => {
+interface MemberCardProps {
+  member: ExtendedMembershipDetails;
+  sessionId: string;
+}
+
+const MemberCard: React.FC<MemberCardProps> = ({ member, sessionId }) => {
   const joinedAs = member.isTeacher ? "Teacher" : "Student";
 
   return (
@@ -81,7 +94,9 @@ const MemberCard = ({ member }: { member: ExtendedMembershipDetails }) => {
           </div>
           <CustomTooltip text={`Joined as a ${joinedAs.toLowerCase()}`}>
             <div>
-              <Badge variant="outline">{joinedAs}</Badge>
+              <Badge variant="outline">
+                {member.userId === sessionId ? "You" : joinedAs}
+              </Badge>
             </div>
           </CustomTooltip>
         </div>
