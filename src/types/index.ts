@@ -2,6 +2,7 @@ import {
   Assignment,
   ClassRoom,
   Comment,
+  Media,
   Membership,
   Section,
   Submission,
@@ -43,4 +44,11 @@ export type ExtendedAssignment = Assignment & {
 
 export type ExtendedComment = Comment & {
   user: User;
+};
+
+export type ExtendedSubmission = Submission & {
+  member: Membership & {
+    user: User;
+  };
+  media: Media[];
 };

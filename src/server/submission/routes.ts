@@ -103,7 +103,43 @@ export const createSubmission = privateProcedure
   });
 
 /**
- * To get submission details for a particular submission
+ * To get all submissions for a particular assignment.
+ *
+ * @param {object} input - The input parameters to get assignment submissions.
+ * @param {string} input.assignmentId - The id of the assignment.
+ * @returns {Promise<Object>} - A list of submission objects from the database.
+ */
+export const getAssignmentSubmissions = privateProcedure
+  .input(
+    z.object({
+      assignmentId: z.string(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const { assignmentId } = input;
+
+    const submissions = await db.submission.findMany({
+      where: {
+        assignmentId,
+      },
+      include: {
+        member: {
+          include: {
+            user: true,
+          },
+        },
+        media: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return submissions;
+  });
+
+/**
+ * To get details for a particular submission
  *
  * @param {object} input - The input parameters to get submission details.
  * @param {string} input.assignmentId - The id of the assignment.

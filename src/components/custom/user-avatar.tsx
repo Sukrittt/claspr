@@ -14,7 +14,6 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({ user, ...props }) => {
       <AvatarImage
         src={user.image ?? ""}
         alt={user?.name ?? "user avatar"}
-        className="cursor-pointer"
       />
       <AvatarFallback className="cursor-pointer">
         <span className="sr-only">{user?.name}</span>

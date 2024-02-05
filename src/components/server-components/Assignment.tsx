@@ -34,7 +34,7 @@ export const Assignment: React.FC<AssignmentProps> = async ({
   return (
     <PartOfClass classroomId={classroomId}>
       {isTeacher ? (
-        <TeacherView />
+        <TeacherView assignment={assignment} session={session} />
       ) : (
         <StudentView assignment={assignment} session={session} />
       )}
