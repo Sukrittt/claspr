@@ -37,7 +37,7 @@ export const TeacherView: React.FC<TeacherViewProps> = ({
             </TabsTrigger>
           </TabsList>
 
-          <AssignmentFilter />
+          <AssignmentFilter assignment={assignment} />
         </div>
         <TabsContent value="submissions">
           <Submissions assignment={assignment} session={session} />

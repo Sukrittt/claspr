@@ -1,3 +1,7 @@
+import qs from "query-string";
+import { useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import {
   Select,
   SelectContent,
@@ -5,10 +9,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ExtendedAssignment } from "@/types";
 
-export const AssignmentFilter = () => {
+interface AssignmentFilterProps {
+  assignment: ExtendedAssignment;
+}
+
+export const AssignmentFilter: React.FC<AssignmentFilterProps> = ({
+  assignment,
+}) => {
+  const router = useRouter();
+  const params = useSearchParams();
+
+  const handleQueryChange = useCallback(
+    (value: string) => {
+      let currentQuery = {};
+
+      if (params) {
+        currentQuery = qs.parse(params.toString());
+      }
+
+      const updatedQuery: any = {
+        ...currentQuery,
+        status: value,
+      };
+
+      const url = qs.stringifyUrl(
+        {
+          url: `/c/${assignment.classRoomId}/a/${assignment.id}`,
+          query: updatedQuery,
+        },
+        { skipNull: true }
+      );
+
+      router.push(url);
+    },
+    [params]
+  );
+
   return (
-    <Select defaultValue="pending">
+    <Select defaultValue="pending" onValueChange={handleQueryChange}>
       <SelectTrigger className="w-[200px] font-medium text-[12px]">
         <SelectValue placeholder="Filter assignments" />
       </SelectTrigger>

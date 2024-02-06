@@ -1,3 +1,7 @@
+import qs from "query-string";
+import { useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import {
   Select,
   SelectContent,
@@ -6,9 +10,38 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const ClassroomSorting = () => {
+export const ClassroomSorting = ({ classroomId }: { classroomId: string }) => {
+  const router = useRouter();
+  const params = useSearchParams();
+
+  const handleQueryChange = useCallback(
+    (value: string) => {
+      let currentQuery = {};
+
+      if (params) {
+        currentQuery = qs.parse(params.toString());
+      }
+
+      const updatedQuery: any = {
+        ...currentQuery,
+        filter: value,
+      };
+
+      const url = qs.stringifyUrl(
+        {
+          url: `/c/${classroomId}`,
+          query: updatedQuery,
+        },
+        { skipNull: true }
+      );
+
+      router.push(url);
+    },
+    [params]
+  );
+
   return (
-    <Select defaultValue="date-created">
+    <Select defaultValue="date-created" onValueChange={handleQueryChange}>
       <SelectTrigger className="w-[220px] font-medium text-[12px]">
         <div className="flex items-center gap-x-1">
           <span className="text-muted-foreground font-semibold">Sort by: </span>

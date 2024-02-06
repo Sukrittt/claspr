@@ -26,7 +26,7 @@ export const ClassroomControls: React.FC<ClassroomControlProps> = ({
 
   return (
     <div className="flex items-center gap-x-2">
-      <ClassroomSorting />
+      <ClassroomSorting classroomId={classroom.id} />
       {isTeacher && (
         <Link
           href={`/c/${classroom.id}/create`}
