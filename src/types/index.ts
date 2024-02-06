@@ -43,7 +43,8 @@ export type ExtendedAssignment = Assignment & {
 };
 
 export type ExtendedComment = Comment & {
-  user: User;
+  sender: User;
+  receiver: User | null;
 };
 
 export type ExtendedSubmission = Submission & {

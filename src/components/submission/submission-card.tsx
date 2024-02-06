@@ -1,7 +1,14 @@
 "use client";
 import { isAfter } from "date-fns";
-import { MediaType } from "@prisma/client";
-import { LinkIcon, File, FileX } from "lucide-react";
+import { MediaType, SubmissionStatus } from "@prisma/client";
+import {
+  LinkIcon,
+  File,
+  FileX,
+  Hourglass,
+  CheckCircle2,
+  FilePenLine,
+} from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
@@ -27,6 +34,7 @@ import {
 import { CreateSubmission } from "./create-submission";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MediaDropdown } from "@/components/media/media-dropdown";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface SubmissionCardProps {
   assignment: ExtendedAssignment;
@@ -74,11 +82,32 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
     window.open(url, "_blank");
   };
 
+  const SubmissionStatusIcon = {
+    [SubmissionStatus.PENDING]: (
+      <CustomTooltip text="Pending evaluation">
+        <Hourglass className="h-4 w-4 text-yellow-500" />
+      </CustomTooltip>
+    ),
+    [SubmissionStatus.APPROVED]: (
+      <CustomTooltip text="Evaluated">
+        <CheckCircle2 className="h-4 w-4 text-green-500" />
+      </CustomTooltip>
+    ),
+    [SubmissionStatus.CHANGES_REQUESTED]: (
+      <CustomTooltip text="Changes requested">
+        <FilePenLine className="h-4 w-4 text-red-500" />
+      </CustomTooltip>
+    ),
+  };
+
   return (
     <Card>
       <CardHeader className="border-b py-2 pl-4 pr-3 space-y-0">
-        <CardTitle className="text-base">Submit your work</CardTitle>
-        <CardDescription>
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-base">Submit your work</CardTitle>
+          {submission && SubmissionStatusIcon[submission.submissionStatus!]}
+        </div>
+        <CardDescription className="text-xs">
           Attach files or links to submit your work.
         </CardDescription>
       </CardHeader>

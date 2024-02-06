@@ -11,11 +11,8 @@ interface UserAvatarProps extends AvatarProps {
 export const UserAvatar: React.FC<UserAvatarProps> = ({ user, ...props }) => {
   return (
     <Avatar {...props}>
-      <AvatarImage
-        src={user.image ?? ""}
-        alt={user?.name ?? "user avatar"}
-      />
-      <AvatarFallback className="cursor-pointer">
+      <AvatarImage src={user.image ?? ""} alt={user?.name ?? "user avatar"} />
+      <AvatarFallback className="rounded-md">
         <span className="sr-only">{user?.name}</span>
         <UserIcon className="h-4 w-4" />
       </AvatarFallback>

@@ -33,8 +33,12 @@ export const useSubmitReview = ({
   return trpc.assignment.submitReview.useMutation({
     onSuccess: () => {
       handleCleanups();
-      utils.assignment.getAssignments.invalidate();
+      utils.submission.getAssignmentSubmissions.invalidate();
       toast.success("Your review was submitted");
     },
   });
+};
+
+export const useNotSubmittedStudents = (assignmentId: string) => {
+  return trpc.assignment.getNotSubmittedStudents.useQuery({ assignmentId });
 };

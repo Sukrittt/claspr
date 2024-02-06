@@ -48,7 +48,7 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
   const classDetails = [
     {
       title: "Members",
-      description: classroom.students.length,
+      description: classroom.students.length + 1, // + 1 to include the creator
     },
     {
       title: "Class Code",

@@ -80,12 +80,12 @@ const CommentCard: React.FC<CommentCardProps> = ({ comment }) => {
 
   return (
     <div className="flex gap-x-2 w-full group">
-      <UserAvatar user={comment.user} className="h-5 w-5" />
-      <div className="space-y-1.5 w-full">
+      <UserAvatar user={comment.sender} className="h-5 w-5" />
+      <div className="space-y-0.5 w-full">
         <div className="flex items-center justify-between">
           <div className="flex items-center tracking-tight text-xs gap-x-2">
             <p className="font-semibold text-neutral-800">
-              {getShortenedText(comment.user.name ?? "", 20)}
+              {getShortenedText(comment.sender.name ?? "", 20)}
             </p>
             <p className="font-medium">{timeAgo(comment.createdAt)}</p>
           </div>

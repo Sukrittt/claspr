@@ -9,10 +9,10 @@ import { privateProcedure } from "@/server/trpc";
  *
  * @param {object} input - The input parameters for creating assignment.
  * @param {string} input.title - The title for the assignment.
- * @param {string} input.dueDate - Due date for the submission.
+ * @param {date} input.dueDate - Due date for the submission.
  * @param {string} input.classroomId - The id of the classroom where the assignment is to be created.
- * @param {string} input.content - The assignment description in a Json format.
- * @param {string} input.lateSubmission - If late submission is allowed or not.
+ * @param {any} input.content - The assignment description in a Json format.
+ * @param {boolean} input.lateSubmission - If late submission is allowed or not.
  */
 export const createAssignment = privateProcedure
   .input(
@@ -73,7 +73,7 @@ export const createAssignment = privateProcedure
  * To get assignments of a classroom.
  *
  * @param {object} input - The input parameters for getting assignments of a classroom.
- * @param {boolean} input.classroomId - The id of the classroom.
+ * @param {string} input.classroomId - The id of the classroom.
  * @returns {Promise<Object[]>} - A list of assignment objects.
  */
 export const getAssignments = privateProcedure
@@ -109,8 +109,8 @@ export const getAssignments = privateProcedure
  * To get assignment details.
  *
  * @param {object} input - The input parameters for getting assignment details.
- * @param {boolean} input.assignmentId - The id of the assignment to be fetched.
- * @param {boolean} input.classroomId - The id of the classroom where the assignment belongs.
+ * @param {string} input.assignmentId - The id of the assignment to be fetched.
+ * @param {string} input.classroomId - The id of the classroom where the assignment belongs.
  * @returns {Promise<Object[]>} - A list of assignment objects.
  */
 export const getAssignment = privateProcedure
@@ -178,6 +178,7 @@ export const submitReview = privateProcedure
       },
       include: {
         assignment: true,
+        member: true,
       },
     });
 
@@ -204,7 +205,8 @@ export const submitReview = privateProcedure
         data: {
           message,
           assignmentId,
-          userId: ctx.userId,
+          senderId: ctx.userId,
+          receiverId: existingSubmission.member.userId,
         },
       }),
       db.submission.update({
@@ -219,6 +221,52 @@ export const submitReview = privateProcedure
     ];
 
     await Promise.all(promises);
+  });
+
+/**
+ * To get all the students who have not yet submitted their work.
+ *
+ * @param {object} input - The input parameters for getting not submitted students.
+ * @param {string} input.assignmentId - The id of the assignment.
+ * @returns {Promise<Object[]>} - A list of member objects.
+ */
+export const getNotSubmittedStudents = privateProcedure
+  .input(
+    z.object({
+      assignmentId: z.string(),
+    })
+  )
+  .query(async ({ input }) => {
+    const { assignmentId } = input;
+
+    const existingAssignment = await db.assignment.findFirst({
+      where: { id: assignmentId },
+      select: { classRoomId: true },
+    });
+
+    if (!existingAssignment) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find this assignment. Please try again later.",
+      });
+    }
+
+    const notSubmittedMembers = await db.membership.findMany({
+      where: {
+        classRoomId: existingAssignment.classRoomId,
+        isTeacher: false,
+        submissions: {
+          none: {
+            assignmentId,
+          },
+        },
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    return notSubmittedMembers;
   });
 
 export const isTeacherAuthed = async (classRoomId: string, userId: string) => {
@@ -237,8 +285,8 @@ export const isTeacherAuthed = async (classRoomId: string, userId: string) => {
   });
 
   if (!existingClass && (!existingMember || !existingMember.isTeacher)) {
-    return true;
+    return false;
   }
 
-  return false;
+  return true;
 };

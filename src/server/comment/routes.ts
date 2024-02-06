@@ -8,24 +8,41 @@ import { privateProcedure } from "@/server/trpc";
  * To get comments associated with an assignment.
  *
  * @param {object} input - The input parameters for getting comments of an assignment.
- * @param {boolean} input.annnouncementId - The id of the assignment.
+ * @param {string} input.annnouncementId - The id of the assignment.
+ * @param {boolean} input.isTeacher - A boolean to check if the user is a teacher.
+ * @param {string} input.receiverId - The id of the user on the receiving end.
  * @returns {Promise<Object[]>} - A list of comments object.
  */
 export const getComments = privateProcedure
   .input(
     z.object({
       assignmentId: z.string(),
+      isTeacher: z.boolean().optional().default(false),
+      receiverId: z.string().optional(),
     })
   )
-  .query(async ({ input }) => {
-    const { assignmentId } = input;
+  .query(async ({ input, ctx }) => {
+    const { assignmentId, isTeacher, receiverId } = input;
+
+    let whereClause = {};
+
+    if (!isTeacher) {
+      whereClause = {
+        assignmentId,
+        OR: [{ senderId: ctx.userId }, { receiverId: ctx.userId }],
+      };
+    } else {
+      whereClause = {
+        assignmentId,
+        OR: [{ senderId: ctx.userId }, { senderId: receiverId }],
+      };
+    }
 
     const comments = await db.comment.findMany({
-      where: {
-        assignmentId,
-      },
+      where: whereClause,
       include: {
-        user: true,
+        sender: true,
+        receiver: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -41,16 +58,18 @@ export const getComments = privateProcedure
  * @param {object} input - The input parameters for creating assignment.
  * @param {string} input.message - The message for the comment.
  * @param {string} input.assignmentId - The id of the assignment.
+ * @param {string} input.receiverId - The id of the user on the receiving end.
  */
 export const createComment = privateProcedure
   .input(
     z.object({
       message: z.string().max(80),
       assignmentId: z.string(),
+      receiverId: z.string().optional(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { assignmentId, message } = input;
+    const { assignmentId, message, receiverId } = input;
 
     const existingAssignment = await db.assignment.findFirst({
       where: { id: assignmentId },
@@ -98,7 +117,8 @@ export const createComment = privateProcedure
       data: {
         message,
         assignmentId,
-        userId: ctx.userId,
+        senderId: ctx.userId,
+        receiverId,
       },
     });
   });
@@ -121,8 +141,8 @@ export const editComment = privateProcedure
     const { commentId, message } = input;
 
     const existingComment = await db.comment.findFirst({
-      where: { id: commentId, userId: ctx.userId },
-      select: { id: true, userId: true },
+      where: { id: commentId, senderId: ctx.userId },
+      select: { id: true, senderId: true },
     });
 
     if (!existingComment) {
@@ -132,7 +152,7 @@ export const editComment = privateProcedure
       });
     }
 
-    if (existingComment.userId !== ctx.userId) {
+    if (existingComment.senderId !== ctx.userId) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "You are not allowed to edit someone else's comment.",
@@ -164,8 +184,8 @@ export const removeComment = privateProcedure
     const { commentId } = input;
 
     const existingComment = await db.comment.findFirst({
-      where: { id: commentId, userId: ctx.userId },
-      select: { id: true, userId: true },
+      where: { id: commentId, senderId: ctx.userId },
+      select: { id: true, senderId: true },
     });
 
     if (!existingComment) {
@@ -175,7 +195,7 @@ export const removeComment = privateProcedure
       });
     }
 
-    if (existingComment.userId !== ctx.userId) {
+    if (existingComment.senderId !== ctx.userId) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "You are not allowed to edit someone else's comment.",
@@ -183,6 +203,6 @@ export const removeComment = privateProcedure
     }
 
     await db.comment.delete({
-      where: { id: commentId, userId: ctx.userId },
+      where: { id: commentId, senderId: ctx.userId },
     });
   });

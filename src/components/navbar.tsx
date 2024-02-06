@@ -22,7 +22,10 @@ export const Navbar = async () => {
       </Link>
       {session ? (
         <UserDropdown user={session.user}>
-          <UserAvatar user={session.user} className="h-7 w-7 cursor-pointer" />
+          <UserAvatar
+            user={session.user}
+            className="h-7 w-7 cursor-pointer rounded-md"
+          />
         </UserDropdown>
       ) : (
         <Link href="/sign-in" className={buttonVariants()}>

@@ -5,6 +5,7 @@ import {
   getAssignments,
   getAssignment,
   submitReview,
+  getNotSubmittedStudents,
 } from "@/server/assignment/routes";
 
 export const assignmentRouter = createTRPCRouter({
@@ -12,4 +13,5 @@ export const assignmentRouter = createTRPCRouter({
   getAssignments,
   getAssignment,
   submitReview,
+  getNotSubmittedStudents,
 });

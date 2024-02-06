@@ -59,19 +59,20 @@ model User {
 
   createdAt DateTime @default(now())
 
-  accounts       Account[]
-  sessions       Session[]
-  sections       Section[]
-  classrooms     ClassRoom[] //only teachers will have this
-  assignments    Assignment[]
-  comments       Comment[]
-  memberships    Membership[] //only students will have this
-  conversations  Conversation[]
-  questions      Question[]
-  answers        Answer[]
-  media          Media[]
-  studyMaterials StudyMaterial[]
-  events         Event[]
+  accounts        Account[]
+  sessions        Session[]
+  sections        Section[]
+  classrooms      ClassRoom[] //only teachers will have this
+  assignments     Assignment[]
+  commentReceived Comment[]       @relation(name: "Receiver")
+  commentSent     Comment[]       @relation(name: "Sender")
+  memberships     Membership[] //only students will have this
+  conversations   Conversation[]
+  questions       Question[]
+  answers         Answer[]
+  media           Media[]
+  studyMaterials  StudyMaterial[]
+  events          Event[]
 }
 
 enum SectionType {
@@ -228,8 +229,11 @@ model Comment {
 
   message String
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  senderId String
+  sender   User   @relation(name: "Sender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  receiverId String?
+  receiver   User?   @relation(name: "Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
 
   isEdited Boolean? @default(false)
 

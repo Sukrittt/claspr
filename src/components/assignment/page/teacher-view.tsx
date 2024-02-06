@@ -14,7 +14,7 @@ interface TeacherViewProps {
 
 export const TeacherView: React.FC<TeacherViewProps> = ({ assignment }) => {
   return (
-    <div className="px-20 py-8">
+    <div className="px-20 py-8 h-full">
       <Tabs defaultValue="submissions" className="h-full">
         <div className="flex items-center justify-between">
           <TabsList className="mb-2">
@@ -34,7 +34,7 @@ export const TeacherView: React.FC<TeacherViewProps> = ({ assignment }) => {
 
           <AssignmentFilter assignment={assignment} />
         </div>
-        <TabsContent value="submissions">
+        <TabsContent value="submissions" className="h-[85%]">
           <Submissions assignment={assignment} />
         </TabsContent>
         <TabsContent value="instructions">
