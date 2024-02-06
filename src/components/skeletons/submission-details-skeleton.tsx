@@ -20,16 +20,19 @@ export const SubmissionDetailsSkeleton = ({
 
 const SubmissionDetailCard = () => {
   return (
-    <div className="flex items-center gap-x-4 border-b text-sm px-3 py-2 cursor-pointer hover:bg-neutral-100 transition">
-      <Skeleton className="h-8 w-8 rounded-md" />
-      <div className="flex flex-col gap-y-1">
-        <Skeleton className="h-3 w-[28%]" />
-        <div className="flex items-center gap-x-2.5">
-          <Skeleton className="h-3 w-36" />
-          <Separator orientation="vertical" className="h-4" />
-          <Skeleton className="h-3 w-56" />
+    <div className="flex items-center justify-between border-b text-sm px-3 py-2 cursor-pointer hover:bg-neutral-100 transition">
+      <div className="flex items-center gap-x-4">
+        <Skeleton className="h-8 w-8 rounded-md" />
+        <div className="flex flex-col gap-y-1">
+          <Skeleton className="h-3 w-[28%]" />
+          <div className="flex items-center gap-x-2.5">
+            <Skeleton className="h-3 w-36" />
+            <Separator orientation="vertical" className="h-4" />
+            <Skeleton className="h-3 w-56" />
+          </div>
         </div>
       </div>
+      <Skeleton className="h-6 w-6 rounded-md" />
     </div>
   );
 };

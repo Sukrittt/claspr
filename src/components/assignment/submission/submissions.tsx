@@ -1,8 +1,10 @@
 import { format } from "date-fns";
-import { FileCheck2, FileClock, FilePen, Link as LinkIcon } from "lucide-react";
 import { Session } from "next-auth";
 import { useSearchParams } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
+import { FileCheck2, FileClock, FilePen, Link as LinkIcon } from "lucide-react";
 
+import { ContainerVariants } from "@/lib/motion";
 import { Separator } from "@/components/ui/separator";
 import { SubmissionReview } from "./submission-review";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -63,18 +65,27 @@ export const Submissions: React.FC<SubmissionsProps> = ({
           </p>
         </div>
       ) : (
-        <ScrollArea className="h-[70vh]">
-          <div className="flex flex-col gap-y-2 h-full">
-            {submissions.map((submission) => (
-              <StudentSubmission
-                key={submission.id}
-                submission={submission}
-                assignment={assignment}
-                session={session}
-              />
-            ))}
-          </div>
-        </ScrollArea>
+        <AnimatePresence mode="wait">
+          <motion.div
+            variants={ContainerVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <ScrollArea className="h-[70vh]">
+              <div className="flex flex-col gap-y-2 h-full">
+                {submissions.map((submission) => (
+                  <StudentSubmission
+                    key={submission.id}
+                    submission={submission}
+                    assignment={assignment}
+                    session={session}
+                  />
+                ))}
+              </div>
+            </ScrollArea>
+          </motion.div>
+        </AnimatePresence>
       )}
     </div>
   );

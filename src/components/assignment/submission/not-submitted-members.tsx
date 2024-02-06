@@ -1,5 +1,7 @@
 import { UsersRound } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
+import { ContainerVariants } from "@/lib/motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { useNotSubmittedStudents } from "@/hooks/assignment";
@@ -26,22 +28,36 @@ export const NotSubmittedMembers: React.FC<NotSubmittedMembersProps> = ({
           </p>
         </div>
       ) : (
-        <ScrollArea className="h-[70vh]">
-          <div className="flex flex-col gap-y-2">
-            {students.map((student) => (
-              <div
-                key={student.userId}
-                className="flex items-center gap-x-4 border-b text-sm px-3 py-2"
-              >
-                <UserAvatar
-                  user={student.user}
-                  className="h-8 w-8 rounded-md"
-                />
-                <p>{student.user.name}</p>
+        <AnimatePresence mode="wait">
+          <motion.div
+            variants={ContainerVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+          >
+            <ScrollArea className="h-[70vh]">
+              <div className="flex flex-col gap-y-2">
+                {students.map((student) => (
+                  <div
+                    key={student.userId}
+                    className="flex items-center gap-x-4 border-b text-sm px-3 py-2"
+                  >
+                    <UserAvatar
+                      user={student.user}
+                      className="h-8 w-8 rounded-md"
+                    />
+                    <div>
+                      <p className="font-medium">{student.user.name}</p>
+                      <p className="text-muted-foreground text-[13px]">
+                        {student.user.email}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </ScrollArea>
+            </ScrollArea>
+          </motion.div>
+        </AnimatePresence>
       )}
     </div>
   );

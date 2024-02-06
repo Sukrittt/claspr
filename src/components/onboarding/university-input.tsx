@@ -34,9 +34,12 @@ const universityInputSchema = z.object({
     .regex(/^[a-zA-Z0-9 ]+$/, {
       message: ERROR_MESSAGE_STARTING + " alphanumeric",
     })
-    .refine((val) => {
-      return val.trim().length > 0;
-    },{message:"University name cannot be empty"}),
+    .refine(
+      (val) => {
+        return val.trim().length > 0;
+      },
+      { message: "University name cannot be empty" }
+    ),
 });
 
 type Inputs = z.infer<typeof universityInputSchema>;
@@ -103,6 +106,7 @@ export const UniversityInput: React.FC<UniversityInputProps> = ({ role }) => {
                     <div className="flex gap-x-2 items-center">
                       <Input
                         type="text"
+                        className="h-[30px]"
                         disabled={isLoading}
                         placeholder="E.g: Christ University"
                         {...field}
