@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
+import { isTeacherAuthed } from "../assignment/routes";
 
 const CODE_LENGTH = 6;
 const CODE_CHARACTERS =
@@ -487,25 +488,12 @@ export const addDescription = privateProcedure
   .mutation(async ({ input, ctx }) => {
     const { classroomId, description } = input;
 
-    const existingMember = await db.membership.findFirst({
-      where: {
-        userId: ctx.userId,
-        classRoomId: classroomId,
-      },
-    });
+    const isTeacher = await isTeacherAuthed(ctx.userId, classroomId);
 
-    const existingClass = await db.classRoom.findFirst({
-      where: {
-        id: classroomId,
-        teacherId: ctx.userId,
-      },
-    });
-
-    if (!existingClass && (!existingMember || !existingMember.isTeacher)) {
+    if (!isTeacher) {
       throw new TRPCError({
-        code: "BAD_REQUEST",
-        message:
-          "You are not authorized to update the description of this class.",
+        code: "UNAUTHORIZED",
+        message: "You are not authorized to edit this class.",
       });
     }
 

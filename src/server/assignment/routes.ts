@@ -27,6 +27,15 @@ export const createAssignment = privateProcedure
   .mutation(async ({ input, ctx }) => {
     const { classRoomId, lateSubmission, title, dueDate, content } = input;
 
+    const isTeacher = await isTeacherAuthed(classRoomId, ctx.userId);
+
+    if (!isTeacher) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not authorized to create an assignment.",
+      });
+    }
+
     const existingClassroom = await db.classRoom.findFirst({
       where: { id: classRoomId },
     });
@@ -142,3 +151,82 @@ export const getAssignment = privateProcedure
 
     return { assignment, isJoinedAsTeacher };
   });
+
+/**
+ * To submit review for an submission of an assignment.
+ *
+ * @param {object} input - The input parameters for submitting review.
+ * @param {string} input.submissionId - The id of the submission to review.
+ * @param {string} input.assignmentId - The id of the assignment where the submission belongs.
+ */
+export const submitReview = privateProcedure
+  .input(
+    z.object({
+      submissionId: z.string(),
+      assignmentId: z.string(),
+      submissionStatus: z.enum(["PENDING", "APPROVED", "CHANGES_REQUESTED"]),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { submissionId, assignmentId, submissionStatus } = input;
+
+    const existingSubmission = await db.submission.findFirst({
+      where: {
+        id: submissionId,
+        assignmentId,
+      },
+      include: {
+        assignment: true,
+      },
+    });
+
+    if (!existingSubmission) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the submimssion you are trying to review.",
+      });
+    }
+
+    const classRoomId = existingSubmission.assignment.classRoomId;
+
+    const isTeacher = await isTeacherAuthed(classRoomId, ctx.userId);
+
+    if (!isTeacher) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not authorized to review this submission.",
+      });
+    }
+
+    await db.submission.update({
+      where: {
+        id: submissionId,
+        assignmentId,
+      },
+      data: {
+        submissionStatus,
+      },
+    });
+  });
+
+export const isTeacherAuthed = async (classRoomId: string, userId: string) => {
+  const existingMember = await db.membership.findFirst({
+    where: {
+      userId,
+      classRoomId,
+    },
+  });
+
+  const existingClass = await db.classRoom.findFirst({
+    where: {
+      id: classRoomId,
+      teacherId: userId,
+    },
+  });
+
+  if (!existingClass && (!existingMember || !existingMember.isTeacher)) {
+    return true;
+  }
+
+  return false;
+};

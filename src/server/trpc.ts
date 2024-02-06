@@ -43,4 +43,3 @@ const enforcedUserIsAuthed = t.middleware(async ({ next }) => {
 });
 
 export const privateProcedure = t.procedure.use(enforcedUserIsAuthed);
-//teacher procedure
