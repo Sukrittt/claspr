@@ -26,7 +26,7 @@ const SubmissionDetailCard = () => {
         <Skeleton className="h-3 w-[28%]" />
         <div className="flex items-center gap-x-2.5">
           <Skeleton className="h-3 w-36" />
-          <Separator orientation="vertical" className="h-5" />
+          <Separator orientation="vertical" className="h-4" />
           <Skeleton className="h-3 w-56" />
         </div>
       </div>

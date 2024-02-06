@@ -1,12 +1,6 @@
 import { format } from "date-fns";
-import {
-  File,
-  FileCheck2,
-  FileClock,
-  FilePen,
-  Link as LinkIcon,
-  UsersRound,
-} from "lucide-react";
+import { FileCheck2, FileClock, FilePen, Link as LinkIcon } from "lucide-react";
+import { Session } from "next-auth";
 import { useSearchParams } from "next/navigation";
 
 import { Separator } from "@/components/ui/separator";
@@ -16,14 +10,19 @@ import { getSubmissionStatusFromQuery } from "@/lib/utils";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { useAssignmentSubmissions } from "@/hooks/submission";
 import { NotSubmittedMembers } from "./not-submitted-members";
+import { TeacherCommentsDialog } from "./teacher-comments-dialog";
 import { ExtendedAssignment, ExtendedSubmission, FilterType } from "@/types";
 import { SubmissionDetailsSkeleton } from "@/components/skeletons/submission-details-skeleton";
 
 interface SubmissionsProps {
   assignment: ExtendedAssignment;
+  session: Session;
 }
 
-export const Submissions: React.FC<SubmissionsProps> = ({ assignment }) => {
+export const Submissions: React.FC<SubmissionsProps> = ({
+  assignment,
+  session,
+}) => {
   const params = useSearchParams();
 
   // Search params
@@ -71,6 +70,7 @@ export const Submissions: React.FC<SubmissionsProps> = ({ assignment }) => {
                 key={submission.id}
                 submission={submission}
                 assignment={assignment}
+                session={session}
               />
             ))}
           </div>
@@ -83,45 +83,56 @@ export const Submissions: React.FC<SubmissionsProps> = ({ assignment }) => {
 interface StudentSubmissionProps {
   submission: ExtendedSubmission;
   assignment: ExtendedAssignment;
+  session: Session;
 }
 
 const StudentSubmission: React.FC<StudentSubmissionProps> = ({
   submission,
   assignment,
+  session,
 }) => {
   const lateSubmission =
     !assignment.lateSubmission && submission.createdAt > assignment.dueDate;
 
   return (
     <SubmissionReview submission={submission} assignment={assignment}>
-      <div className="flex items-center gap-x-4 border-b text-sm px-3 py-2 cursor-pointer hover:bg-neutral-100 transition">
-        <UserAvatar
-          user={submission.member.user}
-          className="h-8 w-8 rounded-md"
-        />
-        <div>
-          <p className="font-medium">{submission.member.user.name}</p>
-          <div className="text-[12px] text-muted-foreground flex items-center gap-x-2.5">
-            {submission.media.length === 0 ? (
-              <p>No work attached</p>
-            ) : (
-              <>
-                <span className="text-muted-foreground text-[12px]">
-                  Submitted {lateSubmission && <span>late</span>} on{" "}
-                  {format(submission.createdAt, "d MMM")}
-                </span>
-                <Separator orientation="vertical" className="h-5" />
-                {submission.media.map((media) => (
-                  <div key={media.id} className="flex items-center gap-x-1">
-                    {media.mediaType === "LINK" && (
-                      <LinkIcon className="h-2.5 w-2.5 text-muted-foreground" />
-                    )}
-                    <span>{media.label}</span>
-                  </div>
-                ))}
-              </>
-            )}
+      <div className="flex items-center justify-between border-b text-sm px-3 py-2 cursor-pointer hover:bg-neutral-100 transition">
+        <div className="flex items-center gap-x-4">
+          <UserAvatar
+            user={submission.member.user}
+            className="h-8 w-8 rounded-md"
+          />
+          <div>
+            <p className="font-medium">{submission.member.user.name}</p>
+            <div className="text-[12px] text-muted-foreground flex items-center gap-x-2.5">
+              {submission.media.length === 0 ? (
+                <p>No work attached</p>
+              ) : (
+                <>
+                  <span className="text-muted-foreground text-[12px]">
+                    Submitted {lateSubmission && <span>late</span>} on{" "}
+                    {format(submission.createdAt, "d MMM")}
+                  </span>
+                  <Separator orientation="vertical" className="h-4" />
+                  {submission.media.map((media) => (
+                    <div key={media.id} className="flex items-center gap-x-1">
+                      {media.mediaType === "LINK" && (
+                        <LinkIcon className="h-2.5 w-2.5 text-muted-foreground" />
+                      )}
+                      <span>{media.label}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
           </div>
+        </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <TeacherCommentsDialog
+            member={submission.member}
+            assignment={assignment}
+            session={session}
+          />
         </div>
       </div>
     </SubmissionReview>

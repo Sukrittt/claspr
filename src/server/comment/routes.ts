@@ -34,7 +34,7 @@ export const getComments = privateProcedure
     } else {
       whereClause = {
         assignmentId,
-        OR: [{ senderId: ctx.userId }, { senderId: receiverId }],
+        OR: [{ senderId: ctx.userId, receiverId }, { senderId: receiverId }],
       };
     }
 

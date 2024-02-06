@@ -35,11 +35,13 @@ type Inputs = z.infer<typeof commentCreationSchema>;
 interface CommentInputProps {
   assignment: ExtendedAssignment;
   session: Session;
+  receiverId?: string;
 }
 
 export const CommentInput: React.FC<CommentInputProps> = ({
   assignment,
   session,
+  receiverId,
 }) => {
   // react-hook-form
   const form = useForm<Inputs>({
@@ -59,6 +61,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
     createComment({
       ...data,
       assignmentId: assignment.id,
+      receiverId,
     });
   }
 

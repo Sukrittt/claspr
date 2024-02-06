@@ -48,9 +48,7 @@ export type ExtendedComment = Comment & {
 };
 
 export type ExtendedSubmission = Submission & {
-  member: Membership & {
-    user: User;
-  };
+  member: ExtendedMembershipDetails;
   media: Media[];
 };
 

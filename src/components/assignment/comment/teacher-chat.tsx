@@ -4,74 +4,72 @@ import { Session } from "next-auth";
 import { Inbox } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { useGetComments } from "@/hooks/comment";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ExtendedAssignment, ExtendedComment } from "@/types";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { CommentInput } from "./comment-input";
 import { ContainerVariants } from "@/lib/motion";
+import { useGetComments } from "@/hooks/comment";
 import { CommentDropdown } from "./comment-dropdown";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn, getShortenedText, timeAgo } from "@/lib/utils";
 import { UserAvatar } from "@/components/custom/user-avatar";
+import { ExtendedAssignment, ExtendedComment } from "@/types";
 import { CommentSkeleton } from "@/components/skeletons/comment-skeleton";
 
-interface CommentsProps {
+interface TeacherChatProps {
   assignment: ExtendedAssignment;
   session: Session;
+  receiverId: string;
 }
 
-export const Comments: React.FC<CommentsProps> = ({ assignment, session }) => {
-  const { data: comments, isLoading } = useGetComments(assignment.id);
+export const TeacherChat: React.FC<TeacherChatProps> = ({
+  assignment,
+  session,
+  receiverId,
+}) => {
+  const { data: comments, isLoading } = useGetComments(
+    assignment.id,
+    true,
+    receiverId
+  );
 
   return (
-    <Card className="flex-1 flex flex-col">
-      <CardHeader className="border-b py-2 pl-4 pr-3 space-y-0.5">
-        <CardTitle className="text-[13px] text-neutral-700">Comments</CardTitle>
-        <CardDescription className="text-[13px]">
-          Visible only to you and your teacher
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="py-3 flex-1 flex flex-col gap-y-2 pl-4 pr-3">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {isLoading ? (
-            <CommentSkeleton />
-          ) : !comments || comments.length === 0 ? (
-            <div className="pt-16 flex justify-center items-center gap-x-2">
-              <Inbox className="h-4 w-4" />
-              <p>No comments yet.</p>
-            </div>
-          ) : (
-            <AnimatePresence mode="wait">
-              <motion.div
-                variants={ContainerVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-              >
-                <ScrollArea className="h-[170px] pb-4">
-                  <div className="flex flex-col gap-y-4 pt-2">
-                    {comments.map((comment) => (
-                      <CommentCard
-                        comment={comment}
-                        key={comment.id}
-                        sessionId={session.user.id}
-                      />
-                    ))}
-                  </div>
-                </ScrollArea>
-              </motion.div>
-            </AnimatePresence>
-          )}
-        </div>
-        <CommentInput assignment={assignment} session={session} />
-      </CardContent>
-    </Card>
+    <>
+      <div className="flex-1 text-sm text-muted-foreground">
+        {isLoading ? (
+          <CommentSkeleton isTeacherComment />
+        ) : !comments || comments.length === 0 ? (
+          <div className="h-[200px] flex justify-center items-center gap-x-2">
+            <Inbox className="h-4 w-4" />
+            <p>No comments yet.</p>
+          </div>
+        ) : (
+          <AnimatePresence mode="wait">
+            <motion.div
+              variants={ContainerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <ScrollArea className="h-[200px] pb-4">
+                <div className="flex flex-col gap-y-4 pt-2">
+                  {comments.map((comment) => (
+                    <CommentCard
+                      sessionId={session.user.id}
+                      comment={comment}
+                      key={comment.id}
+                    />
+                  ))}
+                </div>
+              </ScrollArea>
+            </motion.div>
+          </AnimatePresence>
+        )}
+      </div>
+      <CommentInput
+        assignment={assignment}
+        session={session}
+        receiverId={receiverId}
+      />
+    </>
   );
 };
 

@@ -2,8 +2,16 @@ import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
 
-export const useGetComments = (assignmentId: string) => {
-  return trpc.comment.getComments.useQuery({ assignmentId });
+export const useGetComments = (
+  assignmentId: string,
+  isTeacher?: boolean,
+  receiverId?: string
+) => {
+  return trpc.comment.getComments.useQuery({
+    assignmentId,
+    isTeacher,
+    receiverId,
+  });
 };
 
 export const useCreateComment = ({ resetForm }: { resetForm: () => void }) => {
