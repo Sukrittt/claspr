@@ -10,6 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ExtendedAssignment } from "@/types";
+import { useMounted } from "@/hooks/use-mounted";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface AssignmentFilterProps {
   assignment: ExtendedAssignment;
@@ -20,6 +22,7 @@ export const AssignmentFilter: React.FC<AssignmentFilterProps> = ({
 }) => {
   const router = useRouter();
   const params = useSearchParams();
+  const mounted = useMounted();
 
   const handleQueryChange = useCallback(
     (value: string) => {
@@ -48,9 +51,16 @@ export const AssignmentFilter: React.FC<AssignmentFilterProps> = ({
   );
 
   return (
-    <Select defaultValue="pending" onValueChange={handleQueryChange}>
+    <Select
+      defaultValue={params?.get("status") ?? "pending"}
+      onValueChange={handleQueryChange}
+    >
       <SelectTrigger className="w-[200px] font-medium text-[12px]">
-        <SelectValue placeholder="Filter assignments" />
+        {mounted ? (
+          <SelectValue placeholder="Filter assignments" />
+        ) : (
+          <Skeleton className="h-4 w-28" />
+        )}
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="pending">Pending</SelectItem>

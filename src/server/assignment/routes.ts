@@ -164,11 +164,12 @@ export const submitReview = privateProcedure
     z.object({
       submissionId: z.string(),
       assignmentId: z.string(),
+      message: z.string().max(80),
       submissionStatus: z.enum(["PENDING", "APPROVED", "CHANGES_REQUESTED"]),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { submissionId, assignmentId, submissionStatus } = input;
+    const { submissionId, assignmentId, submissionStatus, message } = input;
 
     const existingSubmission = await db.submission.findFirst({
       where: {
@@ -198,15 +199,26 @@ export const submitReview = privateProcedure
       });
     }
 
-    await db.submission.update({
-      where: {
-        id: submissionId,
-        assignmentId,
-      },
-      data: {
-        submissionStatus,
-      },
-    });
+    const promises = [
+      db.comment.create({
+        data: {
+          message,
+          assignmentId,
+          userId: ctx.userId,
+        },
+      }),
+      db.submission.update({
+        where: {
+          id: submissionId,
+          assignmentId,
+        },
+        data: {
+          submissionStatus,
+        },
+      }),
+    ];
+
+    await Promise.all(promises);
   });
 
 export const isTeacherAuthed = async (classRoomId: string, userId: string) => {

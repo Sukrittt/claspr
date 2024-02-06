@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
+import { FilterType } from "@/types";
 
 export const useGetSubmission = (assignmentId: string) => {
   return trpc.submission.getSubmission.useQuery({ assignmentId });
@@ -13,6 +14,16 @@ export const useCreateSubmission = () => {
     onSuccess: () => {
       utils.submission.getSubmission.invalidate();
     },
+  });
+};
+
+export const useAssignmentSubmissions = (
+  assignmentId: string,
+  status: FilterType
+) => {
+  return trpc.submission.getAssignmentSubmissions.useQuery({
+    assignmentId,
+    status,
   });
 };
 

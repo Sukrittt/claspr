@@ -1,4 +1,3 @@
-import { Session } from "next-auth";
 import { SubmissionStatus } from "@prisma/client";
 import {
   CheckCircle2,
@@ -6,29 +5,34 @@ import {
   Hourglass,
   Link as LinkIcon,
 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
-import { trpc } from "@/trpc/client";
 import { SubmissionReview } from "./submission-review";
+import { getSubmissionStatusFromQuery } from "@/lib/utils";
 import { UserAvatar } from "@/components/custom/user-avatar";
-import { ExtendedAssignment, ExtendedSubmission } from "@/types";
+import { useAssignmentSubmissions } from "@/hooks/submission";
+import { NotSubmittedMembers } from "./not-submitted-members";
+import { ExtendedAssignment, ExtendedSubmission, FilterType } from "@/types";
 
 interface SubmissionsProps {
   assignment: ExtendedAssignment;
-  session: Session;
 }
 
-export const Submissions: React.FC<SubmissionsProps> = ({
-  assignment,
-  session,
-}) => {
-  const { data: submissions, isLoading } =
-    trpc.submission.getAssignmentSubmissions.useQuery({
-      assignmentId: assignment.id,
-    });
+export const Submissions: React.FC<SubmissionsProps> = ({ assignment }) => {
+  const params = useSearchParams();
+
+  // Search params
+  const status = getSubmissionStatusFromQuery(params.get("status"));
+
+  const {
+    data: submissions,
+    isLoading,
+    isFetching,
+  } = useAssignmentSubmissions(assignment.id, status as FilterType);
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || isFetching ? (
         <p>Loading...</p>
       ) : !submissions || submissions.length === 0 ? (
         <p>No submissions</p>
@@ -38,7 +42,7 @@ export const Submissions: React.FC<SubmissionsProps> = ({
             key={submission.id}
             submission={submission}
             assignment={assignment}
-            session={session}
+            queryStatus={params.get("status")}
           />
         ))
       )}
@@ -49,13 +53,13 @@ export const Submissions: React.FC<SubmissionsProps> = ({
 interface StudentSubmissionProps {
   submission: ExtendedSubmission;
   assignment: ExtendedAssignment;
-  session: Session;
+  queryStatus: string | null;
 }
 
 const StudentSubmission: React.FC<StudentSubmissionProps> = ({
   submission,
   assignment,
-  session,
+  queryStatus,
 }) => {
   const Icon = {
     [SubmissionStatus.PENDING]: (
@@ -70,38 +74,37 @@ const StudentSubmission: React.FC<StudentSubmissionProps> = ({
   };
 
   return (
-    <SubmissionReview
-      submission={submission}
-      assignment={assignment}
-      session={session}
-    >
-      <div className="flex items-center justify-between border-b text-sm px-3 py-2 cursor-pointer hover:bg-neutral-100 transition">
-        <div className="flex items-center gap-x-4">
-          <UserAvatar
-            user={submission.member.user}
-            className="h-8 w-8 rounded-md"
-          />
-          <div>
-            <p className="font-medium">{submission.member.user.name}</p>
-            <div className="text-[12px] text-muted-foreground flex items-center gap-x-2.5">
-              {submission.media.length === 0 ? (
-                <p>No work attached</p>
-              ) : (
-                submission.media.map((media) => (
-                  <div key={media.id} className="flex items-center gap-x-1">
-                    {media.mediaType === "LINK" && (
-                      <LinkIcon className="h-2.5 w-2.5 text-muted-foreground" />
-                    )}
-                    <span>{media.label}</span>
-                  </div>
-                ))
-              )}
+    <>
+      <NotSubmittedMembers isOpen={queryStatus === "not-submitted"} />
+      <SubmissionReview submission={submission} assignment={assignment}>
+        <div className="flex items-center justify-between border-b text-sm px-3 py-2 cursor-pointer hover:bg-neutral-100 transition">
+          <div className="flex items-center gap-x-4">
+            <UserAvatar
+              user={submission.member.user}
+              className="h-8 w-8 rounded-md"
+            />
+            <div>
+              <p className="font-medium">{submission.member.user.name}</p>
+              <div className="text-[12px] text-muted-foreground flex items-center gap-x-2.5">
+                {submission.media.length === 0 ? (
+                  <p>No work attached</p>
+                ) : (
+                  submission.media.map((media) => (
+                    <div key={media.id} className="flex items-center gap-x-1">
+                      {media.mediaType === "LINK" && (
+                        <LinkIcon className="h-2.5 w-2.5 text-muted-foreground" />
+                      )}
+                      <span>{media.label}</span>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </div>
+          {/* REMOVE THIS WHEN SHOWING WHO DIDN'T SUBMIT */}
+          <div>{Icon[submission.submissionStatus!]}</div>
         </div>
-        {/* REMOVE THIS WHEN SHOWING WHO DIDN'T SUBMIT */}
-        <div>{Icon[submission.submissionStatus!]}</div>
-      </div>
-    </SubmissionReview>
+      </SubmissionReview>
+    </>
   );
 };

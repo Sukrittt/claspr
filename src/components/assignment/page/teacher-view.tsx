@@ -1,5 +1,4 @@
 "use client";
-import { Session } from "next-auth";
 import { FileText, Speech } from "lucide-react";
 
 import { ExtendedAssignment } from "@/types";
@@ -11,13 +10,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface TeacherViewProps {
   assignment: ExtendedAssignment;
-  session: Session;
 }
 
-export const TeacherView: React.FC<TeacherViewProps> = ({
-  assignment,
-  session,
-}) => {
+export const TeacherView: React.FC<TeacherViewProps> = ({ assignment }) => {
   return (
     <div className="px-20 py-8">
       <Tabs defaultValue="submissions" className="h-full">
@@ -40,7 +35,7 @@ export const TeacherView: React.FC<TeacherViewProps> = ({
           <AssignmentFilter assignment={assignment} />
         </div>
         <TabsContent value="submissions">
-          <Submissions assignment={assignment} session={session} />
+          <Submissions assignment={assignment} />
         </TabsContent>
         <TabsContent value="instructions">
           <ScrollArea className="h-[500px]">

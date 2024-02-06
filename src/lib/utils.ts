@@ -56,3 +56,14 @@ export const getFilteredResponse = (text: string) => {
 
   return result;
 };
+
+export const getSubmissionStatusFromQuery = (queryStatus: string | null) => {
+  if (
+    !queryStatus ||
+    queryStatus.length === 0 ||
+    queryStatus === "not-submitted"
+  )
+    return "pending";
+
+  return queryStatus;
+};

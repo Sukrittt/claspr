@@ -52,3 +52,5 @@ export type ExtendedSubmission = Submission & {
   };
   media: Media[];
 };
+
+export type FilterType = "pending" | "evaluated" | "changes-requested";

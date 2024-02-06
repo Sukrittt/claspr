@@ -45,7 +45,7 @@ export const getComments = privateProcedure
 export const createComment = privateProcedure
   .input(
     z.object({
-      message: z.string().min(1).max(80),
+      message: z.string().max(80),
       assignmentId: z.string(),
     })
   )

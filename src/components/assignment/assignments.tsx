@@ -34,6 +34,12 @@ export const Assignments: React.FC<AssignmentProps> = ({
   session,
 }) => {
   const mounted = useMounted();
+
+  // const params = useSearchParams()
+
+  // // Search params
+  // const filter = params?.get("filter") ?? "date-created"
+
   const { data: assignments, isLoading } = useGetAssignments(classroomId);
 
   if (!mounted) {

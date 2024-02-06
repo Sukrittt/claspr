@@ -22,3 +22,19 @@ export const useCreateAssignment = () => {
 export const useGetAssignments = (classroomId: string) => {
   return trpc.assignment.getAssignments.useQuery({ classroomId });
 };
+
+export const useSubmitReview = ({
+  handleCleanups,
+}: {
+  handleCleanups: () => void;
+}) => {
+  const utils = trpc.useUtils();
+
+  return trpc.assignment.submitReview.useMutation({
+    onSuccess: () => {
+      handleCleanups();
+      utils.assignment.getAssignments.invalidate();
+      toast.success("Your review was submitted");
+    },
+  });
+};

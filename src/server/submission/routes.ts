@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { SubmissionStatus } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { FilterType } from "@/types";
 import { privateProcedure } from "@/server/trpc";
 
 /**
@@ -113,14 +115,18 @@ export const getAssignmentSubmissions = privateProcedure
   .input(
     z.object({
       assignmentId: z.string(),
+      status: z.enum(["pending", "evaluated", "changes-requested"]),
     })
   )
-  .query(async ({ ctx, input }) => {
-    const { assignmentId } = input;
+  .query(async ({ input }) => {
+    const { assignmentId, status } = input;
+
+    const submissionStatus = getSubmissionStatus(status);
 
     const submissions = await db.submission.findMany({
       where: {
         assignmentId,
+        submissionStatus,
       },
       include: {
         member: {
@@ -217,3 +223,14 @@ export const unsubmit = privateProcedure
       },
     });
   });
+
+const getSubmissionStatus = (status: FilterType): SubmissionStatus => {
+  switch (status) {
+    case "pending":
+      return "PENDING";
+    case "changes-requested":
+      return "CHANGES_REQUESTED";
+    case "evaluated":
+      return "APPROVED";
+  }
+};

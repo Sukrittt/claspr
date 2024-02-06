@@ -35,19 +35,17 @@ type Inputs = z.infer<typeof commentCreationSchema>;
 interface CommentInputProps {
   assignment: ExtendedAssignment;
   session: Session;
-  reviewComment?: string;
 }
 
 export const CommentInput: React.FC<CommentInputProps> = ({
   assignment,
   session,
-  reviewComment,
 }) => {
   // react-hook-form
   const form = useForm<Inputs>({
     resolver: zodResolver(commentCreationSchema),
     defaultValues: {
-      message: reviewComment ?? "",
+      message: "",
     },
   });
 
@@ -97,23 +95,21 @@ export const CommentInput: React.FC<CommentInputProps> = ({
                     {...field}
                   />
 
-                  {!reviewComment && (
-                    <div className="absolute right-1">
-                      <Button
-                        form="comment-creation-form"
-                        className="h-[22px] w-[22px]"
-                        disabled={disabled}
-                        size="icon"
-                        variant="ghost"
-                      >
-                        {isLoading ? (
-                          <Loader className="h-3 w-3 text-muted-foreground animate-spin" />
-                        ) : (
-                          <ArrowUpFromDot className="h-3 w-3 text-muted-foreground" />
-                        )}
-                      </Button>
-                    </div>
-                  )}
+                  <div className="absolute right-1">
+                    <Button
+                      form="comment-creation-form"
+                      className="h-[22px] w-[22px]"
+                      disabled={disabled}
+                      size="icon"
+                      variant="ghost"
+                    >
+                      {isLoading ? (
+                        <Loader className="h-3 w-3 text-muted-foreground animate-spin" />
+                      ) : (
+                        <ArrowUpFromDot className="h-3 w-3 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </FormControl>
               <FormMessage className="text-xs" />

@@ -1,7 +1,5 @@
 import Link from "next/link";
-import { toast } from "sonner";
 import { useState } from "react";
-import { Session } from "next-auth";
 import { ExternalLink } from "lucide-react";
 import { SubmissionStatus } from "@prisma/client";
 
@@ -14,24 +12,22 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { TeacherReviewInput } from "./teacher-review-input";
 import { ExtendedAssignment, ExtendedSubmission } from "@/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CommentInput } from "@/components/assignment/comment/comment-input";
 
 interface SubmissionReviewProps {
   children: React.ReactNode;
   submission: ExtendedSubmission;
   assignment: ExtendedAssignment;
-  session: Session;
 }
 
 export const SubmissionReview: React.FC<SubmissionReviewProps> = ({
   children,
   submission,
   assignment,
-  session,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [review, setReview] = useState(submission.submissionStatus!);
 
   const reviewOptions = [
@@ -52,15 +48,8 @@ export const SubmissionReview: React.FC<SubmissionReviewProps> = ({
     },
   ];
 
-  const getReviewComment = () => {
-    if (review === "CHANGES_REQUESTED")
-      return "Please make the requested changes and resubmit your work.";
-
-    if (review === "APPROVED") return "Your work has been approved. Great job!";
-  };
-
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={(val) => setIsOpen(val)}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
@@ -92,6 +81,7 @@ export const SubmissionReview: React.FC<SubmissionReviewProps> = ({
         <RadioGroup
           defaultValue={review as string}
           onValueChange={(value) => setReview(value as SubmissionStatus)}
+          className="py-2"
         >
           {reviewOptions.map((option, index) => (
             <div key={index} className="flex items-center space-x-2 text-sm">
@@ -101,7 +91,12 @@ export const SubmissionReview: React.FC<SubmissionReviewProps> = ({
                 className="h-3.5 w-3.5"
               />
               <div className="space-y-1">
-                <Label htmlFor={option.value as string}>{option.label}</Label>
+                <Label
+                  className="cursor-pointer"
+                  htmlFor={option.value as string}
+                >
+                  {option.label}
+                </Label>
                 <p className="text-muted-foreground text-xs">
                   {option.description}
                 </p>
@@ -110,20 +105,12 @@ export const SubmissionReview: React.FC<SubmissionReviewProps> = ({
           ))}
         </RadioGroup>
 
-        <div className="flex gap-x-2">
-          <CommentInput
-            assignment={assignment}
-            session={session}
-            reviewComment={getReviewComment()}
-          />
-          {/* <Button form="comment-creation-form" className="pt-2"> */}
-          <Button
-            onClick={() => toast.message("Coming soon..")}
-            className="pt-2"
-          >
-            Submit review
-          </Button>
-        </div>
+        <TeacherReviewInput
+          assignment={assignment}
+          selectedReview={review}
+          submissionId={submission.id}
+          closeModal={() => setIsOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   );
