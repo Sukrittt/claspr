@@ -80,7 +80,8 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
         disabled={isLoading || isCreatingMedia}
         className="cursor-pointer hover:bg-neutral-100 transition"
         onChange={handleFileChange}
-        accept=".jpg, .jpeg, .png, .gif, .pdf, .mp4, .mp3, .wav, .doc, .docx"
+        //Find a way to accept all text/code files instead of mentioning individual file extensions
+        accept="image/*, audio/*, .gif, .pdf, .wav, .doc, .docx, .java, .c, .cpp, .html, .htm, .css, .js, .ts, .jsx, .tsx, .saas, .py"
         multiple
         type="file"
       />

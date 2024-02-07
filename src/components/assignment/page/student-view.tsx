@@ -10,6 +10,7 @@ import { Comments } from "@/components/assignment/comment/comments";
 import { EditorOutput } from "@/components/editor/EditorOutput";
 import { SubmissionCard } from "@/components/submission/submission-card";
 import { SubmissionDetails } from "@/components/submission/submission-details";
+import { format } from "date-fns";
 
 interface StudentViewProps {
   assignment: ExtendedAssignment;
@@ -20,21 +21,6 @@ export const StudentView: React.FC<StudentViewProps> = ({
   assignment,
   session,
 }) => {
-  const getModifiedDueDate = () => {
-    const parsedDueDate = moment(assignment.dueDate, "YYYY-MM-DD");
-
-    const currentDate = moment();
-    const daysDifference = parsedDueDate.diff(currentDate, "days");
-
-    if (daysDifference === 1) {
-      return "Due Tomorrow";
-    } else if (daysDifference < 0) {
-      return "Expired";
-    } else {
-      return `Due ${timeAgo(assignment.dueDate)}`;
-    }
-  };
-
   return (
     <div className="px-20 py-8 grid grid-cols-8 gap-8">
       <div className="col-span-5 xl:col-span-6 space-y-4">
@@ -52,7 +38,12 @@ export const StudentView: React.FC<StudentViewProps> = ({
               </div>
 
               <SubmissionDetails assignment={assignment}>
-                <span className="font-semibold">{getModifiedDueDate()}</span>
+                <span className="text-[12px]">
+                  Submit before{" "}
+                  <span className="font-semibold">
+                    {format(assignment.dueDate, "dd MMM")}
+                  </span>
+                </span>
               </SubmissionDetails>
             </div>
           </div>
