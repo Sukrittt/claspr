@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMounted } from "@/hooks/use-mounted";
-import { ContainerInputVariants, ContainerVariants } from "@/lib/motion";
+import { ContainerInputVariants } from "@/lib/motion";
 import { TitleInputSkeleton } from "@/components/skeletons/title-input";
 
 const createAssignmentSchema = z.object({
@@ -27,7 +27,7 @@ const createAssignmentSchema = z.object({
       (val) => {
         return val.trim().length > 0;
       },
-      { message: "Assignment name cannot be empty" }
+      { message: "Assignment title cannot be empty" }
     ),
 });
 
@@ -74,7 +74,7 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
       >
         <Form {...form}>
           <form
-            id="anouncement-creation-form"
+            id="assignment-creation-form"
             onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
           >
             <FormField
@@ -94,7 +94,7 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
                     <Button
                       className="h-9 w-9 py-1"
                       size="icon"
-                      form="anouncement-creation-form"
+                      form="assignment-creation-form"
                     >
                       <MoveRightIcon className="w-4 h-4" />
                       <span className="sr-only">Next Step</span>

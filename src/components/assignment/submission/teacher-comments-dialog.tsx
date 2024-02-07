@@ -31,8 +31,8 @@ export const TeacherCommentsDialog: React.FC<TeacherCommentsDialogProps> = ({
       <DialogTrigger asChild>
         <div>
           <CustomTooltip text={`Chat with ${member.user.name}`}>
-            <Button size="icon" variant="ghost" className="h-9 w-9">
-              <MessageCircleMore className="text-muted-foreground h-5 w-5" />
+            <Button size="icon" variant="ghost" className="h-8 w-8">
+              <MessageCircleMore className="text-muted-foreground h-4 w-4" />
             </Button>
           </CustomTooltip>
         </div>

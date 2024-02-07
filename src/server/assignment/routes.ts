@@ -70,23 +70,36 @@ export const createAssignment = privateProcedure
   });
 
 /**
- * To update assignment content.
+ * To update assignment details.
  *
- * @param {object} input - The input parameters for updating assignment.
+ * @param {object} input - The input parameters for updating assignment details.
  * @param {any} input.content - The assignment description in a Json format.
+ *  * @param {string} input.title - The title for the assignment.
+ * @param {date} input.dueDate - Due date for the submission.
  * @param {string} input.assignmentId - The id of the assignment.
  * @param {string} input.classroomId - For checking if the user is a teacher of the classroom.
+ * @param {boolean} input.lateSubmission - If late submission is allowed or not.
  */
-export const editAssignmentContent = privateProcedure
+export const editAssignmentDetails = privateProcedure
   .input(
     z.object({
-      content: z.any(),
       assignmentId: z.string(),
       classroomId: z.string(),
+      content: z.any().optional(),
+      title: z.string().max(80).optional(),
+      dueDate: z.date().optional(),
+      lateSubmission: z.boolean().optional().default(false).optional(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { content, assignmentId, classroomId } = input;
+    const {
+      content,
+      assignmentId,
+      classroomId,
+      dueDate,
+      lateSubmission,
+      title,
+    } = input;
 
     const isTeacher = await isTeacherAuthed(classroomId, ctx.userId);
 
@@ -99,7 +112,6 @@ export const editAssignmentContent = privateProcedure
 
     const existingAssignment = await db.assignment.findFirst({
       where: { id: assignmentId },
-      select: { id: true },
     });
 
     if (!existingAssignment) {
@@ -116,7 +128,10 @@ export const editAssignmentContent = privateProcedure
         classRoomId: classroomId,
       },
       data: {
-        description: content,
+        title: title ?? existingAssignment.title,
+        dueDate: dueDate ?? existingAssignment.dueDate,
+        lateSubmission: lateSubmission ?? existingAssignment.lateSubmission,
+        description: content ?? existingAssignment.description,
       },
     });
   });

@@ -32,7 +32,7 @@ const SubmissionDetailCard = () => {
           </div>
         </div>
       </div>
-      <Skeleton className="h-6 w-6 rounded-md" />
+      <Skeleton className="h-5 w-5 rounded-md" />
     </div>
   );
 };

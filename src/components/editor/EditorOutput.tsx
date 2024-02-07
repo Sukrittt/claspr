@@ -276,7 +276,7 @@ function CustomQuoteRenderer({ data }: any) {
 
 function CustomWarningRenderer({ data }: any) {
   return (
-    <Alert className="bg-yellow-100/60">
+    <Alert className="bg-yellow-100/60 my-4">
       <AlertTriangle className="h-4 w-4" />
       <AlertTitle>{data.title}</AlertTitle>
       <AlertDescription>{data.message}</AlertDescription>

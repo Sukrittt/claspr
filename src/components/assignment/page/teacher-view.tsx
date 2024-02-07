@@ -1,14 +1,14 @@
 "use client";
 import { useState } from "react";
 import { Session } from "next-auth";
-import { FileText, Speech } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { FileText, NotepadText, Speech } from "lucide-react";
 
 import { ExtendedAssignment } from "@/types";
-import { ContainerFilterVariants } from "@/lib/motion";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ContainerFilterVariants, ContainerVariants } from "@/lib/motion";
 import { Submissions } from "@/components/assignment/submission/submissions";
 import { AssignmentFilter } from "@/components/assignment/assignment-filter";
+import { AssignmentDetails } from "@/components/assignment/assignment-details";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssignmentInstructions } from "@/components/assignment/assignment-instructions";
 
@@ -45,6 +45,12 @@ export const TeacherView: React.FC<TeacherViewProps> = ({
                 <span>Instructions</span>
               </div>
             </TabsTrigger>
+            <TabsTrigger value="details">
+              <div className="flex items-center gap-x-2">
+                <NotepadText className="w-4 h-4" />
+                <span>Details</span>
+              </div>
+            </TabsTrigger>
           </TabsList>
 
           <AnimatePresence mode="wait">
@@ -64,9 +70,28 @@ export const TeacherView: React.FC<TeacherViewProps> = ({
           <Submissions assignment={assignment} session={session} />
         </TabsContent>
         <TabsContent value="instructions">
-          <ScrollArea className="h-[500px]">
-            <AssignmentInstructions assignment={assignment} />
-          </ScrollArea>
+          <AnimatePresence mode="wait">
+            <motion.div
+              variants={ContainerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <AssignmentInstructions assignment={assignment} />
+            </motion.div>
+          </AnimatePresence>
+        </TabsContent>
+        <TabsContent value="details">
+          <AnimatePresence mode="wait">
+            <motion.div
+              variants={ContainerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <AssignmentDetails assignment={assignment} />
+            </motion.div>
+          </AnimatePresence>
         </TabsContent>
       </Tabs>
     </div>

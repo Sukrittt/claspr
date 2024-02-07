@@ -1,5 +1,5 @@
-import { format } from "date-fns";
 import { Session } from "next-auth";
+import { format, isAfter } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { FileCheck2, FileClock, FilePen, Link as LinkIcon } from "lucide-react";
@@ -54,7 +54,7 @@ export const Submissions: React.FC<SubmissionsProps> = ({
   return (
     <div className="h-full">
       {params.get("status") === "not-submitted" ? (
-        <NotSubmittedMembers assignmentId={assignment.id} />
+        <NotSubmittedMembers assignment={assignment} session={session} />
       ) : isLoading || isFetching ? (
         <SubmissionDetailsSkeleton />
       ) : !submissions || submissions.length === 0 ? (
@@ -103,7 +103,8 @@ const StudentSubmission: React.FC<StudentSubmissionProps> = ({
   session,
 }) => {
   const lateSubmission =
-    !assignment.lateSubmission && submission.createdAt > assignment.dueDate;
+    assignment.lateSubmission &&
+    isAfter(submission.createdAt, assignment.dueDate);
 
   return (
     <SubmissionReview submission={submission} assignment={assignment}>

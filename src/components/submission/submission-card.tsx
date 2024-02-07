@@ -63,8 +63,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
 
   const deadlinePassed = isAfter(new Date(), assignment.dueDate);
   const preventSubmission =
-    !!submission ||
-    !!(assignment.lateSubmission && !submission && deadlinePassed);
+    !!submission || !!(!assignment.lateSubmission && deadlinePassed);
 
   const Icon = {
     [MediaType.LINK]: <LinkIcon className="h-4 w-4" />,

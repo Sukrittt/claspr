@@ -1,20 +1,25 @@
+import { Session } from "next-auth";
 import { UsersRound } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { ExtendedAssignment } from "@/types";
 import { ContainerVariants } from "@/lib/motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { useNotSubmittedStudents } from "@/hooks/assignment";
+import { TeacherCommentsDialog } from "./teacher-comments-dialog";
 import { NotSubmittedMembersSkeleton } from "@/components/skeletons/not-submitted-skeletons";
 
 interface NotSubmittedMembersProps {
-  assignmentId: string;
+  assignment: ExtendedAssignment;
+  session: Session;
 }
 
 export const NotSubmittedMembers: React.FC<NotSubmittedMembersProps> = ({
-  assignmentId,
+  assignment,
+  session,
 }) => {
-  const { data: students, isLoading } = useNotSubmittedStudents(assignmentId);
+  const { data: students, isLoading } = useNotSubmittedStudents(assignment.id);
 
   return (
     <div className="h-full">
@@ -40,18 +45,25 @@ export const NotSubmittedMembers: React.FC<NotSubmittedMembersProps> = ({
                 {students.map((student) => (
                   <div
                     key={student.userId}
-                    className="flex items-center gap-x-4 border-b text-sm px-3 py-2"
+                    className="flex items-center justify-between border-b text-sm px-3 py-2"
                   >
-                    <UserAvatar
-                      user={student.user}
-                      className="h-8 w-8 rounded-md"
-                    />
-                    <div>
-                      <p className="font-medium">{student.user.name}</p>
-                      <p className="text-muted-foreground text-[13px]">
-                        {student.user.email}
-                      </p>
+                    <div className="flex items-center gap-x-4">
+                      <UserAvatar
+                        user={student.user}
+                        className="h-8 w-8 rounded-md"
+                      />
+                      <div>
+                        <p className="font-medium">{student.user.name}</p>
+                        <p className="text-muted-foreground text-[13px]">
+                          {student.user.email}
+                        </p>
+                      </div>
                     </div>
+                    <TeacherCommentsDialog
+                      member={student}
+                      assignment={assignment}
+                      session={session}
+                    />
                   </div>
                 ))}
               </div>

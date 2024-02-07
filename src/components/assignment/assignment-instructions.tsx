@@ -9,7 +9,7 @@ import { Editor } from "@/components/editor/Editor";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEditAssignmentContent } from "@/hooks/assignment";
+import { useEditAssignmentDetails } from "@/hooks/assignment";
 import { EditorOutput } from "@/components/editor/EditorOutput";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
@@ -29,9 +29,8 @@ export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
     setIsEditable(false);
   };
 
-  const { mutate: editContent, isLoading } = useEditAssignmentContent({
-    disableEditing,
-  });
+  const { mutate: editContent, isLoading } =
+    useEditAssignmentDetails(disableEditing);
 
   const handleToggleEditingMode = () => {
     if (!isEditable) {
@@ -66,7 +65,7 @@ export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
   return (
     <Card>
       <CardContent className="py-3 pr-1 relative">
-        <ScrollArea className="h-[65vh]">
+        <ScrollArea className="h-[70vh]">
           <CustomTooltip text={`${isEditable ? "Save" : "Edit"} instructions`}>
             <div
               className={cn(
@@ -79,7 +78,7 @@ export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
             >
               {isEditable ? (
                 isLoading ? (
-                  <Loader className="h-4 w-4 animate-spin" />
+                  <Loader className="h-3 w-3 animate-spin" />
                 ) : (
                   <Save className="h-4 w-4" />
                 )
@@ -89,10 +88,12 @@ export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
             </div>
           </CustomTooltip>
           {isEditable ? (
-            <Editor
-              classroom={assignment.classRoom}
-              content={assignment.description}
-            />
+            <div className="pl-12">
+              <Editor
+                classroom={assignment.classRoom}
+                content={assignment.description}
+              />
+            </div>
           ) : (
             <EditorOutput content={assignment.description} />
           )}
