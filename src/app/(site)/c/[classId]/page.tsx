@@ -3,6 +3,9 @@ import { Suspense } from "react";
 import { Classroom } from "@/components/server-components/Classroom";
 import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 interface ClassPageProps {
   params: {
     classId: string;

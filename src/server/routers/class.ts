@@ -12,6 +12,7 @@ import {
   updateViewCount,
   getClassroom,
   addDescription,
+  getDescription,
   getIsPartOfClass,
 } from "@/server/class/routes";
 
@@ -28,5 +29,6 @@ export const classRouter = createTRPCRouter({
   updateViewCount,
   getClassroom,
   addDescription,
+  getDescription,
   getIsPartOfClass,
 });

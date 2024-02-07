@@ -1,6 +1,4 @@
 import { z } from "zod";
-import { useAtom } from "jotai";
-import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,9 +10,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { trpc } from "@/trpc/client";
-import { descriptionAtom } from "@/atoms";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useEditClassDescription } from "@/hooks/class";
 
 const classCreationSchema = z.object({
   description: z
@@ -40,8 +38,6 @@ export const AddDescriptionForm = ({
   description?: string;
   closeModal: () => void;
 }) => {
-  const [, setDescription] = useAtom(descriptionAtom);
-
   // react-hook-form
   const form = useForm<Inputs>({
     resolver: zodResolver(classCreationSchema),
@@ -50,12 +46,7 @@ export const AddDescriptionForm = ({
     },
   });
 
-  const { mutate: addDescription } = trpc.class.addDescription.useMutation({
-    onMutate: ({ description }) => {
-      closeModal();
-      setDescription(description);
-    },
-  });
+  const { mutate: addDescription } = useEditClassDescription({ closeModal });
 
   function handleAddDescription(data: Inputs) {
     addDescription({

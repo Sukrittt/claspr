@@ -1,6 +1,5 @@
 "use client";
 import { toast } from "sonner";
-import { useAtom } from "jotai";
 import { useState } from "react";
 import { Check, Copy, Info } from "lucide-react";
 
@@ -12,9 +11,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { descriptionAtom } from "@/atoms";
-import { ExtendedClassroomDetails } from "@/types";
 import { Badge } from "@/components/ui/badge";
+import { ExtendedClassroomDetails } from "@/types";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useClassroomDescription } from "@/hooks/class";
 import { AddDescriptionDialog } from "./add-description-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
@@ -28,7 +28,9 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
   sessionId,
 }) => {
   const [copied, setCopied] = useState(false);
-  const [description] = useAtom(descriptionAtom);
+  const { data: description, isLoading } = useClassroomDescription(
+    classroom.id
+  );
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(classroom.classCode);
@@ -91,13 +93,15 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
             </CustomTooltip>
           )}
         </div>
-        {description || classroom.description ? (
+        {isLoading ? (
+          <Skeleton className="h-4 w-1/2" />
+        ) : description || classroom.description ? (
           <div className="text-sm text-muted-foreground flex items-center gap-x-1">
             <AddDescriptionDialog
               classroomId={classroom.id}
               description={description ?? classroom.description ?? ""}
             >
-              <span className="hover:underline underline-offset-4 cursor-pointer">
+              <span className="hover:underline underline-offset-4 cursor-pointer text-[13px]">
                 {description ?? classroom.description}
               </span>
             </AddDescriptionDialog>

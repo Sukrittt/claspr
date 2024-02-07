@@ -488,7 +488,7 @@ export const addDescription = privateProcedure
   .mutation(async ({ input, ctx }) => {
     const { classroomId, description } = input;
 
-    const isTeacher = await isTeacherAuthed(ctx.userId, classroomId);
+    const isTeacher = await isTeacherAuthed(classroomId, ctx.userId);
 
     if (!isTeacher) {
       throw new TRPCError({
@@ -501,6 +501,37 @@ export const addDescription = privateProcedure
       where: { id: classroomId },
       data: { description },
     });
+  });
+
+/**
+ * To get the description of the classroom.
+ * Note: Keeping this function separate because facing issues with stale data fetched from server.
+ *
+ * @param {object} input - The input parameters for getting classroom description.
+ * @param {string} input.classroomId - The id of the classroom.
+ */
+export const getDescription = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .query(async ({ input, ctx }) => {
+    const { classroomId } = input;
+
+    const existingClassroom = await db.classRoom.findFirst({
+      where: { id: classroomId },
+      select: { description: true },
+    });
+
+    if (!existingClassroom) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the classroom you are looking for.",
+      });
+    }
+
+    return existingClassroom.description;
   });
 
 /**

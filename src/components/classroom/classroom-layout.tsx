@@ -1,10 +1,8 @@
 "use client";
-import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { Session } from "next-auth";
 
 import { trpc } from "@/trpc/client";
-import { descriptionAtom } from "@/atoms";
 import { useMounted } from "@/hooks/use-mounted";
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomContainer } from "./classroom-container";
@@ -20,7 +18,6 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
   session,
 }) => {
   const mounted = useMounted();
-  const [, setDescription] = useAtom(descriptionAtom);
 
   const { mutate: updateViewCount } = trpc.class.updateViewCount.useMutation();
 
@@ -28,8 +25,6 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
     if (mounted) {
       updateViewCount({ classroomId: classroom.id });
     }
-
-    return () => setDescription(null);
   }, [mounted]);
 
   return (

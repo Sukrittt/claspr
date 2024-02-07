@@ -21,7 +21,10 @@ const NotSubmittedMemberCard = () => {
   return (
     <div className="flex items-center gap-x-4 border-b text-sm px-3 py-2 cursor-pointer hover:bg-neutral-100 transition">
       <Skeleton className="h-8 w-8 rounded-md" />
-      <Skeleton className="h-3 w-[20%]" />
+      <div className="space-y-1">
+        <Skeleton className="h-3 w-[20%]" />
+        <Skeleton className="h-3 w-[10%]" />
+      </div>
     </div>
   );
 };
