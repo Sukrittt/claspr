@@ -70,7 +70,7 @@ export const Editor: React.FC<EditorProps> = ({
         placeholder:
           "Provide concise instructions and details for your assignment here.",
         inlineToolbar: true,
-        data: { blocks: content.blocks ?? [] },
+        data: { blocks: content?.blocks ?? [] },
         tools: {
           header: {
             class: Header,
@@ -204,7 +204,7 @@ export const Editor: React.FC<EditorProps> = ({
   const addInfo = `This is the title given by the teacher for this assignment: ${title}.`;
 
   return (
-    <>
+    <div>
       <motion.div
         variants={ContainerHeightVariants}
         initial="initial"
@@ -221,6 +221,6 @@ export const Editor: React.FC<EditorProps> = ({
         personal="QUESTION_EXPERT"
         addInfo={addInfo}
       />
-    </>
+    </div>
   );
 };

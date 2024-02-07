@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Editor } from "@/components/editor/Editor";
 import { AssignmentForm } from "./assignment-form";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCreateAssignment } from "@/hooks/assignment";
 import { ContainerHeightVariants, ContainerVariants } from "@/lib/motion";
 import { SubmissionStatus } from "@/components/submission/submission-status";
@@ -105,7 +106,14 @@ export const AssignmentFlow: React.FC<AssignmentFlowProps> = ({
             exit="exit"
             className="flex flex-col gap-y-4"
           >
-            <Editor title={title} classroom={classroom} />
+            <ScrollArea
+              className="h-[40vh]"
+              style={{
+                position: "static", // For some reason, 'static' tailwind class does not work here
+              }}
+            >
+              <Editor title={title} classroom={classroom} />
+            </ScrollArea>
             <SubmissionStatus
               date={date}
               setDate={setDate}

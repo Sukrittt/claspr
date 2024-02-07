@@ -158,6 +158,7 @@ export const getAssignments = privateProcedure
       },
       include: {
         creator: true,
+        classRoom: true,
         submissions: {
           include: {
             member: true,
