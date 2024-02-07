@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useCreateMedia } from "@/hooks/media";
 import { uploadFiles } from "@/lib/uploadthing";
 import { Button } from "@/components/ui/button";
+import { acceptFileExtensions } from "@/config/utils";
 
 interface SubmitDocFormProps {
   closeModal: () => void;
@@ -80,8 +81,7 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
         disabled={isLoading || isCreatingMedia}
         className="cursor-pointer hover:bg-neutral-100 transition"
         onChange={handleFileChange}
-        //Find a way to accept all text/code files instead of mentioning individual file extensions
-        accept="image/*, audio/*, .gif, .pdf, .wav, .doc, .docx, .java, .c, .cpp, .html, .htm, .css, .js, .ts, .jsx, .tsx, .saas, .py"
+        accept={acceptFileExtensions}
         multiple
         type="file"
       />
