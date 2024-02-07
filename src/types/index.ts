@@ -37,6 +37,7 @@ export type ExtendedMembershipDetails = Membership & {
 
 export type ExtendedAssignment = Assignment & {
   creator: User;
+  classRoom: ClassRoom;
   submissions: (Submission & {
     member: Membership;
   })[];

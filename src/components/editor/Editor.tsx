@@ -14,9 +14,14 @@ import { AIDialog } from "@/components/conversation/ai-dialog";
 interface EditorProps {
   classroom: ClassRoom;
   title?: string;
+  content?: any;
 }
 
-export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
+export const Editor: React.FC<EditorProps> = ({
+  classroom,
+  title,
+  content,
+}) => {
   const ref = useRef<EditorJS>();
   const mounted = useMounted();
 
@@ -65,7 +70,7 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
         placeholder:
           "Provide concise instructions and details for your assignment here.",
         inlineToolbar: true,
-        data: { blocks: [] },
+        data: { blocks: content.blocks ?? [] },
         tools: {
           header: {
             class: Header,
@@ -200,16 +205,14 @@ export const Editor: React.FC<EditorProps> = ({ classroom, title }) => {
 
   return (
     <>
-      <ScrollArea className="h-[400px] p-2">
-        <motion.div
-          variants={ContainerHeightVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          id="editor"
-          className="px-4 typography-styles"
-        />
-      </ScrollArea>
+      <motion.div
+        variants={ContainerHeightVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        id="editor"
+        className="px-4 typography-styles"
+      />
 
       <AIDialog
         temperature={0.7}

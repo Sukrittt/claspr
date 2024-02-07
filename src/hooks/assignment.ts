@@ -42,3 +42,19 @@ export const useSubmitReview = ({
 export const useNotSubmittedStudents = (assignmentId: string) => {
   return trpc.assignment.getNotSubmittedStudents.useQuery({ assignmentId });
 };
+
+export const useEditAssignmentContent = ({
+  disableEditing,
+}: {
+  disableEditing: () => void;
+}) => {
+  const router = useRouter();
+
+  return trpc.assignment.editAssignmentContent.useMutation({
+    onSuccess: () => {
+      toast.success("Assignment content updated");
+      router.refresh();
+      disableEditing();
+    },
+  });
+};

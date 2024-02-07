@@ -70,6 +70,58 @@ export const createAssignment = privateProcedure
   });
 
 /**
+ * To update assignment content.
+ *
+ * @param {object} input - The input parameters for updating assignment.
+ * @param {any} input.content - The assignment description in a Json format.
+ * @param {string} input.assignmentId - The id of the assignment.
+ * @param {string} input.classroomId - For checking if the user is a teacher of the classroom.
+ */
+export const editAssignmentContent = privateProcedure
+  .input(
+    z.object({
+      content: z.any(),
+      assignmentId: z.string(),
+      classroomId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { content, assignmentId, classroomId } = input;
+
+    const isTeacher = await isTeacherAuthed(classroomId, ctx.userId);
+
+    if (!isTeacher) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not authorized to create an assignment.",
+      });
+    }
+
+    const existingAssignment = await db.assignment.findFirst({
+      where: { id: assignmentId },
+      select: { id: true },
+    });
+
+    if (!existingAssignment) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message:
+          "This assignment no longer exists. Please create a new assignment.",
+      });
+    }
+
+    await db.assignment.update({
+      where: {
+        id: assignmentId,
+        classRoomId: classroomId,
+      },
+      data: {
+        description: content,
+      },
+    });
+  });
+
+/**
  * To get assignments of a classroom.
  *
  * @param {object} input - The input parameters for getting assignments of a classroom.
@@ -130,6 +182,7 @@ export const getAssignment = privateProcedure
       },
       include: {
         creator: true,
+        classRoom: true,
         submissions: {
           include: {
             member: true,
