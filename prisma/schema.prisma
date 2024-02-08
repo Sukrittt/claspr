@@ -64,6 +64,9 @@ model User {
   sections        Section[]
   classrooms      ClassRoom[] //only teachers will have this
   assignments     Assignment[]
+  discussions     Discussion[]
+  replies         Reply[]
+  reactions       Reaction[]
   commentReceived Comment[]       @relation(name: "Receiver")
   commentSent     Comment[]       @relation(name: "Sender")
   memberships     Membership[] //only students will have this
@@ -120,6 +123,7 @@ model ClassRoom {
   students       Membership[]
   questions      Question[]
   assignments    Assignment[]
+  discussions    Discussion[]
   conversations  Conversation[]
   studyMaterials StudyMaterial[]
 }
@@ -163,6 +167,80 @@ model Conversation {
 
   classRoomId String
   classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum DiscussionType {
+  ANNOUNCEMENT
+  GENERAL
+  DOUBTS
+}
+
+model Discussion {
+  id      String @id @unique @default(cuid())
+  content Json?
+
+  discussionType DiscussionType
+
+  classroomId String
+  classroom   ClassRoom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  replies   Reply[]
+  reactions Reaction[]
+}
+
+model Reply {
+  id   String @id @unique @default(cuid())
+  text String
+
+  discussionId String
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  replyId String?
+  reply   Reply?  @relation("ReplyTo", fields: [replyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reactions Reaction[]
+  replies   Reply[]    @relation("ReplyTo")
+}
+
+enum ReactionType {
+  THUMBS_UP
+  THUMBS_DOWN
+  SMILE
+  PARTY_POPPER
+  SAD
+  HEART
+  ROCKET
+  EYES
+}
+
+model Reaction {
+  id String @id @unique @default(cuid())
+
+  discussionId String?
+  discussion   Discussion? @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+
+  replyId String?
+  reply   Reply?  @relation(fields: [replyId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  reaction ReactionType
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

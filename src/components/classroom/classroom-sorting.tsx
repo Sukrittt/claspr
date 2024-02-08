@@ -42,7 +42,7 @@ export const ClassroomSorting = ({ classroomId }: { classroomId: string }) => {
 
   return (
     <Select
-      defaultValue={params?.get("filter") ?? "date-creted"}
+      defaultValue={params?.get("filter") ?? "date-created"}
       onValueChange={handleQueryChange}
     >
       <SelectTrigger className="w-[220px] font-medium text-[12px]">
