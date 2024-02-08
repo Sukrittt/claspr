@@ -41,7 +41,10 @@ export const ClassroomSorting = ({ classroomId }: { classroomId: string }) => {
   );
 
   return (
-    <Select defaultValue="date-created" onValueChange={handleQueryChange}>
+    <Select
+      defaultValue={params?.get("filter") ?? "date-creted"}
+      onValueChange={handleQueryChange}
+    >
       <SelectTrigger className="w-[220px] font-medium text-[12px]">
         <div className="flex items-center gap-x-1">
           <span className="text-muted-foreground font-semibold">Sort by: </span>
