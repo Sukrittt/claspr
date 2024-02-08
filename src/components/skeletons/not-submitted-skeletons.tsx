@@ -20,7 +20,7 @@ export const NotSubmittedMembersSkeleton = ({
 const NotSubmittedMemberCard = () => {
   return (
     <div className="flex items-center justify-between border-b text-sm px-3 py-2">
-      <div className="flex items-center gap-x-4">
+      <div className="flex items-center gap-x-4 w-full">
         <Skeleton className="h-8 w-8 rounded-md" />
         <div className="space-y-1 w-full">
           <Skeleton className="h-3 w-[20%]" />

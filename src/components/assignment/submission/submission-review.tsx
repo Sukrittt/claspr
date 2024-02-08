@@ -33,7 +33,7 @@ export const SubmissionReview: React.FC<SubmissionReviewProps> = ({
   const reviewOptions = [
     {
       value: SubmissionStatus.PENDING,
-      label: "Comment",
+      label: "Pending",
       description: "Submit general feedback without explicit approval.",
     },
     {
