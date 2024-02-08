@@ -42,6 +42,8 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
 
     if (selectedReview === "APPROVED")
       return "Your work has been approved. Great job!";
+
+    return "You work has been marked as pending.";
   }, [selectedReview]);
 
   // react-hook-form
@@ -75,7 +77,7 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
     const reviewComment = getEmptyReviewComment();
 
     submitReview({
-      message: data.message || reviewComment!, //all cases for review is handled
+      message: data.message || reviewComment,
       assignmentId: assignment.id,
       submissionId,
       submissionStatus: selectedReview,
@@ -85,10 +87,6 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
   function onSubmit(data: Inputs) {
     handleCreateComment(data);
   }
-
-  const disabled =
-    isLoading ||
-    (selectedReview === "PENDING" && form.getValues("message")?.length === 0);
 
   return (
     <Form {...form}>
@@ -116,7 +114,7 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
                   <Button
                     className="h-7"
                     form="comment-creation-form"
-                    disabled={disabled}
+                    disabled={isLoading}
                   >
                     {isLoading ? (
                       <Loader className="h-3 w-20 text-muted-foreground animate-spin" />
