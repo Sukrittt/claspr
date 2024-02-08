@@ -2,8 +2,10 @@ import {
   Assignment,
   ClassRoom,
   Comment,
+  Discussion,
   Media,
   Membership,
+  Reply,
   Section,
   Submission,
   User,
@@ -54,3 +56,15 @@ export type ExtendedSubmission = Submission & {
 };
 
 export type FilterType = "pending" | "evaluated" | "changes-requested";
+
+export type ExtendedDiscussion = Discussion & {
+  creator: User;
+  _count: {
+    replies: number;
+  };
+  replies: ExtendedReply[];
+};
+
+export type ExtendedReply = Reply & {
+  creator: User;
+};

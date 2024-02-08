@@ -1,10 +1,14 @@
 import qs from "query-string";
 import { useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Megaphone, MessageCircleQuestion, MessageSquare } from "lucide-react";
+import {
+  BarChartHorizontal,
+  Hash,
+  Megaphone,
+  MessageCircleQuestion,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { useMounted } from "@/hooks/use-mounted";
 
 export const tabs = [
   {
@@ -17,12 +21,21 @@ export const tabs = [
     value: "questionnaires",
     icon: MessageCircleQuestion,
   },
+  {
+    label: "Polls",
+    value: "polls",
+    icon: BarChartHorizontal,
+  },
+  {
+    label: "General",
+    value: "general",
+    icon: Hash,
+  },
 ];
 
 export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
   const router = useRouter();
   const params = useSearchParams();
-  const mounted = useMounted();
 
   const activeTab = params?.get("tab") ?? "announcements";
 
@@ -54,7 +67,7 @@ export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
 
   return (
     <div className="space-y-4 text-neutral-800">
-      <h3 className="tracking-tight font-medium text-sm">Categories</h3>
+      <h3 className="tracking-tight font-medium text-[13px]">Categories</h3>
       <div className="flex flex-col gap-y-2">
         {tabs.map((tab, index) => (
           <div

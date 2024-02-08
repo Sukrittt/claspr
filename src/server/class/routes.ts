@@ -509,6 +509,7 @@ export const addDescription = privateProcedure
  *
  * @param {object} input - The input parameters for getting classroom description.
  * @param {string} input.classroomId - The id of the classroom.
+ * @returns {Promise<string>} - The description of the classroom.
  */
 export const getDescription = privateProcedure
   .input(
@@ -540,6 +541,8 @@ export const getDescription = privateProcedure
  * @param {object} input - The input parameters for creating class.
  * @param {string} input.classroomId - The id of the classroom.
  * @param {boolean} input.isTeacher - A boolean attribute to check if the user is a teacher or not.
+ * @returns {Promise<boolean>} - A boolean value indicating if the user is a part of the classroom or not.
+ *
  */
 export const getIsPartOfClass = privateProcedure
   .input(
@@ -551,29 +554,54 @@ export const getIsPartOfClass = privateProcedure
   .query(async ({ input, ctx }) => {
     const { classroomId, isTeacher } = input;
 
-    const promises = [
-      db.classRoom.findFirst({
-        where: {
-          id: classroomId,
-          teacherId: ctx.userId,
-        },
-        select: {
-          id: true,
-        },
-      }),
-      db.membership.findFirst({
-        where: {
-          classRoomId: classroomId,
-          userId: ctx.userId,
-          isTeacher,
-        },
-        select: { id: true },
-      }),
-    ];
-
-    const [teacher, member] = await Promise.all(promises);
-
-    const isPartOfClass = !!member || !!teacher;
+    const isPartOfClass = await getIsPartOfClassAuth(
+      classroomId,
+      ctx.userId,
+      isTeacher
+    );
 
     return isPartOfClass;
   });
+
+export const getIsPartOfClassAuth = async (
+  classroomId: string,
+  userId: string,
+  isTeacher?: boolean
+) => {
+  let whereClause = {};
+
+  if (isTeacher) {
+    whereClause = {
+      classRoomId: classroomId,
+      userId,
+      isTeacher: true,
+    };
+  } else {
+    whereClause = {
+      classRoomId: classroomId,
+      userId,
+    };
+  }
+
+  const promises = [
+    db.classRoom.findFirst({
+      where: {
+        id: classroomId,
+        teacherId: userId,
+      },
+      select: {
+        id: true,
+      },
+    }),
+    db.membership.findFirst({
+      where: whereClause,
+      select: { id: true },
+    }),
+  ];
+
+  const [teacher, member] = await Promise.all(promises);
+
+  const isPartOfClass = !!member || !!teacher;
+
+  return isPartOfClass;
+};

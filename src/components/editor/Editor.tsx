@@ -8,19 +8,22 @@ import { uploadFiles } from "@/lib/uploadthing";
 import { useMounted } from "@/hooks/use-mounted";
 import { ContainerHeightVariants } from "@/lib/motion";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { AIDialog } from "@/components/conversation/ai-dialog";
 
 interface EditorProps {
   classroom: ClassRoom;
   title?: string;
   content?: any;
+  disableAI?: boolean;
+  placeholder?: string;
 }
 
 export const Editor: React.FC<EditorProps> = ({
   classroom,
   title,
   content,
+  disableAI = false,
+  placeholder,
 }) => {
   const ref = useRef<EditorJS>();
   const mounted = useMounted();
@@ -68,6 +71,7 @@ export const Editor: React.FC<EditorProps> = ({
         autofocus: true,
 
         placeholder:
+          placeholder ??
           "Provide concise instructions and details for your assignment here.",
         inlineToolbar: true,
         data: { blocks: content?.blocks ?? [] },
@@ -214,13 +218,15 @@ export const Editor: React.FC<EditorProps> = ({
         className="px-4 typography-styles"
       />
 
-      <AIDialog
-        temperature={0.7}
-        classroom={classroom}
-        moveToEditor={insertBlock}
-        personal="QUESTION_EXPERT"
-        addInfo={addInfo}
-      />
+      {!disableAI && (
+        <AIDialog
+          temperature={0.7}
+          classroom={classroom}
+          moveToEditor={insertBlock}
+          personal="QUESTION_EXPERT"
+          addInfo={addInfo}
+        />
+      )}
     </div>
   );
 };

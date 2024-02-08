@@ -173,13 +173,13 @@ model Conversation {
 }
 
 enum DiscussionType {
-  ANNOUNCEMENT
-  GENERAL
-  DOUBTS
+  announcements
+  general
 }
 
 model Discussion {
   id      String @id @unique @default(cuid())
+  title   String
   content Json?
 
   discussionType DiscussionType

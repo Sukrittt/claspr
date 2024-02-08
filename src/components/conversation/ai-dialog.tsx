@@ -180,7 +180,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           initial="initial"
           animate="animate"
           exit="exit"
-          className="absolute bottom-6 right-8 group z-[99999]"
+          className="absolute bottom-6 right-8 group"
         >
           <CustomTooltip text="Ask AI">
             <div>

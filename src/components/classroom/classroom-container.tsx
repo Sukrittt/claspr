@@ -6,6 +6,7 @@ import {
   MessageSquare,
   UsersRound,
 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 import { ClassMembers } from "./class-members";
 import { ClassroomCard } from "./classroom-card";
@@ -27,8 +28,13 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
   classroom,
   session,
 }) => {
+  const params = useSearchParams();
+
   return (
-    <Tabs defaultValue="assignments" className="h-full">
+    <Tabs
+      defaultValue={params.get("tab") ? "discussions" : "assignments"}
+      className="h-full"
+    >
       <div className="flex items-center justify-between">
         <TabsList className="mb-2">
           <TabsTrigger className="ml-0" value="assignments">
@@ -78,7 +84,7 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
                 <DiscussionTabs classroomId={classroom.id} />
               </div>
               <div className="col-span-6">
-                <ClassDiscussions classroom={classroom} />
+                <ClassDiscussions classroom={classroom} session={session} />
               </div>
             </div>
           </TabsContent>
