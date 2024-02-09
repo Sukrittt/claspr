@@ -20,7 +20,7 @@ export const startDiscussion = privateProcedure
       classroomId: z.string(),
       title: z.string().min(3).max(100),
       content: z.any(),
-      discussionType: z.enum(["general", "announcements"]),
+      discussionType: z.enum(["general", "announcements", "questionnaires"]),
     })
   )
   .mutation(async ({ input, ctx }) => {
@@ -71,7 +71,7 @@ export const getDiscussions = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-      discussionType: z.enum(["general", "announcements"]),
+      discussionType: z.enum(["general", "announcements", "questionnaires"]),
     })
   )
   .query(async ({ input, ctx }) => {
@@ -117,6 +117,7 @@ export const getDiscussions = privateProcedure
           include: {
             creator: true,
           },
+          distinct: ["creatorId"],
           take: 3,
           orderBy: {
             createdAt: "desc",
@@ -126,4 +127,115 @@ export const getDiscussions = privateProcedure
     });
 
     return discussions;
+  });
+
+/**
+ * To get the details of a discussion.
+ *
+ * @param {object} input - The input parameters for getting discussion details.
+ * @param {string} input.discussionId - The id of the discussion.
+ * @param {enum} input.discussionType - The type of discussion to fetch.
+ * @returns {Promise<Object[]>} - A discussion object from the database.
+ */
+export const getDiscussionDetails = privateProcedure
+  .input(
+    z.object({
+      discussionId: z.string(),
+      discussionType: z.enum(["general", "announcements", "questionnaires"]),
+    })
+  )
+  .query(async ({ input }) => {
+    const { discussionId, discussionType } = input;
+
+    const discussion = await db.discussion.findFirst({
+      where: { id: discussionId, discussionType },
+      include: {
+        creator: true,
+        replies: {
+          where: {
+            replyId: null,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          include: {
+            creator: true,
+            replies: {
+              include: {
+                creator: true,
+              },
+            },
+          },
+        },
+        reactions: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+
+    if (!discussion) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the classroom you are looking for.",
+      });
+    }
+
+    return discussion;
+  });
+
+/**
+ * To add a reply to discussion or reply.
+ *
+ * @param {object} input - The input parameters for adding a reply.
+ * @param {string} input.discussionId - The id of the discussion.
+ * @param {string} input.text - The text of the reply.
+ * @param {string} input.replyId - An optional id of the reply to reply to.
+ */
+export const addReply = privateProcedure
+  .input(
+    z.object({
+      discussionId: z.string(),
+      text: z.string().min(1).max(100),
+      replyId: z.string().optional(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { discussionId, text, replyId } = input;
+
+    const existingDiscussion = await db.discussion.findFirst({
+      where: {
+        id: discussionId,
+      },
+    });
+
+    if (!existingDiscussion) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the discussion you are looking for.",
+      });
+    }
+
+    const isPartOfClass = await getIsPartOfClassAuth(
+      existingDiscussion.classroomId,
+      ctx.userId
+    );
+
+    if (!isPartOfClass) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message:
+          "You are not a part of this class to reply to this discussion.",
+      });
+    }
+
+    await db.reply.create({
+      data: {
+        text,
+        discussionId,
+        replyId,
+        creatorId: ctx.userId,
+      },
+    });
   });

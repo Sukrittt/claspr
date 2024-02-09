@@ -37,7 +37,7 @@ export const AvatarGroup = ({ data }: AvatarGroupProps) => {
                 )}
                 asChild
               >
-                <Avatar>
+                <Avatar className="h-6 w-6">
                   <AvatarImage src={image as string} alt={name as string} />
                   <AvatarFallback>{name}</AvatarFallback>
                 </Avatar>

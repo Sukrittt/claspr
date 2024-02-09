@@ -71,8 +71,6 @@ model User {
   commentSent     Comment[]       @relation(name: "Sender")
   memberships     Membership[] //only students will have this
   conversations   Conversation[]
-  questions       Question[]
-  answers         Answer[]
   media           Media[]
   studyMaterials  StudyMaterial[]
   events          Event[]
@@ -121,7 +119,6 @@ model ClassRoom {
   updatedAt DateTime @updatedAt
 
   students       Membership[]
-  questions      Question[]
   assignments    Assignment[]
   discussions    Discussion[]
   conversations  Conversation[]
@@ -175,6 +172,7 @@ model Conversation {
 enum DiscussionType {
   announcements
   general
+  questionnaires
 }
 
 model Discussion {
@@ -183,6 +181,8 @@ model Discussion {
   content Json?
 
   discussionType DiscussionType
+
+  isEdited Boolean? @default(false)
 
   classroomId String
   classroom   ClassRoom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
@@ -201,6 +201,8 @@ model Reply {
   id   String @id @unique @default(cuid())
   text String
 
+  isEdited Boolean? @default(false)
+
   discussionId String
   discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
 
@@ -209,6 +211,8 @@ model Reply {
 
   replyId String?
   reply   Reply?  @relation("ReplyTo", fields: [replyId], references: [id], onDelete: Cascade)
+
+  selected Boolean? @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -241,39 +245,6 @@ model Reaction {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   reaction ReactionType
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Question {
-  id         String  @id @unique @default(cuid())
-  message    String
-  isAnswered Boolean @default(false)
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  classRoomId String
-  classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  answers Answer[]
-}
-
-model Answer {
-  id      String @id @unique @default(cuid())
-  message String
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-
-  selected Boolean? @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

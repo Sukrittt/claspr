@@ -82,7 +82,7 @@ export const CreateDiscussionForm: React.FC<CreateDiscussionFormProps> = ({
             exit="exit"
             className="flex flex-col gap-y-4"
           >
-            <ScrollArea className="h-[50vh]">
+            <ScrollArea className="h-[50vh]" style={{ position: "static" }}>
               <Editor
                 classroom={classroom}
                 disableAI

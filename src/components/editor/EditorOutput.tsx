@@ -29,7 +29,7 @@ const Output = dynamic(
 
 const style = {
   paragraph: {
-    fontSize: "0.9rem",
+    fontSize: "0.875rem",
     lineHeight: "1.25rem",
   },
 };

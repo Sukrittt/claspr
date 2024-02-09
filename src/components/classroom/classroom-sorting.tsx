@@ -9,9 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useMounted } from "@/hooks/use-mounted";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const ClassroomSorting = ({ classroomId }: { classroomId: string }) => {
   const router = useRouter();
+  const mounted = useMounted();
   const params = useSearchParams();
 
   const handleQueryChange = useCallback(
@@ -46,10 +49,16 @@ export const ClassroomSorting = ({ classroomId }: { classroomId: string }) => {
       onValueChange={handleQueryChange}
     >
       <SelectTrigger className="w-[220px] font-medium text-[12px]">
-        <div className="flex items-center gap-x-1">
-          <span className="text-muted-foreground font-semibold">Sort by: </span>
-          <SelectValue placeholder="Sort by" />
-        </div>
+        {mounted ? (
+          <div className="flex items-center gap-x-1">
+            <span className="text-muted-foreground font-semibold">
+              Sort by:{" "}
+            </span>
+            <SelectValue placeholder="Sort by" />
+          </div>
+        ) : (
+          <Skeleton className="h-4 w-3/4" />
+        )}
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="date-created">Date created</SelectItem>

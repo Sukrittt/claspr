@@ -33,3 +33,18 @@ export const useStartDiscussion = ({
     },
   });
 };
+
+interface GeDetailedtDiscussionProps {
+  discussionId: string;
+  discussionType: DiscussionType;
+}
+
+export const useGetDiscussionDetails = ({
+  discussionId,
+  discussionType,
+}: GeDetailedtDiscussionProps) => {
+  return trpc.discussion.getDiscussionDetails.useQuery({
+    discussionId,
+    discussionType,
+  });
+};

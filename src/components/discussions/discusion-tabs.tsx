@@ -1,12 +1,7 @@
 import qs from "query-string";
 import { useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  BarChartHorizontal,
-  Hash,
-  Megaphone,
-  MessageCircleQuestion,
-} from "lucide-react";
+import { Hash, Megaphone, MessageCircleQuestion } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -20,11 +15,6 @@ export const tabs = [
     label: "Questionnaires",
     value: "questionnaires",
     icon: MessageCircleQuestion,
-  },
-  {
-    label: "Polls",
-    value: "polls",
-    icon: BarChartHorizontal,
   },
   {
     label: "General",
@@ -50,6 +40,7 @@ export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
       const updatedQuery: any = {
         ...currentQuery,
         tab: value,
+        active: undefined,
       };
 
       const url = qs.stringifyUrl(

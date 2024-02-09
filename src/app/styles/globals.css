@@ -87,3 +87,7 @@
   overflow-wrap: break-word;
   word-break: break-word;
 }
+
+.avatar-group:hover .avatar {
+  @apply ml-0;
+}

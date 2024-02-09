@@ -68,3 +68,8 @@ export type ExtendedDiscussion = Discussion & {
 export type ExtendedReply = Reply & {
   creator: User;
 };
+
+export type ExtendedDetailedReply = Reply & {
+  creator: User;
+  replies: ExtendedReply[];
+};

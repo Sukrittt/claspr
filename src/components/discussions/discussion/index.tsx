@@ -2,7 +2,7 @@ import { Session } from "next-auth";
 import { DiscussionType } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { MegaphoneOff, MessageSquareOff } from "lucide-react";
+import { MegaphoneOff, MessageSquareOff, MessageSquareX } from "lucide-react";
 
 import { ContainerVariants } from "@/lib/motion";
 import { useGetDiscussions } from "@/hooks/discussion";
@@ -40,6 +40,10 @@ export const Discussions: React.FC<ClassDiscussionsProps> = ({
     general: {
       label: "No general discussions created yet.",
       icon: <MessageSquareOff className="h-10 w-10 text-neutral-800" />,
+    },
+    questionnaires: {
+      label: "No questionnaires created yet.",
+      icon: <MessageSquareX className="h-10 w-10 text-neutral-800" />,
     },
   };
 

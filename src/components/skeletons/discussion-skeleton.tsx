@@ -28,8 +28,8 @@ const DiscussionSkeletonCard = () => {
       <div className="flex items-center gap-x-8">
         <div className="flex items-center">
           <Skeleton className="h-6 w-6 rounded-full" />
-          <Skeleton className="h-6 w-6 rounded-full -ml-2" />
-          <Skeleton className="h-6 w-6 rounded-full -ml-2" />
+          <Skeleton className="h-6 w-6 rounded-full -ml-4" />
+          <Skeleton className="h-6 w-6 rounded-full -ml-4" />
         </div>
         <div className="flex items-center gap-x-2 text-muted-foreground">
           <MessageSquare className="h-4 w-4" />

@@ -14,4 +14,10 @@ export const discussionPlaceholders = {
     placeholder: "E.g: What's your favorite programming language?",
     editorPlaceholder: "What's on your mind?",
   },
+  questionnaires: {
+    title: "Ask a question",
+    description: "Ask a question to your class",
+    placeholder: "E.g: What's your favorite programming language?",
+    editorPlaceholder: "What's on your mind?",
+  },
 };
