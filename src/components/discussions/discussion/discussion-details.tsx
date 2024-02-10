@@ -17,6 +17,7 @@ import { EditorOutput } from "@/components/editor/EditorOutput";
 import { Replies } from "@/components/discussions/reply/replies";
 import { ReplyInput } from "@/components/discussions/reply/reply-input";
 import { DiscussionDetailSkeleton } from "@/components/skeletons/discussion-detail-skeleton";
+import { RenameDiscussionTitle } from "./rename-discussion-title";
 
 interface DiscussionDetailsProps {
   activeDiscussionId: string;
@@ -89,16 +90,13 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
             exit="exit"
             className="space-y-4 pr-2"
           >
-            <div className="flex items-center justify-between">
-              <h5 className="tracking-tight text-xl font-medium">
-                {discussion.title}
-              </h5>
-
-              <MoreVertical
-                className="h-4 w-4 cursor-pointer"
-                onClick={() => toast.message("Coming Soon...")}
-              />
-            </div>
+            {/* <h5 className="tracking-tight text-2xl">{discussion.title}</h5> */}
+            <RenameDiscussionTitle
+              discussionId={discussion.id}
+              discussionType={discussion.discussionType}
+              initialTitle={discussion.title}
+              isEditable={session.user.id === discussion.creatorId}
+            />
 
             <div className="border rounded-md space-y-4">
               <div className="p-4 pb-0 space-y-4">

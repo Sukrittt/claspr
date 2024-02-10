@@ -1,8 +1,9 @@
 import { toast } from "sonner";
-import { useState } from "react";
 import { Session } from "next-auth";
 import { Smile } from "lucide-react";
+import { useEffect, useState } from "react";
 import { ReactionType } from "@prisma/client";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { ExtendedReaction } from "@/types";
 import {
@@ -10,10 +11,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { listOfReactions } from "@/config/utils";
+import { ContainerVariants } from "@/lib/motion";
 import { useAddReaction } from "@/hooks/discussion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { cn } from "@/lib/utils";
 
 interface ReactionListsProps {
   discussionId?: string;
@@ -65,6 +67,10 @@ export const ReactionLists: React.FC<ReactionListsProps> = ({
 
     setSelectedReactionValue(validValue ? (val as ReactionType) : undefined);
   };
+
+  useEffect(() => {
+    setSelectedReactionValue(selectedReaction?.reaction);
+  }, [selectedReaction?.reaction]);
 
   return (
     <div className="flex items-center gap-x-2">
@@ -135,39 +141,45 @@ const ReactionsDisplay: React.FC<ReactionsDisplayProps> = ({
   );
 
   return (
-    <div className="flex items-center gap-x-2">
-      {Object.keys(reactionCounts).map((reactionType) => {
-        const emoji = listOfReactions.find(
-          (r) => r.value === reactionType
-        )?.emoji;
+    <AnimatePresence mode="wait">
+      <div className="flex items-center gap-x-2">
+        {Object.keys(reactionCounts).map((reactionType) => {
+          const emoji = listOfReactions.find(
+            (r) => r.value === reactionType
+          )?.emoji;
 
-        const emojiCount = reactionCounts[reactionType as ReactionType];
+          const emojiCount = reactionCounts[reactionType as ReactionType];
 
-        if (emojiCount === 0) return null;
+          if (emojiCount === 0) return null;
 
-        const userReacted = reactions.some(
-          (reaction) =>
-            reaction.reaction === reactionType &&
-            reaction.userId === session.user.id
-        );
+          const userReacted = reactions.some(
+            (reaction) =>
+              reaction.reaction === reactionType &&
+              reaction.userId === session.user.id
+          );
 
-        return (
-          <div
-            key={reactionType}
-            onClick={() => handleReactionChange(reactionType)}
-            className={cn(
-              "border rounded-lg px-2 py-0.5 text-xs flex items-center gap-x-2 cursor-pointer hover:bg-neutral-200/70 transition",
-              {
-                "bg-sky-100 border-sky-500": userReacted,
-                "opacity-50 cursor-default": disabled,
-              }
-            )}
-          >
-            <span>{emoji}</span>
-            <span>{emojiCount}</span>
-          </div>
-        );
-      })}
-    </div>
+          return (
+            <motion.div
+              variants={ContainerVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              key={reactionType}
+              onClick={() => handleReactionChange(reactionType)}
+              className={cn(
+                "border rounded-lg px-2 py-0.5 text-xs flex items-center gap-x-2 cursor-pointer hover:bg-neutral-200/70 transition",
+                {
+                  "bg-sky-100 border-sky-500": userReacted,
+                  "opacity-50 cursor-default": disabled,
+                }
+              )}
+            >
+              <span>{emoji}</span>
+              <span>{emojiCount}</span>
+            </motion.div>
+          );
+        })}
+      </div>
+    </AnimatePresence>
   );
 };

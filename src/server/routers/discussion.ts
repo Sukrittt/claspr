@@ -6,6 +6,7 @@ import {
   getDiscussionDetails,
   addReply,
   addReaction,
+  renameTitle,
 } from "@/server/discussion/routes";
 
 export const discussionRouter = createTRPCRouter({
@@ -14,4 +15,5 @@ export const discussionRouter = createTRPCRouter({
   getDiscussionDetails,
   addReply,
   addReaction,
+  renameTitle,
 });

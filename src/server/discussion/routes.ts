@@ -254,7 +254,7 @@ export const addReply = privateProcedure
   });
 
 /**
- * To add a reaction for a discussion or reply
+ * To add a reaction for a discussion or reply.
  *
  * @param {object} input - The input parameters for adding a reaction.
  * @param {string} input.discussionId - An optional id of discussion.
@@ -347,4 +347,47 @@ export const addReaction = privateProcedure
         },
       });
     }
+  });
+
+/**
+ * To rename the title of a discussion.
+ *
+ * @param {object} input - The input parameters for adding a reaction.
+ * @param {string} input.discussionId - The id of discussion.
+ * @param {string} input.title - The updated title of the description.
+ */
+export const renameTitle = privateProcedure
+  .input(
+    z.object({
+      discussionId: z.string(),
+      title: z.string().min(3).max(100),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { discussionId, title } = input;
+
+    const existingDiscussion = await db.discussion.findFirst({
+      where: {
+        id: discussionId,
+        creatorId: ctx.userId,
+      },
+      select: { id: true, creatorId: true },
+    });
+
+    if (!existingDiscussion) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The discussion you are looking for does not exist.",
+      });
+    }
+
+    await db.discussion.update({
+      data: {
+        title,
+      },
+      where: {
+        id: discussionId,
+        creatorId: ctx.userId,
+      },
+    });
   });

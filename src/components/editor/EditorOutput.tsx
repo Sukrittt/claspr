@@ -145,9 +145,9 @@ function CustomAttachmentRenderer({ data }: any) {
     <Link
       href={data.file.url}
       target="_blank"
-      className="border border-neutral-300 rounded-md my-4 py-2 px-2 text-sm flex justify-between items-center group"
+      className="border border-neutral-300 rounded-md my-4 py-2 px-2 flex justify-between items-center group"
     >
-      <div className="flex items-center gap-x-2">
+      <div className="flex items-center gap-x-2 text-[0.875rem]">
         <File className="text-muted-foreground h-4 w-4" />
         <p>{data.title}</p>
       </div>
@@ -186,14 +186,14 @@ function CustomTableRenderer({ data }: any) {
 function CustomLinkRenderer({ data }: any) {
   console.log("link data", data);
 
-  return <p>Link</p>;
+  return <p className="text-[0.875rem]">Link</p>;
 }
 
 function CustomListRenderer({ data }: any) {
   const { items, style } = data;
 
   return (
-    <div className="my-4">
+    <div className="my-4 text-[0.875rem]">
       {style === "ordered" ? (
         <NestedOrdererdList items={items} />
       ) : (

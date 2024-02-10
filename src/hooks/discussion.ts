@@ -63,3 +63,38 @@ export const useAddReaction = ({
     },
   });
 };
+
+export const useRenameDiscussionTitle = ({
+  discussionType,
+  setTitle,
+}: {
+  discussionType: DiscussionType;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  const utils = trpc.useUtils();
+
+  return trpc.discussion.renameTitle.useMutation({
+    onMutate: async ({ discussionId }) => {
+      await utils.discussion.getDiscussionDetails.cancel({
+        discussionId,
+        discussionType,
+      });
+
+      const prevDiscussionDetails =
+        utils.discussion.getDiscussionDetails.getData({
+          discussionId,
+          discussionType,
+        });
+
+      return { prevDiscussionDetails };
+    },
+    onError: (error, _, ctx) => {
+      setTitle(ctx?.prevDiscussionDetails?.title ?? "Untitled Discussion");
+
+      toast.error(error.message);
+    },
+    onSettled: () => {
+      utils.discussion.getDiscussionDetails.invalidate();
+    },
+  });
+};
