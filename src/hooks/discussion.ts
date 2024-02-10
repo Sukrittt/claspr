@@ -103,3 +103,56 @@ export const useEditDiscussion = ({
     },
   });
 };
+
+interface RemoveDiscussionProps {
+  classroomId: string;
+  discussionType: DiscussionType;
+  closeModal: () => void;
+  goBack: () => void;
+}
+
+export const useRemoveDiscussion = ({
+  closeModal,
+  classroomId,
+  discussionType,
+  goBack,
+}: RemoveDiscussionProps) => {
+  const utils = trpc.useUtils();
+
+  return trpc.discussion.removeDiscussion.useMutation({
+    onMutate: async ({ discussionId }) => {
+      closeModal();
+
+      await utils.discussion.getDiscussions.cancel({
+        classroomId,
+        discussionType,
+      });
+
+      const prevDiscussions = utils.discussion.getDiscussions.getData();
+
+      utils.discussion.getDiscussions.setData(
+        { classroomId, discussionType },
+        (prev) => prev?.filter((discussion) => discussion.id !== discussionId)
+      );
+
+      return { prevDiscussions };
+    },
+    onError: (error, data, ctx) => {
+      toast.error(error.message);
+
+      utils.discussion.getDiscussions.setData(
+        { classroomId, discussionType },
+        ctx?.prevDiscussions
+      );
+    },
+    onSettled: () => {
+      utils.discussion.getDiscussions.invalidate({
+        classroomId,
+        discussionType,
+      });
+    },
+    onSuccess: () => {
+      goBack();
+    },
+  });
+};

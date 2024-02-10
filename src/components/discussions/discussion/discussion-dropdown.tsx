@@ -10,17 +10,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EditDiscussionDialog } from "./edit-dropdown-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { DeleteDiscussionDialog } from "./delete-discussion-dialog";
 
 interface DiscussionDropdownProps {
   discussionId: string;
   discussionContent: any;
   discussionType: DiscussionType;
+  classroomId: string;
 }
 
 export const DiscussionDropdown: React.FC<DiscussionDropdownProps> = ({
   discussionContent,
   discussionId,
   discussionType,
+  classroomId,
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -63,14 +66,15 @@ export const DiscussionDropdown: React.FC<DiscussionDropdownProps> = ({
           setIsEditOpen={setIsEditOpen}
         />
       )}
-      {/* {isDeleteOpen && (
-        <DeleteSectionDialog
-          sectionId={sectionId}
-          sectionType={sectionType}
+      {isDeleteOpen && (
+        <DeleteDiscussionDialog
+          classroomId={classroomId}
+          discussionType={discussionType}
+          discussionId={discussionId}
           isOpen={isDeleteOpen}
           setIsDeleteOpen={setIsDeleteOpen}
         />
-      )} */}
+      )}
     </>
   );
 };

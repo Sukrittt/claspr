@@ -394,3 +394,41 @@ export const editDiscussion = privateProcedure
       },
     });
   });
+
+/**
+ * To remove a discussion.
+ *
+ * @param {object} input - The input parameters for removing a discussion..
+ * @param {string} input.discussionId - The id of discussion.
+ */
+export const removeDiscussion = privateProcedure
+  .input(
+    z.object({
+      discussionId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { discussionId } = input;
+
+    const existingDiscussion = await db.discussion.findFirst({
+      where: {
+        id: discussionId,
+        creatorId: ctx.userId,
+      },
+      select: { id: true },
+    });
+
+    if (!existingDiscussion) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The discussion you are looking for does not exist.",
+      });
+    }
+
+    await db.discussion.delete({
+      where: {
+        id: discussionId,
+        creatorId: ctx.userId,
+      },
+    });
+  });

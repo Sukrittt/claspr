@@ -23,14 +23,12 @@ import { DiscussionDropdown } from "./discussion-dropdown";
 interface DiscussionDetailsProps {
   activeDiscussionId: string;
   discussionType: DiscussionType;
-  classroomId: string;
   session: Session;
 }
 
 export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
   activeDiscussionId,
   discussionType,
-  classroomId,
   session,
 }) => {
   const router = useRouter();
@@ -55,7 +53,7 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
 
     const url = qs.stringifyUrl(
       {
-        url: `/c/${classroomId}`,
+        url: `/c/${discussion?.classroomId}`,
         query: updatedQuery,
       },
       { skipNull: true }
@@ -125,6 +123,7 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
                       {discussion.creator.id === session.user.id && (
                         <DiscussionDropdown
                           discussionId={discussion.id}
+                          classroomId={discussion.classroomId}
                           discussionContent={discussion.content}
                           discussionType={discussion.discussionType}
                         />
