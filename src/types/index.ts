@@ -5,6 +5,7 @@ import {
   Discussion,
   Media,
   Membership,
+  Reaction,
   Reply,
   Section,
   Submission,
@@ -65,11 +66,17 @@ export type ExtendedDiscussion = Discussion & {
   replies: ExtendedReply[];
 };
 
+export type ExtendedReaction = Reaction & {
+  user: User;
+};
+
 export type ExtendedReply = Reply & {
   creator: User;
+  reactions: ExtendedReaction[];
 };
 
 export type ExtendedDetailedReply = Reply & {
   creator: User;
   replies: ExtendedReply[];
+  reactions: ExtendedReaction[];
 };

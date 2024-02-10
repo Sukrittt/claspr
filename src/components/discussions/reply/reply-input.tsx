@@ -85,7 +85,7 @@ export const ReplyInput: React.FC<ReplyInputProps> = ({
                     className="h-7 text-xs focus-visible:ring-0 w-full pr-7"
                     disabled={isLoading}
                     autoComplete="off"
-                    placeholder="Leave a comment..."
+                    placeholder="Write a reply..."
                     {...field}
                   />
 

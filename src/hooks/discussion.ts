@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { DiscussionType } from "@prisma/client";
+import { Discussion, DiscussionType } from "@prisma/client";
 
 import { trpc } from "@/trpc/client";
 
@@ -46,5 +46,20 @@ export const useGetDiscussionDetails = ({
   return trpc.discussion.getDiscussionDetails.useQuery({
     discussionId,
     discussionType,
+  });
+};
+
+export const useAddReaction = ({
+  closePopover,
+}: {
+  closePopover: () => void;
+}) => {
+  const utils = trpc.useUtils();
+
+  return trpc.discussion.addReaction.useMutation({
+    onSuccess: () => {
+      closePopover();
+      utils.discussion.getDiscussionDetails.invalidate();
+    },
   });
 };

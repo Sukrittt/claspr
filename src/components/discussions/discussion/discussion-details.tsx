@@ -1,12 +1,14 @@
 import qs from "query-string";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { Session } from "next-auth";
 import { useCallback } from "react";
 import { MoreVertical } from "lucide-react";
 import { DiscussionType } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { ReactionLists } from "./reaction-lists";
 import { ContainerVariants } from "@/lib/motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
@@ -20,12 +22,14 @@ interface DiscussionDetailsProps {
   activeDiscussionId: string;
   discussionType: DiscussionType;
   classroomId: string;
+  session: Session;
 }
 
 export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
   activeDiscussionId,
   discussionType,
   classroomId,
+  session,
 }) => {
   const router = useRouter();
   const params = useSearchParams();
@@ -97,25 +101,33 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
             </div>
 
             <div className="border rounded-md space-y-4">
-              <div className="p-4">
-                <div className="flex items-center gap-x-2 text-[13px] pb-2">
-                  <UserAvatar user={discussion.creator} className="h-6 w-6" />
-                  <p className="text-muted-foreground">
-                    <span className="font-semibold text-neutral-800">
-                      {discussion.creator.name}
-                    </span>{" "}
-                    on {format(discussion.createdAt, "MMM d, yyyy")}
-                  </p>
+              <div className="p-4 pb-0 space-y-4">
+                <div>
+                  <div className="flex items-center gap-x-2 text-[13px] pb-2">
+                    <UserAvatar user={discussion.creator} className="h-6 w-6" />
+                    <p className="text-muted-foreground">
+                      <span className="font-semibold text-neutral-800">
+                        {discussion.creator.name}
+                      </span>{" "}
+                      on {format(discussion.createdAt, "MMM d, yyyy")}
+                    </p>
+                  </div>
+
+                  <EditorOutput content={discussion.content} />
                 </div>
 
-                <EditorOutput content={discussion.content} />
+                <ReactionLists
+                  discussionId={discussion.id}
+                  reactions={discussion.reactions}
+                  session={session}
+                />
               </div>
 
               <ReplyInput discussionId={discussion.id} />
             </div>
 
             <div className="pb-20">
-              <Replies replies={discussion.replies} />
+              <Replies replies={discussion.replies} session={session} />
             </div>
           </motion.div>
         </AnimatePresence>

@@ -44,7 +44,7 @@ export const startDiscussion = privateProcedure
     if (!isPartOfClass) {
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: "You are not a part of this class to start a discussion.",
+        message: "You are not a part of this classroom to start a discussion.",
       });
     }
 
@@ -94,7 +94,7 @@ export const getDiscussions = privateProcedure
     if (!isPartOfClass) {
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: "You are not a part of this class to view discussions.",
+        message: "You are not a part of this classroom to view discussions.",
       });
     }
 
@@ -163,6 +163,16 @@ export const getDiscussionDetails = privateProcedure
             replies: {
               include: {
                 creator: true,
+                reactions: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
+            reactions: {
+              include: {
+                user: true,
               },
             },
           },
@@ -170,6 +180,9 @@ export const getDiscussionDetails = privateProcedure
         reactions: {
           include: {
             user: true,
+          },
+          where: {
+            replyId: null,
           },
         },
       },
@@ -226,7 +239,7 @@ export const addReply = privateProcedure
       throw new TRPCError({
         code: "FORBIDDEN",
         message:
-          "You are not a part of this class to reply to this discussion.",
+          "You are not a part of this classroom to reply to this discussion.",
       });
     }
 
@@ -238,4 +251,100 @@ export const addReply = privateProcedure
         creatorId: ctx.userId,
       },
     });
+  });
+
+/**
+ * To add a reaction for a discussion or reply
+ *
+ * @param {object} input - The input parameters for adding a reaction.
+ * @param {string} input.discussionId - An optional id of discussion.
+ * @param {string} input.replyId - An optional replyId when reaction attaached to a reply.
+ * @param {enum} input.reactionType - An optional type of reaction to add to the discussion or reply.
+ */
+export const addReaction = privateProcedure
+  .input(
+    z.object({
+      discussionId: z.string().optional(),
+      replyId: z.string().optional(),
+      reactionType: z.enum([
+        "THUMBS_UP",
+        "THUMBS_DOWN",
+        "SMILE",
+        "PARTY_POPPER",
+        "SAD",
+        "HEART",
+        "ROCKET",
+        "EYES",
+      ]),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { discussionId, reactionType, replyId } = input;
+
+    const existingDiscussion = await db.discussion.findFirst({
+      where: { id: discussionId },
+      select: { id: true, classroomId: true },
+    });
+
+    if (!existingDiscussion) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The discussion you are looking for does not exist.",
+      });
+    }
+
+    const isPartOfClass = await getIsPartOfClassAuth(
+      existingDiscussion.classroomId,
+      ctx.userId
+    );
+
+    if (!isPartOfClass) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not a part of this classroom to start a discussion.",
+      });
+    }
+
+    const existingReaction = await db.reaction.findFirst({
+      where: {
+        discussionId,
+        userId: ctx.userId,
+        replyId,
+      },
+      select: { id: true, reaction: true },
+    });
+
+    if (existingReaction) {
+      if (existingReaction.reaction === reactionType) {
+        await db.reaction.delete({
+          where: {
+            id: existingReaction.id,
+            discussionId,
+            userId: ctx.userId,
+            replyId,
+          },
+        });
+      } else {
+        await db.reaction.update({
+          data: {
+            reaction: reactionType,
+          },
+          where: {
+            id: existingReaction.id,
+            discussionId,
+            userId: ctx.userId,
+            replyId,
+          },
+        });
+      }
+    } else {
+      await db.reaction.create({
+        data: {
+          discussionId,
+          replyId,
+          reaction: reactionType,
+          userId: ctx.userId,
+        },
+      });
+    }
   });
