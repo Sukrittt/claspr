@@ -2,20 +2,19 @@ import { Session } from "next-auth";
 import { DiscussionType } from "@prisma/client";
 import { useSearchParams } from "next/navigation";
 
-import { tabs } from "./discusion-tabs";
+import { tabs } from "./discussion-tabs";
 import { Discussions } from "./discussion";
-import { ExtendedClassroomDetails } from "@/types";
 import { Separator } from "@/components/ui/separator";
-import { CreateDiscussionDialog } from "./discussion/create-discussion-dialog";
 import { DiscussionDetails } from "./discussion/discussion-details";
+import { CreateDiscussionDialog } from "./discussion/create-discussion-dialog";
 
 interface ClassDiscussionsProps {
-  classroom: ExtendedClassroomDetails;
+  classroomId: string;
   session: Session;
 }
 
 export const ClassDiscussions: React.FC<ClassDiscussionsProps> = ({
-  classroom,
+  classroomId,
   session,
 }) => {
   const params = useSearchParams();
@@ -38,7 +37,7 @@ export const ClassDiscussions: React.FC<ClassDiscussionsProps> = ({
             </div>
 
             <CreateDiscussionDialog
-              classroom={classroom}
+              classroomId={classroomId}
               discussionType={activeTab.value as DiscussionType}
             />
           </div>
@@ -47,7 +46,7 @@ export const ClassDiscussions: React.FC<ClassDiscussionsProps> = ({
             <Separator />
 
             <Discussions
-              classroomId={classroom.id}
+              classroomId={classroomId}
               discussionType={activeTab.value as DiscussionType}
               session={session}
             />
@@ -55,7 +54,7 @@ export const ClassDiscussions: React.FC<ClassDiscussionsProps> = ({
         </div>
       ) : (
         <DiscussionDetails
-          classroomId={classroom.id}
+          classroomId={classroomId}
           activeDiscussionId={activeDiscussionId}
           session={session}
           discussionType={activeTab.value as DiscussionType}

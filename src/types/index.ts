@@ -63,7 +63,9 @@ export type ExtendedDiscussion = Discussion & {
   _count: {
     replies: number;
   };
-  replies: ExtendedReply[];
+  replies: (Reply & {
+    creator: User;
+  })[];
 };
 
 export type ExtendedReaction = Reaction & {

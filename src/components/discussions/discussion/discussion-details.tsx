@@ -18,6 +18,7 @@ import { Replies } from "@/components/discussions/reply/replies";
 import { ReplyInput } from "@/components/discussions/reply/reply-input";
 import { DiscussionDetailSkeleton } from "@/components/skeletons/discussion-detail-skeleton";
 import { RenameDiscussionTitle } from "./rename-discussion-title";
+import { DiscussionDropdown } from "./discussion-dropdown";
 
 interface DiscussionDetailsProps {
   activeDiscussionId: string;
@@ -90,7 +91,6 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
             exit="exit"
             className="space-y-4 pr-2"
           >
-            {/* <h5 className="tracking-tight text-2xl">{discussion.title}</h5> */}
             <RenameDiscussionTitle
               discussionId={discussion.id}
               discussionType={discussion.discussionType}
@@ -101,14 +101,35 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
             <div className="border rounded-md space-y-4">
               <div className="p-4 pb-0 space-y-4">
                 <div>
-                  <div className="flex items-center gap-x-2 text-[13px] pb-2">
-                    <UserAvatar user={discussion.creator} className="h-6 w-6" />
-                    <p className="text-muted-foreground">
-                      <span className="font-semibold text-neutral-800">
-                        {discussion.creator.name}
-                      </span>{" "}
-                      on {format(discussion.createdAt, "MMM d, yyyy")}
-                    </p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-x-2 text-[13px] pb-2">
+                      <UserAvatar
+                        user={discussion.creator}
+                        className="h-6 w-6"
+                      />
+                      <p className="text-muted-foreground">
+                        <span className="font-semibold text-neutral-800">
+                          {discussion.creator.name}
+                        </span>{" "}
+                        on {format(discussion.createdAt, "MMM d, yyyy")}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-x-2">
+                      {discussion.isEdited && (
+                        <span className="text-muted-foreground text-xs tracking-tight">
+                          edited
+                        </span>
+                      )}
+
+                      {discussion.creator.id === session.user.id && (
+                        <DiscussionDropdown
+                          discussionId={discussion.id}
+                          discussionContent={discussion.content}
+                          discussionType={discussion.discussionType}
+                        />
+                      )}
+                    </div>
                   </div>
 
                   <EditorOutput content={discussion.content} />

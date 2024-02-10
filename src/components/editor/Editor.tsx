@@ -11,7 +11,7 @@ import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { AIDialog } from "@/components/conversation/ai-dialog";
 
 interface EditorProps {
-  classroom: ClassRoom;
+  classroom?: ClassRoom;
   title?: string;
   content?: any;
   disableAI?: boolean;
@@ -218,7 +218,7 @@ export const Editor: React.FC<EditorProps> = ({
         className="px-4 typography-styles"
       />
 
-      {!disableAI && (
+      {!disableAI && classroom && (
         <AIDialog
           temperature={0.7}
           classroom={classroom}

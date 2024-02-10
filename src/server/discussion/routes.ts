@@ -350,28 +350,29 @@ export const addReaction = privateProcedure
   });
 
 /**
- * To rename the title of a discussion.
+ * To edit a discussion.
  *
- * @param {object} input - The input parameters for adding a reaction.
+ * @param {object} input - The input parameters for editing a discussion..
  * @param {string} input.discussionId - The id of discussion.
- * @param {string} input.title - The updated title of the description.
+ * @param {string} input.title - The updated title of the discussion.
+ * @param {any} input.content - The updated content of the discussion.
  */
-export const renameTitle = privateProcedure
+export const editDiscussion = privateProcedure
   .input(
     z.object({
       discussionId: z.string(),
-      title: z.string().min(3).max(100),
+      title: z.string().max(100).optional(),
+      content: z.any().optional(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { discussionId, title } = input;
+    const { discussionId, title, content } = input;
 
     const existingDiscussion = await db.discussion.findFirst({
       where: {
         id: discussionId,
         creatorId: ctx.userId,
       },
-      select: { id: true, creatorId: true },
     });
 
     if (!existingDiscussion) {
@@ -383,7 +384,9 @@ export const renameTitle = privateProcedure
 
     await db.discussion.update({
       data: {
-        title,
+        title: title ?? existingDiscussion.title,
+        content: content ?? existingDiscussion.content,
+        isEdited: true,
       },
       where: {
         id: discussionId,

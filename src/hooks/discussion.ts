@@ -64,16 +64,18 @@ export const useAddReaction = ({
   });
 };
 
-export const useRenameDiscussionTitle = ({
+export const useEditDiscussion = ({
   discussionType,
   setTitle,
+  closeModal,
 }: {
   discussionType: DiscussionType;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setTitle?: React.Dispatch<React.SetStateAction<string>>;
+  closeModal?: () => void;
 }) => {
   const utils = trpc.useUtils();
 
-  return trpc.discussion.renameTitle.useMutation({
+  return trpc.discussion.editDiscussion.useMutation({
     onMutate: async ({ discussionId }) => {
       await utils.discussion.getDiscussionDetails.cancel({
         discussionId,
@@ -89,12 +91,15 @@ export const useRenameDiscussionTitle = ({
       return { prevDiscussionDetails };
     },
     onError: (error, _, ctx) => {
-      setTitle(ctx?.prevDiscussionDetails?.title ?? "Untitled Discussion");
+      setTitle?.(ctx?.prevDiscussionDetails?.title ?? "Untitled Discussion");
 
       toast.error(error.message);
     },
     onSettled: () => {
       utils.discussion.getDiscussionDetails.invalidate();
+    },
+    onSuccess: () => {
+      closeModal?.();
     },
   });
 };

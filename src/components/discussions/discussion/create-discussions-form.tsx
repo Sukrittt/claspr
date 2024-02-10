@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ClassRoom, DiscussionType } from "@prisma/client";
+import { DiscussionType } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { Editor } from "@/components/editor/Editor";
@@ -15,7 +15,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DiscussionTitleInput } from "./discussion-title-input";
 
 interface CreateDiscussionFormProps {
-  classroom: ClassRoom;
+  classroomId: string;
   discussionType: DiscussionType;
   closeModal: () => void;
 }
@@ -23,7 +23,7 @@ interface CreateDiscussionFormProps {
 export type DiscussionStep = "title-input" | "content-input";
 
 export const CreateDiscussionForm: React.FC<CreateDiscussionFormProps> = ({
-  classroom,
+  classroomId,
   discussionType,
   closeModal,
 }) => {
@@ -42,12 +42,12 @@ export const CreateDiscussionForm: React.FC<CreateDiscussionFormProps> = ({
 
   const handleStartDiscussion = () => {
     if (!content) {
-      toast.error("Please provide some instructions for better understanding.");
+      toast.error("Please provide some content for better understanding.");
       return;
     }
 
     startDiscussion({
-      classroomId: classroom.id,
+      classroomId,
       title,
       content,
       discussionType,
@@ -83,11 +83,7 @@ export const CreateDiscussionForm: React.FC<CreateDiscussionFormProps> = ({
             className="flex flex-col gap-y-4"
           >
             <ScrollArea className="h-[50vh]" style={{ position: "static" }}>
-              <Editor
-                classroom={classroom}
-                disableAI
-                placeholder={editorPlaceholder}
-              />
+              <Editor disableAI placeholder={editorPlaceholder} />
             </ScrollArea>
           </motion.div>
         )}

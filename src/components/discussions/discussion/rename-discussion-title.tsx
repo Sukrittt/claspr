@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DiscussionType } from "@prisma/client";
 
 import { useDebounce } from "@/hooks/use-debounce";
-import { useRenameDiscussionTitle } from "@/hooks/discussion";
+import { useEditDiscussion } from "@/hooks/discussion";
 
 interface RenameDiscussionTitleProps {
   initialTitle: string;
@@ -20,7 +20,7 @@ export const RenameDiscussionTitle: React.FC<RenameDiscussionTitleProps> = ({
   const [title, setTitle] = useState(initialTitle);
   const debouncedTitle = useDebounce(title, 500);
 
-  const { mutate: renameTitle } = useRenameDiscussionTitle({
+  const { mutate: renameTitle } = useEditDiscussion({
     discussionType,
     setTitle,
   });

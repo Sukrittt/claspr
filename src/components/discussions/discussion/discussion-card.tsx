@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { ExtendedDiscussion } from "@/types";
 import AvatarGroup from "@/components/ui/avatar-group";
-import { tabs } from "@/components/discussions/discusion-tabs";
+import { tabs } from "@/components/discussions/discussion-tabs";
 
 interface DiscussionCardProps {
   discussion: ExtendedDiscussion;

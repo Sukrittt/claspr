@@ -7,7 +7,7 @@ import { MegaphoneOff, MessageSquareOff, MessageSquareX } from "lucide-react";
 import { ContainerVariants } from "@/lib/motion";
 import { useGetDiscussions } from "@/hooks/discussion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { tabs } from "@/components/discussions/discusion-tabs";
+import { tabs } from "@/components/discussions/discussion-tabs";
 import { DiscussionSkeleton } from "@/components/skeletons/discussion-skeleton";
 import { DiscussionCard } from "@/components/discussions/discussion/discussion-card";
 

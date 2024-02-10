@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { ClassRoom, DiscussionType } from "@prisma/client";
+import { DiscussionType } from "@prisma/client";
 
 import {
   Dialog,
@@ -17,11 +17,11 @@ import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface CreateDiscussionDialogProps {
   discussionType: DiscussionType;
-  classroom: ClassRoom;
+  classroomId: string;
 }
 
 export const CreateDiscussionDialog: React.FC<CreateDiscussionDialogProps> = ({
-  classroom,
+  classroomId,
   discussionType,
 }) => {
   const [open, setOpen] = useState(false);
@@ -45,7 +45,7 @@ export const CreateDiscussionDialog: React.FC<CreateDiscussionDialogProps> = ({
         </DialogHeader>
 
         <CreateDiscussionForm
-          classroom={classroom}
+          classroomId={classroomId}
           discussionType={discussionType}
           closeModal={() => setOpen(false)}
         />

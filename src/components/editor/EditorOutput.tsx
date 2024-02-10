@@ -252,7 +252,7 @@ function CustomCheckListRenderer({ data }: any) {
   };
 
   return (
-    <div className="flex flex-col gap-y-2 text-sm">
+    <div className="flex flex-col gap-y-2 text-sm my-4">
       {items.map((item: Item, index: number) => (
         <div key={index} className="flex items-center gap-x-2">
           <Checkbox checked={item.checked} />
