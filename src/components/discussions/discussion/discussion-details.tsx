@@ -1,9 +1,7 @@
 import qs from "query-string";
-import { toast } from "sonner";
 import { format } from "date-fns";
 import { Session } from "next-auth";
 import { useCallback } from "react";
-import { MoreVertical } from "lucide-react";
 import { DiscussionType } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,14 +9,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ReactionLists } from "./reaction-lists";
 import { ContainerVariants } from "@/lib/motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DiscussionDropdown } from "./discussion-dropdown";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { useGetDiscussionDetails } from "@/hooks/discussion";
 import { EditorOutput } from "@/components/editor/EditorOutput";
 import { Replies } from "@/components/discussions/reply/replies";
+import { RenameDiscussionTitle } from "./rename-discussion-title";
 import { ReplyInput } from "@/components/discussions/reply/reply-input";
 import { DiscussionDetailSkeleton } from "@/components/skeletons/discussion-detail-skeleton";
-import { RenameDiscussionTitle } from "./rename-discussion-title";
-import { DiscussionDropdown } from "./discussion-dropdown";
 
 interface DiscussionDetailsProps {
   activeDiscussionId: string;
@@ -134,11 +132,17 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
                   <EditorOutput content={discussion.content} />
                 </div>
 
-                <ReactionLists
-                  discussionId={discussion.id}
-                  reactions={discussion.reactions}
-                  session={session}
-                />
+                <div className="flex items-center justify-between text-xs text-muted-foreground tracking-tight">
+                  <ReactionLists
+                    discussionId={discussion.id}
+                    reactions={discussion.reactions}
+                    session={session}
+                  />
+                  <span>
+                    {discussion.replies.length}{" "}
+                    {discussion.replies.length === 1 ? "reply" : "replies"}
+                  </span>
+                </div>
               </div>
 
               <ReplyInput discussionId={discussion.id} />

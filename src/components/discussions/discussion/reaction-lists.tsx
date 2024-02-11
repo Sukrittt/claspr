@@ -167,7 +167,7 @@ const ReactionsDisplay: React.FC<ReactionsDisplayProps> = ({
               key={reactionType}
               onClick={() => handleReactionChange(reactionType)}
               className={cn(
-                "border rounded-lg px-2 py-0.5 text-xs flex items-center gap-x-2 cursor-pointer hover:bg-neutral-200/70 transition",
+                "border rounded-lg px-2 py-0.5 text-xs flex items-center gap-x-2 cursor-pointer hover:bg-neutral-200/70 hover:border-border transition",
                 {
                   "bg-sky-100 border-sky-500": userReacted,
                   "opacity-50 cursor-default": disabled,

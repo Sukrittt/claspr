@@ -15,7 +15,7 @@ export const DiscussionDetailSkeleton = ({
       </div>
 
       <div className="border rounded-md space-y-4">
-        <div className="p-4">
+        <div className="p-4 space-y-4 pb-0">
           <div className="flex items-center gap-x-2 text-[13px] pb-2">
             <Skeleton className="h-6 w-6 rounded-full" />
             <Skeleton className="h-4 w-1/3" />
@@ -26,8 +26,21 @@ export const DiscussionDetailSkeleton = ({
 
             <div className="space-y-2 pt-1">
               <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-1/2" />
             </div>
+          </div>
+
+          <div className="flex items-center justify-between text-xs text-muted-foreground tracking-tight">
+            <div className="flex items-center gap-x-2">
+              <div className="border p-1 rounded-full cursor-pointer">
+                <Smile className="h-4 w-4 text-neutral-800" />
+              </div>
+
+              <ReactionListSkeleton />
+            </div>
+
+            <Skeleton className="h-4 w-12" />
           </div>
         </div>
 
@@ -61,8 +74,11 @@ const ReplySkeleton = () => {
         <Skeleton className="h-4 w-1/2" />
 
         <div className="flex items-center justify-between text-xs text-muted-foreground tracking-tight">
-          <div className="border p-1 rounded-full cursor-pointer">
-            <Smile className="h-4 w-4 text-neutral-800" />
+          <div className="flex items-center gap-x-2">
+            <div className="border p-1 rounded-full cursor-pointer">
+              <Smile className="h-4 w-4 text-neutral-800" />
+            </div>
+            <ReactionListSkeleton />
           </div>
 
           <Skeleton className="h-4 w-12" />
@@ -97,6 +113,16 @@ const ReplySkeleton = () => {
       <div className="p-2 border-t">
         <Skeleton className="h-7 w-full" />
       </div>
+    </div>
+  );
+};
+
+const ReactionListSkeleton = ({ length = 4 }: { length?: number }) => {
+  return (
+    <div className="flex items-center gap-x-2">
+      {Array.from({ length }).map((_, i) => (
+        <Skeleton key={i} className="h-4 w-10" />
+      ))}
     </div>
   );
 };
