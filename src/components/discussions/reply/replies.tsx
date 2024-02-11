@@ -1,7 +1,5 @@
-import { toast } from "sonner";
 import { format } from "date-fns";
 import { Session } from "next-auth";
-import { MoreHorizontal } from "lucide-react";
 import { DiscussionType } from "@prisma/client";
 
 import { ReplyInput } from "./reply-input";

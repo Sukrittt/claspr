@@ -8,8 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ExtendedDetailedReply } from "@/types";
 import { EditReplyDialog } from "./edit-reply-dialog";
+import { DeleteReplyDialog } from "./delete-reply-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface ReplyDropdownProps {
@@ -70,15 +70,16 @@ export const ReplyDropdown: React.FC<ReplyDropdownProps> = ({
           isReplyToReply={isReplyToReply}
         />
       )}
-      {/* {isDeleteOpen && (
-        <DeleteDiscussionDialog
-          classroomId={classroomId}
+      {isDeleteOpen && (
+        <DeleteReplyDialog
+          replyId={replyId}
           discussionType={discussionType}
           discussionId={discussionId}
+          isReplyToReply={isReplyToReply}
           isOpen={isDeleteOpen}
           setIsDeleteOpen={setIsDeleteOpen}
         />
-      )} */}
+      )}
     </>
   );
 };

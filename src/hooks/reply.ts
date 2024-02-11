@@ -115,8 +115,8 @@ export const useRemoveReply = ({
 }: EditReplyProps) => {
   const utils = trpc.useUtils();
 
-  return trpc.discussion.editReply.useMutation({
-    onMutate: async ({ replyId, text }) => {
+  return trpc.discussion.removeReply.useMutation({
+    onMutate: async ({ replyId }) => {
       closeModal();
 
       await utils.discussion.getDiscussionDetails.cancel({
