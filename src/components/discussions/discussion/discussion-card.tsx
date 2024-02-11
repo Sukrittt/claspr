@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ExtendedDiscussion } from "@/types";
 import AvatarGroup from "@/components/ui/avatar-group";
 import { tabs } from "@/components/discussions/discussion-tabs";
+import { QuestionStatus } from "@/components/discussions/questionnaire/question-status";
 
 interface DiscussionCardProps {
   discussion: ExtendedDiscussion;
@@ -60,20 +61,26 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
 
         <div className="space-y-0.5">
           <h6
-            className="font-medium tracking-tight text-base hover:underline underline-offset-4 hover:text-neutral-800 transition cursor-pointer"
+            className="font-medium tracking-tight text-base hover:underline underline-offset-4 hover:text-neutral-800 transition cursor-pointer w-fit"
             onClick={() => handleQueryChange(discussion.id)}
           >
             {discussion.title}
           </h6>
-          <p className="text-muted-foreground tracking-tight text-[13px]">
-            <span className="underline underline-offset-4">
-              {discussion.creator.name}
-            </span>{" "}
-            created this on {format(discussion.createdAt, "MMM dd, yyyy")} in{" "}
-            <span className="underline underline-offset-4">
-              {discussionDetails.label}
-            </span>
-          </p>
+          <div className="flex items-center gap-x-1 text-muted-foreground tracking-tight text-[13px]">
+            <p>
+              <span className="underline underline-offset-4">
+                {discussion.creator.name}
+              </span>{" "}
+              created this on {format(discussion.createdAt, "MMM dd, yyyy")} in{" "}
+              <span className="underline underline-offset-4">
+                {discussionDetails.label}
+              </span>
+            </p>
+
+            {discussion.discussionType === "questionnaires" && (
+              <QuestionStatus discussionId={discussion.id} />
+            )}
+          </div>
         </div>
       </div>
 

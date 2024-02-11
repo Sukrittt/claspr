@@ -10,6 +10,8 @@ import {
   removeDiscussion,
   editReply,
   removeReply,
+  getIsAnswered,
+  toggleAnswerSelection,
 } from "@/server/discussion/routes";
 
 export const discussionRouter = createTRPCRouter({
@@ -22,4 +24,6 @@ export const discussionRouter = createTRPCRouter({
   removeDiscussion,
   editReply,
   removeReply,
+  getIsAnswered,
+  toggleAnswerSelection,
 });

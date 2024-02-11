@@ -83,7 +83,11 @@ export const CreateDiscussionForm: React.FC<CreateDiscussionFormProps> = ({
             className="flex flex-col gap-y-4"
           >
             <ScrollArea className="h-[50vh]" style={{ position: "static" }}>
-              <Editor disableAI placeholder={editorPlaceholder} />
+              <Editor
+                disableAI
+                disableAutofocus
+                placeholder={editorPlaceholder}
+              />
             </ScrollArea>
           </motion.div>
         )}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DiscussionType } from "@prisma/client";
+import ReactTextareaAutosize from "react-textarea-autosize";
 
 import { useDebounce } from "@/hooks/use-debounce";
 import { useEditDiscussion } from "@/hooks/discussion";
@@ -37,9 +38,9 @@ export const RenameDiscussionTitle: React.FC<RenameDiscussionTitleProps> = ({
   }, [debouncedTitle, isEditable]);
 
   return isEditable ? (
-    <input
+    <ReactTextareaAutosize
       placeholder="Untitled Discussion"
-      className="tracking-tight text-2xl bg-transparent focus:outline-none w-full"
+      className="tracking-tight text-2xl bg-transparent focus:outline-none w-full resize-none"
       value={title}
       onChange={(e) => setTitle(e.target.value)}
     />

@@ -18,43 +18,55 @@ export const discussionPlaceholders = {
   },
   questionnaires: {
     title: "Ask a question",
-    description: "Ask a question to your class",
-    placeholder: "E.g: What's your favorite programming language?",
-    editorPlaceholder: "What's on your mind?",
+    description: "You can select the best answer for your question",
+    placeholder: "E.g: What is data flow diagram?",
+    editorPlaceholder: "Provide further details on your question...",
   },
 };
 
-export const listOfReactions: { emoji: string; value: ReactionType }[] = [
+export const listOfReactions: {
+  emoji: string;
+  value: ReactionType;
+  label: string;
+}[] = [
   {
     emoji: "👍",
     value: "THUMBS_UP",
+    label: "Thumbs Up",
   },
   {
     emoji: "👎",
     value: "THUMBS_DOWN",
+    label: "Thumbs Down",
   },
   {
     emoji: "😄",
     value: "SMILE",
+    label: "Happy",
   },
   {
     emoji: "🎉",
     value: "PARTY_POPPER",
+    label: "Party Popper",
   },
   {
     emoji: "😢",
     value: "SAD",
+    label: "Sad",
   },
   {
     emoji: "❤️",
     value: "HEART",
+    label: "Heart",
   },
   {
     emoji: "🚀",
     value: "ROCKET",
+    label: "Rocket",
   },
   {
     emoji: "👀",
     value: "EYES",
+    label: "Eyes",
   },
 ];

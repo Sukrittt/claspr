@@ -18,6 +18,16 @@ export const useGetDiscussions = ({
   });
 };
 
+export const useGetIsAnswered = ({
+  discussionId,
+}: {
+  discussionId: string;
+}) => {
+  return trpc.discussion.getIsAnswered.useQuery({
+    discussionId,
+  });
+};
+
 export const useStartDiscussion = ({
   closeModal,
 }: {

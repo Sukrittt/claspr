@@ -169,6 +169,9 @@ export const getDiscussionDetails = privateProcedure
                   },
                 },
               },
+              orderBy: {
+                createdAt: "asc",
+              },
             },
             reactions: {
               include: {
@@ -509,6 +512,114 @@ export const removeReply = privateProcedure
       where: {
         id: replyId,
         creatorId: ctx.userId,
+      },
+    });
+  });
+
+/**
+ * To check if a questionnaire is answered or not.
+ *
+ * @param {object} input - The input parameters for checking if a questionnaire is answered or not.
+ * @param {string} input.discussionId - The id of the discussion.
+ * @return {Promise<boolean>} - A boolean value indicating if the questionnaire is answered or not.
+ */
+export const getIsAnswered = privateProcedure
+  .input(
+    z.object({
+      discussionId: z.string(),
+    })
+  )
+  .query(async ({ input }) => {
+    const { discussionId } = input;
+
+    const existingDiscussion = await db.discussion.findFirst({
+      where: {
+        id: discussionId,
+      },
+    });
+
+    if (!existingDiscussion) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The discussion you are looking for does not exist.",
+      });
+    }
+
+    const isAnswered = await db.discussion.findFirst({
+      where: {
+        id: discussionId,
+        discussionType: "questionnaires",
+        replies: {
+          some: {
+            OR: [
+              { selected: true },
+              {
+                replies: {
+                  some: { selected: true },
+                },
+              },
+            ],
+          },
+        },
+      },
+    });
+
+    return !!isAnswered;
+  });
+
+/**
+ * To toggle the selection of a reply as an answer to a questionnaire.
+ *
+ * @param {object} input - The input parameters for removing a reply.
+ * @param {string} input.replyId - The id of the reply.
+ */
+export const toggleAnswerSelection = privateProcedure
+  .input(
+    z.object({
+      replyId: z.string(),
+    })
+  )
+  .mutation(async ({ input }) => {
+    const { replyId } = input;
+
+    const existingReply = await db.reply.findFirst({
+      where: {
+        id: replyId,
+      },
+    });
+
+    if (!existingReply) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The reply you are looking for does not exist.",
+      });
+    }
+
+    const alreadyAnsweredReply = await db.reply.findFirst({
+      where: {
+        discussionId: existingReply.discussionId,
+        selected: true,
+        NOT: {
+          id: replyId,
+        },
+      },
+    });
+
+    if (alreadyAnsweredReply) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "You can't select multiple answers for a questionnaire.",
+      });
+    }
+
+    await db.reply.update({
+      where: {
+        id: replyId,
+      },
+      data: {
+        selected: {
+          set: !existingReply.selected,
+        },
       },
     });
   });

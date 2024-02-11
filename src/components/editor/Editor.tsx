@@ -15,6 +15,7 @@ interface EditorProps {
   title?: string;
   content?: any;
   disableAI?: boolean;
+  disableAutofocus?: boolean;
   placeholder?: string;
 }
 
@@ -23,6 +24,7 @@ export const Editor: React.FC<EditorProps> = ({
   title,
   content,
   disableAI = false,
+  disableAutofocus = false,
   placeholder,
 }) => {
   const ref = useRef<EditorJS>();
@@ -68,7 +70,7 @@ export const Editor: React.FC<EditorProps> = ({
         onReady() {
           ref.current = editor;
         },
-        autofocus: true,
+        autofocus: !disableAutofocus,
 
         placeholder:
           placeholder ??

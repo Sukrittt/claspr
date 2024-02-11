@@ -176,3 +176,90 @@ export const useRemoveReply = ({
     },
   });
 };
+
+interface ToggleAnswerSelectionProps {
+  discussionId: string;
+  discussionType: DiscussionType;
+  isReplyToReply?: boolean;
+}
+
+export const useToggleAnswerSelection = ({
+  discussionId,
+  discussionType,
+  isReplyToReply,
+}: ToggleAnswerSelectionProps) => {
+  const utils = trpc.useUtils();
+
+  return trpc.discussion.toggleAnswerSelection.useMutation({
+    onMutate: async ({ replyId }) => {
+      await utils.discussion.getDiscussionDetails.cancel({
+        discussionId,
+        discussionType,
+      });
+
+      const prevDetailedDiscussion =
+        utils.discussion.getDiscussionDetails.getData();
+
+      if (!isReplyToReply) {
+        utils.discussion.getDiscussionDetails.setData(
+          { discussionId, discussionType },
+          // @ts-ignore
+          (prev) => {
+            return {
+              ...prev,
+              replies: prev?.replies.map((reply) => {
+                if (reply.id === replyId) {
+                  return {
+                    ...reply,
+                    selected: !reply.selected,
+                  };
+                }
+                return reply;
+              }),
+            };
+          }
+        );
+      } else {
+        utils.discussion.getDiscussionDetails.setData(
+          { discussionId, discussionType },
+          // @ts-ignore
+          (prev) => {
+            return {
+              ...prev,
+              replies: prev?.replies.map((reply) => {
+                return {
+                  ...reply,
+                  replies: reply.replies.map((reply) => {
+                    if (reply.id === replyId) {
+                      return {
+                        ...reply,
+                        selected: !reply.selected,
+                      };
+                    }
+                    return reply;
+                  }),
+                };
+              }),
+            };
+          }
+        );
+      }
+
+      return { prevDetailedDiscussion };
+    },
+    onError: (error, _, ctx) => {
+      toast.error(error.message);
+
+      utils.discussion.getDiscussionDetails.setData(
+        { discussionId, discussionType },
+        ctx?.prevDetailedDiscussion
+      );
+    },
+    onSettled: () => {
+      utils.discussion.getDiscussionDetails.invalidate({
+        discussionId,
+        discussionType,
+      });
+    },
+  });
+};

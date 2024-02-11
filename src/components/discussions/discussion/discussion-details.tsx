@@ -17,6 +17,7 @@ import { Replies } from "@/components/discussions/reply/replies";
 import { RenameDiscussionTitle } from "./rename-discussion-title";
 import { ReplyInput } from "@/components/discussions/reply/reply-input";
 import { DiscussionDetailSkeleton } from "@/components/skeletons/discussion-detail-skeleton";
+import { AnswerDetails } from "@/components/discussions/questionnaire/answer-details";
 
 interface DiscussionDetailsProps {
   activeDiscussionId: string;
@@ -59,6 +60,11 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
 
     router.push(url);
   }, [params]);
+
+  const selectedReply = discussion?.replies.find(
+    (reply) =>
+      reply.selected || (reply.replies && reply.replies.find((r) => r.selected))
+  );
 
   return (
     <ScrollArea className="h-[73vh]">
@@ -145,13 +151,35 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
                 </div>
               </div>
 
-              <ReplyInput discussionId={discussion.id} />
+              {selectedReply && selectedReply.replies ? (
+                (() => {
+                  const selectedReplyToReply = selectedReply.replies.find(
+                    (r) => r.selected === true
+                  );
+                  return selectedReplyToReply ? (
+                    <AnswerDetails
+                      text={selectedReplyToReply.text}
+                      answeredBy={selectedReplyToReply.creator}
+                      answeredAt={selectedReplyToReply.createdAt}
+                    />
+                  ) : (
+                    <AnswerDetails
+                      text={selectedReply.text}
+                      answeredBy={selectedReply.creator}
+                      answeredAt={selectedReply.createdAt}
+                    />
+                  );
+                })()
+              ) : (
+                <ReplyInput discussionId={discussion.id} />
+              )}
             </div>
 
             <div className="pb-20">
               <Replies
                 replies={discussion.replies}
                 session={session}
+                discussionOwnerId={discussion.creatorId}
                 discussionId={discussion.id}
                 discussionType={discussion.discussionType}
               />

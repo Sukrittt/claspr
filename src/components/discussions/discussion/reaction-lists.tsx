@@ -16,6 +16,7 @@ import { listOfReactions } from "@/config/utils";
 import { ContainerVariants } from "@/lib/motion";
 import { useAddReaction } from "@/hooks/discussion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface ReactionListsProps {
   discussionId?: string;
@@ -76,7 +77,7 @@ export const ReactionLists: React.FC<ReactionListsProps> = ({
     <div className="flex items-center gap-x-2">
       <Popover open={open} onOpenChange={(val) => setOpen(val)}>
         <PopoverTrigger asChild>
-          <div className="border p-1 w-fit rounded-full cursor-pointer">
+          <div className="border p-1 w-fit rounded-full cursor-pointer hover:bg-neutral-200/70 transition">
             <Smile className="h-4 w-4 text-neutral-800" />
           </div>
         </PopoverTrigger>
@@ -93,7 +94,9 @@ export const ReactionLists: React.FC<ReactionListsProps> = ({
                 key={reaction.value}
                 value={reaction.value}
               >
-                {reaction.emoji}
+                <CustomTooltip text={reaction.label}>
+                  <span className="-ml-[5px]">{reaction.emoji}</span>
+                </CustomTooltip>
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
