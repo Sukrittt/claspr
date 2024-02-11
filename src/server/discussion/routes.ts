@@ -213,7 +213,7 @@ export const addReply = privateProcedure
   .input(
     z.object({
       discussionId: z.string(),
-      text: z.string().min(1).max(100),
+      text: z.string().min(1).max(200),
       replyId: z.string().optional(),
     })
   )

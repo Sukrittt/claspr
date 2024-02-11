@@ -23,7 +23,7 @@ const replyPostingSchema = z.object({
   text: z
     .string()
     .min(1)
-    .max(80)
+    .max(200)
     .refine(
       (val) => {
         return val.trim().length > 0;

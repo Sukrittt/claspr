@@ -5,19 +5,12 @@ import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DiscussionType } from "@prisma/client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Editor } from "@/components/editor/Editor";
 import { useEditDiscussion } from "@/hooks/discussion";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 type EditDiscussionDialogProps = {
   isOpen: boolean;
@@ -80,11 +73,6 @@ export const EditDiscussionDialog = ({
         <></>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
-        {/* <DialogHeader>
-          <DialogTitle>Edit Discussion</DialogTitle>
-          <DialogDescription>Edit your discussion content</DialogDescription>
-        </DialogHeader> */}
-
         <ScrollArea className="h-[60vh]">
           <Editor
             placeholder="What's on your mind?"

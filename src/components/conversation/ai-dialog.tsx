@@ -285,7 +285,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           ) : (
             <div className="flex gap-x-2">
               <Input
-                className="focus-visible:ring-transparent h-9"
+                className="focus-visible:ring-transparent h-8"
                 placeholder="Type your prompt here."
                 disabled={isLoading || isGenerating}
                 value={input}
@@ -297,13 +297,13 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
                 }}
               />
               <Button
-                className="h-9"
+                className="h-8"
                 disabled={isLoading || isGenerating || input.length === 0}
                 onClick={() => handleAskAI(input)}
               >
                 {isLoading ? (
                   <div className="h-5 w-6 flex items-center justify-center">
-                    <Loader className="w-4 h-4 animate-spin" />
+                    <Loader className="h-3 w-3 animate-spin" />
                   </div>
                 ) : (
                   "Ask"

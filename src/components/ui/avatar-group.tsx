@@ -1,4 +1,5 @@
 import { Session } from "next-auth";
+import { UserIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -38,8 +39,14 @@ export const AvatarGroup = ({ data }: AvatarGroupProps) => {
                 asChild
               >
                 <Avatar className="h-6 w-6">
-                  <AvatarImage src={image as string} alt={name as string} />
-                  <AvatarFallback>{name}</AvatarFallback>
+                  <AvatarImage
+                    src={image as string}
+                    alt={name ?? "user avatar"}
+                  />
+                  <AvatarFallback className="rounded-md">
+                    <span className="sr-only">{name}</span>
+                    <UserIcon className="h-4 w-4" />
+                  </AvatarFallback>
                 </Avatar>
               </TooltipTrigger>
               <TooltipContent>
