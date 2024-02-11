@@ -13,3 +13,5 @@ export const isCloseAllMembershipToggle = atom<boolean | null>(null);
 
 export const isSubmittingAtom = atom<boolean | undefined>(undefined);
 export const contentAtom = atom<undefined | any>(undefined);
+
+export const isChangingQueryAtom = atom(false);

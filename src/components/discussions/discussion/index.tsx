@@ -8,7 +8,9 @@ import {
   MessageSquareOff,
   MessageSquareX,
 } from "lucide-react";
+import { useAtom } from "jotai";
 
+import { isChangingQueryAtom } from "@/atoms";
 import { ContainerVariants } from "@/lib/motion";
 import { useGetDiscussions } from "@/hooks/discussion";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -28,6 +30,7 @@ export const Discussions: React.FC<ClassDiscussionsProps> = ({
   session,
 }) => {
   const params = useSearchParams();
+  const [isChangingQuery] = useAtom(isChangingQueryAtom);
 
   const activeTab =
     tabs.find((tab) => tab.value === params?.get("tab")) ?? tabs[0];
@@ -58,7 +61,7 @@ export const Discussions: React.FC<ClassDiscussionsProps> = ({
 
   return (
     <ScrollArea className="h-[68vh]">
-      {isLoading ? (
+      {isLoading || isChangingQuery ? (
         <DiscussionSkeleton />
       ) : !discussions || discussions.length === 0 ? (
         <div className="h-[50vh] flex flex-col items-center justify-center gap-y-2">

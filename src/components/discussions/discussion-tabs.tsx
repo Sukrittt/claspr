@@ -1,5 +1,5 @@
 import qs from "query-string";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Hash,
@@ -7,8 +7,10 @@ import {
   Megaphone,
   MessageCircleQuestion,
 } from "lucide-react";
+import { useAtom } from "jotai";
 
 import { cn } from "@/lib/utils";
+import { isChangingQueryAtom } from "@/atoms";
 
 export const tabs = [
   {
@@ -37,7 +39,13 @@ export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
   const router = useRouter();
   const params = useSearchParams();
 
+  const [, setIsChangingQuery] = useAtom(isChangingQueryAtom);
+
   const activeTab = params?.get("tab") ?? "announcements";
+
+  useEffect(() => {
+    setIsChangingQuery(false);
+  }, [params]);
 
   const handleQueryChange = useCallback(
     (value: string) => {
@@ -79,7 +87,10 @@ export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
                 "bg-neutral-100 font-medium": activeTab === tab.value,
               }
             )}
-            onClick={() => handleQueryChange(tab.value)}
+            onClick={() => {
+              setIsChangingQuery(true);
+              handleQueryChange(tab.value);
+            }}
           >
             <tab.icon className="h-3.5 w-3.5" />
             <p>{tab.label}</p>

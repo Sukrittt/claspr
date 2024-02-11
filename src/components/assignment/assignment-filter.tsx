@@ -1,5 +1,6 @@
 import qs from "query-string";
-import { useCallback } from "react";
+import { useAtom } from "jotai";
+import { useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import {
@@ -10,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ExtendedAssignment } from "@/types";
+import { isChangingQueryAtom } from "@/atoms";
 import { useMounted } from "@/hooks/use-mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -22,7 +24,14 @@ export const AssignmentFilter: React.FC<AssignmentFilterProps> = ({
 }) => {
   const router = useRouter();
   const params = useSearchParams();
+
+  const [, setIsChangingQuery] = useAtom(isChangingQueryAtom);
+
   const mounted = useMounted();
+
+  useEffect(() => {
+    setIsChangingQuery(false);
+  }, [params]);
 
   const handleQueryChange = useCallback(
     (value: string) => {
@@ -53,7 +62,10 @@ export const AssignmentFilter: React.FC<AssignmentFilterProps> = ({
   return (
     <Select
       defaultValue={params?.get("status") ?? "pending"}
-      onValueChange={handleQueryChange}
+      onValueChange={(val) => {
+        setIsChangingQuery(true);
+        handleQueryChange(val);
+      }}
     >
       <SelectTrigger className="w-[200px] font-medium text-[12px]">
         {mounted ? (

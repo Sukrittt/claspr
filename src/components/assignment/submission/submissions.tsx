@@ -1,9 +1,11 @@
+import { useAtom } from "jotai";
 import { Session } from "next-auth";
 import { format, isAfter } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { FileCheck2, FileClock, FilePen, Link as LinkIcon } from "lucide-react";
 
+import { isChangingQueryAtom } from "@/atoms";
 import { ContainerVariants } from "@/lib/motion";
 import { Separator } from "@/components/ui/separator";
 import { SubmissionReview } from "./submission-review";
@@ -26,6 +28,7 @@ export const Submissions: React.FC<SubmissionsProps> = ({
   session,
 }) => {
   const params = useSearchParams();
+  const [isChangingQuery] = useAtom(isChangingQueryAtom);
 
   // Search params
   const status = getSubmissionStatusFromQuery(params.get("status"));
@@ -55,7 +58,7 @@ export const Submissions: React.FC<SubmissionsProps> = ({
     <div className="h-full">
       {params.get("status") === "not-submitted" ? (
         <NotSubmittedMembers assignment={assignment} session={session} />
-      ) : isLoading || isFetching ? (
+      ) : isLoading || isFetching || isChangingQuery ? (
         <SubmissionDetailsSkeleton />
       ) : !submissions || submissions.length === 0 ? (
         <div className="h-full flex flex-col items-center justify-center gap-y-2">
