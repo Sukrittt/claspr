@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { subDays } from "date-fns";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
@@ -20,7 +21,12 @@ export const startDiscussion = privateProcedure
       classroomId: z.string(),
       title: z.string().min(3).max(100),
       content: z.any(),
-      discussionType: z.enum(["general", "announcements", "questionnaires"]),
+      discussionType: z.enum([
+        "general",
+        "announcements",
+        "questionnaires",
+        "ideas",
+      ]),
     })
   )
   .mutation(async ({ input, ctx }) => {
@@ -71,7 +77,12 @@ export const getDiscussions = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-      discussionType: z.enum(["general", "announcements", "questionnaires"]),
+      discussionType: z.enum([
+        "general",
+        "announcements",
+        "questionnaires",
+        "ideas",
+      ]),
     })
   )
   .query(async ({ input, ctx }) => {
@@ -141,7 +152,12 @@ export const getDiscussionDetails = privateProcedure
   .input(
     z.object({
       discussionId: z.string(),
-      discussionType: z.enum(["general", "announcements", "questionnaires"]),
+      discussionType: z.enum([
+        "general",
+        "announcements",
+        "questionnaires",
+        "ideas",
+      ]),
     })
   )
   .query(async ({ input }) => {
@@ -622,4 +638,65 @@ export const toggleAnswerSelection = privateProcedure
         },
       },
     });
+  });
+
+/**
+ * To get the users who have been helpful in all kinds of discussion.
+ *
+ * @param {object} input - The input parameters for getting helpful users.
+ * @param {string} input.classroomId - The id of the classroom.
+ * @return {Promise<object>} - A list of users who have been helpful in all kinds of discussion.
+ */
+export const getHelpfulUsers = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .query(async ({ input }) => {
+    const { classroomId } = input;
+
+    const existingClassroom = await db.classRoom.findFirst({
+      where: {
+        id: classroomId,
+      },
+    });
+
+    if (!existingClassroom) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The classroom you are looking for does not exist.",
+      });
+    }
+
+    const thirtyDaysAgo = subDays(new Date(), 30);
+
+    const helpfulUsers = await db.user.findMany({
+      where: {
+        replies: {
+          some: {
+            discussion: {
+              classroomId,
+            },
+            createdAt: {
+              gte: thirtyDaysAgo,
+            },
+          },
+        },
+      },
+      orderBy: {
+        replies: {
+          _count: "desc",
+        },
+      },
+      include: {
+        _count: {
+          select: {
+            replies: true,
+          },
+        },
+      },
+    });
+
+    return helpfulUsers;
   });

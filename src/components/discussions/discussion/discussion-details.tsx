@@ -23,12 +23,14 @@ interface DiscussionDetailsProps {
   activeDiscussionId: string;
   discussionType: DiscussionType;
   session: Session;
+  classroomId: string;
 }
 
 export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
   activeDiscussionId,
   discussionType,
   session,
+  classroomId,
 }) => {
   const router = useRouter();
   const params = useSearchParams();
@@ -52,7 +54,7 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
 
     const url = qs.stringifyUrl(
       {
-        url: `/c/${discussion?.classroomId}`,
+        url: `/c/${classroomId}`,
         query: updatedQuery,
       },
       { skipNull: true }

@@ -22,6 +22,12 @@ export const discussionPlaceholders = {
     placeholder: "E.g: What is data flow diagram?",
     editorPlaceholder: "Provide further details on your question...",
   },
+  ideas: {
+    title: "Share an idea",
+    description: "Share your ideas with your class",
+    placeholder: "E.g: I have an idea for the next project",
+    editorPlaceholder: "Provide further details on your idea...",
+  },
 };
 
 export const listOfReactions: {

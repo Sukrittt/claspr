@@ -173,6 +173,7 @@ enum DiscussionType {
   announcements
   general
   questionnaires
+  ideas
 }
 
 model Discussion {

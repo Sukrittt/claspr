@@ -1,7 +1,7 @@
+import { toast } from "sonner";
 import { DiscussionType } from "@prisma/client";
 
 import { trpc } from "@/trpc/client";
-import { toast } from "sonner";
 
 export const useAddReply = ({ resetForm }: { resetForm: () => void }) => {
   const utils = trpc.useUtils();
@@ -10,6 +10,7 @@ export const useAddReply = ({ resetForm }: { resetForm: () => void }) => {
     onSuccess: () => {
       resetForm();
       utils.discussion.getDiscussionDetails.invalidate();
+      utils.discussion.getHelpfulUsers.invalidate();
     },
   });
 };

@@ -15,7 +15,7 @@ export const DiscussionSkeleton = ({ length = 10 }: { length?: number }) => {
 
 const DiscussionSkeletonCard = () => {
   return (
-    <div className="border-b px-3 py-4 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition">
+    <div className="border-b px-3 py-4 flex items-center justify-between">
       <div className="flex items-center gap-x-4 w-1/2">
         <Skeleton className="rounded-md h-10 w-12" />
 

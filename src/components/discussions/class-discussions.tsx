@@ -54,8 +54,9 @@ export const ClassDiscussions: React.FC<ClassDiscussionsProps> = ({
         </div>
       ) : (
         <DiscussionDetails
-          activeDiscussionId={activeDiscussionId}
           session={session}
+          classroomId={classroomId}
+          activeDiscussionId={activeDiscussionId}
           discussionType={activeTab.value as DiscussionType}
         />
       )}

@@ -1,7 +1,12 @@
 import qs from "query-string";
 import { useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Hash, Megaphone, MessageCircleQuestion } from "lucide-react";
+import {
+  Hash,
+  Lightbulb,
+  Megaphone,
+  MessageCircleQuestion,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -20,6 +25,11 @@ export const tabs = [
     label: "General",
     value: "general",
     icon: Hash,
+  },
+  {
+    label: "Ideas",
+    value: "ideas",
+    icon: Lightbulb,
   },
 ];
 

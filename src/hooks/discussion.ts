@@ -166,3 +166,7 @@ export const useRemoveDiscussion = ({
     },
   });
 };
+
+export const useGetHelpfulUsers = (classroomId: string) => {
+  return trpc.discussion.getHelpfulUsers.useQuery({ classroomId });
+};

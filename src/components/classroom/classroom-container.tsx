@@ -14,6 +14,7 @@ import { UpcomingEvents } from "./upcoming-events";
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomControls } from "./classroom-controls";
 import { Assignments } from "@/components/assignment/assignments";
+import { HelpfulUsers } from "@/components/discussions/helpful-users";
 import { DiscussionTabs } from "@/components/discussions/discussion-tabs";
 import { ClassDiscussions } from "@/components/discussions/class-discussions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -80,8 +81,9 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
           </TabsContent>
           <TabsContent className="h-full" value="discussions">
             <div className="grid grid-cols-8 gap-4">
-              <div className="col-span-2">
+              <div className="col-span-2 flex flex-col gap-y-6">
                 <DiscussionTabs classroomId={classroom.id} />
+                <HelpfulUsers classroomId={classroom.id} />
               </div>
               <div className="col-span-6">
                 <ClassDiscussions
