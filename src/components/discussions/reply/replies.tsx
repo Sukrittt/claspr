@@ -1,9 +1,11 @@
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { Session } from "next-auth";
-import { MoreHorizontal, Smile } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
+import { DiscussionType } from "@prisma/client";
 
 import { ReplyInput } from "./reply-input";
+import { ReplyDropdown } from "./reply-dropdown";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { ExtendedDetailedReply, ExtendedReply } from "@/types";
 import { ReactionLists } from "@/components/discussions/discussion/reaction-lists";
@@ -11,24 +13,43 @@ import { ReactionLists } from "@/components/discussions/discussion/reaction-list
 interface RepliesProps {
   replies: ExtendedDetailedReply[];
   session: Session;
+  discussionId: string;
+  discussionType: DiscussionType;
 }
 
-export const Replies: React.FC<RepliesProps> = ({ replies, session }) => {
+export const Replies: React.FC<RepliesProps> = ({
+  replies,
+  session,
+  discussionId,
+  discussionType,
+}) => {
   return (
     <div className="flex flex-col gap-y-4">
       {replies.map((reply) => (
-        <ReplyCard key={reply.id} reply={reply} session={session} />
+        <ReplyCard
+          key={reply.id}
+          reply={reply}
+          session={session}
+          discussionId={discussionId}
+          discussionType={discussionType}
+        />
       ))}
     </div>
   );
 };
 
-const ReplyCard = ({
-  reply,
-  session,
-}: {
+interface ReplyCardProps {
   reply: ExtendedDetailedReply;
   session: Session;
+  discussionId: string;
+  discussionType: DiscussionType;
+}
+
+const ReplyCard: React.FC<ReplyCardProps> = ({
+  reply,
+  session,
+  discussionId,
+  discussionType,
 }) => {
   return (
     <div className="border rounded-md space-y-2">
@@ -44,10 +65,22 @@ const ReplyCard = ({
             </p>
           </div>
 
-          <MoreHorizontal
-            onClick={() => toast.message("Coming Soon...")}
-            className="h-4 w-4 cursor-pointer text-muted-foreground"
-          />
+          <div className="flex items-center gap-x-2">
+            {reply.isEdited && (
+              <span className="text-muted-foreground text-xs tracking-tight">
+                edited
+              </span>
+            )}
+
+            {reply.creatorId === session.user.id && (
+              <ReplyDropdown
+                replyId={reply.id}
+                replyText={reply.text}
+                discussionId={discussionId}
+                discussionType={discussionType}
+              />
+            )}
+          </div>
         </div>
 
         <p className="text-neutral-800 text-sm">{reply.text}</p>
@@ -70,7 +103,12 @@ const ReplyCard = ({
         <div className="border-t p-4 flex flex-col gap-y-4">
           {reply.replies.map((reply) => (
             <div key={reply.id} className="relative">
-              <ReplyToReplyCard reply={reply} session={session} />
+              <ReplyToReplyCard
+                reply={reply}
+                session={session}
+                discussionId={discussionId}
+                discussionType={discussionType}
+              />
               <div className="h-full w-[2px] bg-neutral-200 absolute top-6 left-[11px]" />
             </div>
           ))}
@@ -85,11 +123,15 @@ const ReplyCard = ({
 interface ReplyToReplyCardProps {
   reply: ExtendedReply;
   session: Session;
+  discussionId: string;
+  discussionType: DiscussionType;
 }
 
 const ReplyToReplyCard: React.FC<ReplyToReplyCardProps> = ({
   reply,
   session,
+  discussionId,
+  discussionType,
 }) => {
   return (
     <div className="space-y-4">
@@ -114,10 +156,23 @@ const ReplyToReplyCard: React.FC<ReplyToReplyCardProps> = ({
           </div>
         </div>
 
-        <MoreHorizontal
-          onClick={() => toast.message("Coming Soon...")}
-          className="h-4 w-4 cursor-pointer text-muted-foreground"
-        />
+        <div className="flex items-center gap-x-2">
+          {reply.isEdited && (
+            <span className="text-muted-foreground text-xs tracking-tight">
+              edited
+            </span>
+          )}
+
+          {reply.creatorId === session.user.id && (
+            <ReplyDropdown
+              replyId={reply.id}
+              replyText={reply.text}
+              discussionId={discussionId}
+              discussionType={discussionType}
+              isReplyToReply
+            />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,8 @@ import {
   addReaction,
   editDiscussion,
   removeDiscussion,
+  editReply,
+  removeReply,
 } from "@/server/discussion/routes";
 
 export const discussionRouter = createTRPCRouter({
@@ -18,4 +20,6 @@ export const discussionRouter = createTRPCRouter({
   addReaction,
   editDiscussion,
   removeDiscussion,
+  editReply,
+  removeReply,
 });

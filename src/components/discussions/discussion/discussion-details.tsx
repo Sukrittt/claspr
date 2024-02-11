@@ -145,7 +145,12 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
             </div>
 
             <div className="pb-20">
-              <Replies replies={discussion.replies} session={session} />
+              <Replies
+                replies={discussion.replies}
+                session={session}
+                discussionId={discussion.id}
+                discussionType={discussion.discussionType}
+              />
             </div>
           </motion.div>
         </AnimatePresence>

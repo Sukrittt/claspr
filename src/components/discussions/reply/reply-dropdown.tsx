@@ -8,22 +8,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EditDiscussionDialog } from "./edit-discussion-dialog";
+import { ExtendedDetailedReply } from "@/types";
+import { EditReplyDialog } from "./edit-reply-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { DeleteDiscussionDialog } from "./delete-discussion-dialog";
 
-interface DiscussionDropdownProps {
-  discussionId: string;
-  discussionContent: any;
+interface ReplyDropdownProps {
   discussionType: DiscussionType;
-  classroomId: string;
+  discussionId: string;
+  isReplyToReply?: boolean;
+  replyId: string;
+  replyText: string;
 }
 
-export const DiscussionDropdown: React.FC<DiscussionDropdownProps> = ({
-  discussionContent,
+export const ReplyDropdown: React.FC<ReplyDropdownProps> = ({
+  replyId,
+  replyText,
   discussionId,
   discussionType,
-  classroomId,
+  isReplyToReply,
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -58,15 +60,17 @@ export const DiscussionDropdown: React.FC<DiscussionDropdownProps> = ({
         </DropdownMenuContent>
       </DropdownMenu>
       {isEditOpen && (
-        <EditDiscussionDialog
-          discussionType={discussionType}
-          discussionId={discussionId}
-          discussionContent={discussionContent}
+        <EditReplyDialog
           isOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
+          replyId={replyId}
+          discussionType={discussionType}
+          discussionId={discussionId}
+          replyText={replyText}
+          isReplyToReply={isReplyToReply}
         />
       )}
-      {isDeleteOpen && (
+      {/* {isDeleteOpen && (
         <DeleteDiscussionDialog
           classroomId={classroomId}
           discussionType={discussionType}
@@ -74,7 +78,7 @@ export const DiscussionDropdown: React.FC<DiscussionDropdownProps> = ({
           isOpen={isDeleteOpen}
           setIsDeleteOpen={setIsDeleteOpen}
         />
-      )}
+      )} */}
     </>
   );
 };

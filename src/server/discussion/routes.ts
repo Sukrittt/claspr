@@ -432,3 +432,83 @@ export const removeDiscussion = privateProcedure
       },
     });
   });
+
+/**
+ * To edit a reply.
+ *
+ * @param {object} input - The input parameters for editing a reply.
+ * @param {string} input.replyId - The id of the reply.
+ * @param {string} input.text - The updated text of the reply.
+ */
+export const editReply = privateProcedure
+  .input(
+    z.object({
+      replyId: z.string(),
+      text: z.string().min(1).max(100),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { text, replyId } = input;
+
+    const existingReply = await db.reply.findFirst({
+      where: {
+        id: replyId,
+        creatorId: ctx.userId,
+      },
+    });
+
+    if (!existingReply) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The reply you are looking for does not exist.",
+      });
+    }
+
+    await db.reply.update({
+      data: {
+        text,
+        isEdited: true,
+      },
+      where: {
+        id: replyId,
+        creatorId: ctx.userId,
+      },
+    });
+  });
+
+/**
+ * To remove a reply.
+ *
+ * @param {object} input - The input parameters for removing a reply.
+ * @param {string} input.replyId - The id of the reply.
+ */
+export const removeReply = privateProcedure
+  .input(
+    z.object({
+      replyId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { replyId } = input;
+
+    const existingReply = await db.reply.findFirst({
+      where: {
+        id: replyId,
+        creatorId: ctx.userId,
+      },
+    });
+
+    if (!existingReply) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The reply you are looking for does not exist.",
+      });
+    }
+
+    await db.reply.delete({
+      where: {
+        id: replyId,
+        creatorId: ctx.userId,
+      },
+    });
+  });
