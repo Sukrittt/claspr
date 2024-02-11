@@ -150,7 +150,8 @@ const ReplyCard: React.FC<ReplyCardProps> = ({
                   className={cn(
                     "h-full w-[2px] bg-neutral-200 absolute top-6 left-[11px]",
                     {
-                      "bg-green-300": reply.selected,
+                      "bg-green-300":
+                        reply.selected && discussionType === "questionnaires",
                     }
                   )}
                 />

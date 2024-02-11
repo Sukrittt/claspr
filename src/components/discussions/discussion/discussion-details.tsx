@@ -153,7 +153,9 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
                 </div>
               </div>
 
-              {selectedReply && selectedReply.replies ? (
+              {selectedReply &&
+              selectedReply.replies &&
+              discussionType === "questionnaires" ? (
                 (() => {
                   const selectedReplyToReply = selectedReply.replies.find(
                     (r) => r.selected === true

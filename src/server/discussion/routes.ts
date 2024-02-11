@@ -371,21 +371,25 @@ export const addReaction = privateProcedure
 /**
  * To edit a discussion.
  *
- * @param {object} input - The input parameters for editing a discussion..
+ * @param {object} input - The input parameters for editing a discussion.
  * @param {string} input.discussionId - The id of discussion.
  * @param {string} input.title - The updated title of the discussion.
  * @param {any} input.content - The updated content of the discussion.
+ * @param {enum} input.discussionType - The updated discussionType of the discussion.
  */
 export const editDiscussion = privateProcedure
   .input(
     z.object({
       discussionId: z.string(),
       title: z.string().max(100).optional(),
+      discussionType: z
+        .enum(["general", "announcements", "questionnaires", "ideas"])
+        .optional(),
       content: z.any().optional(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { discussionId, title, content } = input;
+    const { discussionId, title, content, discussionType } = input;
 
     const existingDiscussion = await db.discussion.findFirst({
       where: {
@@ -405,6 +409,7 @@ export const editDiscussion = privateProcedure
       data: {
         title: title ?? existingDiscussion.title,
         content: content ?? existingDiscussion.content,
+        discussionType: discussionType ?? existingDiscussion.discussionType,
         isEdited: true,
       },
       where: {
@@ -417,7 +422,7 @@ export const editDiscussion = privateProcedure
 /**
  * To remove a discussion.
  *
- * @param {object} input - The input parameters for removing a discussion..
+ * @param {object} input - The input parameters for removing a discussion.
  * @param {string} input.discussionId - The id of discussion.
  */
 export const removeDiscussion = privateProcedure
