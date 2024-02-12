@@ -74,9 +74,9 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
 
   return (
     <Card>
-      <CardHeader className="border-b py-2.5 space-y-0">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base">
+      <CardHeader className="border-b py-2.5 space-y-1">
+        <div className="flex justify-between">
+          <CardTitle className="text-base pt-1">
             {studentDetails?.renamedClassroom ?? classroom.title}
           </CardTitle>
           {isTeacher ? (
