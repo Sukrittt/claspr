@@ -22,10 +22,11 @@ export const createClass = privateProcedure
     z.object({
       title: z.string().min(1).max(80),
       sectionId: z.string(),
+      protectedDomain: z.string().optional(),
     })
   )
   .mutation(async ({ input, ctx }) => {
-    const { title, sectionId } = input;
+    const { title, sectionId, protectedDomain } = input;
 
     const existingTeacher = await db.user.findUnique({
       where: { id: ctx.userId },
@@ -59,6 +60,7 @@ export const createClass = privateProcedure
         classCode,
         teacherId: ctx.userId,
         sectionId,
+        protectedDomain,
       },
     });
 
@@ -385,6 +387,18 @@ export const joinClass = privateProcedure
       });
     }
 
+    const userDomain = getDomain(ctx.email ?? null);
+
+    if (
+      existingClassRoom.protectedDomain &&
+      existingClassRoom.protectedDomain !== userDomain
+    ) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `Only members with the domain ${existingClassRoom.protectedDomain} are allowed in this classroom.`,
+      });
+    }
+
     await db.membership.create({
       data: {
         classRoomId: existingClassRoom.id,
@@ -396,6 +410,13 @@ export const joinClass = privateProcedure
 
     return existingClassRoom;
   });
+
+const getDomain = (email: string | null) => {
+  if (!email) return;
+
+  const parts = email.split("@");
+  return parts[parts.length - 1];
+};
 
 /**
  * To update the section a classroom belongs to.
@@ -517,7 +538,7 @@ export const getDescription = privateProcedure
       classroomId: z.string(),
     })
   )
-  .query(async ({ input, ctx }) => {
+  .query(async ({ input }) => {
     const { classroomId } = input;
 
     const existingClassroom = await db.classRoom.findFirst({

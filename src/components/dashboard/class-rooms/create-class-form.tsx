@@ -1,13 +1,16 @@
 import { z } from "zod";
 import { toast } from "sonner";
+import { useState } from "react";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence, motion } from "framer-motion";
 
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,7 +18,10 @@ import {
 } from "@/components/ui/form";
 import { trpc } from "@/trpc/client";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { ContainerHeightVariants } from "@/lib/motion";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 const classCreationSchema = z.object({
   title: z
@@ -28,12 +34,15 @@ const classCreationSchema = z.object({
       },
       { message: "Class name cannot be empty" }
     ),
+  protectedDomain: z.string().optional(),
 });
 
 type Inputs = z.infer<typeof classCreationSchema>;
 
 export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
   const router = useRouter();
+  const [isDomainProtectionEnabled, setIsDomainProtectionEnabled] =
+    useState(false);
 
   // react-hook-form
   const form = useForm<Inputs>({
@@ -56,7 +65,7 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
 
   function handleCreateClass(data: Inputs) {
     createClass({
-      title: data.title,
+      ...data,
       sectionId,
     });
   }
@@ -71,13 +80,27 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
         <form
           id="class-creation-form"
           onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
+          className="space-y-4 overflow-hidden"
         >
           <FormField
             control={form.control}
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <div className="flex items-center justify-between pr-1">
+                  <FormLabel>Name</FormLabel>
+                  <CustomTooltip text="Enable domain protection">
+                    <div>
+                      <Switch
+                        id="protected-domain"
+                        checked={isDomainProtectionEnabled}
+                        onCheckedChange={(val) =>
+                          setIsDomainProtectionEnabled(val)
+                        }
+                      />
+                    </div>
+                  </CustomTooltip>
+                </div>
                 <FormControl>
                   <Input
                     type="text"
@@ -89,10 +112,48 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
               </FormItem>
             )}
           />
+
+          <div>
+            <AnimatePresence mode="wait">
+              {isDomainProtectionEnabled && (
+                <motion.div
+                  variants={ContainerHeightVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="pb-2"
+                >
+                  <FormField
+                    control={form.control}
+                    name="protectedDomain"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Domain</FormLabel>
+                        <FormControl>
+                          <>
+                            <Input
+                              type="text"
+                              placeholder="E.g: gmail.com"
+                              {...field}
+                            />
+                            <FormDescription className="text-xs">
+                              Only users with this email domain are permitted to
+                              join this classroom.
+                            </FormDescription>
+                          </>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </form>
       </Form>
       <Button
-        className="my-1 w-full"
+        className="mb-1 w-full"
         form="class-creation-form"
         disabled={isLoading}
       >

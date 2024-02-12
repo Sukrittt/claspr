@@ -107,6 +107,8 @@ model ClassRoom {
   description String?
   classCode   String  @unique
 
+  protectedDomain String?
+
   sectionId String
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
