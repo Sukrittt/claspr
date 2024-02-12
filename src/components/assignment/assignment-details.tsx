@@ -122,6 +122,7 @@ export const AssignmentDetails: React.FC<AssignmentDetailsProps> = ({
           value={date}
           setValue={setDate}
           disabled={[{ before: new Date() }, new Date()]}
+          showScrollArea
         />
       </div>
 

@@ -24,26 +24,8 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const body = await req.json();
-  const {
-    prompt,
-    classDescription,
-    prevConversations,
-    personal,
-    temperature,
-    classTitle,
-  } = PromptValidator.parse(body);
-
-  const formattedPrevConversations = prevConversations
-    .map((c, index) => {
-      return `\n${index + 1}. ${c.prompt}.${
-        c.feedback
-          ? ` The user has ${
-              c.feedback === "LIKE" ? "liked" : "disliked"
-            } this conversation.`
-          : ""
-      }`;
-    })
-    .join("\n\n");
+  const { prompt, classDescription, personal, temperature, classTitle } =
+    PromptValidator.parse(body);
 
   const customTemperature = temperature ?? 0.2;
   const validDescription = classDescription && classDescription !== "";
@@ -57,10 +39,6 @@ export async function POST(req: Request): Promise<Response> {
       : "") +
     (validDescription
       ? `This is the classroom description provided by the teacher: ${classTitle} `
-      : "") +
-    (formattedPrevConversations.length > 0
-      ? "Also, here are some previous questions asked by this user to give you more context of what the user has asked earlier. Additionally, consider the user's likes and dislikes based on the conversations. Note: Only consider the user's likes and dislikes when feedback has been provided. \n\n" +
-        formattedPrevConversations.slice(0, 30)
       : "");
 
   const response = await openai.chat.completions.create({

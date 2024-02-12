@@ -20,7 +20,11 @@ import { ExtendedClassroomDetails } from "@/types";
 import { cn, getFilteredResponse } from "@/lib/utils";
 import { PromptValidatorType } from "@/types/validator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AiPersonal, type AiPersonalType } from "@/config/ai";
+import {
+  AiPersonal,
+  previousConversationTrainingText,
+  type AiPersonalType,
+} from "@/config/ai";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AiDialogVariants, ContainerVariants } from "@/lib/motion";
 import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
@@ -60,17 +64,29 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
 
   const { mutate: handleSubmission, isLoading } = useMutation({
     mutationFn: async (userQuery: string) => {
-      const prevConvo = prevConversations?.map((convo) => {
-        return {
-          prompt: convo.prompt,
-          answer: convo.answer,
-          feedback: convo.feedback,
-        };
-      });
+      const prevConvo =
+        prevConversations?.length === 0
+          ? "I did not have any conversations with you yet. You can safely ignore this.\n"
+          : prevConversations
+              ?.map((c, index) => {
+                return `\n${index + 1}. ${c.prompt}. \n Your answer: ${
+                  c.answer
+                } \n ${
+                  c.feedback
+                    ? ` I gave a ${c.feedback} to this conversation.`
+                    : ""
+                }`;
+              })
+              .join("\n\n");
+
+      const formattedInput = `\nNow, you are supposed to generate content based on this prompt: ${userQuery}`;
+
+      const customUserQuery =
+        previousConversationTrainingText + prevConvo + formattedInput;
 
       const prompt = addInfo
-        ? `${addInfo}. Generate content based on this query: ${userQuery}`
-        : userQuery;
+        ? `Here are some additional information about this classroom:\n${addInfo}\n${customUserQuery}`
+        : customUserQuery;
 
       const payload: PromptValidatorType = {
         prompt: hasFollowUp
@@ -78,7 +94,6 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           : prompt,
         classTitle: classroom.title,
         classDescription: classroom.description,
-        prevConversations: prevConvo ?? [],
         personal: AiPersonal[personal ?? "TEACHER"],
         temperature,
       };

@@ -8,3 +8,6 @@ export const AiPersonal = {
 } as const;
 
 export type AiPersonalType = keyof typeof AiPersonal;
+
+export const previousConversationTrainingText =
+  "Here are the previous conversations I had with you. I'm providing these conversations to give you a better context of what I usually ask in this classroom. Each question contains of my prompt, your answer and the feedback I gave to this conversation. Please consider my likes and dislikes based on the conversations. Note: Only consider my likes and dislikes when feedback has been provided. \n\n";

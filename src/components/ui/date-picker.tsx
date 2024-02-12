@@ -14,15 +14,21 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { TimePicker } from "@/components/ui/time-picker";
-import { ScrollArea } from "./scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface DatePickerProps {
   value: Date | undefined;
   setValue: (date: Date | undefined) => void;
   disabled?: Matcher[];
+  showScrollArea?: boolean;
 }
 
-export function DatePicker({ setValue, value, disabled }: DatePickerProps) {
+export function DatePicker({
+  setValue,
+  value,
+  disabled,
+  showScrollArea = false,
+}: DatePickerProps) {
   const [date, setDate] = useState<Date>();
 
   const tomorrow = addDays(new Date(), 1);
@@ -52,7 +58,11 @@ export function DatePicker({ setValue, value, disabled }: DatePickerProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <ScrollArea className="h-[300px] pr-0">
+        <ScrollArea
+          className={cn({
+            "h-[300px] pr-0": showScrollArea,
+          })}
+        >
           <Calendar
             mode="single"
             today={value || tomorrow}

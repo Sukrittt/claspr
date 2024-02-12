@@ -4,13 +4,6 @@ export const PromptValidator = z.object({
   prompt: z.string(),
   classDescription: z.string().nullable(),
   classTitle: z.string().nullable(),
-  prevConversations: z.array(
-    z.object({
-      prompt: z.string(),
-      answer: z.string(),
-      feedback: z.enum(["LIKE", "DISLIKE"]).nullable(),
-    })
-  ),
   personal: z.optional(z.string()),
   temperature: z.optional(z.number()),
   addInfo: z.optional(z.string()),

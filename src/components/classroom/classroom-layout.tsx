@@ -27,10 +27,16 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
     }
   }, [mounted]);
 
+  const additionalInfo =
+    `This is the title of this classroom: ${classroom.title}. ` +
+    (classroom.description
+      ? `This is the description of this classroom: ${classroom.description}.`
+      : "");
+
   return (
     <div className="px-20 py-6 h-[95%]">
       <ClassroomContainer classroom={classroom} session={session} />
-      <AIDialog classroom={classroom} hasFollowUp />
+      <AIDialog classroom={classroom} hasFollowUp addInfo={additionalInfo} />
     </div>
   );
 };

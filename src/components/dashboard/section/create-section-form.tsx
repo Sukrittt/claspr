@@ -118,10 +118,11 @@ export const CreateSectionForm: React.FC<CreateSectionFormProps> = ({
         form="section-creation-form"
         disabled={isLoading}
       >
-        {isLoading && (
-          <Loader className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+        {isLoading ? (
+          <Loader className="mr-2 h-3 w-3 animate-spin" aria-hidden="true" />
+        ) : (
+          "Create Section"
         )}
-        Create Section
         <span className="sr-only">Create Section</span>
       </Button>
     </div>

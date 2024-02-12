@@ -157,10 +157,11 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
         form="class-creation-form"
         disabled={isLoading}
       >
-        {isLoading && (
-          <Loader className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+        {isLoading ? (
+          <Loader className="h-3 w-3 animate-spin" aria-hidden="true" />
+        ) : (
+          "Create Class"
         )}
-        Create Class
         <span className="sr-only">Create Class</span>
       </Button>
     </div>
