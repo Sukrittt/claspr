@@ -145,7 +145,7 @@ export const AssignmentDetails: React.FC<AssignmentDetailsProps> = ({
         className="w-fit"
         disabled={isLoading}
       >
-        {isLoading ? <Loader className="h-3 w-[22px] animate-spin" /> : "Edit"}
+        {isLoading ? <Loader className="h-3 w-[22px] animate-spin" /> : "Save"}
       </Button>
     </div>
   );

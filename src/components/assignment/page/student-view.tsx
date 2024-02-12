@@ -1,4 +1,4 @@
-import moment from "moment";
+import { format } from "date-fns";
 import { Session } from "next-auth";
 
 import { timeAgo } from "@/lib/utils";
@@ -10,7 +10,6 @@ import { Comments } from "@/components/assignment/comment/comments";
 import { EditorOutput } from "@/components/editor/EditorOutput";
 import { SubmissionCard } from "@/components/submission/submission-card";
 import { SubmissionDetails } from "@/components/submission/submission-details";
-import { format } from "date-fns";
 
 interface StudentViewProps {
   assignment: ExtendedAssignment;
@@ -41,7 +40,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
                 <span className="text-[12px]">
                   Submit before{" "}
                   <span className="font-semibold">
-                    {format(assignment.dueDate, "dd MMM")}
+                    {format(assignment.dueDate, "do MMM, h:mm a")}
                   </span>
                 </span>
               </SubmissionDetails>

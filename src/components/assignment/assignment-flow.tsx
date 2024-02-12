@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
 import { toast } from "sonner";
+import { isBefore } from "date-fns";
 import { Loader } from "lucide-react";
 import { ClassRoom } from "@prisma/client";
 import { useEffect, useState } from "react";
@@ -39,6 +40,11 @@ export const AssignmentFlow: React.FC<AssignmentFlowProps> = ({
   const handleCreateAssignment = () => {
     if (!date) {
       toast.error("Please select a due date for this assignment.");
+      return;
+    }
+
+    if (isBefore(date, new Date())) {
+      toast.error("Due date cannot be set to past date.");
       return;
     }
 

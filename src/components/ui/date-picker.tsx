@@ -13,6 +13,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { TimePicker } from "@/components/ui/time-picker";
+import { ScrollArea } from "./scroll-area";
 
 interface DatePickerProps {
   value: Date | undefined;
@@ -43,21 +45,24 @@ export function DatePicker({ setValue, value, disabled }: DatePickerProps) {
         >
           <CalendarIcon className="h-4 w-4" />
           {value ? (
-            format(new Date(value), "PPP")
+            format(new Date(value), "MMMM do, h:mm a")
           ) : (
             <span className="pt-px">Pick a due date</span>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          today={value || tomorrow}
-          selected={date}
-          onSelect={setDate}
-          initialFocus
-          disabled={disabled}
-        />
+        <ScrollArea className="h-[300px] pr-0">
+          <Calendar
+            mode="single"
+            today={value || tomorrow}
+            selected={date}
+            onSelect={setDate}
+            initialFocus
+            disabled={disabled}
+          />
+          <TimePicker setDate={setDate} date={value ?? date} />
+        </ScrollArea>
       </PopoverContent>
     </Popover>
   );

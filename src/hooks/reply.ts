@@ -174,6 +174,7 @@ export const useRemoveReply = ({
         discussionId,
         discussionType,
       });
+      utils.discussion.getHelpfulUsers.invalidate();
     },
   });
 };
