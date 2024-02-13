@@ -18,3 +18,4 @@ export const contentAtom = atom<undefined | any>(undefined);
 export const isChangingQueryAtom = atom(false);
 
 export const folderAtom = atom<ExtendedFolder[]>([]);
+export const activeFolderIdAtom = atom<string | null>(null);

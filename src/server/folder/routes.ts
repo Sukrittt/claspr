@@ -26,6 +26,7 @@ export const getFolders = privateProcedure.query(async ({ ctx }) => {
           id: true,
           folderId: true,
           title: true,
+          emojiUrl: true,
         },
       },
     },
