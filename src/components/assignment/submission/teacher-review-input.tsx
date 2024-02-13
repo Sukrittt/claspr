@@ -37,9 +37,6 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
   submissionId,
 }) => {
   const getEmptyReviewComment = useCallback(() => {
-    if (selectedReview === "CHANGES_REQUESTED")
-      return "Please make the requested changes and resubmit your work.";
-
     if (selectedReview === "APPROVED")
       return "Your work has been approved. Great job!";
 
@@ -88,6 +85,11 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
     handleCreateComment(data);
   }
 
+  const disabled =
+    isLoading ||
+    (selectedReview === "CHANGES_REQUESTED" &&
+      form.getValues("message")?.length === 0);
+
   return (
     <Form {...form}>
       <form
@@ -114,7 +116,7 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
                   <Button
                     className="h-7"
                     form="comment-creation-form"
-                    disabled={isLoading}
+                    disabled={disabled}
                   >
                     {isLoading ? (
                       <Loader className="h-3 w-20 text-muted-foreground animate-spin" />

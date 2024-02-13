@@ -43,8 +43,9 @@ export const SubmissionReview: React.FC<SubmissionReviewProps> = ({
     },
     {
       value: SubmissionStatus.CHANGES_REQUESTED,
-      label: "Request Changes",
-      description: "Submit feedback and request changes from the student.",
+      label: "Changes Required",
+      description:
+        "Submit feedback and inform the student about the required changes.",
     },
   ];
 
