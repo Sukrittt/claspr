@@ -2,7 +2,14 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useState } from "react";
 import { GripVertical } from "lucide-react";
-import { useDraggable } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useDraggable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 
 import { cn } from "@/lib/utils";
 import { ExtendedClassroom } from "@/types";
@@ -33,6 +40,14 @@ export const CreatedClassroom = ({
       }
     : undefined;
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
   if (isDragging) {
     return (
       <div id="portal-item">
@@ -46,11 +61,11 @@ export const CreatedClassroom = ({
 
   return (
     <div
+      id="always-on-show"
       style={style}
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      id="always-on-show"
     >
       <ClassContextMenu
         containerId={classroom.id}
@@ -74,23 +89,26 @@ export const CreatedClassroom = ({
             <GripVertical className="w-4 h-4 text-gray-800 cursor-grab" />
             <p>{classroom.title}</p>
           </div>
-          <div
-            className={cn("opacity-0 group-hover:opacity-100", {
-              "opacity-100": isDropdownOpen,
-            })}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <ClassDropdown
-              containerId={classroom.id}
-              sectionType="CREATION"
-              sectionId={classroom.sectionId}
-              classroomName={classroom.title}
-              isDropdownOpen={isDropdownOpen}
-              setIsDropdownOpen={setIsDropdownOpen}
-            />
-          </div>
+
+          <DndContext sensors={sensors} collisionDetection={closestCenter}>
+            <div
+              className={cn("opacity-0 group-hover:opacity-100", {
+                "opacity-100": isDropdownOpen,
+              })}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <ClassDropdown
+                containerId={classroom.id}
+                sectionType="CREATION"
+                sectionId={classroom.sectionId}
+                classroomName={classroom.title}
+                isDropdownOpen={isDropdownOpen}
+                setIsDropdownOpen={setIsDropdownOpen}
+              />
+            </div>
+          </DndContext>
         </Link>
       </ClassContextMenu>
     </div>

@@ -87,7 +87,7 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center justify-between pr-1">
+                <div className="flex items-center justify-between pt-1 pr-1">
                   <FormLabel>Name</FormLabel>
                   <CustomTooltip text="Enable domain protection">
                     <div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDraggable } from "@dnd-kit/core";
 import { SectionType } from "@prisma/client";
 import { DoorOpen, MoreHorizontal, Pen, Trash } from "lucide-react";
 
@@ -33,8 +34,14 @@ export const ClassDropdown: React.FC<ClassDropdownProps> = ({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
+  //This is just a workaround to prevent dropdown drag event to be propogated.
+  //Note. stopPropagation() does NOT work here.
+  const { attributes, listeners, setNodeRef } = useDraggable({
+    id: "DUMMY",
+  });
+
   return (
-    <>
+    <div {...attributes} {...listeners} ref={setNodeRef}>
       <DropdownMenu
         open={isDropdownOpen}
         onOpenChange={(val) => setIsDropdownOpen(val)}
@@ -100,6 +107,6 @@ export const ClassDropdown: React.FC<ClassDropdownProps> = ({
             sectionId={sectionId}
           />
         ))}
-    </>
+    </div>
   );
 };

@@ -2,7 +2,14 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useState } from "react";
 import { GripVertical } from "lucide-react";
-import { useDraggable } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useDraggable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 
 import { cn } from "@/lib/utils";
 import { ExtendedMembership } from "@/types";
@@ -32,6 +39,14 @@ export const JoinedMembership = ({
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
       }
     : undefined;
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   if (isDragging) {
     return (
@@ -76,25 +91,27 @@ export const JoinedMembership = ({
             <GripVertical className="w-4 h-4 text-gray-800" />
             <p>{membership.renamedClassroom ?? membership.classRoom.title}</p>
           </div>
-          <div
-            className={cn("opacity-0 group-hover:opacity-100", {
-              "opacity-100": isDropdownOpen,
-            })}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <ClassDropdown
-              containerId={membership.id}
-              sectionType="MEMBERSHIP"
-              sectionId={membership.sectionId}
-              classroomName={
-                membership.renamedClassroom ?? membership.classRoom.title
-              }
-              isDropdownOpen={isDropdownOpen}
-              setIsDropdownOpen={setIsDropdownOpen}
-            />
-          </div>
+          <DndContext sensors={sensors} collisionDetection={closestCenter}>
+            <div
+              className={cn("opacity-0 group-hover:opacity-100", {
+                "opacity-100": isDropdownOpen,
+              })}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <ClassDropdown
+                containerId={membership.id}
+                sectionType="MEMBERSHIP"
+                sectionId={membership.sectionId}
+                classroomName={
+                  membership.renamedClassroom ?? membership.classRoom.title
+                }
+                isDropdownOpen={isDropdownOpen}
+                setIsDropdownOpen={setIsDropdownOpen}
+              />
+            </div>
+          </DndContext>
         </Link>
       </ClassContextMenu>
     </div>

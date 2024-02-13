@@ -1,6 +1,13 @@
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { useDroppable } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { ChevronRight, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -48,6 +55,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({ section }) => {
         {...listeners}
         {...attributes}
         id="always-on-show"
+        data-no-dnd="true"
         variants={ContainerVariants}
         initial="initial"
         animate="animate"
@@ -79,6 +87,14 @@ export const SectionItem = ({
       content: section,
     },
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   useEffect(() => {
     if (closeAllToggle !== null) {
@@ -156,32 +172,35 @@ export const SectionItem = ({
               <p>{section.name}</p>
             </div>
           </div>
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            className={cn(
-              "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
-              {
-                "opacity-100": isDropdownOpen,
-              }
-            )}
-          >
-            {section.isDefault ? (
-              <CustomTooltip text="Default section for your classrooms">
-                <Info className="h-3.5 w-3.5 text-gray-700" />
-              </CustomTooltip>
-            ) : (
-              <SectionDropdown
-                sectionId={section.id}
-                sectionName={section.name}
-                isDropdownOpen={isDropdownOpen}
-                setIsDropdownOpen={setIsDropdownOpen}
-                sectionType={section.sectionType}
-              />
-            )}
-            <CreateClassDialog sectionId={section.id} />
-          </div>
+
+          <DndContext sensors={sensors} collisionDetection={closestCenter}>
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              className={cn(
+                "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
+                {
+                  "opacity-100": isDropdownOpen,
+                }
+              )}
+            >
+              {section.isDefault ? (
+                <CustomTooltip text="Default section for your classrooms">
+                  <Info className="h-3.5 w-3.5 text-gray-700" />
+                </CustomTooltip>
+              ) : (
+                <SectionDropdown
+                  sectionId={section.id}
+                  sectionName={section.name}
+                  isDropdownOpen={isDropdownOpen}
+                  setIsDropdownOpen={setIsDropdownOpen}
+                  sectionType={section.sectionType}
+                />
+              )}
+              <CreateClassDialog sectionId={section.id} />
+            </div>
+          </DndContext>
         </div>
       </SectionContextMenu>
       <AnimatePresence mode="wait">

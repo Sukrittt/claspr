@@ -44,7 +44,7 @@ export const EditClassDialog = ({
 
   const dialogDescription =
     sectionType === "CREATION"
-      ? "Edit this section to quickly organize your classrooms"
+      ? "This name will be visible to all its members"
       : "This name will only be visible to you";
 
   return (
@@ -54,7 +54,7 @@ export const EditClassDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Section</DialogTitle>
+          <DialogTitle>Rename Classroom</DialogTitle>
           <DialogDescription>{dialogDescription}</DialogDescription>
         </DialogHeader>
         {sectionType === "CREATION" ? (
