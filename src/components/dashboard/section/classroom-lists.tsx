@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 
-import { ContainerHeightVariants, ContainerVariants } from "@/lib/motion";
+import { ContainerHeightVariants } from "@/lib/motion";
 import { CreatedClassroom } from "./created-classroom";
 import { JoinedMembership } from "./joined-membership";
-import { ExtendedMembership, ExtendedClassroom } from "@/types";
+import { ExtendedMembership, MinifiedClassroom } from "@/types";
 
 interface ClassroomListsWithCreationProps {
-  classrooms: ExtendedClassroom[];
+  classrooms: MinifiedClassroom[];
 }
 
 export const ClassroomListsWithCreation: React.FC<

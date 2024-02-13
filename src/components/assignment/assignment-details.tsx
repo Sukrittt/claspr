@@ -67,7 +67,7 @@ export const AssignmentDetails: React.FC<AssignmentDetailsProps> = ({
 
     editAssignment({
       assignmentId: assignment.id,
-      classroomId: assignment.classRoom.id,
+      classroomId: assignment.classRoomId,
       title: data.title,
       dueDate: date,
       lateSubmission: allowLateSubmission,

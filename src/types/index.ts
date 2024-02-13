@@ -17,12 +17,14 @@ export type ExtendedClassroom = ClassRoom & {
   students: Membership[];
 };
 
+export type MinifiedClassroom = Pick<ClassRoom, "id" | "title" | "sectionId">;
+
 export type ExtendedSectionWithClassrooms = Section & {
-  classrooms: ExtendedClassroom[];
+  classrooms: MinifiedClassroom[];
 };
 
 export type ExtendedMembership = Membership & {
-  classRoom: ExtendedClassroom;
+  classRoom: MinifiedClassroom;
 };
 
 export type ExtendedSectionWithMemberships = Section & {
@@ -40,9 +42,9 @@ export type ExtendedMembershipDetails = Membership & {
 
 export type ExtendedAssignment = Assignment & {
   creator: User;
-  classRoom: ClassRoom;
+  classRoom: Pick<ClassRoom, "id" | "title" | "description">;
   submissions: (Submission & {
-    member: Membership;
+    member: Pick<Membership, "userId">;
   })[];
 };
 

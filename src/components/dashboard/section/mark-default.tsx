@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { BadgeCheck } from "lucide-react";
 import { SectionType } from "@prisma/client";
@@ -19,6 +20,7 @@ export const MarkDefault: React.FC<MarkDefaultProps> = ({
 
   const { mutate: markAsDefault } = trpc.section.updateSection.useMutation({
     onMutate: () => {
+      toast.success("Section marked as default");
       handleOptimisticUpdate();
     },
   });

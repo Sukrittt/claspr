@@ -49,7 +49,7 @@ export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
 
     editContent({
       assignmentId: assignment.id,
-      classroomId: assignment.classRoom.id,
+      classroomId: assignment.classRoomId,
       content,
     });
 

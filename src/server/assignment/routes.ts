@@ -161,7 +161,11 @@ export const getAssignments = privateProcedure
         classRoom: true,
         submissions: {
           include: {
-            member: true,
+            member: {
+              select: {
+                userId: true,
+              },
+            },
           },
         },
       },
@@ -198,10 +202,20 @@ export const getAssignment = privateProcedure
       },
       include: {
         creator: true,
-        classRoom: true,
+        classRoom: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+          },
+        },
         submissions: {
           include: {
-            member: true,
+            member: {
+              select: {
+                userId: true,
+              },
+            },
           },
         },
       },

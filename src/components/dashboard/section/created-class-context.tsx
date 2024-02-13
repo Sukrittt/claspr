@@ -18,7 +18,7 @@ import {
 import { createPortal } from "react-dom";
 
 import { trpc } from "@/trpc/client";
-import { createdClassSections, isCloseAllCreationToggle } from "@/atoms";
+import { createdClassSections } from "@/atoms";
 import { CreatedClassroom } from "./created-classroom";
 import { getSortedSectionsByOrder } from "@/lib/utils";
 import { SectionCard, SectionItem } from "./section-card";
@@ -27,7 +27,6 @@ import { ExtendedClassroom, ExtendedSectionWithClassrooms } from "@/types";
 export const CreatedClassContext = () => {
   const [sectionsForCreatedClassrooms, setCreatedClassSections] =
     useAtom(createdClassSections);
-  const [, setCloseAllToggle] = useAtom(isCloseAllCreationToggle);
 
   const listOfSectionIds = useMemo(
     () => sectionsForCreatedClassrooms?.map((section) => section.id),
@@ -63,8 +62,6 @@ export const CreatedClassContext = () => {
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-
-    setCloseAllToggle((prev) => !!!prev);
 
     const dragType = active.data.current?.dragType;
 

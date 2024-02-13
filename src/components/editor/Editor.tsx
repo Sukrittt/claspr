@@ -11,7 +11,7 @@ import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { AIDialog } from "@/components/conversation/ai-dialog";
 
 interface EditorProps {
-  classroom?: ClassRoom;
+  classroom?: Pick<ClassRoom, "id" | "title" | "description">;
   title?: string;
   content?: any;
   disableAI?: boolean;

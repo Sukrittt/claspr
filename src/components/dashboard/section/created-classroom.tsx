@@ -12,7 +12,7 @@ import {
 } from "@dnd-kit/core";
 
 import { cn } from "@/lib/utils";
-import { ExtendedClassroom } from "@/types";
+import { ExtendedClassroom, MinifiedClassroom } from "@/types";
 import { ClassDropdown } from "@/components/dashboard/class-rooms/class-dropdown";
 import { ClassContextMenu } from "@/components/dashboard/class-rooms/class-context-menu";
 
@@ -20,7 +20,7 @@ export const CreatedClassroom = ({
   classroom,
   isHolding = false,
 }: {
-  classroom: ExtendedClassroom;
+  classroom: MinifiedClassroom;
   isHolding?: boolean;
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

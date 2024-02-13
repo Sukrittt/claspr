@@ -23,15 +23,13 @@ import {
   MembershipItem,
   MembershipSectionCard,
 } from "./membership-section-card";
+import { joinedClassSections } from "@/atoms";
 import { getSortedSectionsByOrder } from "@/lib/utils";
-import { isCloseAllMembershipToggle, joinedClassSections } from "@/atoms";
 import { ExtendedMembership, ExtendedSectionWithMemberships } from "@/types";
 
 export const MembershipContext = () => {
   const [sectionsForJoinedClassrooms, setJoinedClassSections] =
     useAtom(joinedClassSections);
-
-  const [, setCloseAllToggle] = useAtom(isCloseAllMembershipToggle);
 
   const listOfSectionIds = useMemo(
     () => sectionsForJoinedClassrooms?.map((section) => section.id),
@@ -66,8 +64,6 @@ export const MembershipContext = () => {
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-
-    setCloseAllToggle((prev) => !!!prev);
 
     const dragType = active.data.current?.dragType;
 

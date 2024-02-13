@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { format, isAfter } from "date-fns";
 import { Session } from "next-auth";
+import { format, isAfter } from "date-fns";
 import {
   CalendarCheck,
   CalendarClock,

@@ -31,7 +31,9 @@ import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
 import { useConversation, useCreateConversation } from "@/hooks/conversation";
 
 interface ClassAIDialogProps {
-  classroom: ExtendedClassroomDetails | ClassRoom;
+  classroom:
+    | Pick<ExtendedClassroomDetails, "id" | "title" | "description">
+    | Pick<ClassRoom, "id" | "title" | "description">;
   moveToEditor?: (text: string) => void;
   personal?: AiPersonalType;
   hasFollowUp?: boolean;

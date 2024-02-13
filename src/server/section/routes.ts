@@ -358,9 +358,10 @@ export const getSectionsForCreatedClassrooms = privateProcedure.query(
       },
       include: {
         classrooms: {
-          include: {
-            teacher: true,
-            students: true,
+          select: {
+            id: true,
+            title: true,
+            sectionId: true,
           },
           orderBy: {
             viewCount: "desc",
@@ -392,9 +393,10 @@ export const getSectionsForJoinedClassrooms = privateProcedure.query(
         memberships: {
           include: {
             classRoom: {
-              include: {
-                teacher: true,
-                students: true,
+              select: {
+                id: true,
+                title: true,
+                sectionId: true,
               },
             },
           },
