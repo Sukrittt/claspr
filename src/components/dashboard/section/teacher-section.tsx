@@ -1,3 +1,4 @@
+"use client";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { CopyMinus } from "lucide-react";
@@ -14,6 +15,7 @@ import { MembershipContext } from "./membership-context";
 import { CreatedClassContext } from "./created-class-context";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const TeacherSection = () => {
   const [, setCloseAllCreationToggle] = useAtom(isCloseAllCreationToggle);
@@ -49,13 +51,13 @@ export const TeacherSection = () => {
   }, [sectionsForJoinedClassroomsData]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="flex flex-col gap-y-4">
       <div className="space-y-4">
         <div className="flex justify-between items-end">
           <div>
             <h1 className="font-semibold text-gray-800">Your Sections</h1>
             <p className="text-muted-foreground text-sm">
-              These sections will contain the classrooms you have created.
+              Sections containing created classrooms
             </p>
           </div>
           <div className="flex items-center">
@@ -70,23 +72,25 @@ export const TeacherSection = () => {
             <CreateSectionDialog sectionType="CREATION" />
           </div>
         </div>
-        <div className="flex flex-col gap-y-2">
-          {isFetchingFirstSection || isFetchingFirstSectionRefetch ? (
-            <SectionSkeleton />
-          ) : !sectionsForCreatedClassrooms ||
-            sectionsForCreatedClassrooms.length === 0 ? (
-            <p>No results</p>
-          ) : (
-            <CreatedClassContext />
-          )}
-        </div>
+        <ScrollArea className="h-[30vh]">
+          <div className="flex flex-col gap-y-2">
+            {isFetchingFirstSection || isFetchingFirstSectionRefetch ? (
+              <SectionSkeleton />
+            ) : !sectionsForCreatedClassrooms ||
+              sectionsForCreatedClassrooms.length === 0 ? (
+              <p>No results</p>
+            ) : (
+              <CreatedClassContext />
+            )}
+          </div>
+        </ScrollArea>
       </div>
       <div className="space-y-4">
         <div className="flex justify-between items-end">
           <div>
             <h1 className="font-semibold text-gray-800">Your Sections</h1>
             <p className="text-muted-foreground text-sm">
-              These sections will contain the classrooms you have joined.
+              Sections containing joined classrooms
             </p>
           </div>
           <div className="flex items-center">
@@ -101,16 +105,18 @@ export const TeacherSection = () => {
             <CreateSectionDialog sectionType="MEMBERSHIP" />
           </div>
         </div>
-        <div className="flex flex-col gap-y-2">
-          {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
-            <SectionSkeleton />
-          ) : !sectionsForJoinedClassrooms ||
-            sectionsForJoinedClassrooms.length === 0 ? (
-            <p>No results</p>
-          ) : (
-            <MembershipContext />
-          )}
-        </div>
+        <ScrollArea className="h-[30vh]">
+          <div className="flex flex-col gap-y-2">
+            {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
+              <SectionSkeleton />
+            ) : !sectionsForJoinedClassrooms ||
+              sectionsForJoinedClassrooms.length === 0 ? (
+              <p>No results</p>
+            ) : (
+              <MembershipContext />
+            )}
+          </div>
+        </ScrollArea>
       </div>
     </div>
   );

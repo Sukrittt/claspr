@@ -1,3 +1,4 @@
+"use client";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { CopyMinus } from "lucide-react";
@@ -33,7 +34,7 @@ export const StudentSection = () => {
         <div>
           <h1 className="font-semibold text-gray-800">Your Sections</h1>
           <p className="text-muted-foreground text-sm">
-            These sections will contain the classrooms you have joined.
+            Sections containing joined classrooms
           </p>
         </div>
         <div className="flex items-center">

@@ -1,9 +1,12 @@
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { UserType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
 import { privateProcedure, publicProcedure } from "@/server/trpc";
+
+const RoleEnum = z.nativeEnum(UserType);
 
 /**
  * Creates a new user in the database.
@@ -80,16 +83,16 @@ export const getUserRoleByEmail = publicProcedure
   });
 
 /**
- * To update the user role and university and onboard the user.
+ * To update user details and onboard the user.
  *
  * @param {object} input - The input parameters for updating the user details.
- * @param {string} input.role - The role of the user.
+ * @param {enum} input.role - The role of the user - STUDENT OR TEACHER.
  * @param {string} input.university - The university of the user.
  */
 export const onBoardUser = privateProcedure
   .input(
     z.object({
-      role: z.enum(["STUDENT", "TEACHER"]),
+      role: RoleEnum,
       university: z.string().min(3, {
         message: "University name should be atleast 3 characters long.",
       }),
@@ -162,4 +165,44 @@ export const onBoardUser = privateProcedure
         id: ctx.userId,
       },
     });
+
+    const createdFolder = await db.folder.create({
+      data: {
+        name: "New Folder",
+        userId: ctx.userId,
+      },
+      select: { id: true },
+    });
+
+    await db.note.create({
+      data: {
+        title: "Untitled Note",
+        emojiUrl:
+          "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f601.png", // 😁
+        noteType: "PERSONAL",
+        folderId: createdFolder.id,
+        creatorId: ctx.userId,
+      },
+    });
   });
+
+/**
+ * To get the folders created by the user.
+ *
+ * @param {object} input - The input parameters for getting folders of the user.
+ */
+export const getFolders = privateProcedure.query(async ({ ctx }) => {
+  const folders = await db.folder.findMany({
+    where: {
+      userId: ctx.userId,
+      classroomId: null,
+    },
+    select: {
+      id: true,
+      name: true,
+      createdAt: true,
+    },
+  });
+
+  return folders;
+});

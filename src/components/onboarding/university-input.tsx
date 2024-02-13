@@ -106,23 +106,23 @@ export const UniversityInput: React.FC<UniversityInputProps> = ({ role }) => {
                     <div className="flex gap-x-2 items-center">
                       <Input
                         type="text"
-                        className="h-[30px]"
+                        className="h-[30px] text-[13px]"
                         disabled={isLoading}
                         placeholder="E.g: Christ University"
                         {...field}
                       />
                       <Button
-                        className=""
+                        className="w-10 p-0"
                         form="onboard-form"
                         disabled={isLoading}
                       >
                         {isLoading ? (
                           <Loader
-                            className="h-4 w-4 animate-spin"
+                            className="h-3 w-3 animate-spin"
                             aria-hidden="true"
                           />
                         ) : (
-                          <Check className="h-4 w-4" />
+                          <Check className="h-3 w-3" />
                         )}
                         <span className="sr-only">Continue</span>
                       </Button>

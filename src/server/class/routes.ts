@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
-import { isTeacherAuthed } from "../assignment/routes";
+import { isTeacherAuthed } from "@/server/assignment/routes";
 
 const CODE_LENGTH = 6;
 const CODE_CHARACTERS =
@@ -54,7 +54,7 @@ export const createClass = privateProcedure
       });
     }
 
-    const classRoom = await db.classRoom.create({
+    const classroom = await db.classRoom.create({
       data: {
         title,
         classCode,
@@ -62,9 +62,20 @@ export const createClass = privateProcedure
         sectionId,
         protectedDomain,
       },
+      select: {
+        id: true,
+      },
     });
 
-    return classRoom;
+    await db.folder.create({
+      data: {
+        name: "New Folder",
+        classroomId: classroom.id,
+        userId: ctx.userId,
+      },
+    });
+
+    return classroom;
   });
 
 /**
@@ -610,6 +621,44 @@ export const getIsPartOfClass = privateProcedure
     );
 
     return isPartOfClass;
+  });
+
+/**
+ * To get the folders created inside a classroom.
+ *
+ * @param {object} input - The input parameters for getting folders of the classroom.
+ */
+export const getClassroomFolders = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const { classroomId } = input;
+
+    const isPartOfClass = await getIsPartOfClassAuth(classroomId, ctx.userId);
+
+    if (!isPartOfClass) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message:
+          "You are not authorized to view the content of this classroom.",
+      });
+    }
+
+    const folders = await db.folder.findMany({
+      where: {
+        classroomId,
+      },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+      },
+    });
+
+    return folders;
   });
 
 export const getIsPartOfClassAuth = async (

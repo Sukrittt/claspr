@@ -67,12 +67,13 @@ model User {
   discussions     Discussion[]
   replies         Reply[]
   reactions       Reaction[]
-  commentReceived Comment[]       @relation(name: "Receiver")
-  commentSent     Comment[]       @relation(name: "Sender")
+  commentReceived Comment[]      @relation(name: "Receiver")
+  commentSent     Comment[]      @relation(name: "Sender")
   memberships     Membership[] //only students will have this
   conversations   Conversation[]
   media           Media[]
-  studyMaterials  StudyMaterial[]
+  folders         Folder[]
+  notes           Note[]
   events          Event[]
 }
 
@@ -120,11 +121,12 @@ model ClassRoom {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  students       Membership[]
-  assignments    Assignment[]
-  discussions    Discussion[]
-  conversations  Conversation[]
-  studyMaterials StudyMaterial[]
+  students      Membership[]
+  assignments   Assignment[]
+  discussions   Discussion[]
+  conversations Conversation[]
+  notes         Note[]
+  folders       Folder[]
 }
 
 model Membership {
@@ -318,17 +320,47 @@ model Submission {
   media Media[]
 }
 
-model StudyMaterial {
-  id    String  @id @unique @default(cuid())
-  title String?
+model Folder {
+  id String @id @unique @default(cuid())
+
+  name String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  classroomId String?
+  classroom   ClassRoom? @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notes Note[]
+}
+
+enum NoteType {
+  CLASSROOM
+  PERSONAL
+}
+
+model Note {
+  id    String @id @unique @default(cuid())
+  title String
+
+  coverImage String?
+  emojiUrl   String?
 
   creatorId String
   creator   User   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   content Json?
 
-  classRoomId String?
-  classRoom   ClassRoom? @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
+  noteType NoteType
+
+  classroomId String?
+  classroom   ClassRoom? @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+
+  folderId String
+  folder   Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -341,8 +373,8 @@ model Topic {
 
   name String
 
-  studyMaterialId String
-  studyMaterial   StudyMaterial @relation(fields: [studyMaterialId], references: [id], onDelete: Cascade)
+  noteId String
+  Note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
