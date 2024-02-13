@@ -60,13 +60,13 @@ export const TeacherSection = () => {
               Sections containing created classrooms
             </p>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-x-2 pr-4">
             <CustomTooltip text="Collapse All">
               <div
-                className="p-2 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
                 onClick={() => setCloseAllCreationToggle((prev) => !!!prev)}
               >
-                <CopyMinus className="w-4 h-4" />
+                <CopyMinus className="w-3.5 h-3.5" />
               </div>
             </CustomTooltip>
             <CreateSectionDialog sectionType="CREATION" />
@@ -93,13 +93,13 @@ export const TeacherSection = () => {
               Sections containing joined classrooms
             </p>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-x-2 pr-4">
             <CustomTooltip text="Collapse All">
               <div
-                className="p-2 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
                 onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
               >
-                <CopyMinus className="w-4 h-4" />
+                <CopyMinus className="w-3.5 h-3.5" />
               </div>
             </CustomTooltip>
             <CreateSectionDialog sectionType="MEMBERSHIP" />

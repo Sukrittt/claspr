@@ -72,6 +72,7 @@ export const createClass = privateProcedure
         name: "New Folder",
         classroomId: classroom.id,
         userId: ctx.userId,
+        order: 1,
       },
     });
 
@@ -655,6 +656,9 @@ export const getClassroomFolders = privateProcedure
         id: true,
         name: true,
         createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 

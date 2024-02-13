@@ -170,6 +170,7 @@ export const onBoardUser = privateProcedure
       data: {
         name: "New Folder",
         userId: ctx.userId,
+        order: 1,
       },
       select: { id: true },
     });
@@ -185,24 +186,3 @@ export const onBoardUser = privateProcedure
       },
     });
   });
-
-/**
- * To get the folders created by the user.
- *
- * @param {object} input - The input parameters for getting folders of the user.
- */
-export const getFolders = privateProcedure.query(async ({ ctx }) => {
-  const folders = await db.folder.findMany({
-    where: {
-      userId: ctx.userId,
-      classroomId: null,
-    },
-    select: {
-      id: true,
-      name: true,
-      createdAt: true,
-    },
-  });
-
-  return folders;
-});

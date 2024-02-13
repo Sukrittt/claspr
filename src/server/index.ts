@@ -3,6 +3,7 @@ import { userRouter } from "@/server/routers/user";
 import { mediaRouter } from "@/server/routers/media";
 import { eventRouter } from "@/server/routers/event";
 import { classRouter } from "@/server/routers/class";
+import { folderRouter } from "@/server/routers/folder";
 import { sectionRouter } from "@/server/routers/section";
 import { commentRouter } from "@/server/routers/comment";
 import { discussionRouter } from "@/server/routers/discussion";
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   event: eventRouter,
   comment: commentRouter,
   discussion: discussionRouter,
+  folder: folderRouter,
 });
 
 export type AppRouter = typeof appRouter;

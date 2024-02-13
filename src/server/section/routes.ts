@@ -1,8 +1,11 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { SectionType } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
+
+const SectionTypeEnum = z.nativeEnum(SectionType);
 
 /**
  * To create a new section for the user to store their classrooms.
@@ -15,7 +18,7 @@ export const createSection = privateProcedure
   .input(
     z.object({
       name: z.string().min(1).max(80),
-      sectionType: z.enum(["CREATION", "MEMBERSHIP"]),
+      sectionType: SectionTypeEnum,
     })
   )
   .mutation(async ({ ctx, input }) => {
@@ -24,9 +27,16 @@ export const createSection = privateProcedure
         creatorId: ctx.userId,
         sectionType: input.sectionType,
       },
+      orderBy: {
+        order: "desc",
+      },
+      select: {
+        order: true,
+      },
+      take: 1,
     });
 
-    const nextOrder = userSections.length + 1;
+    const nextOrder = userSections[0].order + 1;
 
     const section = await db.section.create({
       data: {

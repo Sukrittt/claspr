@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 
 import {
+  ExtendedFolder,
   ExtendedSectionWithClassrooms,
   ExtendedSectionWithMemberships,
 } from "@/types";
@@ -15,3 +16,5 @@ export const isSubmittingAtom = atom<boolean | undefined>(undefined);
 export const contentAtom = atom<undefined | any>(undefined);
 
 export const isChangingQueryAtom = atom(false);
+
+export const folderAtom = atom<ExtendedFolder[]>([]);
