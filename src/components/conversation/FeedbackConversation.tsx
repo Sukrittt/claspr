@@ -1,12 +1,13 @@
+import { FEEDBACK_STATUS } from "@prisma/client";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
-import { Conversation, FEEDBACK_STATUS } from "@prisma/client";
 
 import { cn } from "@/lib/utils";
+import { MinifiedConversation } from "@/types";
 import { useGiveFeedback } from "@/hooks/conversation";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface FeedbackConversationProps {
-  conversation: Conversation;
+  conversation: MinifiedConversation;
 }
 
 export const FeedbackConversation: React.FC<FeedbackConversationProps> = ({

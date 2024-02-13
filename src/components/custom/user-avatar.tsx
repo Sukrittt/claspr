@@ -5,7 +5,7 @@ import { AvatarProps } from "@radix-ui/react-avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface UserAvatarProps extends AvatarProps {
-  user: User;
+  user: Pick<User, "name" | "image">;
 }
 
 export const UserAvatar: React.FC<UserAvatarProps> = ({ user, ...props }) => {

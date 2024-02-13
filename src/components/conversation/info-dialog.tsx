@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { format } from "date-fns";
-import { Conversation } from "@prisma/client";
 
 import {
   Dialog,
@@ -11,9 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { MinifiedConversation } from "@/types";
 
 type InfoConversationDialogProps = {
-  conversation: Conversation;
+  conversation: MinifiedConversation;
   isOpen: boolean;
   setIsInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };

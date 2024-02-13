@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Conversation } from "@prisma/client";
 import { Info, MoreHorizontal, Trash } from "lucide-react";
 
 import {
@@ -8,12 +7,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { MinifiedConversation } from "@/types";
 import { InfoConversationDialog } from "./info-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { DeleteConversationDialog } from "./delete-conversation-dialog";
 
 interface ConversationDropdownProps {
-  conversation: Conversation;
+  conversation: MinifiedConversation;
   isDropdownOpen: boolean;
   setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

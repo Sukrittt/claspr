@@ -4,7 +4,7 @@ import { Session } from "next-auth";
 import { AnimatePresence, motion } from "framer-motion";
 import { FileText, NotepadText, Speech } from "lucide-react";
 
-import { ExtendedAssignment } from "@/types";
+import { ExtendedAssignmentDetails } from "@/types";
 import { ContainerFilterVariants, ContainerVariants } from "@/lib/motion";
 import { Submissions } from "@/components/assignment/submission/submissions";
 import { AssignmentFilter } from "@/components/assignment/assignment-filter";
@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssignmentInstructions } from "@/components/assignment/assignment-instructions";
 
 interface TeacherViewProps {
-  assignment: ExtendedAssignment;
+  assignment: ExtendedAssignmentDetails;
   session: Session;
 }
 

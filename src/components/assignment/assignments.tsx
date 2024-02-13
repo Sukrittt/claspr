@@ -69,7 +69,7 @@ export const Assignments: React.FC<AssignmentProps> = ({
             <ScrollArea className="h-[500px]">
               <div className="flex flex-col gap-y-4">
                 {assignments?.map((assignment) => (
-                  <AssignmentCard
+                  <AssignmentCardList
                     key={assignment.id}
                     assignment={assignment}
                     session={session}
@@ -84,12 +84,12 @@ export const Assignments: React.FC<AssignmentProps> = ({
   );
 };
 
-interface AssignmentCardProps {
+interface AssignmentCardListProps {
   assignment: ExtendedAssignment;
   session: Session;
 }
 
-const AssignmentCard: React.FC<AssignmentCardProps> = ({
+const AssignmentCardList: React.FC<AssignmentCardListProps> = ({
   assignment,
   session,
 }) => {

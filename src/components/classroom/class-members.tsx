@@ -1,16 +1,15 @@
-import { User } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { Badge } from "@/components/ui/badge";
 import { ContainerVariants } from "@/lib/motion";
-import { ExtendedMembershipDetails } from "@/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
+import { ExtendedMembershipDetails, MinifiedUser } from "@/types";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface ClassMembersProps {
   members: ExtendedMembershipDetails[];
-  creator: User;
+  creator: MinifiedUser;
   sessionId: string;
 }
 

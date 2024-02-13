@@ -10,13 +10,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ExtendedAssignment } from "@/types";
 import { isChangingQueryAtom } from "@/atoms";
 import { useMounted } from "@/hooks/use-mounted";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ExtendedAssignmentDetails } from "@/types";
 
 interface AssignmentFilterProps {
-  assignment: ExtendedAssignment;
+  assignment: ExtendedAssignmentDetails;
 }
 
 export const AssignmentFilter: React.FC<AssignmentFilterProps> = ({

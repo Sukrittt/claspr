@@ -283,7 +283,14 @@ export const getClassesCreated = privateProcedure.query(async ({ ctx }) => {
     where: { teacherId: ctx.userId },
     include: {
       students: true,
-      teacher: true,
+      teacher: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
     },
   });
 
@@ -309,7 +316,14 @@ export const getClassesJoined = privateProcedure
       include: {
         classRoom: {
           include: {
-            teacher: true,
+            teacher: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
             students: true,
           },
         },
@@ -481,10 +495,24 @@ export const getClassroom = privateProcedure
       include: {
         students: {
           include: {
-            user: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
           },
         },
-        teacher: true,
+        teacher: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
       },
     });
 

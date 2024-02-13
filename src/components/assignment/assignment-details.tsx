@@ -5,7 +5,7 @@ import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ExtendedAssignment } from "@/types";
+import { ExtendedAssignmentDetails } from "@/types";
 import {
   Form,
   FormControl,
@@ -23,7 +23,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { useEditAssignmentDetails } from "@/hooks/assignment";
 
 interface AssignmentDetailsProps {
-  assignment: ExtendedAssignment;
+  assignment: ExtendedAssignmentDetails;
 }
 
 const editAssignmentSchema = z.object({

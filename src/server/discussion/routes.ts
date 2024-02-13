@@ -1,10 +1,14 @@
 import { z } from "zod";
 import { subDays } from "date-fns";
 import { TRPCError } from "@trpc/server";
+import { DiscussionType, ReactionType } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
 import { getIsPartOfClassAuth } from "@/server/class/routes";
+
+const ReactionEnum = z.nativeEnum(ReactionType);
+const DiscussionEnum = z.nativeEnum(DiscussionType);
 
 /**
  * Startes a discussion for a class.
@@ -21,12 +25,7 @@ export const startDiscussion = privateProcedure
       classroomId: z.string(),
       title: z.string().min(3).max(100),
       content: z.any(),
-      discussionType: z.enum([
-        "general",
-        "announcements",
-        "questionnaires",
-        "ideas",
-      ]),
+      discussionType: DiscussionEnum,
     })
   )
   .mutation(async ({ input, ctx }) => {
@@ -77,12 +76,7 @@ export const getDiscussions = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-      discussionType: z.enum([
-        "general",
-        "announcements",
-        "questionnaires",
-        "ideas",
-      ]),
+      discussionType: DiscussionEnum,
     })
   )
   .query(async ({ input, ctx }) => {
@@ -152,12 +146,7 @@ export const getDiscussionDetails = privateProcedure
   .input(
     z.object({
       discussionId: z.string(),
-      discussionType: z.enum([
-        "general",
-        "announcements",
-        "questionnaires",
-        "ideas",
-      ]),
+      discussionType: DiscussionEnum,
     })
   )
   .query(async ({ input }) => {
@@ -285,16 +274,7 @@ export const addReaction = privateProcedure
     z.object({
       discussionId: z.string().optional(),
       replyId: z.string().optional(),
-      reactionType: z.enum([
-        "THUMBS_UP",
-        "THUMBS_DOWN",
-        "SMILE",
-        "PARTY_POPPER",
-        "SAD",
-        "HEART",
-        "ROCKET",
-        "EYES",
-      ]),
+      reactionType: ReactionEnum,
     })
   )
   .mutation(async ({ input, ctx }) => {
@@ -382,9 +362,7 @@ export const editDiscussion = privateProcedure
     z.object({
       discussionId: z.string(),
       title: z.string().max(100).optional(),
-      discussionType: z
-        .enum(["general", "announcements", "questionnaires", "ideas"])
-        .optional(),
+      discussionType: DiscussionEnum.optional(),
       content: z.any().optional(),
     })
   )

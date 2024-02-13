@@ -356,7 +356,14 @@ export const getSectionsForCreatedClassrooms = privateProcedure.query(
         creatorId: ctx.userId,
         sectionType: "CREATION",
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        order: true,
+        emojiUrl: true,
+        isDefault: true,
+        sectionType: true,
+
         classrooms: {
           select: {
             id: true,
@@ -389,9 +396,20 @@ export const getSectionsForJoinedClassrooms = privateProcedure.query(
         creatorId: ctx.userId,
         sectionType: "MEMBERSHIP",
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        order: true,
+        emojiUrl: true,
+        isDefault: true,
+        sectionType: true,
+
         memberships: {
-          include: {
+          select: {
+            id: true,
+            renamedClassroom: true,
+            sectionId: true,
+
             classRoom: {
               select: {
                 id: true,

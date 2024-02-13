@@ -54,6 +54,14 @@ export const getPreviousConversations = privateProcedure
         userId: ctx.userId,
         classRoomId: input.classroomId,
       },
+      select: {
+        id: true,
+        prompt: true,
+        answer: true,
+        feedback: true,
+        createdAt: true,
+        classRoomId: true,
+      },
       orderBy: { createdAt: "desc" },
       take: input.limit ?? undefined,
     });

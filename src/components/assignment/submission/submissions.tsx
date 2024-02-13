@@ -15,11 +15,16 @@ import { UserAvatar } from "@/components/custom/user-avatar";
 import { useAssignmentSubmissions } from "@/hooks/submission";
 import { NotSubmittedMembers } from "./not-submitted-members";
 import { TeacherCommentsDialog } from "./teacher-comments-dialog";
-import { ExtendedAssignment, ExtendedSubmission, FilterType } from "@/types";
 import { SubmissionDetailsSkeleton } from "@/components/skeletons/submission-details-skeleton";
+import {
+  ExtendedAssignment,
+  ExtendedAssignmentDetails,
+  ExtendedSubmission,
+  FilterType,
+} from "@/types";
 
 interface SubmissionsProps {
-  assignment: ExtendedAssignment;
+  assignment: ExtendedAssignmentDetails;
   session: Session;
 }
 
@@ -96,7 +101,7 @@ export const Submissions: React.FC<SubmissionsProps> = ({
 
 interface StudentSubmissionProps {
   submission: ExtendedSubmission;
-  assignment: ExtendedAssignment;
+  assignment: ExtendedAssignmentDetails;
   session: Session;
 }
 

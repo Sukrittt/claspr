@@ -156,9 +156,29 @@ export const getAssignments = privateProcedure
       where: {
         classRoomId: classroomId,
       },
-      include: {
-        creator: true,
-        classRoom: true,
+      select: {
+        id: true,
+        classRoomId: true,
+        dueDate: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
+
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            email: true,
+          },
+        },
+        classRoom: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+          },
+        },
         submissions: {
           include: {
             member: {
@@ -200,8 +220,24 @@ export const getAssignment = privateProcedure
         id: assignmentId,
         classRoomId: classroomId,
       },
-      include: {
-        creator: true,
+      select: {
+        id: true,
+        classRoomId: true,
+        dueDate: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
+        lateSubmission: true,
+        description: true,
+
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            email: true,
+          },
+        },
         classRoom: {
           select: {
             id: true,

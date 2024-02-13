@@ -23,7 +23,7 @@ import {
 import { Unsubmit } from "./unsubmit";
 import { useGetMedia } from "@/hooks/media";
 import { getShortenedText } from "@/lib/utils";
-import { ExtendedAssignment } from "@/types";
+import { ExtendedAssignmentDetails } from "@/types";
 import { ContainerVariants } from "@/lib/motion";
 import { useGetSubmission } from "@/hooks/submission";
 import { SubmissionDropdown } from "./submission-dropdown";
@@ -37,7 +37,7 @@ import { MediaDropdown } from "@/components/media/media-dropdown";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface SubmissionCardProps {
-  assignment: ExtendedAssignment;
+  assignment: ExtendedAssignmentDetails;
 }
 
 export const SubmissionCard: React.FC<SubmissionCardProps> = ({

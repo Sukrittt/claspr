@@ -2,17 +2,17 @@ import { format } from "date-fns";
 import { Session } from "next-auth";
 
 import { timeAgo } from "@/lib/utils";
-import { ExtendedAssignment } from "@/types";
+import { ExtendedAssignmentDetails } from "@/types";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
-import { Comments } from "@/components/assignment/comment/comments";
 import { EditorOutput } from "@/components/editor/EditorOutput";
+import { Comments } from "@/components/assignment/comment/comments";
 import { SubmissionCard } from "@/components/submission/submission-card";
 import { SubmissionDetails } from "@/components/submission/submission-details";
 
 interface StudentViewProps {
-  assignment: ExtendedAssignment;
+  assignment: ExtendedAssignmentDetails;
   session: Session;
 }
 

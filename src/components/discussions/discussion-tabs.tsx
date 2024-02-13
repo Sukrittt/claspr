@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   Hash,
   Lightbulb,
@@ -36,7 +36,6 @@ export const tabs = [
 ];
 
 export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
-  const router = useRouter();
   const params = useSearchParams();
 
   const [, setIsChangingQuery] = useAtom(isChangingQueryAtom);
@@ -53,6 +52,7 @@ export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
       <div className="flex flex-col gap-y-2">
         {tabs.map((tab, index) => (
           <Link
+            prefetch={false}
             href={`/c/${classroomId}?tab=${tab.value}`}
             key={index}
             className={cn(

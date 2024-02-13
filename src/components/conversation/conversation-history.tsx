@@ -2,9 +2,9 @@ import { toast } from "sonner";
 import { useState } from "react";
 import Markdown from "react-markdown";
 import { Check, Copy } from "lucide-react";
-import { Conversation } from "@prisma/client";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { MinifiedConversation } from "@/types";
 import { ContainerVariants } from "@/lib/motion";
 import { useMounted } from "@/hooks/use-mounted";
 import { Separator } from "@/components/ui/separator";
@@ -17,7 +17,6 @@ import { ConversationDropdown } from "./conversation-dropdown";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConversationSkeleton } from "@/components/skeletons/conversation-skeleton";
-
 export const ConversationHistory = ({
   classroomId,
 }: {
@@ -82,7 +81,11 @@ export const ConversationHistory = ({
   );
 };
 
-const ConversationCard = ({ conversation }: { conversation: Conversation }) => {
+const ConversationCard = ({
+  conversation,
+}: {
+  conversation: MinifiedConversation;
+}) => {
   const [copied, setCopied] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 

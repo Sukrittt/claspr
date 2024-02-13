@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Loader, Pencil, Save } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { ExtendedAssignment } from "@/types";
+import { ExtendedAssignmentDetails } from "@/types";
 import { Editor } from "@/components/editor/Editor";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -14,7 +14,7 @@ import { EditorOutput } from "@/components/editor/EditorOutput";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface AssignmentInstructionsProps {
-  assignment: ExtendedAssignment;
+  assignment: ExtendedAssignmentDetails;
 }
 
 export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
