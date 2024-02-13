@@ -9,24 +9,28 @@ export const discussionPlaceholders = {
     description: "Share important information with your class",
     placeholder: "E.g: Exam schedule, Class cancellation, etc.",
     editorPlaceholder: "What's on your mind?",
+    btnLabel: "Create",
   },
   general: {
     title: "Start a discussion",
     description: "General discussions with your class",
     placeholder: "E.g: What's your favorite programming language?",
     editorPlaceholder: "What's on your mind?",
+    btnLabel: "Start",
   },
   questionnaires: {
     title: "Ask a question",
     description: "You can select the best answer for your question",
     placeholder: "E.g: What is data flow diagram?",
     editorPlaceholder: "Provide further details on your question...",
+    btnLabel: "Ask",
   },
   ideas: {
     title: "Share an idea",
     description: "Share your ideas with your class",
     placeholder: "E.g: I have an idea for the next project",
     editorPlaceholder: "Provide further details on your idea...",
+    btnLabel: "Share",
   },
 };
 

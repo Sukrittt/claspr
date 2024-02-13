@@ -27,7 +27,7 @@ export const CreateDiscussionForm: React.FC<CreateDiscussionFormProps> = ({
   discussionType,
   closeModal,
 }) => {
-  const { placeholder, editorPlaceholder } =
+  const { placeholder, editorPlaceholder, btnLabel } =
     discussionPlaceholders[discussionType];
 
   const [step, setStep] = useState<DiscussionStep>("title-input");
@@ -107,7 +107,7 @@ export const CreateDiscussionForm: React.FC<CreateDiscussionFormProps> = ({
             onClick={() => setIsSubmitting(true)}
             className="h-7 text-[11px]"
           >
-            {isLoading ? <Loader className="h-3 w-8 animate-spin" /> : "Create"}
+            {isLoading ? <Loader className="h-3 w-8 animate-spin" /> : btnLabel}
           </Button>
         </div>
       )}
