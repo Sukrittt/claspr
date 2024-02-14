@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { Bookmark } from "lucide-react";
+import { FileText } from "lucide-react";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 
 import {
@@ -9,29 +9,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { trpc } from "@/trpc/client";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
-interface EmojiPopoverProps {
-  emojiUrl: string | null;
-  sectionId: string;
+interface EmojiPickerToolProps {
+  emojiUrl: string | undefined;
+  setEmojiUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-export const EmojiPopover: React.FC<EmojiPopoverProps> = ({
+export const EmojiPickerTool: React.FC<EmojiPickerToolProps> = ({
   emojiUrl,
-  sectionId,
+  setEmojiUrl,
 }) => {
   const [selectedEmoji, setSelectedEmoji] = useState({
     name: "",
-    url: emojiUrl,
+    url: emojiUrl ?? "",
   });
-
-  const { mutate: updateEmoji } = trpc.section.updateSection.useMutation();
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <span className="p-1 rounded-md hover:bg-neutral-300 hover:text-gray-700 transition block">
+        <span className="p-2 cursor-pointer rounded-md bg-neutral-200 hover:bg-neutral-300 hover:text-gray-700 transition block">
           {selectedEmoji.url ? (
             <div className="h-4 w-4 relative">
               <Image
@@ -43,17 +40,17 @@ export const EmojiPopover: React.FC<EmojiPopoverProps> = ({
             </div>
           ) : (
             <CustomTooltip text="Pick Emoji">
-              <Bookmark className="w-4 h-4" />
+              <FileText className="w-4 h-4" />
             </CustomTooltip>
           )}
         </span>
       </PopoverTrigger>
-      <PopoverContent className="w-full bg-transparent border-0">
+      <PopoverContent className="w-auto bg-transparent shadow-none border-none pt-0">
         <EmojiPicker
           theme={Theme.LIGHT}
           onEmojiClick={(e) => {
+            setEmojiUrl(e.imageUrl);
             setSelectedEmoji({ name: e.names[0], url: e.imageUrl });
-            updateEmoji({ sectionId, emojiUrl: e.imageUrl });
           }}
         />
       </PopoverContent>

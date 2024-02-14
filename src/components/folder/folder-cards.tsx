@@ -1,10 +1,10 @@
 "use client";
+import Link from "next/link";
 import Image from "next/image";
-import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, File, FileText, Folder, Plus } from "lucide-react";
+import { ChevronRight, File, FileText, Folder } from "lucide-react";
 
 import { activeFolderIdAtom, folderAtom } from "@/atoms";
 import {
@@ -21,6 +21,7 @@ import { usePersonalFolders } from "@/hooks/folder";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { CreateFolderDialog } from "./mutations/create-folder-dialog";
+import { CreateNoteDialog } from "@/components/note/create-note-dialog";
 
 export const FolderCards = () => {
   const [folders, setFolders] = useAtom(folderAtom);
@@ -102,7 +103,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ folder, setFolderActive }) => {
         <div className="border rounded-md p-1.5">
           <Folder className="h-3.5 w-3.5" />
         </div>
-        <p className="font-medium group-hover:underline underline-offset-4 cursor-pointer">
+        <p className="text-[13px] font-medium group-hover:underline underline-offset-4 cursor-pointer">
           {getShortenedText(folder.name, 15)}
         </p>
       </div>
@@ -145,31 +146,35 @@ const FolderNotes: React.FC<FolderNotesProps> = ({
         initial="initial"
         animate="animate"
         exit="exit"
-        className="space-y-4 text-[13px] px-6"
+        className="space-y-4 text-[13px]"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-end justify-between px-6">
           <div
             onClick={handleGoBack}
-            className="text-muted-foreground group font-medium flex items-center gap-x-2 cursor-pointer"
+            className="text-muted-foreground group font-medium flex items-center gap-x-1 cursor-pointer"
           >
-            <ArrowLeft className="h-4 w-4" />
-            <p className="group-hover:underline underline-offset-4">Go back</p>
+            <ChevronRight className="h-4 w-4" />
+
+            <p className="group-hover:underline underline-offset-4">
+              ../{activeFolder.name}
+            </p>
           </div>
-          <Plus
-            className="h-3.5 w-3.5 text-gray-800"
-            onClick={() => toast.message("Coming Soon...")}
-          />
+          <CreateNoteDialog folderId={activeFolder.id} noteType="PERSONAL" />
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-y-2">
           {activeFolder.notes.length === 0 ? (
-            <div className="pt-10 flex flex-col gap-y-2 items-center text-muted-foreground">
+            <div className="pt-10 flex flex-col gap-y-2 items-center text-muted-foreground px-6">
               <File className="h-4 w-4" />
               <p>No notes in this folder.</p>
             </div>
           ) : (
             activeFolder.notes.map((note) => (
-              <div key={note.id} className="flex items-center gap-x-2">
+              <Link
+                href={`/n/${note.id}`}
+                key={note.id}
+                className="flex items-center gap-x-2 border-b pb-2 px-6 group"
+              >
                 {note.emojiUrl ? (
                   <div className="h-4 w-4 relative">
                     <Image
@@ -180,10 +185,14 @@ const FolderNotes: React.FC<FolderNotesProps> = ({
                     />
                   </div>
                 ) : (
-                  <FileText className="h-4 w-4" />
+                  <div className="border rounded-md p-1.5 text-gray-800">
+                    <FileText className="h-3.5 w-3.5" />
+                  </div>
                 )}
-                <p className="text-sm">{note.title}</p>
-              </div>
+                <p className="text-[13px] group-hover:underline underline-offset-4">
+                  {note.title}
+                </p>
+              </Link>
             ))
           )}
         </div>

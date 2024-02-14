@@ -2,6 +2,7 @@ import { z } from "zod";
 import { useAtom } from "jotai";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { NoteType } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -13,86 +14,106 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { folderAtom } from "@/atoms";
-import { MinifiedFolder } from "@/types";
+import { MinifiedNote } from "@/types";
 import { Input } from "@/components/ui/input";
+import { useCreateNote } from "@/hooks/folder";
 import { Button } from "@/components/ui/button";
-import { useCreateFolder } from "@/hooks/folder";
 
-const folderCreationSchema = z.object({
-  name: z
+const noteCreationSchema = z.object({
+  title: z
     .string()
     .min(1)
-    .max(100)
+    .max(200)
     .refine(
       (val) => {
         return val.trim().length > 0;
       },
-      { message: "Folder name cannot be empty" }
+      { message: "Note title cannot be empty" }
     ),
 });
 
-type Inputs = z.infer<typeof folderCreationSchema>;
+type Inputs = z.infer<typeof noteCreationSchema>;
 
-interface CreateFolderFormProps {
+interface CreateNoteFormProps {
+  folderId: string;
   closeModal: () => void;
   classroomId?: string;
+  noteType: NoteType;
 }
 
-export const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
+export const CreateNoteForm: React.FC<CreateNoteFormProps> = ({
   closeModal,
   classroomId,
+  noteType,
+  folderId,
 }) => {
-  const [, setFolders] = useAtom(folderAtom);
+  const [folders, setFolders] = useAtom(folderAtom);
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(folderCreationSchema),
+    resolver: zodResolver(noteCreationSchema),
     defaultValues: {
-      name: "",
+      title: "",
     },
   });
 
-  const handleCleanUps = (folder: MinifiedFolder) => {
+  const handleCleanUps = (note: MinifiedNote) => {
     closeModal();
 
+    const folderToUpdate = folders.find(
+      (folder) => folder.id === note.folderId
+    );
+
+    if (!folderToUpdate) return;
+
     const updatedFolder = {
-      ...folder,
-      notes: [],
+      ...folderToUpdate,
+      notes: [note, ...folderToUpdate.notes],
     };
 
-    setFolders((prev) => [updatedFolder, ...prev]);
+    setFolders((prev) =>
+      prev.map((folder) =>
+        folder.id === updatedFolder.id ? updatedFolder : folder
+      )
+    );
   };
 
-  const { mutate: createFolder, isLoading } = useCreateFolder({
+  const { mutate: createNote, isLoading } = useCreateNote({
     handleCleanUps,
   });
 
-  function handleCreateFolder(data: Inputs) {
-    createFolder({
-      name: data.name,
+  function handleCreateNote(data: Inputs) {
+    createNote({
+      ...data,
+      noteType,
       classroomId,
+      folderId,
     });
   }
 
   function onSubmit(data: Inputs) {
-    handleCreateFolder(data);
+    handleCreateNote(data);
   }
 
   return (
     <div className="space-y-2">
       <Form {...form}>
         <form
-          id="folder-creation-form"
+          id="note-creation-form"
           onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
         >
           <FormField
             control={form.control}
-            name="name"
+            name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="E.g: Maths" {...field} />
+                  <Input
+                    type="text"
+                    placeholder="E.g: Number Theory: Chapter One"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -102,15 +123,15 @@ export const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
       </Form>
       <Button
         className="my-1 w-full"
-        form="folder-creation-form"
+        form="note-creation-form"
         disabled={isLoading}
       >
         {isLoading ? (
           <Loader className="mr-2 h-3 w-3 animate-spin" aria-hidden="true" />
         ) : (
-          "Create Folder"
+          "Create Note"
         )}
-        <span className="sr-only">Create Folder</span>
+        <span className="sr-only">Create Note</span>
       </Button>
     </div>
   );

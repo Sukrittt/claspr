@@ -656,6 +656,17 @@ export const getClassroomFolders = privateProcedure
         id: true,
         name: true,
         createdAt: true,
+        notes: {
+          select: {
+            id: true,
+            folderId: true,
+            title: true,
+            emojiUrl: true,
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
