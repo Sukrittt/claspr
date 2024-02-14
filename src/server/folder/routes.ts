@@ -168,6 +168,7 @@ export const removeFolder = privateProcedure
         id: folderId,
         userId: ctx.userId,
       },
+      select: { order: true },
     });
 
     if (!existingFolder) {
@@ -177,10 +178,114 @@ export const removeFolder = privateProcedure
       });
     }
 
-    await db.folder.delete({
+    const deletedFolderOrder = existingFolder.order;
+
+    const promises = [
+      db.folder.delete({
+        where: {
+          id: folderId,
+          userId: ctx.userId,
+        },
+      }),
+      db.folder.updateMany({
+        where: {
+          order: { gt: deletedFolderOrder },
+          userId: ctx.userId,
+        },
+        data: {
+          order: { decrement: 1 },
+        },
+      }),
+    ];
+
+    await Promise.all(promises);
+  });
+
+/**
+ * To reorder a folder.
+ *
+ * @param {object} input - The input parameters for reordering a folder.
+ * @param {string} input.activeFolderId - The id of the folder which is being dragged.
+ * @param {string} input.overFolderId - The id of the folder where it was dropped.
+ * @param {enum} input.shiftDirection - The direction in which the shifting should happen.
+ */
+export const reorderFolder = privateProcedure
+  .input(
+    z.object({
+      activeFolderId: z.string(),
+      overFolderId: z.string(),
+      shiftFolders: z.array(
+        z.object({
+          folderId: z.string(),
+          order: z.number(),
+        })
+      ),
+      shiftDirection: z.enum(["UP", "DOWN"]),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { activeFolderId, shiftFolders, shiftDirection, overFolderId } =
+      input;
+
+    const activeOrderFolder = await db.folder.findFirst({
       where: {
-        id: folderId,
+        id: activeFolderId,
         userId: ctx.userId,
       },
+      select: { id: true },
     });
+
+    if (!activeOrderFolder) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Folder you are trying to move was not found.",
+      });
+    }
+
+    const existingOverFolder = await db.folder.findFirst({
+      where: {
+        id: overFolderId,
+        userId: ctx.userId,
+      },
+      select: { id: true, order: true },
+    });
+
+    if (!existingOverFolder) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Folder you are trying to move was not found.",
+      });
+    }
+
+    // NOTE: I'm not using Promise.all because of the order of execution
+
+    //update the order of the active folder
+    await db.folder.update({
+      where: {
+        id: activeFolderId,
+        userId: ctx.userId,
+      },
+      data: {
+        order: existingOverFolder.order,
+      },
+    });
+
+    if (shiftFolders.length > 0) {
+      //shifting the order of the folders in between
+      const shiftUpdatePromise = shiftFolders.map(
+        async ({ folderId, order }) => {
+          return db.folder.update({
+            where: {
+              id: folderId,
+              userId: ctx.userId,
+            },
+            data: {
+              order: shiftDirection === "UP" ? order + 1 : order - 1,
+            },
+          });
+        }
+      );
+
+      await Promise.all(shiftUpdatePromise);
+    }
   });

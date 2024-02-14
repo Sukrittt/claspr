@@ -48,7 +48,14 @@ export const createSection = privateProcedure
       include: {
         classrooms: {
           include: {
-            teacher: true,
+            teacher: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+                email: true,
+              },
+            },
             students: true,
           },
         },
@@ -56,7 +63,7 @@ export const createSection = privateProcedure
     });
 
     if (input.sectionType === "MEMBERSHIP") {
-      const sections = await db.section.findFirst({
+      const membershipSection = await db.section.findFirst({
         where: {
           id: section.id,
           creatorId: ctx.userId,
@@ -67,7 +74,14 @@ export const createSection = privateProcedure
             include: {
               classRoom: {
                 include: {
-                  teacher: true,
+                  teacher: {
+                    select: {
+                      id: true,
+                      name: true,
+                      image: true,
+                      email: true,
+                    },
+                  },
                   students: true,
                 },
               },
@@ -76,7 +90,7 @@ export const createSection = privateProcedure
         },
       });
 
-      return sections;
+      return membershipSection;
     }
 
     return section;
@@ -181,14 +195,29 @@ export const removeSection = privateProcedure
     })
   )
   .mutation(async ({ ctx, input }) => {
+    const { sectionId } = input;
+
     const existingSection = await db.section.findFirst({
       where: {
-        id: input.sectionId,
+        id: sectionId,
         creatorId: ctx.userId,
       },
-      include: {
-        classrooms: true,
-        memberships: true,
+      select: {
+        id: true,
+        order: true,
+        isDefault: true,
+        sectionType: true,
+
+        classrooms: {
+          select: {
+            id: true,
+          },
+        },
+        memberships: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
 
@@ -258,12 +287,27 @@ export const removeSection = privateProcedure
       }
     }
 
-    await db.section.delete({
-      where: {
-        id: input.sectionId,
-        creatorId: ctx.userId,
-      },
-    });
+    const deletedSectionOrder = existingSection.order;
+
+    const promises = [
+      db.section.delete({
+        where: {
+          id: sectionId,
+          creatorId: ctx.userId,
+        },
+      }),
+      db.section.updateMany({
+        where: {
+          order: { gt: deletedSectionOrder },
+          creatorId: ctx.userId,
+        },
+        data: {
+          order: { decrement: 1 },
+        },
+      }),
+    ];
+
+    await Promise.all(promises);
   });
 
 /**
@@ -272,7 +316,6 @@ export const removeSection = privateProcedure
  * @param {object} input - The input parameters for reordering a section.
  * @param {string} input.activeSectionId - The id of the section which is being dragged.
  * @param {string} input.overSectionId - The id of the section where it was dropped.
- * @param {string[]} input.shiftSectionIds - The list of section ids to shift.
  * @param {enum} input.shiftDirection - The direction in which the shifting should happen.
  */
 export const moveSection = privateProcedure
@@ -298,6 +341,7 @@ export const moveSection = privateProcedure
         id: activeSectionId,
         creatorId: ctx.userId,
       },
+      select: { id: true },
     });
 
     if (!activeOrderSection) {
@@ -312,6 +356,7 @@ export const moveSection = privateProcedure
         id: overSectionId,
         creatorId: ctx.userId,
       },
+      select: { id: true, order: true },
     });
 
     if (!existingOverSection) {

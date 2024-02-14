@@ -4,6 +4,7 @@ import {
   getFolders,
   editFolder,
   removeFolder,
+  reorderFolder,
 } from "@/server/folder/routes";
 
 export const folderRouter = createTRPCRouter({
@@ -11,4 +12,5 @@ export const folderRouter = createTRPCRouter({
   getFolders,
   editFolder,
   removeFolder,
+  reorderFolder,
 });

@@ -109,7 +109,7 @@ export const SectionItem = ({
   if (isDragging) {
     return (
       <>
-        <div className="flex items-center gap-x-1 text-sm font-medium py-1 px-2 opacity-60">
+        <div className="flex items-center gap-x-1 text-sm font-medium py-1 px-2">
           <ChevronRight
             className={cn("w-4 h-4 transition", {
               "rotate-90": showClassrooms,

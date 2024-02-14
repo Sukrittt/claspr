@@ -35,6 +35,7 @@ export const DeleteSectionDialog = ({
   const [, setJoinedClassSections] = useAtom(joinedClassSections);
 
   const [open, setOpen] = useState(isOpen);
+  const utils = trpc.useUtils();
 
   const closeModal = () => {
     setOpen(false);
@@ -153,6 +154,13 @@ export const DeleteSectionDialog = ({
     },
     onError: () => {
       toast.error("Your changes were not saved. Please refresh your page.");
+    },
+    onSettled: () => {
+      if (sectionType === "CREATION") {
+        utils.section.getSectionsForCreatedClassrooms.invalidate();
+      } else if (sectionType === "MEMBERSHIP") {
+        utils.section.getSectionsForJoinedClassrooms.invalidate();
+      }
     },
   });
 

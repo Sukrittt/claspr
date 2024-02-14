@@ -15,14 +15,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ExtendedFolder } from "@/types";
-import { getShortenedText } from "@/lib/utils";
+import { cn, getShortenedText } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
+import { FolderContext } from "./folder-context";
 import { FolderDropdown } from "./folder-dropdown";
 import { usePersonalFolders } from "@/hooks/folder";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NoteDropdown } from "@/components/note/note-dropdown";
 import { CreateFolderDialog } from "./mutations/create-folder-dialog";
 import { CreateNoteDialog } from "@/components/note/mutations/create-note-dialog";
+import { useSortable } from "@dnd-kit/sortable";
 
 export const FolderCards = () => {
   const [folders, setFolders] = useAtom(folderAtom);
@@ -68,18 +70,14 @@ export const FolderCards = () => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
+                className="flex flex-col gap-y-2"
               >
-                <div className="flex flex-col gap-y-2">
-                  {folders.map((folder) => (
-                    <FolderCard
-                      key={folder.id}
-                      folder={folder}
-                      setFolderActive={(folderId: string) =>
-                        setActiveFolderId(folderId)
-                      }
-                    />
-                  ))}
-                </div>
+                <FolderContext
+                  folders={folders}
+                  setActiveFolderId={(folderId: string) =>
+                    setActiveFolderId(folderId)
+                  }
+                />
               </motion.div>
             </AnimatePresence>
           )}
@@ -92,15 +90,75 @@ export const FolderCards = () => {
 interface FolderCardProps {
   folder: ExtendedFolder;
   setFolderActive: (folderId: string) => void;
+  isHolding?: boolean;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ folder, setFolderActive }) => {
+export const FolderCard: React.FC<FolderCardProps> = ({
+  folder,
+  setFolderActive,
+  isHolding = false,
+}) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: folder.id,
+    data: { content: folder },
+  });
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        transition,
+      }
+    : undefined;
+
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        {...listeners}
+        {...attributes}
+        className="flex items-center justify-between group pb-2 px-6 text-gray-800 text-sm border-b"
+      >
+        <div className="flex items-center gap-x-3">
+          <div className="border rounded-md p-1.5">
+            <Folder className="h-3.5 w-3.5" />
+          </div>
+          <p className="text-[13px] font-medium group-hover:underline underline-offset-4 cursor-pointer">
+            {getShortenedText(folder.name, 15)}
+          </p>
+        </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <FolderDropdown folder={folder} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      id="always-on-show"
       onClick={() => setFolderActive(folder.id)}
-      className="flex items-center justify-between group pb-2 px-6 text-gray-800 text-sm border-b cursor-pointer"
+      className={cn(
+        "flex items-center justify-between group pb-2 px-6 text-gray-800 text-sm border-b cursor-pointer focus:outline-none",
+        {
+          "cursor-grabbing bg-background/60 opacity-60 pt-2": isHolding,
+        }
+      )}
     >
-      <div className="flex items-center gap-x-3">
+      <div
+        className={cn("flex items-center gap-x-3", { "opacity-60": isHolding })}
+      >
         <div className="border rounded-md p-1.5">
           <Folder className="h-3.5 w-3.5" />
         </div>
@@ -143,7 +201,7 @@ const FolderNotes: React.FC<FolderNotesProps> = ({
         initial="initial"
         animate="animate"
         exit="exit"
-        className="space-y-4 text-[13px]"
+        className="space-y-2 text-[13px]"
       >
         <div className="flex items-end justify-between px-6">
           <div

@@ -84,3 +84,16 @@ export const useRemoveFolder = ({ closeModal }: { closeModal: () => void }) => {
     },
   });
 };
+
+export const useReorderFolder = () => {
+  const utils = trpc.useUtils();
+
+  return trpc.folder.reorderFolder.useMutation({
+    onError: () => {
+      toast.error("Your changes were not saved. Please refresh your page.");
+    },
+    onSettled: () => {
+      utils.folder.getFolders.invalidate();
+    },
+  });
+};

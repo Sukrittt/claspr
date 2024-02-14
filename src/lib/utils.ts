@@ -1,9 +1,9 @@
 import moment from "moment";
 import { twMerge } from "tailwind-merge";
 import { type ClassValue, clsx } from "clsx";
-import { SectionType } from "@prisma/client";
 
 import {
+  ExtendedFolder,
   ExtendedSectionWithClassrooms,
   ExtendedSectionWithMemberships,
 } from "@/types";
@@ -47,6 +47,10 @@ export const getSortedSectionsByOrder = (
   sections: ExtendedSectionWithClassrooms[] | ExtendedSectionWithMemberships[]
 ) => {
   return sections.sort((a, b) => a.order - b.order);
+};
+
+export const getSortedFoldersByOrder = (folders: ExtendedFolder[]) => {
+  return folders.sort((a, b) => b.order - a.order);
 };
 
 export const getFilteredResponse = (text: string) => {
