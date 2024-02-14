@@ -64,13 +64,13 @@ export const CreateSectionForm: React.FC<CreateSectionFormProps> = ({
 
         if (sectionType === "CREATION") {
           setCreatedClassSections((prev) => [
-            ...prev,
             section as ExtendedSectionWithClassrooms,
+            ...prev,
           ]);
         } else {
           setJoinedClassSections((prev) => [
-            ...prev,
             section as ExtendedSectionWithMemberships,
+            ...prev,
           ]);
         }
       },

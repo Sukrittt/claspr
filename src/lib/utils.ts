@@ -46,7 +46,7 @@ export function getShortenedText(text: string, maxLength: number) {
 export const getSortedSectionsByOrder = (
   sections: ExtendedSectionWithClassrooms[] | ExtendedSectionWithMemberships[]
 ) => {
-  return sections.sort((a, b) => a.order - b.order);
+  return sections.sort((a, b) => b.order - a.order);
 };
 
 export const getSortedFoldersByOrder = (folders: ExtendedFolder[]) => {

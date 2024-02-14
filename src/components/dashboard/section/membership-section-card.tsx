@@ -1,6 +1,13 @@
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { useDroppable } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { ChevronRight, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,7 +18,6 @@ import { ContainerVariants } from "@/lib/motion";
 import { isCloseAllMembershipToggle } from "@/atoms";
 import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithMemberships } from "@/types";
-import { SectionContextMenu } from "./section-context-menu";
 import { ClassroomListsWithMembership } from "./classroom-lists";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { JoinClassDialog } from "@/components/dashboard/class-rooms/join-class-dialog";
@@ -54,6 +60,7 @@ export const MembershipSectionCard: React.FC<SectionCardProps> = ({
         initial="initial"
         animate="animate"
         exit="exit"
+        className="focus:outline-none"
       >
         <MembershipItem section={section} isDragging={isDragging} />
       </motion.div>
@@ -81,6 +88,14 @@ export const MembershipItem = ({
       content: section,
     },
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   useEffect(() => {
     if (closeAllToggle !== null) {
@@ -115,44 +130,40 @@ export const MembershipItem = ({
 
   return (
     <>
-      <SectionContextMenu
-        sectionId={section.id}
-        sectionName={section.name}
-        sectionType={section.sectionType}
-        isDefault={section.isDefault}
+      <div
+        className={cn(
+          "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-200/60 py-1 px-2 rounded-md transition group",
+          {
+            "bg-neutral-200/60 duration-500":
+              isOver && active?.data.current?.dragType === "CLASSROOM",
+            "bg-neutral-200/60 text-sm opacity-60 cursor-grabbing": isHolding,
+          }
+        )}
+        ref={setNodeRef}
+        onClick={handleShowClassrooms}
       >
-        <div
-          className={cn(
-            "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-200/60 py-1 px-2 rounded-md transition group",
-            {
-              "bg-neutral-200/60 duration-500":
-                isOver && active?.data.current?.dragType === "CLASSROOM",
-              "bg-neutral-200/60 text-sm opacity-60 cursor-grabbing": isHolding,
-            }
-          )}
-          ref={setNodeRef}
-          onClick={handleShowClassrooms}
-        >
-          <div className="flex items-center gap-x-1">
-            <ChevronRight
-              className={cn("w-4 h-4 transition", {
-                "rotate-90": showClassrooms || isHolding,
-              })}
-            />
-            <div className="flex items-center gap-x-2">
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <EmojiPopover
-                  emojiUrl={section.emojiUrl}
-                  sectionId={section.id}
-                />
-              </div>
-              <p>{section.name}</p>
+        <div className="flex items-center gap-x-1">
+          <ChevronRight
+            className={cn("w-4 h-4 transition", {
+              "rotate-90": showClassrooms || isHolding,
+            })}
+          />
+          <div className="flex items-center gap-x-2">
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <EmojiPopover
+                emojiUrl={section.emojiUrl}
+                sectionId={section.id}
+              />
             </div>
+            <p>{section.name}</p>
           </div>
+        </div>
+
+        <DndContext sensors={sensors} collisionDetection={closestCenter}>
           <div
             onClick={(e) => {
               e.stopPropagation();
@@ -179,8 +190,8 @@ export const MembershipItem = ({
             )}
             <JoinClassDialog sectionId={section.id} />
           </div>
-        </div>
-      </SectionContextMenu>
+        </DndContext>
+      </div>
       <AnimatePresence mode="wait">
         {(showClassrooms || isHolding) && (
           <div

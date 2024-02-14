@@ -14,7 +14,6 @@ import {
 import { cn } from "@/lib/utils";
 import { ExtendedMembership } from "@/types";
 import { ClassDropdown } from "@/components/dashboard/class-rooms/class-dropdown";
-import { ClassContextMenu } from "@/components/dashboard/class-rooms/class-context-menu";
 
 export const JoinedMembership = ({
   membership,
@@ -67,53 +66,44 @@ export const JoinedMembership = ({
       {...listeners}
       id="always-on-show"
     >
-      <ClassContextMenu
-        containerId={membership.id}
-        sectionType="MEMBERSHIP"
-        sectionId={membership.sectionId}
-        classroomName={
-          membership.renamedClassroom ?? membership.classRoom.title
+      <Link
+        onClick={() =>
+          toast.loading("Getting your data together...", { duration: 2000 })
         }
-      >
-        <Link
-          onClick={() =>
-            toast.loading("Getting your data together...", { duration: 2000 })
+        href={`/c/${membership.classRoom.id}`}
+        className={cn(
+          "text-gray-800 tracking-tight group hover:bg-neutral-200 transition rounded-md py-1 px-2 flex items-center justify-between",
+          {
+            "bg-neutral-200 text-sm opacity-60 cursor-grabbing": isHolding,
           }
-          href={`/c/${membership.classRoom.id}`}
-          className={cn(
-            "text-gray-800 tracking-tight group hover:bg-neutral-200 transition rounded-md py-1 px-2 flex items-center justify-between",
-            {
-              "bg-neutral-200 text-sm opacity-60 cursor-grabbing": isHolding,
-            }
-          )}
-        >
-          <div className="flex items-center gap-x-1">
-            <GripVertical className="w-4 h-4 text-gray-800" />
-            <p>{membership.renamedClassroom ?? membership.classRoom.title}</p>
+        )}
+      >
+        <div className="flex items-center gap-x-1">
+          <GripVertical className="w-4 h-4 text-gray-800" />
+          <p>{membership.renamedClassroom ?? membership.classRoom.title}</p>
+        </div>
+        <DndContext sensors={sensors} collisionDetection={closestCenter}>
+          <div
+            className={cn("opacity-0 group-hover:opacity-100", {
+              "opacity-100": isDropdownOpen,
+            })}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <ClassDropdown
+              containerId={membership.id}
+              sectionType="MEMBERSHIP"
+              sectionId={membership.sectionId}
+              classroomName={
+                membership.renamedClassroom ?? membership.classRoom.title
+              }
+              isDropdownOpen={isDropdownOpen}
+              setIsDropdownOpen={setIsDropdownOpen}
+            />
           </div>
-          <DndContext sensors={sensors} collisionDetection={closestCenter}>
-            <div
-              className={cn("opacity-0 group-hover:opacity-100", {
-                "opacity-100": isDropdownOpen,
-              })}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <ClassDropdown
-                containerId={membership.id}
-                sectionType="MEMBERSHIP"
-                sectionId={membership.sectionId}
-                classroomName={
-                  membership.renamedClassroom ?? membership.classRoom.title
-                }
-                isDropdownOpen={isDropdownOpen}
-                setIsDropdownOpen={setIsDropdownOpen}
-              />
-            </div>
-          </DndContext>
-        </Link>
-      </ClassContextMenu>
+        </DndContext>
+      </Link>
     </div>
   );
 };

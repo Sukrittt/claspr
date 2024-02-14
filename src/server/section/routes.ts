@@ -389,7 +389,7 @@ export const moveSection = privateProcedure
               creatorId: ctx.userId,
             },
             data: {
-              order: shiftDirection === "UP" ? order - 1 : order + 1,
+              order: shiftDirection === "UP" ? order + 1 : order - 1,
             },
           });
         }
@@ -431,7 +431,7 @@ export const getSectionsForCreatedClassrooms = privateProcedure.query(
         },
       },
       orderBy: {
-        order: "asc",
+        order: "desc",
       },
     });
 
@@ -479,7 +479,7 @@ export const getSectionsForJoinedClassrooms = privateProcedure.query(
         },
       },
       orderBy: {
-        order: "asc",
+        order: "desc",
       },
     });
 

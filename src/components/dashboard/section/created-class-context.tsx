@@ -215,7 +215,7 @@ export const CreatedClassContext = () => {
       const updatedShiftedSections = shiftSections.map((section) => {
         return {
           ...section,
-          order: reversed ? section.order + 1 : section.order - 1,
+          order: reversed ? section.order - 1 : section.order + 1,
         };
       });
 

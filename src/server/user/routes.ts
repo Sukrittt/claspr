@@ -120,7 +120,7 @@ export const onBoardUser = privateProcedure
     });
 
     if (!defaultSection) {
-      if (existingUser.role === "STUDENT") {
+      if (role === "STUDENT") {
         await db.section.create({
           data: {
             creatorId: ctx.userId,

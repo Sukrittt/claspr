@@ -18,7 +18,6 @@ import { ContainerVariants } from "@/lib/motion";
 import { isCloseAllCreationToggle } from "@/atoms";
 import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithClassrooms } from "@/types";
-import { SectionContextMenu } from "./section-context-menu";
 import { ClassroomListsWithCreation } from "./classroom-lists";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { CreateClassDialog } from "@/components/dashboard/class-rooms/create-class-dialog";
@@ -60,6 +59,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({ section }) => {
         initial="initial"
         animate="animate"
         exit="exit"
+        className="focus:outline-none"
       >
         <SectionItem section={section} isDragging={isDragging} />
       </motion.div>
@@ -134,75 +134,69 @@ export const SectionItem = ({
   }
 
   return (
-    <div ref={setNodeRef}>
-      <SectionContextMenu
-        sectionId={section.id}
-        sectionName={section.name}
-        sectionType={section.sectionType}
-        isDefault={section.isDefault}
+    <>
+      <div
+        className={cn(
+          "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-200/60 py-1 px-2 rounded-md transition group",
+          {
+            "bg-neutral-200/60 duration-500":
+              isOver && active?.data.current?.dragType === "CLASSROOM",
+            "bg-neutral-200/60 text-sm opacity-60 cursor-grabbing": isHolding,
+          }
+        )}
+        ref={setNodeRef}
+        onClick={handleToggleOpenClassrooms}
       >
-        <div
-          className={cn(
-            "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-200/60 py-1 px-2 rounded-md transition group",
-            {
-              "bg-neutral-200/60 duration-500":
-                isOver && active?.data.current?.dragType === "CLASSROOM",
-              "bg-neutral-200/60 text-sm opacity-60 cursor-grabbing": isHolding,
-            }
-          )}
-          onClick={handleToggleOpenClassrooms}
-        >
-          <div className="flex items-center gap-x-1">
-            <ChevronRight
-              className={cn("w-4 h-4 transition", {
-                "rotate-90": showClassrooms || isHolding,
-              })}
-            />
-            <div className="flex items-center gap-x-2">
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <EmojiPopover
-                  emojiUrl={section.emojiUrl}
-                  sectionId={section.id}
-                />
-              </div>
-              <p>{section.name}</p>
-            </div>
-          </div>
-
-          <DndContext sensors={sensors} collisionDetection={closestCenter}>
+        <div className="flex items-center gap-x-1">
+          <ChevronRight
+            className={cn("w-4 h-4 transition", {
+              "rotate-90": showClassrooms || isHolding,
+            })}
+          />
+          <div className="flex items-center gap-x-2">
             <div
               onClick={(e) => {
                 e.stopPropagation();
               }}
-              className={cn(
-                "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
-                {
-                  "opacity-100": isDropdownOpen,
-                }
-              )}
             >
-              {section.isDefault ? (
-                <CustomTooltip text="Default section for your classrooms">
-                  <Info className="h-3.5 w-3.5 text-gray-700" />
-                </CustomTooltip>
-              ) : (
-                <SectionDropdown
-                  sectionId={section.id}
-                  sectionName={section.name}
-                  isDropdownOpen={isDropdownOpen}
-                  setIsDropdownOpen={setIsDropdownOpen}
-                  sectionType={section.sectionType}
-                />
-              )}
-              <CreateClassDialog sectionId={section.id} />
+              <EmojiPopover
+                emojiUrl={section.emojiUrl}
+                sectionId={section.id}
+              />
             </div>
-          </DndContext>
+            <p>{section.name}</p>
+          </div>
         </div>
-      </SectionContextMenu>
+
+        <DndContext sensors={sensors} collisionDetection={closestCenter}>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            className={cn(
+              "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
+              {
+                "opacity-100": isDropdownOpen,
+              }
+            )}
+          >
+            {section.isDefault ? (
+              <CustomTooltip text="Default section for your classrooms">
+                <Info className="h-3.5 w-3.5 text-gray-700" />
+              </CustomTooltip>
+            ) : (
+              <SectionDropdown
+                sectionId={section.id}
+                sectionName={section.name}
+                isDropdownOpen={isDropdownOpen}
+                setIsDropdownOpen={setIsDropdownOpen}
+                sectionType={section.sectionType}
+              />
+            )}
+            <CreateClassDialog sectionId={section.id} />
+          </div>
+        </DndContext>
+      </div>
       <AnimatePresence mode="wait">
         {(showClassrooms || isHolding) && (
           <div
@@ -214,6 +208,6 @@ export const SectionItem = ({
           </div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
