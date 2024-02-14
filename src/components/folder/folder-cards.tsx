@@ -3,8 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAtom } from "jotai";
 import { useEffect, useMemo } from "react";
+import { useSortable } from "@dnd-kit/sortable";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronRight, File, FileText, Folder } from "lucide-react";
+import { ChevronRight, File, FileText, Folder, FolderX } from "lucide-react";
 
 import { activeFolderIdAtom, folderAtom } from "@/atoms";
 import {
@@ -23,8 +24,8 @@ import { usePersonalFolders } from "@/hooks/folder";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NoteDropdown } from "@/components/note/note-dropdown";
 import { CreateFolderDialog } from "./mutations/create-folder-dialog";
+import { FolderSkeleton } from "@/components/skeletons/folder-skeleton";
 import { CreateNoteDialog } from "@/components/note/mutations/create-note-dialog";
-import { useSortable } from "@dnd-kit/sortable";
 
 export const FolderCards = () => {
   const [folders, setFolders] = useAtom(folderAtom);
@@ -53,9 +54,14 @@ export const FolderCards = () => {
       <CardContent className="pt-4 px-0 text-sm">
         <ScrollArea className="h-[29.25vh] pr-0">
           {isLoading ? (
-            <p>Loading...</p>
+            <FolderSkeleton />
           ) : !folders || folders.length === 0 ? (
-            <p>No folders</p>
+            <div className="pt-12 flex flex-col items-center justify-center gap-y-2">
+              <FolderX className="h-10 w-10 text-neutral-800" />
+              <p className="text-sm text-muted-foreground">
+                No folders created yet.
+              </p>
+            </div>
           ) : activeFolderId ? (
             <FolderNotes
               activeFolderId={activeFolderId}

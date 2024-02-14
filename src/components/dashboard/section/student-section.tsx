@@ -1,7 +1,7 @@
 "use client";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
-import { CopyMinus } from "lucide-react";
+import { CopyMinus, MonitorX } from "lucide-react";
 
 import { trpc } from "@/trpc/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -68,7 +68,17 @@ export const StudentSection = () => {
               <SectionSkeleton />
             ) : !sectionsForJoinedClassrooms ||
               sectionsForJoinedClassrooms.length === 0 ? (
-              <p>No results</p>
+              <div className="pt-12 flex flex-col items-center justify-center gap-y-2">
+                <MonitorX className="h-10 w-10 text-neutral-800" />
+                <div className="space-y-1 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    You shouldn&rsquo;t be seeing this.
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    We are working on fixing your issue.
+                  </p>
+                </div>
+              </div>
             ) : (
               <MembershipContext />
             )}

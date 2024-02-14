@@ -36,7 +36,7 @@ export const createSection = privateProcedure
       take: 1,
     });
 
-    const nextOrder = userSections[0].order + 1;
+    const nextOrder = userSections.length === 0 ? 1 : userSections[0].order + 1;
 
     const section = await db.section.create({
       data: {

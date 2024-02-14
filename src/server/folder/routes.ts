@@ -86,7 +86,8 @@ export const createFolder = privateProcedure
       take: 1,
     });
 
-    const nextOrder = userLastOrderFolder[0].order + 1;
+    const nextOrder =
+      userLastOrderFolder.length === 0 ? 1 : userLastOrderFolder[0].order + 1;
 
     const folder = await db.folder.create({
       data: {
