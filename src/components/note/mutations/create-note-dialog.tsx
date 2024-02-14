@@ -17,26 +17,32 @@ interface CreateNoteDialogProps {
   classroomId?: string;
   folderId: string;
   noteType: NoteType;
+  children?: React.ReactNode;
 }
 
 export const CreateNoteDialog: React.FC<CreateNoteDialogProps> = ({
   classroomId,
   folderId,
   noteType,
+  children,
 }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div>
-          <CustomTooltip text="Create Note">
-            <div className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200">
-              <Plus className="h-3.5 w-3.5" />
-              <div className="sr-only">Create Note</div>
-            </div>
-          </CustomTooltip>
-        </div>
+        {children ? (
+          children
+        ) : (
+          <div>
+            <CustomTooltip text="Create Note">
+              <div className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200">
+                <Plus className="h-3.5 w-3.5" />
+                <div className="sr-only">Create Note</div>
+              </div>
+            </CustomTooltip>
+          </div>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

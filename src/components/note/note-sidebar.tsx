@@ -1,0 +1,83 @@
+"use client";
+import { toast } from "sonner";
+import { useMemo, useState } from "react";
+import { FolderIcon, PanelLeft, Plus } from "lucide-react";
+
+import { ExtendedNote } from "@/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { usePersonalFolders } from "@/hooks/folder";
+import { NoteLists } from "./note-lists";
+import { Button } from "@/components/ui/button";
+import { CreateNoteDialog } from "./mutations/create-note-dialog";
+
+export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
+  const { data: folders, isLoading } = usePersonalFolders();
+
+  const [activeFolderId, setActiveFolderId] = useState(note.folder.id);
+
+  const activeFolder = useMemo(
+    () => folders?.find((folder) => folder.id === activeFolderId),
+    [activeFolderId, folders]
+  );
+
+  return (
+    <aside className="w-[350px] h-full border-r p-6 flex flex-col justify-between gap-y-8">
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="text-[13px] px-2 py-1.5 flex items-center gap-x-2 rounded-md bg-neutral-200/60">
+            <FolderIcon className="w-3.5 h-3.5 text-muted-foreground" />
+            <span className="font-medium text-gray-800">
+              {note.folder.name}
+            </span>
+          </div>
+
+          <PanelLeft
+            className="h-4 w-4 text-muted-foreground hover:text-neutral-700 transition"
+            onClick={() => toast.message("Coming Soon...")}
+          />
+        </div>
+
+        <div>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : !folders || !activeFolder || folders.length === 0 ? (
+            <p>No folders</p>
+          ) : (
+            <div className="space-y-6">
+              <Select
+                value={activeFolderId}
+                onValueChange={(val) => setActiveFolderId(val)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Folder" />
+                </SelectTrigger>
+                <SelectContent>
+                  {folders.map((folder) => (
+                    <SelectItem key={folder.id} value={folder.id}>
+                      {folder.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <NoteLists activeFolder={activeFolder} activeNoteId={note.id} />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <CreateNoteDialog folderId={activeFolderId} noteType="PERSONAL">
+        <Button type="button" className="mt-auto w-full">
+          <Plus className="h-4 w-4 mr-2" />
+          Create Note
+        </Button>
+      </CreateNoteDialog>
+    </aside>
+  );
+};

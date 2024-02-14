@@ -10,15 +10,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MinifiedNote } from "@/types";
 import { EditNoteDialog } from "./mutations/edit-note-dialog";
+import { NoteInfoDialog } from "./mutations/note-info-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { DeleteNoteDialog } from "./mutations/delete-note-dialog";
-import { NoteInfoDialog } from "./mutations/note-info-dialog";
 
 interface NoteDropdownProps {
   note: MinifiedNote;
+  disabled?: boolean;
 }
 
-export const NoteDropdown: React.FC<NoteDropdownProps> = ({ note }) => {
+export const NoteDropdown: React.FC<NoteDropdownProps> = ({
+  note,
+  disabled = false,
+}) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
@@ -49,13 +53,15 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({ note }) => {
             <Pen className="h-3.5 w-3.5 mr-2" />
             Edit
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
-            onClick={() => setIsDeleteOpen(true)}
-          >
-            <Trash className="h-3.5 w-3.5 mr-2" />
-            Delete
-          </DropdownMenuItem>
+          {!disabled && (
+            <DropdownMenuItem
+              className="text-gray-700 text-[13px]"
+              onClick={() => setIsDeleteOpen(true)}
+            >
+              <Trash className="h-3.5 w-3.5 mr-2" />
+              Delete
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             className="text-gray-700 text-[13px]"
             onClick={() => setIsInfoOpen(true)}
@@ -72,7 +78,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({ note }) => {
           setIsEditOpen={setIsEditOpen}
         />
       )}
-      {isDeleteOpen && (
+      {isDeleteOpen && !disabled && (
         <DeleteNoteDialog
           note={note}
           isOpen={isDeleteOpen}

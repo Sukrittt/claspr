@@ -29,4 +29,6 @@ export type {
   ExtendedReply,
 } from "./discussion";
 
-export type { MinifiedFolder, ExtendedFolder, MinifiedNote } from "./folder";
+export type { MinifiedFolder, ExtendedFolder } from "./folder";
+
+export type { ExtendedNote, MinifiedNote } from "./note";

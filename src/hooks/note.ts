@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { NoteType } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 import { trpc } from "@/trpc/client";
@@ -108,5 +109,19 @@ export const useRemoveNote = ({
     onSettled: () => {
       utils.folder.getFolders.invalidate();
     },
+  });
+};
+
+interface GetNoteProps {
+  noteId: string;
+  noteType: NoteType;
+  classroomId?: string;
+}
+
+export const useNote = ({ noteId, noteType, classroomId }: GetNoteProps) => {
+  return trpc.note.getNote.useQuery({
+    noteId,
+    noteType,
+    classroomId,
   });
 };

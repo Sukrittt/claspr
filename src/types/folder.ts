@@ -1,13 +1,10 @@
-import { Folder, Note } from "@prisma/client";
+import { Folder } from "@prisma/client";
+
+import { MinifiedNote } from ".";
 
 export type MinifiedFolder = Pick<
   Folder,
   "id" | "name" | "createdAt" | "order"
->;
-
-export type MinifiedNote = Pick<
-  Note,
-  "id" | "title" | "folderId" | "emojiUrl" | "createdAt"
 >;
 
 export type ExtendedFolder = MinifiedFolder & {

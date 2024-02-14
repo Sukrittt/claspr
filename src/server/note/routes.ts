@@ -143,3 +143,54 @@ export const removeNote = privateProcedure
       },
     });
   });
+
+/**
+ * To get a specific note.
+ *
+ * @param {object} input - The input parameters for getting a specific note.
+ * @param {string} input.noteId - The id of the node.
+ * @param {enum} input.noteType - The type of note to be fetched.
+ * @param {enum} input.classroomId - An optional id of the classroom.
+ * @returns {Promise<Object>} - A note object returned from the database.
+ */
+export const getNote = privateProcedure
+  .input(
+    z.object({
+      noteId: z.string(),
+      noteType: NoteTypeEnum,
+      classroomId: z.string().optional(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const { noteId, noteType, classroomId } = input;
+
+    if (noteType === "CLASSROOM" && classroomId) {
+      const isPartOfClass = await getIsPartOfClassAuth(classroomId, ctx.userId);
+
+      if (!isPartOfClass) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message:
+            "You are not authorized to view this content in this classroom.",
+        });
+      }
+    }
+
+    const note = await db.note.findFirst({
+      where: {
+        id: noteId,
+        noteType,
+        classroomId,
+      },
+      include: {
+        folder: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return note;
+  });

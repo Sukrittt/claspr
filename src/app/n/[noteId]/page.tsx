@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import { LoadingScreen } from "@/components/skeletons/loading-screen";
+import { Note } from "@/components/server-components/Note";
 
 interface NotePageProps {
   params: {
@@ -12,9 +13,8 @@ export default async function page({ params }: NotePageProps) {
   const { noteId } = params;
 
   return (
-    // <Suspense fallback={<LoadingScreen />}>
-    //   <Classroom classroomId={classId} />
-    // </Suspense>
-    <p>{noteId}</p>
+    <Suspense fallback={<LoadingScreen />}>
+      <Note noteId={noteId} />
+    </Suspense>
   );
 }

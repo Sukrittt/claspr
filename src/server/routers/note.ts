@@ -1,9 +1,15 @@
 import { createTRPCRouter } from "@/server/trpc";
 
-import { createNote, editNote, removeNote } from "@/server/note/routes";
+import {
+  createNote,
+  editNote,
+  removeNote,
+  getNote,
+} from "@/server/note/routes";
 
 export const noteRouter = createTRPCRouter({
   createNote,
   editNote,
   removeNote,
+  getNote,
 });
