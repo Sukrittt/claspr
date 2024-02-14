@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/form";
 import { folderAtom } from "@/atoms";
 import { MinifiedNote } from "@/types";
+import { useCreateNote } from "@/hooks/note";
 import { Input } from "@/components/ui/input";
-import { useCreateNote } from "@/hooks/folder";
 import { Button } from "@/components/ui/button";
 
 const noteCreationSchema = z.object({

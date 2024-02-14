@@ -1,32 +1,38 @@
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 import { trpc } from "@/trpc/client";
+import { MinifiedNote } from "@/types";
 
-import { MinifiedFolder } from "@/types";
-
-export const usePersonalFolders = () => {
-  return trpc.folder.getFolders.useQuery();
-};
-
-export const useCreateFolder = ({
+export const useCreateNote = ({
   handleCleanUps,
 }: {
-  handleCleanUps: (folder: MinifiedFolder) => void;
+  handleCleanUps: (note: MinifiedNote) => void;
 }) => {
   const utils = trpc.useUtils();
+  const router = useRouter();
 
-  return trpc.folder.createFolder.useMutation({
-    onSuccess: (folder) => {
-      handleCleanUps(folder);
+  return trpc.note.createNote.useMutation({
+    onSuccess: (note) => {
+      router.push(`/n/${note.id}`);
+
+      handleCleanUps(note);
       utils.folder.getFolders.invalidate();
     },
   });
 };
 
-export const useEditFolder = ({ closeModal }: { closeModal: () => void }) => {
+export const useEditNote = ({
+  closeModal,
+  folderId,
+}: {
+  closeModal: () => void;
+  folderId: string;
+}) => {
   const utils = trpc.useUtils();
 
-  return trpc.folder.editFolder.useMutation({
-    onMutate: async ({ folderId, name }) => {
+  return trpc.note.editNote.useMutation({
+    onMutate: async ({ noteId, title }) => {
       closeModal();
 
       await utils.folder.getFolders.cancel();
@@ -38,7 +44,14 @@ export const useEditFolder = ({ closeModal }: { closeModal: () => void }) => {
           folder.id === folderId
             ? {
                 ...folder,
-                name,
+                notes: folder.notes.map((note) =>
+                  note.id === noteId
+                    ? {
+                        ...note,
+                        title,
+                      }
+                    : note
+                ),
               }
             : folder
         )
@@ -57,11 +70,17 @@ export const useEditFolder = ({ closeModal }: { closeModal: () => void }) => {
   });
 };
 
-export const useRemoveFolder = ({ closeModal }: { closeModal: () => void }) => {
+export const useRemoveNote = ({
+  closeModal,
+  folderId,
+}: {
+  closeModal: () => void;
+  folderId: string;
+}) => {
   const utils = trpc.useUtils();
 
-  return trpc.folder.removeFolder.useMutation({
-    onMutate: async ({ folderId }) => {
+  return trpc.note.removeNote.useMutation({
+    onMutate: async ({ noteId }) => {
       closeModal();
 
       await utils.folder.getFolders.cancel();
@@ -69,7 +88,14 @@ export const useRemoveFolder = ({ closeModal }: { closeModal: () => void }) => {
       const prevFolders = utils.folder.getFolders.getData();
 
       utils.folder.getFolders.setData(undefined, (prev) =>
-        prev?.filter((folder) => folder.id !== folderId)
+        prev?.map((folder) =>
+          folder.id === folderId
+            ? {
+                ...folder,
+                notes: folder.notes.filter((note) => note.id !== noteId),
+              }
+            : folder
+        )
       );
 
       return { prevFolders };

@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateNoteForm } from "./create-note-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { CreateNoteForm } from "@/components/note/mutations/create-note-form";
 
 interface CreateNoteDialogProps {
   classroomId?: string;

@@ -10,19 +10,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ExtendedFolder } from "@/types";
+import { MinifiedNote } from "@/types";
 
-type FolderInfoDialogProps = {
-  folder: ExtendedFolder;
+type NoteInfoDialogProps = {
+  note: MinifiedNote;
   isOpen: boolean;
   setIsInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const FolderInfoDialog = ({
-  folder,
+export const NoteInfoDialog = ({
+  note,
   setIsInfoOpen,
   isOpen,
-}: FolderInfoDialogProps) => {
+}: NoteInfoDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
   const handleOpenChange = (open: boolean) => {
@@ -39,14 +39,9 @@ export const FolderInfoDialog = ({
         <DialogHeader>
           <DialogTitle>Info</DialogTitle>
           <DialogDescription>
-            You created this folder on{" "}
-            <span>
-              <span className="font-semibold">
-                {format(folder.createdAt, "do MMM, yyyy")}
-              </span>{" "}
-              and has{" "}
-              <span className="font-semibold">{folder.notes.length} notes</span>{" "}
-              in it.
+            You created this note on{" "}
+            <span className="font-semibold">
+              {format(note.createdAt, "do MMM, yyyy")}
             </span>
           </DialogDescription>
         </DialogHeader>

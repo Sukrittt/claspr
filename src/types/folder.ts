@@ -5,7 +5,10 @@ export type MinifiedFolder = Pick<
   "id" | "name" | "createdAt" | "order"
 >;
 
-export type MinifiedNote = Pick<Note, "id" | "title" | "folderId" | "emojiUrl">;
+export type MinifiedNote = Pick<
+  Note,
+  "id" | "title" | "folderId" | "emojiUrl" | "createdAt"
+>;
 
 export type ExtendedFolder = MinifiedFolder & {
   notes: MinifiedNote[];

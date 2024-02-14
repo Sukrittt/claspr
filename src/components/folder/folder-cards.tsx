@@ -17,12 +17,12 @@ import {
 import { ExtendedFolder } from "@/types";
 import { getShortenedText } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
+import { FolderDropdown } from "./folder-dropdown";
 import { usePersonalFolders } from "@/hooks/folder";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { NoteDropdown } from "@/components/note/note-dropdown";
 import { CreateFolderDialog } from "./mutations/create-folder-dialog";
-import { CreateNoteDialog } from "@/components/note/create-note-dialog";
-import { FolderDropdown } from "./folder-dropdown";
+import { CreateNoteDialog } from "@/components/note/mutations/create-note-dialog";
 
 export const FolderCards = () => {
   const [folders, setFolders] = useAtom(folderAtom);
@@ -166,31 +166,38 @@ const FolderNotes: React.FC<FolderNotesProps> = ({
               <p>No notes in this folder.</p>
             </div>
           ) : (
-            activeFolder.notes.map((note) => (
-              <Link
-                href={`/n/${note.id}`}
-                key={note.id}
-                className="flex items-center gap-x-2 border-b pb-2 px-6 group"
-              >
-                {note.emojiUrl ? (
-                  <div className="h-4 w-4 relative">
-                    <Image
-                      src={note.emojiUrl}
-                      className="object-contain"
-                      alt={note.title}
-                      fill
-                    />
+            <ScrollArea className="h-[20vh] flex flex-col gap-y-2 pr-0">
+              {activeFolder.notes.map((note) => (
+                <Link
+                  href={`/n/${note.id}`}
+                  key={note.id}
+                  className="flex justify-between border-b py-2 px-6 group"
+                >
+                  <div className="flex items-center gap-x-2">
+                    {note.emojiUrl ? (
+                      <div className="h-4 w-4 relative">
+                        <Image
+                          src={note.emojiUrl}
+                          className="object-contain"
+                          alt={note.title}
+                          fill
+                        />
+                      </div>
+                    ) : (
+                      <div className="border rounded-md p-1.5 text-gray-800">
+                        <FileText className="h-3.5 w-3.5" />
+                      </div>
+                    )}
+                    <p className="text-[13px] group-hover:underline underline-offset-4">
+                      {note.title}
+                    </p>
                   </div>
-                ) : (
-                  <div className="border rounded-md p-1.5 text-gray-800">
-                    <FileText className="h-3.5 w-3.5" />
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <NoteDropdown note={note} />
                   </div>
-                )}
-                <p className="text-[13px] group-hover:underline underline-offset-4">
-                  {note.title}
-                </p>
-              </Link>
-            ))
+                </Link>
+              ))}
+            </ScrollArea>
           )}
         </div>
       </motion.div>
