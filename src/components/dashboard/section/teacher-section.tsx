@@ -11,11 +11,18 @@ import {
   isCloseAllCreationToggle,
   joinedClassSections,
 } from "@/atoms";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { MembershipContext } from "./membership-context";
 import { CreatedClassContext } from "./created-class-context";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const TeacherSection = () => {
   const [, setCloseAllCreationToggle] = useAtom(isCloseAllCreationToggle);
@@ -51,73 +58,85 @@ export const TeacherSection = () => {
   }, [sectionsForJoinedClassroomsData]);
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <div className="space-y-4">
-        <div className="flex justify-between items-end">
-          <div>
-            <h1 className="font-semibold text-gray-800">Your Sections</h1>
-            <p className="text-muted-foreground text-sm">
-              Sections containing created classrooms
-            </p>
+    <div className="grid grid-cols-2 gap-4">
+      <Card className="space-y-4">
+        <CardHeader className="border-b py-2.5 space-y-0.5">
+          <div className="flex justify-between items-end">
+            <div>
+              <CardTitle className="text-base font-semibold text-gray-800">
+                Your Sections
+              </CardTitle>
+              <CardDescription className="text-muted-foreground text-sm">
+                Sections containing created classrooms
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-x-2">
+              <CustomTooltip text="Collapse All">
+                <div
+                  className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                  onClick={() => setCloseAllCreationToggle((prev) => !!!prev)}
+                >
+                  <CopyMinus className="w-3.5 h-3.5" />
+                </div>
+              </CustomTooltip>
+              <CreateSectionDialog sectionType="CREATION" />
+            </div>
           </div>
-          <div className="flex items-center gap-x-2 pr-4">
-            <CustomTooltip text="Collapse All">
-              <div
-                className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
-                onClick={() => setCloseAllCreationToggle((prev) => !!!prev)}
-              >
-                <CopyMinus className="w-3.5 h-3.5" />
-              </div>
-            </CustomTooltip>
-            <CreateSectionDialog sectionType="CREATION" />
+        </CardHeader>
+        <CardContent className="mt-0 px-3">
+          <ScrollArea className="h-[30vh]">
+            <div className="flex flex-col gap-y-2">
+              {isFetchingFirstSection || isFetchingFirstSectionRefetch ? (
+                <SectionSkeleton />
+              ) : !sectionsForCreatedClassrooms ||
+                sectionsForCreatedClassrooms.length === 0 ? (
+                <p>No results</p>
+              ) : (
+                <CreatedClassContext />
+              )}
+            </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
+      <Card className="space-y-4">
+        <CardHeader className="border-b py-2.5 space-y-0.5">
+          <div className="flex justify-between items-end">
+            <div>
+              <CardTitle className="text-base font-semibold text-gray-800">
+                Your Sections
+              </CardTitle>
+              <CardDescription className="text-muted-foreground text-sm">
+                Sections containing joined classrooms
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-x-2">
+              <CustomTooltip text="Collapse All">
+                <div
+                  className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                  onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
+                >
+                  <CopyMinus className="w-3.5 h-3.5" />
+                </div>
+              </CustomTooltip>
+              <CreateSectionDialog sectionType="MEMBERSHIP" />
+            </div>
           </div>
-        </div>
-        <ScrollArea className="h-[30vh]">
-          <div className="flex flex-col gap-y-2">
-            {isFetchingFirstSection || isFetchingFirstSectionRefetch ? (
-              <SectionSkeleton />
-            ) : !sectionsForCreatedClassrooms ||
-              sectionsForCreatedClassrooms.length === 0 ? (
-              <p>No results</p>
-            ) : (
-              <CreatedClassContext />
-            )}
-          </div>
-        </ScrollArea>
-      </div>
-      <div className="space-y-4">
-        <div className="flex justify-between items-end">
-          <div>
-            <h1 className="font-semibold text-gray-800">Your Sections</h1>
-            <p className="text-muted-foreground text-sm">
-              Sections containing joined classrooms
-            </p>
-          </div>
-          <div className="flex items-center gap-x-2 pr-4">
-            <CustomTooltip text="Collapse All">
-              <div
-                className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
-                onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
-              >
-                <CopyMinus className="w-3.5 h-3.5" />
-              </div>
-            </CustomTooltip>
-            <CreateSectionDialog sectionType="MEMBERSHIP" />
-          </div>
-        </div>
-        <ScrollArea className="h-[30vh]">
-          <div className="flex flex-col gap-y-2">
-            {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
-              <SectionSkeleton />
-            ) : !sectionsForJoinedClassrooms ||
-              sectionsForJoinedClassrooms.length === 0 ? (
-              <p>No results</p>
-            ) : (
-              <MembershipContext />
-            )}
-          </div>
-        </ScrollArea>
-      </div>
+        </CardHeader>
+        <CardContent className="mt-0 px-3">
+          <ScrollArea className="h-[30vh]">
+            <div className="flex flex-col gap-y-2">
+              {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
+                <SectionSkeleton />
+              ) : !sectionsForJoinedClassrooms ||
+                sectionsForJoinedClassrooms.length === 0 ? (
+                <p>No results</p>
+              ) : (
+                <MembershipContext />
+              )}
+            </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
     </div>
   );
 };

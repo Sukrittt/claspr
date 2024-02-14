@@ -43,7 +43,6 @@ export const FolderCards = () => {
       <CardHeader className="border-b py-2.5 space-y-0.5">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base pt-1">Your Folders</CardTitle>
-
           <CreateFolderDialog />
         </div>
 
@@ -52,7 +51,7 @@ export const FolderCards = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-4 px-0 text-sm">
-        <ScrollArea className="h-[25vh] pr-0">
+        <ScrollArea className="h-[29.25vh] pr-0">
           {isLoading ? (
             <p>Loading...</p>
           ) : !folders || folders.length === 0 ? (
@@ -224,7 +223,7 @@ const FolderNotes: React.FC<FolderNotesProps> = ({
               <p>No notes in this folder.</p>
             </div>
           ) : (
-            <ScrollArea className="h-[20vh] flex flex-col gap-y-2 pr-0">
+            <ScrollArea className="h-[18vh] flex flex-col gap-y-2 pr-0">
               {activeFolder.notes.map((note) => (
                 <Link
                   href={`/n/${note.id}`}

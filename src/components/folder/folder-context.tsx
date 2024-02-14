@@ -167,10 +167,6 @@ export const FolderContext: React.FC<FolderContextProps> = ({
     return { shiftFolders, reversed };
   };
 
-  folders.forEach((folder) => {
-    console.log(folder.name, folder.order);
-  });
-
   return (
     <DndContext
       sensors={sensors}

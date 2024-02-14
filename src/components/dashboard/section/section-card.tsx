@@ -143,11 +143,11 @@ export const SectionItem = ({
       >
         <div
           className={cn(
-            "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-200 py-1 px-2 rounded-md transition group",
+            "flex items-center justify-between cursor-pointer text-gray-800 text-sm font-medium hover:bg-neutral-200/60 py-1 px-2 rounded-md transition group",
             {
-              "bg-neutral-200 duration-500":
+              "bg-neutral-200/60 duration-500":
                 isOver && active?.data.current?.dragType === "CLASSROOM",
-              "bg-neutral-200 text-sm opacity-60 cursor-grabbing": isHolding,
+              "bg-neutral-200/60 text-sm opacity-60 cursor-grabbing": isHolding,
             }
           )}
           onClick={handleToggleOpenClassrooms}
