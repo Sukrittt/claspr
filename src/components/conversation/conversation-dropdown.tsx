@@ -8,8 +8,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MinifiedConversation } from "@/types";
-import { InfoConversationDialog } from "./info-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { InfoConversationDialog } from "./conversation-info-dialog";
 import { DeleteConversationDialog } from "./delete-conversation-dialog";
 
 interface ConversationDropdownProps {

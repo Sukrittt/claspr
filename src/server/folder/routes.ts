@@ -109,6 +109,85 @@ export const createFolder = privateProcedure
   });
 
 /**
+ * To edit a folder.
+ *
+ * @param {object} input - The input parameters for editing a folder.
+ * @param {string} input.folderId - The id of the folder.
+ * @param {string} input.name - The updated name of the folder.
+ */
+export const editFolder = privateProcedure
+  .input(
+    z.object({
+      folderId: z.string(),
+      name: z.string(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { folderId, name } = input;
+
+    const existingFolder = await db.folder.findFirst({
+      where: {
+        id: folderId,
+        userId: ctx.userId,
+      },
+    });
+
+    if (!existingFolder) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We coudln't find the folder you are looking for.",
+      });
+    }
+
+    await db.folder.update({
+      where: {
+        id: folderId,
+        userId: ctx.userId,
+      },
+      data: {
+        name,
+      },
+    });
+  });
+
+/**
+ * To remove a folder.
+ *
+ * @param {object} input - The input parameters for removing a folder.
+ * @param {string} input.folderId - The id of the folder.
+ */
+export const removeFolder = privateProcedure
+  .input(
+    z.object({
+      folderId: z.string(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { folderId } = input;
+
+    const existingFolder = await db.folder.findFirst({
+      where: {
+        id: folderId,
+        userId: ctx.userId,
+      },
+    });
+
+    if (!existingFolder) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We coudln't find the folder you are looking for.",
+      });
+    }
+
+    await db.folder.delete({
+      where: {
+        id: folderId,
+        userId: ctx.userId,
+      },
+    });
+  });
+
+/**
  * To create a new note.
  *
  * @param {object} input - The input parameters for creating a new note.

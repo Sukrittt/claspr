@@ -22,6 +22,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { CreateFolderDialog } from "./mutations/create-folder-dialog";
 import { CreateNoteDialog } from "@/components/note/create-note-dialog";
+import { FolderDropdown } from "./folder-dropdown";
 
 export const FolderCards = () => {
   const [folders, setFolders] = useAtom(folderAtom);
@@ -107,13 +108,9 @@ const FolderCard: React.FC<FolderCardProps> = ({ folder, setFolderActive }) => {
           {getShortenedText(folder.name, 15)}
         </p>
       </div>
-      <CustomTooltip
-        text={`${folder.notes.length} note${
-          folder.notes.length === 1 ? "" : "s"
-        } in this folder`}
-      >
-        <p className="text-[13px]">{folder.notes.length}</p>
-      </CustomTooltip>
+      <div onClick={(e) => e.stopPropagation()}>
+        <FolderDropdown folder={folder} />
+      </div>
     </div>
   );
 };
@@ -156,7 +153,7 @@ const FolderNotes: React.FC<FolderNotesProps> = ({
             <ChevronRight className="h-4 w-4" />
 
             <p className="group-hover:underline underline-offset-4">
-              ../{activeFolder.name}
+              ../{getShortenedText(activeFolder.name, 30)}
             </p>
           </div>
           <CreateNoteDialog folderId={activeFolder.id} noteType="PERSONAL" />

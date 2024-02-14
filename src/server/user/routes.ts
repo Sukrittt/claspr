@@ -178,8 +178,6 @@ export const onBoardUser = privateProcedure
     await db.note.create({
       data: {
         title: "Untitled Note",
-        emojiUrl:
-          "https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f601.png", // 😁
         noteType: "PERSONAL",
         folderId: createdFolder.id,
         creatorId: ctx.userId,

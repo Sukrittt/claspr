@@ -73,7 +73,7 @@ export const useRemoveConversation = ({
 
       return { prevConversations };
     },
-    onError: (error, data, ctx) => {
+    onError: (error, _, ctx) => {
       toast.error(error.message);
 
       utils.conversation.getPreviousConversations.setData(

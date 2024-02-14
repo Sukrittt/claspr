@@ -10,25 +10,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MinifiedConversation } from "@/types";
+import { ExtendedFolder, MinifiedConversation } from "@/types";
 
-type InfoConversationDialogProps = {
-  conversation: MinifiedConversation;
+type FolderInfoDialogProps = {
+  folder: ExtendedFolder;
   isOpen: boolean;
   setIsInfoOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const InfoConversationDialog = ({
-  conversation,
+export const FolderInfoDialog = ({
+  folder,
   setIsInfoOpen,
   isOpen,
-}: InfoConversationDialogProps) => {
+}: FolderInfoDialogProps) => {
   const [open, setOpen] = useState(isOpen);
-
-  const closeModal = () => {
-    setOpen(false);
-    setIsInfoOpen(false);
-  };
 
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
@@ -44,9 +39,14 @@ export const InfoConversationDialog = ({
         <DialogHeader>
           <DialogTitle>Info</DialogTitle>
           <DialogDescription>
-            You had this conversation with our AI on{" "}
-            <span className="font-semibold">
-              {format(conversation.createdAt, "do MMM, yyyy")}
+            You created this folder on{" "}
+            <span>
+              <span className="font-semibold">
+                {format(folder.createdAt, "do MMM, yyyy")}
+              </span>{" "}
+              and has{" "}
+              <span className="font-semibold">{folder.notes.length} notes</span>{" "}
+              in it.
             </span>
           </DialogDescription>
         </DialogHeader>
