@@ -36,11 +36,13 @@ type Inputs = z.infer<typeof folderCreationSchema>;
 interface CreateFolderFormProps {
   closeModal: () => void;
   classroomId?: string;
+  setActiveFolderId?: (folderId: string) => void;
 }
 
 export const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
   closeModal,
   classroomId,
+  setActiveFolderId,
 }) => {
   const [, setFolders] = useAtom(folderAtom);
 
@@ -54,6 +56,7 @@ export const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
 
   const handleCleanUps = (folder: MinifiedFolder) => {
     closeModal();
+    setActiveFolderId?.(folder.id);
 
     const updatedFolder = {
       ...folder,

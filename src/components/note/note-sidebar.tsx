@@ -18,9 +18,11 @@ import { ContainerVariants } from "@/lib/motion";
 import { usePersonalFolders } from "@/hooks/folder";
 import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { CreateNoteDialog } from "./mutations/create-note-dialog";
+import { CreateFolderDialog } from "@/components/folder/mutations/create-folder-dialog";
+import { FolderDropdown } from "../folder/folder-dropdown";
 
 export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
-  const { data: folders, isLoading } = usePersonalFolders();
+  const { data: folders, isLoading, isFetching } = usePersonalFolders();
   const [sidebarState, setSidebarState] = useSidebarState();
 
   const [activeFolderId, setActiveFolderId] = useState(note.folder.id);
@@ -72,7 +74,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
 
         {sidebarState.isOpen && (
           <div>
-            {isLoading ? (
+            {isLoading || isFetching ? (
               <p>Loading...</p>
             ) : !folders || folders.length === 0 ? (
               <p>No folders</p>
@@ -85,25 +87,42 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
                   exit="exit"
                   className="space-y-6"
                 >
-                  <Select
-                    value={activeFolderId}
-                    onValueChange={(val) => setActiveFolderId(val)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Folder" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[{ id: "ALL_NOTES", name: "All Notes" }, ...folders].map(
-                        (folder) => (
+                  <div className="flex items-center gap-x-2">
+                    <Select
+                      value={activeFolderId}
+                      onValueChange={(val) => setActiveFolderId(val)}
+                    >
+                      <SelectTrigger className="w-full text-[13px]">
+                        <SelectValue placeholder="Select Folder" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[
+                          { id: "ALL_NOTES", name: "All Notes" },
+                          ...folders,
+                        ].map((folder) => (
                           <>
                             <SelectItem key={folder.id} value={folder.id}>
                               {folder.name}
                             </SelectItem>
                           </>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {/* <CreateFolderDialog
+                      setActiveFolderId={(folderId: string) =>
+                        setActiveFolderId(folderId)
+                      }
+                    /> */}
+                    {activeFolder && (
+                      <FolderDropdown
+                        folder={activeFolder}
+                        isNotePage
+                        setActiveFolderId={(folderId: string) =>
+                          setActiveFolderId(folderId)
+                        }
+                      />
+                    )}
+                  </div>
 
                   <NoteLists
                     activeFolder={activeFolder}

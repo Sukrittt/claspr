@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
-import { Info, MoreHorizontal, Pen, Trash } from "lucide-react";
+import { Info, MoreHorizontal, Pen, Plus, Trash } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -13,15 +13,23 @@ import { EditFolderDialog } from "./mutations/edit-folder-dialog";
 import { FolderInfoDialog } from "./mutations/folder-info-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { DeleteFolderDialog } from "./mutations/delete-folder-dialog";
+import { CreateFolderDialog } from "./mutations/create-folder-dialog";
 
 interface FolderDropdownProps {
   folder: ExtendedFolder;
+  isNotePage?: boolean;
+  setActiveFolderId?: (folderId: string) => void;
 }
 
-export const FolderDropdown: React.FC<FolderDropdownProps> = ({ folder }) => {
+export const FolderDropdown: React.FC<FolderDropdownProps> = ({
+  folder,
+  isNotePage = false,
+  setActiveFolderId,
+}) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   //This is just a workaround to prevent dropdown drag event to be propogated.
   //Note. stopPropagation() does NOT work here.
@@ -42,6 +50,15 @@ export const FolderDropdown: React.FC<FolderDropdownProps> = ({ folder }) => {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-40">
+          {isNotePage && (
+            <DropdownMenuItem
+              className="text-gray-700 text-[13px]"
+              onClick={() => setIsCreateOpen(true)}
+            >
+              <Plus className="h-3.5 w-3.5 mr-2" />
+              Create
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             className="text-gray-700 text-[13px]"
             onClick={() => setIsEditOpen(true)}
@@ -49,13 +66,15 @@ export const FolderDropdown: React.FC<FolderDropdownProps> = ({ folder }) => {
             <Pen className="h-3.5 w-3.5 mr-2" />
             Edit
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
-            onClick={() => setIsDeleteOpen(true)}
-          >
-            <Trash className="h-3.5 w-3.5 mr-2" />
-            Delete
-          </DropdownMenuItem>
+          {!isNotePage && (
+            <DropdownMenuItem
+              className="text-gray-700 text-[13px]"
+              onClick={() => setIsDeleteOpen(true)}
+            >
+              <Trash className="h-3.5 w-3.5 mr-2" />
+              Delete
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             className="text-gray-700 text-[13px]"
             onClick={() => setIsInfoOpen(true)}
@@ -65,6 +84,14 @@ export const FolderDropdown: React.FC<FolderDropdownProps> = ({ folder }) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      {isCreateOpen && (
+        <CreateFolderDialog
+          isNotePage={isNotePage}
+          isOpen={isCreateOpen}
+          setIsCreateOpen={setIsCreateOpen}
+          setActiveFolderId={setActiveFolderId}
+        />
+      )}
       {isEditOpen && (
         <EditFolderDialog
           folderId={folder.id}
@@ -73,7 +100,7 @@ export const FolderDropdown: React.FC<FolderDropdownProps> = ({ folder }) => {
           setIsEditOpen={setIsEditOpen}
         />
       )}
-      {isDeleteOpen && (
+      {isDeleteOpen && !isNotePage && (
         <DeleteFolderDialog
           folderId={folder.id}
           isOpen={isDeleteOpen}
