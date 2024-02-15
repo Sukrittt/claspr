@@ -43,9 +43,15 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
         />
       </div>
 
+      <div className="pl-20 pt-1">
+        <h3 className="text-4xl font-semibold text-neutral-800 tracking-tight">
+          {note.title}
+        </h3>
+      </div>
+
       <div className="p-4">
         <ScrollArea
-          className="pr-0 h-[55vh]"
+          className="pr-0 pl-10 h-[55vh]"
           style={{
             position: "static", // For some reason, 'static' tailwind class does not work here
           }}
