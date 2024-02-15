@@ -1,7 +1,15 @@
 "use client";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FolderIcon, PanelLeft, PanelLeftOpen, Plus } from "lucide-react";
+import {
+  ChevronLeft,
+  FolderIcon,
+  MonitorX,
+  PanelLeft,
+  PanelLeftOpen,
+  Plus,
+} from "lucide-react";
+import Link from "next/link";
 
 import { ExtendedNote } from "@/types";
 import {
@@ -16,10 +24,11 @@ import { NoteLists } from "./note-lists";
 import { Button } from "@/components/ui/button";
 import { ContainerVariants } from "@/lib/motion";
 import { usePersonalFolders } from "@/hooks/folder";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { CreateNoteDialog } from "./mutations/create-note-dialog";
-import { CreateFolderDialog } from "@/components/folder/mutations/create-folder-dialog";
-import { FolderDropdown } from "../folder/folder-dropdown";
+import { FolderDropdown } from "@/components/folder/folder-dropdown";
+import { NoteSidebarSkeleton } from "@/components/skeletons/note-sidebar-skeleton";
 
 export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
   const { data: folders, isLoading, isFetching } = usePersonalFolders();
@@ -44,12 +53,13 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
       <div className="space-y-8">
         <div className="flex items-center justify-between relative">
           {sidebarState.isOpen && (
-            <div className="text-[13px] px-2 py-1.5 flex items-center gap-x-2 rounded-md bg-neutral-200/60">
-              <FolderIcon className="w-3.5 h-3.5 text-muted-foreground" />
-              <span className="font-medium text-gray-800">
-                {note.folder.name}
-              </span>
-            </div>
+            <Link
+              href="/dashboard"
+              className="text-[13px] px-2 py-1.5 flex items-center gap-x-2 rounded-md bg-neutral-200/60 cursor-pointer hover:bg-neutral-200 transition"
+            >
+              <ChevronLeft className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="font-medium text-gray-800">Go back</span>
+            </Link>
           )}
           {sidebarState.isOpen ? (
             <PanelLeft
@@ -75,9 +85,19 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
         {sidebarState.isOpen && (
           <div>
             {isLoading || isFetching ? (
-              <p>Loading...</p>
+              <NoteSidebarSkeleton />
             ) : !folders || folders.length === 0 ? (
-              <p>No folders</p>
+              <div className="pt-20 flex flex-col items-center justify-center gap-y-2">
+                <MonitorX className="h-10 w-10 text-neutral-800" />
+                <div className="space-y-1 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    You shouldn&rsquo;t be seeing this.
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    We are working on fixing your issue.
+                  </p>
+                </div>
+              </div>
             ) : (
               <AnimatePresence mode="wait">
                 <motion.div
@@ -108,11 +128,6 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
                         ))}
                       </SelectContent>
                     </Select>
-                    {/* <CreateFolderDialog
-                      setActiveFolderId={(folderId: string) =>
-                        setActiveFolderId(folderId)
-                      }
-                    /> */}
                     {activeFolder && (
                       <FolderDropdown
                         folder={activeFolder}
@@ -124,11 +139,13 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
                     )}
                   </div>
 
-                  <NoteLists
-                    activeFolder={activeFolder}
-                    activeNoteId={note.id}
-                    folders={folders}
-                  />
+                  <ScrollArea className="h-[60vh]">
+                    <NoteLists
+                      activeFolder={activeFolder}
+                      activeNoteId={note.id}
+                      folders={folders}
+                    />
+                  </ScrollArea>
                 </motion.div>
               </AnimatePresence>
             )}
