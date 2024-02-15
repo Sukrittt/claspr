@@ -120,11 +120,9 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
                           { id: "ALL_NOTES", name: "All Notes" },
                           ...folders,
                         ].map((folder) => (
-                          <>
-                            <SelectItem key={folder.id} value={folder.id}>
-                              {folder.name}
-                            </SelectItem>
-                          </>
+                          <SelectItem key={folder.id} value={folder.id}>
+                            {folder.name}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>

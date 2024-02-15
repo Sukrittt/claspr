@@ -237,3 +237,46 @@ export const moveNote = privateProcedure
       },
     });
   });
+
+/**
+ * To update the content of the note.
+ *
+ * @param {object} input - The input parameters for updating the content of the note.
+ * @param {string} input.noteId - The id of the node.
+ * @param {any} input.content - The content of the note.
+ */
+export const updateContent = privateProcedure
+  .input(
+    z.object({
+      noteId: z.string(),
+      content: z.any(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { noteId, content } = input;
+
+    const existingNote = await db.note.findFirst({
+      where: {
+        id: noteId,
+        creatorId: ctx.userId,
+      },
+      select: { id: true },
+    });
+
+    if (!existingNote) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the note you are looking for.",
+      });
+    }
+
+    await db.note.update({
+      where: {
+        id: noteId,
+        creatorId: ctx.userId,
+      },
+      data: {
+        content,
+      },
+    });
+  });

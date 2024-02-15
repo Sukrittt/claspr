@@ -176,6 +176,16 @@ export const useMoveNote = ({
   });
 };
 
+export const useUpdateNoteContent = () => {
+  return trpc.note.updateContent.useMutation({
+    onError: () => {
+      toast.error(
+        "Your changes were not saved. Please refresh the page and try again."
+      );
+    },
+  });
+};
+
 interface GetNoteProps {
   noteId: string;
   noteType: NoteType;

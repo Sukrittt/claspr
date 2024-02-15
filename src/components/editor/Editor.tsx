@@ -9,6 +9,7 @@ import { useMounted } from "@/hooks/use-mounted";
 import { ContainerHeightVariants } from "@/lib/motion";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { AIDialog } from "@/components/conversation/ai-dialog";
+import { Loader } from "lucide-react";
 
 interface EditorProps {
   classroom?: Pick<ClassRoom, "id" | "title" | "description">;
@@ -17,6 +18,8 @@ interface EditorProps {
   disableAI?: boolean;
   disableAutofocus?: boolean;
   placeholder?: string;
+  disableFollowUp?: boolean;
+  getDebouncedContent?: boolean;
 }
 
 export const Editor: React.FC<EditorProps> = ({
@@ -25,6 +28,8 @@ export const Editor: React.FC<EditorProps> = ({
   content,
   disableAI = false,
   disableAutofocus = false,
+  disableFollowUp = false,
+  getDebouncedContent,
   placeholder,
 }) => {
   const ref = useRef<EditorJS>();
@@ -69,6 +74,11 @@ export const Editor: React.FC<EditorProps> = ({
         holder: "editor",
         onReady() {
           ref.current = editor;
+        },
+        onChange: () => {
+          if (getDebouncedContent) {
+            setIsSubmitting(true);
+          }
         },
         autofocus: !disableAutofocus,
 
@@ -204,7 +214,9 @@ export const Editor: React.FC<EditorProps> = ({
   }, [isSubmitting]);
 
   if (!mounted) {
-    return <p>Just a moment...</p>;
+    return (
+      <p className="pl-4 text-muted-foreground text-sm">Just a moment...</p>
+    );
   }
 
   const addInfo = `This is the title given by the teacher for this assignment: ${title}.`;
@@ -217,11 +229,12 @@ export const Editor: React.FC<EditorProps> = ({
         animate="animate"
         exit="exit"
         id="editor"
-        className="px-4 typography-styles"
+        className="px-4 pl-8 typography-styles"
       />
 
       {!disableAI && classroom && (
         <AIDialog
+          hasFollowUp={!disableFollowUp}
           temperature={0.7}
           classroom={classroom}
           moveToEditor={insertBlock}
