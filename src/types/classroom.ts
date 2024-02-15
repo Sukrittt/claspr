@@ -25,4 +25,7 @@ export type ExtendedMembershipDetails = Membership & {
 
 export type MinifiedUser = Pick<User, "id" | "name" | "image" | "email">;
 
-export type MinifiedConversation = Omit<Conversation, "updatedAt" | "userId">;
+export type MinifiedConversation = Omit<
+  Conversation,
+  "updatedAt" | "userId" | "noteId"
+>;

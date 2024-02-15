@@ -68,7 +68,7 @@ export const ConversationDropdown: React.FC<ConversationDropdownProps> = ({
 
       {isDeleteOpen && (
         <DeleteConversationDialog
-          classroomId={conversation.classRoomId}
+          classroomId={conversation.classRoomId as string} //deletion is only allowed for the conversation inside a classroom
           conversationId={conversation.id}
           isOpen={isDeleteOpen}
           setIsDeleteOpen={setIsDeleteOpen}

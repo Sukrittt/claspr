@@ -14,7 +14,7 @@ export const FeedbackConversation: React.FC<FeedbackConversationProps> = ({
   conversation,
 }) => {
   const { mutate: giveFeedback } = useGiveFeedback({
-    classroomId: conversation.classRoomId,
+    classroomId: conversation.classRoomId as string, //feedback is only given to the conversation of a classroom
   });
 
   const handleGiveFeedback = (feedback: FEEDBACK_STATUS) => {
