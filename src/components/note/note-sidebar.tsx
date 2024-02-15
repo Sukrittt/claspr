@@ -74,7 +74,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
           <div>
             {isLoading ? (
               <p>Loading...</p>
-            ) : !folders || !activeFolder || folders.length === 0 ? (
+            ) : !folders || folders.length === 0 ? (
               <p>No folders</p>
             ) : (
               <AnimatePresence mode="wait">
@@ -93,11 +93,15 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
                       <SelectValue placeholder="Select Folder" />
                     </SelectTrigger>
                     <SelectContent>
-                      {folders.map((folder) => (
-                        <SelectItem key={folder.id} value={folder.id}>
-                          {folder.name}
-                        </SelectItem>
-                      ))}
+                      {[{ id: "ALL_NOTES", name: "All Notes" }, ...folders].map(
+                        (folder) => (
+                          <>
+                            <SelectItem key={folder.id} value={folder.id}>
+                              {folder.name}
+                            </SelectItem>
+                          </>
+                        )
+                      )}
                     </SelectContent>
                   </Select>
 

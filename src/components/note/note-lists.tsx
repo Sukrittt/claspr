@@ -7,9 +7,9 @@ import { NoteDropdown } from "./note-dropdown";
 import { cn, getShortenedText } from "@/lib/utils";
 
 interface NoteListsProps {
-  folders: ExtendedFolder[];
-  activeFolder: ExtendedFolder;
   activeNoteId: string;
+  folders: ExtendedFolder[];
+  activeFolder: ExtendedFolder | undefined;
 }
 
 export const NoteLists: React.FC<NoteListsProps> = ({
@@ -17,9 +17,13 @@ export const NoteLists: React.FC<NoteListsProps> = ({
   activeNoteId,
   folders,
 }) => {
+  const allNotes = {
+    notes: folders.map((folder) => folder.notes).flat(),
+  };
+
   return (
     <div className="flex flex-col gap-y-2">
-      {activeFolder.notes.map((note) => (
+      {(activeFolder ?? allNotes).notes.map((note) => (
         <Link
           key={note.id}
           href={`/n/${note.id}`}
