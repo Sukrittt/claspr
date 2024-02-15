@@ -112,6 +112,70 @@ export const useRemoveNote = ({
   });
 };
 
+export const useMoveNote = ({
+  closeModal,
+  oldFolderId,
+}: {
+  closeModal: () => void;
+  oldFolderId: string;
+}) => {
+  const utils = trpc.useUtils();
+
+  return trpc.note.moveNote.useMutation({
+    onMutate: async ({ noteId, folderId: newFolderId }) => {
+      closeModal();
+
+      await utils.folder.getFolders.cancel();
+
+      const prevFolders = utils.folder.getFolders.getData();
+
+      utils.folder.getFolders.setData(undefined, (prev) => {
+        let filteredNote: MinifiedNote | null = null;
+
+        const updatedFolders = prev?.map((folder) => {
+          if (folder.id === oldFolderId) {
+            const notes = folder.notes.filter((note) => {
+              const match = note.id === noteId;
+
+              if (match) {
+                filteredNote = note;
+              }
+
+              return !match;
+            });
+
+            return {
+              ...folder,
+              notes,
+            };
+          } else if (folder.id === newFolderId) {
+            return {
+              ...folder,
+              notes: filteredNote
+                ? [...folder.notes, filteredNote]
+                : [...folder.notes],
+            };
+          } else {
+            return folder;
+          }
+        });
+
+        return updatedFolders;
+      });
+
+      return { prevFolders };
+    },
+    onError: (error, _, ctx) => {
+      toast.error(error.message);
+
+      utils.folder.getFolders.setData(undefined, ctx?.prevFolders);
+    },
+    onSettled: () => {
+      utils.folder.getFolders.invalidate();
+    },
+  });
+};
+
 interface GetNoteProps {
   noteId: string;
   noteType: NoteType;

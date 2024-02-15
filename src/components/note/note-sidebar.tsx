@@ -66,7 +66,11 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
                 </SelectContent>
               </Select>
 
-              <NoteLists activeFolder={activeFolder} activeNoteId={note.id} />
+              <NoteLists
+                activeFolder={activeFolder}
+                activeNoteId={note.id}
+                folders={folders}
+              />
             </div>
           )}
         </div>

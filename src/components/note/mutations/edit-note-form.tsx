@@ -60,7 +60,6 @@ export const EditNoteForm: React.FC<EditNoteFormProps> = ({
   }
 
   function onSubmit(data: Inputs) {
-    console.log("submittt");
     handlelEditNote(data);
   }
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
-import { Info, MoreHorizontal, Pen, Trash } from "lucide-react";
+import { Info, MoreHorizontal, Pen, SendToBack, Trash } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -8,24 +8,28 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MinifiedNote } from "@/types";
+import { ExtendedFolder, MinifiedNote } from "@/types";
 import { EditNoteDialog } from "./mutations/edit-note-dialog";
 import { NoteInfoDialog } from "./mutations/note-info-dialog";
-import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { MoveNoteDialog } from "./mutations/move-note-dialog";
 import { DeleteNoteDialog } from "./mutations/delete-note-dialog";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface NoteDropdownProps {
   note: MinifiedNote;
+  folders: ExtendedFolder[];
   disabled?: boolean;
 }
 
 export const NoteDropdown: React.FC<NoteDropdownProps> = ({
   note,
+  folders,
   disabled = false,
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isMoveOpen, setIsMoveOpen] = useState(false);
 
   //This is just a workaround to prevent dropdown drag event to be propogated.
   //Note. stopPropagation() does NOT work here.
@@ -46,6 +50,13 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-40">
+          <DropdownMenuItem
+            className="text-gray-700 text-[13px]"
+            onClick={() => setIsMoveOpen(true)}
+          >
+            <SendToBack className="h-3.5 w-3.5 mr-2" />
+            Move
+          </DropdownMenuItem>
           <DropdownMenuItem
             className="text-gray-700 text-[13px]"
             onClick={() => setIsEditOpen(true)}
@@ -71,6 +82,14 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      {isMoveOpen && (
+        <MoveNoteDialog
+          note={note}
+          isOpen={isMoveOpen}
+          setIsMoveOpen={setIsMoveOpen}
+          folders={folders}
+        />
+      )}
       {isEditOpen && (
         <EditNoteDialog
           note={note}

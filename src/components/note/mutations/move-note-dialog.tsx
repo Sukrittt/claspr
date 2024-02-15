@@ -10,23 +10,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MoveDiscussionForm } from "./move-discussion-form";
+import { MoveNoteForm } from "./move-note-form";
+import { ExtendedFolder, MinifiedNote } from "@/types";
 
-type MoveDiscussionDialogProps = {
+type MoveNoteDialogProps = {
   isOpen: boolean;
   setIsMoveOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  discussionId: string;
-  discussionType: DiscussionType;
-  classroomId: string;
+  note: MinifiedNote;
+  folders: ExtendedFolder[];
 };
 
-export const MoveDiscussionDialog = ({
+export const MoveNoteDialog = ({
   isOpen,
   setIsMoveOpen,
-  discussionId,
-  discussionType,
-  classroomId,
-}: MoveDiscussionDialogProps) => {
+  folders,
+  note,
+}: MoveNoteDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
   const closeModal = () => {
@@ -46,17 +45,16 @@ export const MoveDiscussionDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Move Discussion</DialogTitle>
+          <DialogTitle>Move Note</DialogTitle>
           <DialogDescription>
-            Move this discussion to another category
+            Move this note to another folder
           </DialogDescription>
 
           <div className="pt-4">
-            <MoveDiscussionForm
+            <MoveNoteForm
               closeModal={closeModal}
-              discussionId={discussionId}
-              discussionType={discussionType}
-              classroomId={classroomId}
+              folders={folders}
+              note={note}
             />
           </div>
         </DialogHeader>

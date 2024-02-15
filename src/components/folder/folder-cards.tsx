@@ -256,7 +256,7 @@ const FolderNotes: React.FC<FolderNotesProps> = ({
                     </p>
                   </div>
                   <div onClick={(e) => e.stopPropagation()}>
-                    <NoteDropdown note={note} />
+                    <NoteDropdown note={note} folders={folders} />
                   </div>
                 </Link>
               ))}
