@@ -12,9 +12,14 @@ export const useCreateConversation = () => {
   });
 };
 
-export const useConversation = (classroomId: string, limit?: number) => {
+export const useConversation = (
+  classroomId?: string,
+  noteId?: string,
+  limit?: number
+) => {
   return trpc.conversation.getPreviousConversations.useQuery({
     classroomId,
+    noteId,
     limit,
   });
 };

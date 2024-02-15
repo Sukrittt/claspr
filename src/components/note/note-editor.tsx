@@ -17,8 +17,6 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
   const { mutate: updateContent } = useUpdateNoteContent();
 
   const handleUpdateContent = () => {
-    console.log("updated content", content);
-
     updateContent({
       noteId: note.id,
       content,
@@ -33,10 +31,10 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
   }, [isSubmitting]);
 
   return (
-    <div className="space-y-4 relative group">
+    <div className="space-y-4 group">
       <div className="h-36 border-b bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
 
-      <div className="w-fit pl-10">
+      <div className="w-fit pl-10 relative">
         {note.emojiUrl ? (
           <div className="absolute top-[114px]">
             <div className="h-6 w-6 relative">
@@ -57,8 +55,15 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
       </div>
 
       <div className="p-6">
-        <ScrollArea className="pr-0 h-[55vh]">
+        <ScrollArea
+          className="pr-0 h-[55vh]"
+          style={{
+            position: "static", // For some reason, 'static' tailwind class does not work here
+          }}
+        >
           <Editor
+            isNotePage
+            note={note}
             title={note.title}
             content={note.content}
             getDebouncedContent

@@ -4,15 +4,17 @@ import EditorJS from "@editorjs/editorjs";
 import { ClassRoom } from "@prisma/client";
 import { useCallback, useEffect, useRef } from "react";
 
+import { ExtendedNote } from "@/types";
 import { uploadFiles } from "@/lib/uploadthing";
 import { useMounted } from "@/hooks/use-mounted";
 import { ContainerHeightVariants } from "@/lib/motion";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { AIDialog } from "@/components/conversation/ai-dialog";
-import { Loader } from "lucide-react";
+import { NoteAi } from "@/components/note/note-ai";
 
 interface EditorProps {
   classroom?: Pick<ClassRoom, "id" | "title" | "description">;
+  note?: ExtendedNote;
   title?: string;
   content?: any;
   disableAI?: boolean;
@@ -20,15 +22,18 @@ interface EditorProps {
   placeholder?: string;
   disableFollowUp?: boolean;
   getDebouncedContent?: boolean;
+  isNotePage?: boolean;
 }
 
 export const Editor: React.FC<EditorProps> = ({
   classroom,
+  note,
   title,
   content,
   disableAI = false,
   disableAutofocus = false,
   disableFollowUp = false,
+  isNotePage = false,
   getDebouncedContent,
   placeholder,
 }) => {
@@ -232,16 +237,20 @@ export const Editor: React.FC<EditorProps> = ({
         className="px-4 pl-8 typography-styles"
       />
 
-      {!disableAI && classroom && (
-        <AIDialog
-          hasFollowUp={!disableFollowUp}
-          temperature={0.7}
-          classroom={classroom}
-          moveToEditor={insertBlock}
-          personal="QUESTION_EXPERT"
-          addInfo={addInfo}
-        />
-      )}
+      {!disableAI && !isNotePage
+        ? classroom && (
+            <AIDialog
+              hasFollowUp={!disableFollowUp}
+              temperature={0.7}
+              classroom={classroom}
+              moveToEditor={insertBlock}
+              personal="QUESTION_EXPERT"
+              addInfo={addInfo}
+            />
+          )
+        : note && (
+            <NoteAi moveToEditor={insertBlock} note={note} temperature={0.2} />
+          )}
     </div>
   );
 };

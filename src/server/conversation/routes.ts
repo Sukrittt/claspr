@@ -11,48 +11,56 @@ import { privateProcedure } from "@/server/trpc";
  * @param {object} input - The input parameters for creating a new conversation.
  * @param {string} input.prompt - The prompt given by the user.
  * @param {string} input.answer - The answer to the above prompt.
- * @param {string} input.classroomId - The id of the clasroom.
+ * @param {string} input.classroomId - An optional id of the clasroom.
+ * @param {string} input.noteId - An optional id of the note.
  */
 export const createConversation = privateProcedure
   .input(
     z.object({
       prompt: z.string(),
       answer: z.string(),
-      classroomId: z.string(),
+      classroomId: z.string().optional(),
+      noteId: z.string().optional(),
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const { prompt, classroomId, answer } = input;
+    const { prompt, classroomId, answer, noteId } = input;
 
     await db.conversation.create({
       data: {
         prompt,
         answer,
         classRoomId: classroomId,
+        noteId,
         userId: ctx.userId,
       },
     });
   });
 
 /**
- * To get a list of all the previous conversations the user had with the AI in a particular classroom.
+ * To get a list of all the previous conversations the user had with the AI in a particular classroom or in a note.
  *
  * @param {object} input - The input parameters for getting previous conversations.
- * @param {string} input.classroomId - The id of the classroom.
- * @returns {Promise<Object[]>} - A list of classRoom objects from the database.
+ * @param {string} input.classroomId - An optional id of the classroom.
+ * @param {string} input.note - An optional id of the note.
+ * @returns {Promise<Object[]>} - A list of conversation objects from the database.
  */
 export const getPreviousConversations = privateProcedure
   .input(
     z.object({
-      classroomId: z.string(),
+      classroomId: z.string().optional(),
+      noteId: z.string().optional(),
       limit: z.optional(z.number()),
     })
   )
   .query(async ({ ctx, input }) => {
+    const { classroomId, noteId, limit } = input;
+
     const conversations = await db.conversation.findMany({
       where: {
         userId: ctx.userId,
-        classRoomId: input.classroomId,
+        classRoomId: classroomId,
+        noteId,
       },
       select: {
         id: true,
@@ -63,7 +71,7 @@ export const getPreviousConversations = privateProcedure
         classRoomId: true,
       },
       orderBy: { createdAt: "desc" },
-      take: input.limit ?? undefined,
+      take: limit ?? undefined,
     });
 
     return conversations;

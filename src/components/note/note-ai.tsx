@@ -1,7 +1,6 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import Markdown from "react-markdown";
-import { ClassRoom } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpLeft, Check, Copy, Loader, Sparkles } from "lucide-react";
@@ -14,40 +13,34 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ExtendedNote } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ExtendedClassroomDetails } from "@/types";
 import { cn, getFilteredResponse } from "@/lib/utils";
 import { PromptValidatorType } from "@/types/validator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  AiPersonal,
-  previousConversationTrainingText,
-  type AiPersonalType,
-} from "@/config/ai";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AiDialogVariants, ContainerVariants } from "@/lib/motion";
+import { AiPersonal, previousConversationTrainingText } from "@/config/ai";
 import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
 import { useConversation, useCreateConversation } from "@/hooks/conversation";
 
-interface ClassAIDialogProps {
-  classroom:
-    | Pick<ExtendedClassroomDetails, "id" | "title" | "description">
-    | Pick<ClassRoom, "id" | "title" | "description">;
-  moveToEditor?: (text: string) => void;
-  personal?: AiPersonalType;
-  hasFollowUp?: boolean;
+/**
+ - This component has repetitive code from ai-dialog.tsx. However, it is much more feasible to extract out the logic to generate content for note creation as it is a bit different from the other use cases.
+ - The component is responsible for generating content for the note creation page using the AI.
+ - This is different because ai-dialog.tsx is fully tailored to generate responses as per the classroom. However, note creation is not always a part of classroom.
+ */
+
+interface NoteAiProps {
+  note: ExtendedNote;
+  moveToEditor: (text: string) => void;
   temperature?: number;
-  addInfo?: string;
 }
 
-export const AIDialog: React.FC<ClassAIDialogProps> = ({
-  classroom,
+export const NoteAi: React.FC<NoteAiProps> = ({
+  note,
   moveToEditor,
-  hasFollowUp = false,
-  personal,
   temperature,
-  addInfo,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -60,7 +53,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
   const [followUpQuestion, setFollowUpQuestion] = useState("");
 
   const { data: prevConversations, isLoading: isFetchingConversations } =
-    useConversation(classroom.id, undefined, 30);
+    useConversation(undefined, note.id, 30);
 
   const { mutate: createConversation } = useCreateConversation();
 
@@ -81,22 +74,20 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
               })
               .join("\n\n");
 
-      const formattedInput = `\nNow, you are supposed to generate content based on this prompt: ${userQuery}`;
+      const formattedInput = `\nThis is the title given by the user for this note: ${note.title}.\n\nNow, you are supposed to generate content based on this prompt: ${userQuery}`;
 
-      const customUserQuery =
-        previousConversationTrainingText + prevConvo + formattedInput;
+      const customUserPrompt =
+        previousConversationTrainingText +
+        prevConvo +
+        formattedInput +
+        "\n\n" +
+        AiPersonal["FOLLOW_UP"];
 
-      const prompt = addInfo
-        ? `Here are some additional information about this classroom:\n${addInfo}\n${customUserQuery}`
-        : customUserQuery;
+      console.log("customUserPrompt", customUserPrompt);
 
       const payload: PromptValidatorType = {
-        prompt: hasFollowUp
-          ? prompt + "\n\n" + AiPersonal["FOLLOW_UP"]
-          : prompt,
-        classTitle: classroom.title,
-        classDescription: classroom.description,
-        personal: AiPersonal[personal ?? "TEACHER"],
+        prompt: customUserPrompt,
+        personal: AiPersonal["NOTE_CREATOR_EXPERT"],
         temperature,
       };
 
@@ -149,7 +140,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
 
         // Create a conversation with the AI
         createConversation({
-          classroomId: classroom.id,
+          noteId: note.id,
           prompt: input,
           answer: accResponse,
         });
@@ -187,7 +178,6 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
     const filterdContent = getFilteredResponse(text);
 
     moveToEditor?.(filterdContent);
-
     toast.success("Moved to editor.");
     setOpen(false);
   };
@@ -215,7 +205,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
         <DialogHeader>
           <DialogTitle>Ask me anything</DialogTitle>
           <DialogDescription>
-            Unlock personalized insights with AI&rsquo;s prompt memory
+            I can help you generate content for your note. Just ask me anything.
           </DialogDescription>
         </DialogHeader>
         <AnimatePresence mode="wait">
@@ -249,7 +239,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
                       <Copy className="w-3 h-3 hover:text-gray-800 transition" />
                     )}
                   </CustomTooltip>
-                  {moveToEditor && !isLoading && (
+                  {!isLoading && (
                     <CustomTooltip text="Move to editor">
                       <ArrowUpLeft
                         className="w-4 h-4 hover:text-gray-800 transition"

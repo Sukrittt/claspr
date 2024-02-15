@@ -166,8 +166,11 @@ model Conversation {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  classRoomId String
-  classRoom   ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
+  classRoomId String?
+  classRoom   ClassRoom? @relation(fields: [classRoomId], references: [id])
+
+  noteId String?
+  note   Note?   @relation(fields: [noteId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -367,7 +370,8 @@ model Note {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  topics Topic[]
+  topics        Topic[]
+  conversations Conversation[]
 }
 
 model Topic {
