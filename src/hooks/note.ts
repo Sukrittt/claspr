@@ -27,14 +27,14 @@ export const useEditNote = ({
   closeModal,
   folderId,
 }: {
-  closeModal: () => void;
+  closeModal?: () => void;
   folderId: string;
 }) => {
   const utils = trpc.useUtils();
 
   return trpc.note.editNote.useMutation({
-    onMutate: async ({ noteId, title }) => {
-      closeModal();
+    onMutate: async ({ noteId, title, emojiUrl }) => {
+      closeModal?.();
 
       await utils.folder.getFolders.cancel();
 
@@ -49,7 +49,8 @@ export const useEditNote = ({
                   note.id === noteId
                     ? {
                         ...note,
-                        title,
+                        title: title ?? note.title,
+                        emojiUrl: emojiUrl ?? note.emojiUrl,
                       }
                     : note
                 ),

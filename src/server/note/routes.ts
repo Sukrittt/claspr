@@ -71,16 +71,18 @@ export const createNote = privateProcedure
  * @param {object} input - The input parameters for editing a note.
  * @param {string} input.noteId - The id of the note.
  * @param {string} input.title - The updated title of the note.
+ * @param {string} input.title - The updated emojiUrl of the note.
  */
 export const editNote = privateProcedure
   .input(
     z.object({
-      title: z.string().min(1).max(200),
+      title: z.string().max(200).optional(),
+      emojiUrl: z.string().optional(),
       noteId: z.string(),
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const { title, noteId } = input;
+    const { title, noteId, emojiUrl } = input;
 
     const existingNote = await db.note.findFirst({
       where: {
@@ -102,7 +104,8 @@ export const editNote = privateProcedure
         creatorId: ctx.userId,
       },
       data: {
-        title,
+        title: title ?? existingNote.title,
+        emojiUrl: emojiUrl ?? existingNote.emojiUrl,
       },
     });
   });

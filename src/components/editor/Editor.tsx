@@ -234,7 +234,7 @@ export const Editor: React.FC<EditorProps> = ({
         animate="animate"
         exit="exit"
         id="editor"
-        className="px-4 pl-8 typography-styles"
+        className="px-4 pl-8 typography-styles max-w-full"
       />
 
       {!disableAI && !isNotePage
