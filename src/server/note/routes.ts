@@ -76,9 +76,9 @@ export const createNote = privateProcedure
 export const editNote = privateProcedure
   .input(
     z.object({
+      noteId: z.string(),
       title: z.string().max(200).optional(),
       emojiUrl: z.string().optional(),
-      noteId: z.string(),
     })
   )
   .mutation(async ({ ctx, input }) => {
@@ -88,6 +88,10 @@ export const editNote = privateProcedure
       where: {
         id: noteId,
         creatorId: ctx.userId,
+      },
+      select: {
+        title: true,
+        emojiUrl: true,
       },
     });
 
@@ -108,6 +112,76 @@ export const editNote = privateProcedure
         emojiUrl: emojiUrl ?? existingNote.emojiUrl,
       },
     });
+  });
+
+/**
+ * For updating the cover image of a note.
+ *
+ * @param {object} input - The input parameters for updating the cover image of a note.
+ * @param {string} input.noteId - The id of the note.
+ * @param {string} input.coverImage - An optional cover image of the note.
+ * @param {string} input.gradientClass - An optional gradient class for the note.
+ */
+export const updateCover = privateProcedure
+  .input(
+    z.object({
+      noteId: z.string(),
+      coverImage: z.string().optional(),
+      gradientClass: z.string().optional(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { coverImage, noteId, gradientClass } = input;
+
+    const existingNote = await db.note.findFirst({
+      where: {
+        id: noteId,
+        creatorId: ctx.userId,
+      },
+      select: { id: true },
+    });
+
+    if (!existingNote) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the note you are looking for.",
+      });
+    }
+
+    await db.note.update({
+      where: {
+        id: noteId,
+        creatorId: ctx.userId,
+      },
+      data: {
+        // There can exist only one of the property at a time.
+        coverImage: coverImage ?? null,
+        gradientClass: gradientClass ?? null,
+      },
+    });
+  });
+
+/**
+ * To get the cover image of the note.
+ *
+ * @param {object} input - The input parameters for getting note cover image.
+ * @param {string} input.noteId - The id of the note.
+ */
+export const getNoteCover = privateProcedure
+  .input(
+    z.object({
+      noteId: z.string(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const { noteId } = input;
+
+    const note = await db.note.findFirst({
+      where: { id: noteId, creatorId: ctx.userId },
+      select: { coverImage: true, gradientClass: true },
+    });
+
+    return { coverImage: note?.coverImage, gradientClass: note?.gradientClass };
   });
 
 /**

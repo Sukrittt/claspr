@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useState } from "react";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { useCreateMedia } from "@/hooks/media";
@@ -37,7 +37,7 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
   async function uploadByFile(files: File[]) {
     const fileData = files.map(async (file) => {
       // upload to uploadthing
-      const [res] = await uploadFiles("imageUploader", {
+      const [res] = await uploadFiles("imageUpLoader2", {
         files: [file],
       });
 
@@ -91,7 +91,7 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
         onClick={onSubmit}
       >
         {isLoading || isCreatingMedia ? (
-          <Loader className="h-4 w-4 animate-spin mr-2" />
+          <Loader2 className="h-4 w-4 animate-spin mr-2" />
         ) : (
           "Add Document"
         )}

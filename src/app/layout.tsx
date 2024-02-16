@@ -1,5 +1,5 @@
 import { Toaster } from "sonner";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./styles/globals.css";
@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>{children}</Providers>
         <Toaster
-          loadingIcon={<Loader className="h-4 w-4 animate-spin mt-1" />}
+          loadingIcon={<Loader2 className="h-4 w-4 animate-spin mt-1" />}
         />
       </body>
     </html>

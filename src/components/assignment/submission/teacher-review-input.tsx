@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { useCallback } from "react";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { SubmissionStatus } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -119,7 +119,7 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
                     disabled={disabled}
                   >
                     {isLoading ? (
-                      <Loader className="h-3 w-20 text-muted-foreground animate-spin" />
+                      <Loader2 className="h-3 w-20 text-muted-foreground animate-spin" />
                     ) : (
                       "Submit review"
                     )}

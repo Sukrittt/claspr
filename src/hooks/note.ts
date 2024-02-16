@@ -30,6 +30,7 @@ export const useEditNote = ({
   closeModal?: () => void;
   folderId: string;
 }) => {
+  const router = useRouter();
   const utils = trpc.useUtils();
 
   return trpc.note.editNote.useMutation({
@@ -65,6 +66,9 @@ export const useEditNote = ({
       toast.error(error.message);
 
       utils.folder.getFolders.setData(undefined, ctx?.prevFolders);
+    },
+    onSuccess: () => {
+      router.refresh();
     },
     onSettled: () => {
       utils.folder.getFolders.invalidate();
@@ -183,6 +187,46 @@ export const useUpdateNoteContent = () => {
       toast.error(
         "Your changes were not saved. Please refresh the page and try again."
       );
+    },
+  });
+};
+
+export const useNoteCover = (noteId: string) => {
+  return trpc.note.getNoteCover.useQuery({ noteId });
+};
+
+export const useUpdateNoteCover = ({
+  closePopover,
+}: {
+  closePopover: () => void;
+}) => {
+  const utils = trpc.useUtils();
+
+  return trpc.note.updateCover.useMutation({
+    onMutate: async ({ coverImage, noteId, gradientClass }) => {
+      closePopover();
+
+      await utils.note.getNoteCover.cancel({ noteId });
+
+      const prevNoteCover = utils.note.getNoteCover.getData();
+
+      utils.note.getNoteCover.setData(
+        { noteId },
+        {
+          coverImage,
+          gradientClass,
+        }
+      );
+
+      return { prevNoteCover };
+    },
+    onError: (error, { noteId }, ctx) => {
+      toast.error(error.message);
+
+      utils.note.getNoteCover.setData({ noteId }, ctx?.prevNoteCover);
+    },
+    onSettled: (data, _, { noteId }) => {
+      utils.note.getNoteCover.invalidate({ noteId });
     },
   });
 };

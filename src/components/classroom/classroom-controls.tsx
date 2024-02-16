@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomSorting } from "./classroom-sorting";
@@ -35,7 +35,7 @@ export const ClassroomControls: React.FC<ClassroomControlProps> = ({
         >
           {loading ? (
             <div className="h-3 w-[108px] flex justify-center items-center">
-              <Loader className="h-3 w-3 animate-spin" />
+              <Loader2 className="h-3 w-3 animate-spin" />
             </div>
           ) : (
             "Create assignment"

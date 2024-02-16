@@ -8,7 +8,7 @@ const nextConfig = {
         pathname: "**",
       },
     ],
-    domains: ["utfs.io"],
+    domains: ["utfs.io", "images.unsplash.com", "www.notion.so"],
   },
 };
 

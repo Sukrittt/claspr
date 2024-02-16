@@ -1,5 +1,5 @@
 import qs from "query-string";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { DiscussionType } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -94,7 +94,7 @@ export const MoveDiscussionForm: React.FC<MoveDiscussionFormProps> = ({
           moveDiscussion({ discussionId, discussionType: selectedTab })
         }
       >
-        {isLoading ? <Loader className="h-3 w-3 animate-spin" /> : "Save"}
+        {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Save"}
       </Button>
     </div>
   );

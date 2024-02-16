@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -146,7 +146,7 @@ export const AssignmentDetails: React.FC<AssignmentDetailsProps> = ({
         className="w-fit"
         disabled={isLoading}
       >
-        {isLoading ? <Loader className="h-3 w-[22px] animate-spin" /> : "Save"}
+        {isLoading ? <Loader2 className="h-3 w-[22px] animate-spin" /> : "Save"}
       </Button>
     </div>
   );

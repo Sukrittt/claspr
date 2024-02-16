@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { toast } from "sonner";
 import { isBefore } from "date-fns";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { ClassRoom } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -160,7 +160,7 @@ export const AssignmentFlow: React.FC<AssignmentFlowProps> = ({
               className="h-7 text-[11px]"
             >
               {isLoading ? (
-                <Loader className="h-3 w-8 animate-spin" />
+                <Loader2 className="h-3 w-8 animate-spin" />
               ) : (
                 "Create"
               )}

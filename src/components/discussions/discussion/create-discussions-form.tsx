@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { toast } from "sonner";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { DiscussionType } from "@prisma/client";
@@ -107,7 +107,11 @@ export const CreateDiscussionForm: React.FC<CreateDiscussionFormProps> = ({
             onClick={() => setIsSubmitting(true)}
             className="h-7 text-[11px]"
           >
-            {isLoading ? <Loader className="h-3 w-8 animate-spin" /> : btnLabel}
+            {isLoading ? (
+              <Loader2 className="h-3 w-8 animate-spin" />
+            ) : (
+              btnLabel
+            )}
           </Button>
         </div>
       )}

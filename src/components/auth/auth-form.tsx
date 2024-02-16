@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -180,7 +180,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ authType }) => {
         />
         <Button type="submit" disabled={isLoading || isRegistering}>
           {(isLoading || isRegistering) && (
-            <Loader className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
           )}
           {authType === "signin" ? "Sign in" : "Sign up"}
           <span className="sr-only">

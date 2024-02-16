@@ -1,7 +1,7 @@
 "use client";
 import { useAtom } from "jotai";
 import { toast } from "sonner";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DiscussionType } from "@prisma/client";
 
@@ -82,7 +82,7 @@ export const EditDiscussionDialog = ({
         </ScrollArea>
 
         <Button disabled={isLoading} onClick={() => setIsSubmitting(true)}>
-          {isLoading ? <Loader className="h-3 w-3 animate-spin" /> : "Save"}
+          {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Save"}
         </Button>
       </DialogContent>
     </Dialog>

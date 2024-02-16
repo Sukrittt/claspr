@@ -1,4 +1,4 @@
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useUnsubmitSubmission } from "@/hooks/submission";
@@ -21,7 +21,7 @@ export const Unsubmit: React.FC<UnsubmitProps> = ({
       disabled={isLoading}
       onClick={() => unsubmit({ assignmentId, submissionId })}
     >
-      {isLoading ? <Loader className="h-4 w-4 animate-spin" /> : "Unsubmit"}
+      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Unsubmit"}
     </Button>
   );
 };

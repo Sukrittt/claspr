@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { useAtom } from "jotai";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { NoteType } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -127,7 +127,7 @@ export const CreateNoteForm: React.FC<CreateNoteFormProps> = ({
         disabled={isLoading}
       >
         {isLoading ? (
-          <Loader className="mr-2 h-3 w-3 animate-spin" aria-hidden="true" />
+          <Loader2 className="mr-2 h-3 w-3 animate-spin" aria-hidden="true" />
         ) : (
           "Create Note"
         )}

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { User } from "next-auth";
 import { signOut } from "next-auth/react";
-import { Loader, LogOut } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -35,7 +35,7 @@ export const UserDropdown = ({
       <DropdownMenuTrigger asChild>
         {isLoggingOut ? (
           <div className="py-2">
-            <Loader className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
           </div>
         ) : (
           children

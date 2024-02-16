@@ -80,3 +80,71 @@ export const listOfReactions: {
     label: "Eyes",
   },
 ];
+
+export const gradientColors = [
+  {
+    id: 1,
+    gradientClass: "bg-gradient-to-r from-purple-400 via-pink-500 to-red-500",
+    name: "purple-pink-red",
+  },
+  {
+    id: 2,
+    gradientClass: "bg-gradient-to-r from-yellow-300 via-green-400 to-blue-500",
+    name: "yellow-green-blue",
+  },
+  {
+    id: 3,
+    gradientClass: "bg-gradient-to-r from-teal-400 via-blue-500 to-indigo-500",
+    name: "teal-blue-indigo",
+  },
+  {
+    id: 4,
+    gradientClass: "bg-gradient-to-r from-orange-400 via-red-500 to-pink-500",
+    name: "orange-red-pink",
+  },
+  {
+    id: 5,
+    gradientClass:
+      "bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400",
+    name: "blue-indigo-purple",
+  },
+  {
+    id: 6,
+    gradientClass: "bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500",
+    name: "yellow-red-pink",
+  },
+  {
+    id: 7,
+    gradientClass: "bg-gradient-to-r from-green-400 via-teal-500 to-blue-500",
+    name: "green-teal-blue",
+  },
+  {
+    id: 8,
+    gradientClass: "bg-gradient-to-r from-yellow-300 via-orange-400 to-red-500",
+    name: "yellow-orange-red",
+  },
+  {
+    id: 9,
+    gradientClass:
+      "bg-gradient-to-r from-purple-400 via-indigo-500 to-blue-600",
+    name: "purple-indigo-blue",
+  },
+  {
+    id: 10,
+    gradientClass:
+      "bg-[conic-gradient(at_left,_var(--tw-gradient-stops))] from-rose-500 to-indigo-700",
+    name: "green-yellow-orange",
+  },
+  {
+    id: 11,
+    gradientClass: "bg-gradient-to-r from-violet-500 to-fuchsia-500",
+    name: "violet-fuchsia",
+  },
+  {
+    id: 12,
+    gradientClass: "bg-gradient-to-r from-sky-500 to-indigo-500",
+    name: "sky-indigo",
+  },
+];
+
+export type GradientColor = (typeof gradientColors)[number];

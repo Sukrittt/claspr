@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { DiscussionType } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -106,7 +106,7 @@ export const EditReplyForm: React.FC<EditReplyFormProps> = ({
         disabled={isLoading}
       >
         {isLoading && (
-          <Loader className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
         )}
         Save
         <span className="sr-only">Edit Reply</span>

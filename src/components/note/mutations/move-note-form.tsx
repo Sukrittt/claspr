@@ -1,4 +1,4 @@
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import {
@@ -61,7 +61,7 @@ export const MoveNoteForm: React.FC<MoveNoteFormProps> = ({
           moveNote({ folderId: selectedFolderId, noteId: note.id })
         }
       >
-        {isLoading ? <Loader className="h-3 w-3 animate-spin" /> : "Save"}
+        {isLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : "Save"}
       </Button>
     </div>
   );

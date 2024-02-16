@@ -3,7 +3,7 @@ import { useState } from "react";
 import Markdown from "react-markdown";
 import { useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpLeft, Check, Copy, Loader, Sparkles } from "lucide-react";
+import { ArrowUpLeft, Check, Copy, Loader2, Sparkles } from "lucide-react";
 
 import {
   Dialog,
@@ -313,7 +313,7 @@ export const NoteAi: React.FC<NoteAiProps> = ({
               >
                 {isLoading ? (
                   <div className="h-5 w-6 flex items-center justify-center">
-                    <Loader className="h-3 w-3 animate-spin" />
+                    <Loader2 className="h-3 w-3 animate-spin" />
                   </div>
                 ) : (
                   "Ask"

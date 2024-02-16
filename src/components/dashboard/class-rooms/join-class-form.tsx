@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { toast } from "sonner";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -95,7 +95,7 @@ export const JoinClassForm = ({ sectionId }: { sectionId: string }) => {
         disabled={isLoading}
       >
         {isLoading ? (
-          <Loader className="mr-2 h-3 w-3 animate-spin" aria-hidden="true" />
+          <Loader2 className="mr-2 h-3 w-3 animate-spin" aria-hidden="true" />
         ) : (
           "Join Class"
         )}

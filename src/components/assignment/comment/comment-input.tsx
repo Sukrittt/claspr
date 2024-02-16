@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Session } from "next-auth";
 import { useForm } from "react-hook-form";
-import { ArrowUpFromDot, Loader } from "lucide-react";
+import { ArrowUpFromDot, Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -107,7 +107,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
                       variant="ghost"
                     >
                       {isLoading ? (
-                        <Loader className="h-3 w-3 text-muted-foreground animate-spin" />
+                        <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />
                       ) : (
                         <ArrowUpFromDot className="h-3 w-3 text-muted-foreground" />
                       )}

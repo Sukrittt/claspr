@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -158,7 +158,7 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
         disabled={isLoading}
       >
         {isLoading ? (
-          <Loader className="h-3 w-3 animate-spin" aria-hidden="true" />
+          <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
         ) : (
           "Create Class"
         )}

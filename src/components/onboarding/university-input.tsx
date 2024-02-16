@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { UserType } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { Check, Loader } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -117,7 +117,7 @@ export const UniversityInput: React.FC<UniversityInputProps> = ({ role }) => {
                         disabled={isLoading}
                       >
                         {isLoading ? (
-                          <Loader
+                          <Loader2
                             className="h-3 w-3 animate-spin"
                             aria-hidden="true"
                           />

@@ -47,7 +47,7 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-x-2 text-[13px] text-muted-foreground font-medium opacity-0 group-hover:opacity-100 transition rounded-md hover:bg-neutral-200 hover:text-gray-700 py-0.5 px-2 ml-1">
+            <div className="flex items-center gap-x-2 text-[13px] text-muted-foreground font-medium opacity-0 group-hover:opacity-100 transition rounded-md hover:bg-neutral-200 hover:text-gray-700 py-1 px-2 ml-1">
               <Smile className="h-3.5 w-3.5" />
               <span>Add icon</span>
             </div>

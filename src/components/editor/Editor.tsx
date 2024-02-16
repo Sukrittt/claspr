@@ -113,7 +113,7 @@ export const Editor: React.FC<EditorProps> = ({
             shortcut: "CMD+I",
             config: {
               types: "image/*",
-              uploader: {
+              upLoader2: {
                 async uploadByFile(file: File) {
                   const res = await uploadByFile(file);
 
@@ -131,7 +131,7 @@ export const Editor: React.FC<EditorProps> = ({
             class: Attach,
             config: {
               types: "image/*, video/*, application/pdf, .doc, .docx",
-              uploader: {
+              upLoader2: {
                 async uploadByFile(file: File) {
                   const res = await uploadByFile(file);
 
@@ -181,7 +181,7 @@ export const Editor: React.FC<EditorProps> = ({
 
   async function uploadByFile(file: File) {
     // upload to uploadthing
-    const [res] = await uploadFiles("imageUploader", {
+    const [res] = await uploadFiles("imageUpLoader2", {
       files: [file],
     });
 
@@ -234,7 +234,7 @@ export const Editor: React.FC<EditorProps> = ({
         animate="animate"
         exit="exit"
         id="editor"
-        className="px-4 pl-8 typography-styles max-w-full"
+        className="px-4 pl-10 typography-styles max-w-full"
       />
 
       {!disableAI && !isNotePage

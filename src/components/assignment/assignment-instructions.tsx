@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { Loader, Pencil, Save } from "lucide-react";
+import { Loader2, Pencil, Save } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ExtendedAssignmentDetails } from "@/types";
@@ -78,7 +78,7 @@ export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
             >
               {isEditable ? (
                 isLoading ? (
-                  <Loader className="h-3 w-3 animate-spin" />
+                  <Loader2 className="h-3 w-3 animate-spin" />
                 ) : (
                   <Save className="h-4 w-4" />
                 )

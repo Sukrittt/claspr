@@ -2,7 +2,7 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { Loader, LucideProps } from "lucide-react";
+import { Loader2, LucideProps } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -40,7 +40,7 @@ export const OAuthSignIn = () => {
             onClick={() => handleOAuthLogin(provider.strategy)}
           >
             {isLoading === provider.strategy ? (
-              <Loader className="h-3 w-3 animate-spin mr-2" />
+              <Loader2 className="h-3 w-3 animate-spin mr-2" />
             ) : (
               <Icon className="w-4 h-4 mr-2" />
             )}
