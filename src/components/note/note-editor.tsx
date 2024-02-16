@@ -7,6 +7,7 @@ import { ExtendedNote } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Editor } from "@/components/editor/Editor";
 import { NoteEmojiPicker } from "./note-emoji-picker";
+import { NoteRenameTitle } from "./note-rename-title";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NoteCoverImagePicker } from "./note-cover-dialog";
@@ -37,7 +38,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
   return (
     <div className="space-y-4 group">
       {isLoading ? (
-        <Skeleton className="h-44 w-full" />
+        <Skeleton className="h-44 w-full rounded-none" />
       ) : noteCover?.coverImage ? (
         <CoverDisplay
           coverImage={noteCover.coverImage}
@@ -77,9 +78,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
       </div>
 
       <div className="pl-20 pt-1">
-        <h3 className="text-4xl font-semibold text-neutral-800 tracking-tight">
-          {note.title}
-        </h3>
+        <NoteRenameTitle note={note} />
       </div>
 
       <div className="p-4">

@@ -14,9 +14,9 @@ export const CoverDisplay: React.FC<CoverDisplayProps> = ({
       <Image
         src={coverImage}
         className="object-cover"
-        fill
         alt={alt}
         priority
+        fill
         quality={100}
       />
     </div>
