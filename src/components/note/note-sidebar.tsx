@@ -29,6 +29,7 @@ import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { CreateNoteDialog } from "./mutations/create-note-dialog";
 import { FolderDropdown } from "@/components/folder/folder-dropdown";
 import { NoteSidebarSkeleton } from "@/components/skeletons/note-sidebar-skeleton";
+import { CustomTooltip } from "../custom/custom-tooltip";
 
 export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
   const { data: folders, isLoading, isFetching } = usePersonalFolders();
@@ -62,23 +63,27 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
             </Link>
           )}
           {sidebarState.isOpen ? (
-            <PanelLeft
-              className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition"
-              onClick={() =>
-                setSidebarState({
-                  isOpen: false,
-                })
-              }
-            />
+            <CustomTooltip text="Close sidebar">
+              <PanelLeft
+                className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition"
+                onClick={() =>
+                  setSidebarState({
+                    isOpen: false,
+                  })
+                }
+              />
+            </CustomTooltip>
           ) : (
-            <PanelLeftOpen
-              className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition absolute -left-2 top-1"
-              onClick={() =>
-                setSidebarState({
-                  isOpen: true,
-                })
-              }
-            />
+            <CustomTooltip text="Open sidebar">
+              <PanelLeftOpen
+                className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition absolute -left-2 top-1"
+                onClick={() =>
+                  setSidebarState({
+                    isOpen: true,
+                  })
+                }
+              />
+            </CustomTooltip>
           )}
         </div>
 

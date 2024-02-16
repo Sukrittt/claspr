@@ -1,6 +1,7 @@
 "use client";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+import { MoreHorizontal, MoveUpRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ExtendedNote } from "@/types";
@@ -13,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { NoteCoverImagePicker } from "./note-cover-dialog";
 import { CoverDisplay } from "./cover-image/cover-display";
 import { useNoteCover, useUpdateNoteContent } from "@/hooks/note";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
   const [content] = useAtom(contentAtom);
@@ -36,52 +38,69 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
   }, [isSubmitting]);
 
   return (
-    <div className="space-y-4 group">
-      {isLoading ? (
-        <Skeleton className="h-44 w-full rounded-none" />
-      ) : noteCover?.coverImage ? (
-        <CoverDisplay
-          coverImage={noteCover.coverImage}
-          alt={`${note.title}'s cover image`}
-        />
-      ) : (
-        <div
-          className={cn(
-            "h-44 border-b bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
-            noteCover?.gradientClass
-          )}
-        />
-      )}
-
-      <div className="pl-12 relative flex items-center gap-x-2">
-        <NoteEmojiPicker
-          emojiUrl={note.emojiUrl}
-          folderId={note.folderId}
-          noteId={note.id}
-        />
-
+    <div className="space-y-4 group/parent">
+      <div className="space-y-4 group/child">
         {isLoading ? (
-          note.emojiUrl && (
-            <div className="absolute right-5">
-              <Skeleton className="h-6 w-24" />
-            </div>
-          )
+          <Skeleton className="h-44 w-full rounded-none" />
+        ) : noteCover?.coverImage ? (
+          <CoverDisplay
+            coverImage={noteCover.coverImage}
+            alt={`${note.title}'s cover image`}
+          />
         ) : (
           <div
-            className={cn({
-              "absolute right-5": !!note.emojiUrl,
-            })}
-          >
-            <NoteCoverImagePicker noteId={note.id} hasCover={!!noteCover} />
-          </div>
+            className={cn(
+              "h-44 border-b bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
+              noteCover?.gradientClass
+            )}
+          />
         )}
+
+        <div className="pl-12 flex items-center gap-x-2">
+          <div className="relative">
+            <NoteEmojiPicker
+              emojiUrl={note.emojiUrl}
+              folderId={note.folderId}
+              noteId={note.id}
+            />
+          </div>
+
+          {isLoading ? (
+            note.emojiUrl && (
+              <div className="absolute right-5">
+                <Skeleton className="h-6 w-24" />
+              </div>
+            )
+          ) : (
+            <div
+              className={cn({
+                "absolute top-5 right-5": !!note.emojiUrl,
+              })}
+            >
+              <NoteCoverImagePicker
+                noteId={note.id}
+                hasCover={!!noteCover}
+                hasEmoji={!!note.emojiUrl}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="pl-20 pt-1">
+      <div className="px-20 pt-1 relative">
         <NoteRenameTitle note={note} />
+
+        <div className="absolute -top-5 right-5 border py-0.5 px-2.5 text-xs tracking-tight rounded-full cursor-pointer hover:bg-neutral-100 transition">
+          <CustomTooltip text="Jump to classroom">
+            <div className="flex items-center gap-x-2">
+              <span>DBMS LAB </span>
+              <MoveUpRight className="h-3 w-3" />
+            </div>
+          </CustomTooltip>
+        </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 pt-0">
         <ScrollArea
           className="pr-0 pl-10 h-[45vh]"
           style={{

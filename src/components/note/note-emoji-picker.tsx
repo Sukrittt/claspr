@@ -34,8 +34,8 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
       <PopoverTrigger asChild>
         <span className="py-1 px-2 cursor-pointer block w-fit">
           {selectedEmoji.url ? (
-            <div className="absolute left-20 -top-10">
-              <div className="border p-2 rounded-xl bg-white bg-opacity-20 backdrop-blur-lg drop-shadow-lg">
+            <div className="absolute left-7 -top-10">
+              <div className="border p-2 rounded-xl bg-white bg-opacity-20 backdrop-blur-lg hover:bg-neutral-200/50 transition drop-shadow-lg">
                 <div className="h-8 w-8 relative">
                   <Image
                     src={selectedEmoji.url}
@@ -47,7 +47,7 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-x-2 text-[13px] text-muted-foreground font-medium opacity-0 group-hover:opacity-100 transition rounded-md hover:bg-neutral-200 hover:text-gray-700 py-1 px-2 ml-1">
+            <div className="flex items-center gap-x-2 text-[13px] text-muted-foreground font-medium transition rounded-md hover:bg-neutral-200 hover:text-gray-700 py-1 px-2">
               <Smile className="h-3.5 w-3.5" />
               <span>Add icon</span>
             </div>
