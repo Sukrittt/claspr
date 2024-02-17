@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { Smile } from "lucide-react";
+import { Smile, Trash } from "lucide-react";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 
 import {
@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useEditNote } from "@/hooks/note";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface EmojiPickerToolProps {
   emojiUrl: string | null;
@@ -56,7 +57,7 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
           )}
         </span>
       </PopoverTrigger>
-      <PopoverContent className="w-auto bg-transparent shadow-none border-none pt-0">
+      <PopoverContent className="w-auto bg-transparent shadow-none border-none pt-0 relative">
         <EmojiPicker
           theme={Theme.LIGHT}
           onEmojiClick={(e) => {
@@ -69,6 +70,25 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
             });
           }}
         />
+
+        {selectedEmoji.url && (
+          <CustomTooltip text="Remove icon">
+            <div
+              onClick={() => {
+                setHasEmoji(false);
+
+                setSelectedEmoji({
+                  name: "",
+                  url: "",
+                });
+                updateEmoji({ noteId, emojiUrl: null });
+              }}
+              className="absolute bottom-[38px] right-10 p-1 border rounded-md transition cursor-pointer z-50"
+            >
+              <Trash className="h-4 w-4 text-destructive" />
+            </div>
+          </CustomTooltip>
+        )}
       </PopoverContent>
     </Popover>
   );

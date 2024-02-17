@@ -78,7 +78,7 @@ export const editNote = privateProcedure
     z.object({
       noteId: z.string(),
       title: z.string().max(200).optional(),
-      emojiUrl: z.string().optional(),
+      emojiUrl: z.string().nullable().optional(),
     })
   )
   .mutation(async ({ ctx, input }) => {
@@ -102,6 +102,8 @@ export const editNote = privateProcedure
       });
     }
 
+    const updatedEmojiUrl = emojiUrl === null ? null : existingNote.emojiUrl;
+
     await db.note.update({
       where: {
         id: noteId,
@@ -109,7 +111,7 @@ export const editNote = privateProcedure
       },
       data: {
         title: title ?? existingNote.title,
-        emojiUrl: emojiUrl ?? existingNote.emojiUrl,
+        emojiUrl: updatedEmojiUrl,
       },
     });
   });
