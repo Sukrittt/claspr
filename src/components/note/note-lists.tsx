@@ -10,12 +10,14 @@ interface NoteListsProps {
   activeNoteId: string;
   folders: ExtendedFolder[];
   activeFolder: ExtendedFolder | undefined;
+  setActiveFolderId?: (folderId: string) => void;
 }
 
 export const NoteLists: React.FC<NoteListsProps> = ({
   activeFolder,
   activeNoteId,
   folders,
+  setActiveFolderId,
 }) => {
   const allNotes = {
     notes: folders.map((folder) => folder.notes).flat(),
@@ -66,6 +68,9 @@ export const NoteLists: React.FC<NoteListsProps> = ({
               <NoteDropdown
                 note={note}
                 disabled={note.id === activeNoteId}
+                setActiveFolderId={(folderId: string) =>
+                  setActiveFolderId?.(folderId)
+                }
                 folders={folders}
               />
             </div>

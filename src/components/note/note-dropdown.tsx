@@ -27,12 +27,14 @@ interface NoteDropdownProps {
   note: MinifiedNote;
   folders: ExtendedFolder[];
   disabled?: boolean;
+  setActiveFolderId?: (folderId: string) => void;
 }
 
 export const NoteDropdown: React.FC<NoteDropdownProps> = ({
   note,
   folders,
   disabled = false,
+  setActiveFolderId,
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -113,6 +115,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           isOpen={isMoveOpen}
           setIsMoveOpen={setIsMoveOpen}
           folders={folders}
+          setActiveFolderId={setActiveFolderId}
         />
       )}
       {isEditOpen && (

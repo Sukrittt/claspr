@@ -27,12 +27,12 @@ import { usePersonalFolders } from "@/hooks/folder";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { CreateNoteDialog } from "./mutations/create-note-dialog";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { FolderDropdown } from "@/components/folder/folder-dropdown";
 import { NoteSidebarSkeleton } from "@/components/skeletons/note-sidebar-skeleton";
-import { CustomTooltip } from "../custom/custom-tooltip";
 
 export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
-  const { data: folders, isLoading, isFetching } = usePersonalFolders();
+  const { data: folders, isLoading } = usePersonalFolders();
   const [sidebarState, setSidebarState] = useSidebarState();
 
   const [activeFolderId, setActiveFolderId] = useState(note.folder.id);
@@ -89,7 +89,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
 
         {sidebarState.isOpen && (
           <div>
-            {isLoading || isFetching ? (
+            {isLoading ? (
               <NoteSidebarSkeleton />
             ) : !folders || folders.length === 0 ? (
               <div className="pt-20 flex flex-col items-center justify-center gap-y-2">
@@ -147,6 +147,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
                       activeFolder={activeFolder}
                       activeNoteId={note.id}
                       folders={folders}
+                      setActiveFolderId={setActiveFolderId}
                     />
                   </ScrollArea>
                 </motion.div>

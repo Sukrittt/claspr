@@ -18,6 +18,7 @@ type MoveNoteDialogProps = {
   setIsMoveOpen: React.Dispatch<React.SetStateAction<boolean>>;
   note: MinifiedNote;
   folders: ExtendedFolder[];
+  setActiveFolderId?: (folderId: string) => void;
 };
 
 export const MoveNoteDialog = ({
@@ -25,6 +26,7 @@ export const MoveNoteDialog = ({
   setIsMoveOpen,
   folders,
   note,
+  setActiveFolderId,
 }: MoveNoteDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -55,6 +57,7 @@ export const MoveNoteDialog = ({
               closeModal={closeModal}
               folders={folders}
               note={note}
+              setActiveFolderId={setActiveFolderId}
             />
           </div>
         </DialogHeader>
