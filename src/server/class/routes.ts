@@ -235,6 +235,7 @@ export const updateViewCount = privateProcedure
 
     const existingClassroom = await db.classRoom.findFirst({
       where: { id: classroomId },
+      select: { teacherId: true },
     });
 
     if (!existingClassroom) {

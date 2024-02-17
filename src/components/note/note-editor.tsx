@@ -1,6 +1,6 @@
 "use client";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MoreHorizontal, MoveUpRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -22,6 +22,8 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
 
   const { mutate: updateContent } = useUpdateNoteContent();
   const { data: noteCover, isLoading } = useNoteCover(note.id);
+
+  const [hasEmoji, setHasEmoji] = useState(!!note.emojiUrl);
 
   const handleUpdateContent = () => {
     updateContent({
@@ -62,11 +64,12 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
               emojiUrl={note.emojiUrl}
               folderId={note.folderId}
               noteId={note.id}
+              setHasEmoji={setHasEmoji}
             />
           </div>
 
           {isLoading ? (
-            note.emojiUrl && (
+            hasEmoji && (
               <div className="absolute right-5">
                 <Skeleton className="h-6 w-24" />
               </div>
@@ -74,13 +77,13 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
           ) : (
             <div
               className={cn({
-                "absolute top-5 right-5": !!note.emojiUrl,
+                "absolute top-5 right-5": hasEmoji,
               })}
             >
               <NoteCoverImagePicker
                 noteId={note.id}
                 hasCover={!!noteCover}
-                hasEmoji={!!note.emojiUrl}
+                hasEmoji={hasEmoji}
               />
             </div>
           )}

@@ -15,12 +15,14 @@ interface EmojiPickerToolProps {
   emojiUrl: string | null;
   folderId: string;
   noteId: string;
+  setHasEmoji: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
   emojiUrl,
   folderId,
   noteId,
+  setHasEmoji,
 }) => {
   const [selectedEmoji, setSelectedEmoji] = useState({
     name: "",
@@ -58,6 +60,8 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
         <EmojiPicker
           theme={Theme.LIGHT}
           onEmojiClick={(e) => {
+            setHasEmoji(true);
+
             setSelectedEmoji({ name: e.names[0], url: e.imageUrl });
             updateEmoji({
               noteId,

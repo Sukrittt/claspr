@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
+import { FEEDBACK_STATUS } from "@prisma/client";
 
 /**
  * To facilitate improved context for future conversations, initiate a new dialogue between the user and the AI.
@@ -94,6 +95,7 @@ export const clearConversation = privateProcedure
 
     const existingConversation = await db.conversation.findFirst({
       where: { classRoomId: classroomId, userId: ctx.userId },
+      select: { classRoomId: true },
     });
 
     if (!existingConversation) {
@@ -147,6 +149,8 @@ export const removeConversation = privateProcedure
     });
   });
 
+const FeedbackEnum = z.nativeEnum(FEEDBACK_STATUS);
+
 /**
  * For giving a feedback to the AI for a particular conversation.
  *
@@ -158,7 +162,7 @@ export const giveFeedback = privateProcedure
   .input(
     z.object({
       conversationId: z.string(),
-      feedback: z.enum(["LIKE", "DISLIKE"]),
+      feedback: FeedbackEnum,
     })
   )
   .mutation(async ({ ctx, input }) => {
