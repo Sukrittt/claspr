@@ -16,12 +16,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ExtendedFolder } from "@/types";
-import { cn, getShortenedText } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
 import { FolderContext } from "./folder-context";
 import { FolderDropdown } from "./folder-dropdown";
+import { cn, getShortenedText } from "@/lib/utils";
 import { usePersonalFolders } from "@/hooks/folder";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { NoteSearch } from "@/components/note/note-search";
 import { NoteDropdown } from "@/components/note/note-dropdown";
 import { CreateFolderDialog } from "./mutations/create-folder-dialog";
 import { FolderSkeleton } from "@/components/skeletons/folder-skeleton";
@@ -44,7 +45,10 @@ export const FolderCards = () => {
       <CardHeader className="border-b py-2.5 space-y-0.5">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base pt-1">Your Folders</CardTitle>
-          <CreateFolderDialog />
+          <div className="flex items-center gap-x-2">
+            <NoteSearch />
+            <CreateFolderDialog />
+          </div>
         </div>
 
         <CardDescription className="text-[13px] flex gap-x-1 items-center">
