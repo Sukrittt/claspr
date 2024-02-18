@@ -16,6 +16,7 @@ import {
 import { folderAtom } from "@/atoms";
 import { MinifiedNote } from "@/types";
 import { useCreateNote } from "@/hooks/note";
+import { MinifiedTopic } from "@/types/note";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -57,7 +58,11 @@ export const CreateNoteForm: React.FC<CreateNoteFormProps> = ({
     },
   });
 
-  const handleCleanUps = (note: MinifiedNote) => {
+  const handleCleanUps = (
+    note: MinifiedNote & {
+      topics: MinifiedTopic[];
+    }
+  ) => {
     closeModal();
 
     const folderToUpdate = folders.find(

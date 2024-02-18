@@ -28,6 +28,16 @@ export const getFolders = privateProcedure.query(async ({ ctx }) => {
           title: true,
           emojiUrl: true,
           createdAt: true,
+          topics: {
+            select: {
+              id: true,
+              name: true,
+              noteId: true,
+            },
+            orderBy: {
+              updatedAt: "desc",
+            },
+          },
         },
         orderBy: {
           updatedAt: "desc",

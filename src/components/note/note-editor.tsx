@@ -15,6 +15,7 @@ import { NoteCoverImagePicker } from "./note-cover-dialog";
 import { CoverDisplay } from "./cover-image/cover-display";
 import { useNoteCover, useUpdateNoteContent } from "@/hooks/note";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { Separator } from "../ui/separator";
 
 export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
   const [content] = useAtom(contentAtom);
@@ -92,6 +93,24 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
 
       <div className="px-20 pt-1 relative">
         <NoteRenameTitle note={note} />
+
+        <div className="space-y-1">
+          {note.topics.length > 0 && (
+            <div className="flex text-muted-foreground text-xs font-semibold tracking-tight items-center gap-x-2">
+              {note.topics.map((topic, index) => (
+                <div key={topic.id} className="flex items-center gap-x-2">
+                  <p>{topic.name}</p>
+                  {index !== note.topics.length - 1 && (
+                    <Separator
+                      className="h-4 bg-neutral-300"
+                      orientation="vertical"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="absolute -top-5 right-5 border py-0.5 px-2.5 text-xs tracking-tight rounded-full cursor-pointer hover:bg-neutral-100 transition">
           <CustomTooltip text="Jump to classroom">

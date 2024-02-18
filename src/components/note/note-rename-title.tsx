@@ -28,7 +28,7 @@ export const NoteRenameTitle = ({ note }: { note: ExtendedNote }) => {
   return (
     <ReactTextareaAutosize
       placeholder="Untitled Note"
-      className="text-4xl font-semibold text-neutral-800 tracking-tight bg-transparent focus:outline-none w-full resize-none"
+      className="text-4xl font-semibold text-neutral-800 tracking-tight bg-transparent focus:outline-none w-full resize-none h-[46px]"
       value={title}
       onChange={(e) => setTitle(e.target.value)}
     />

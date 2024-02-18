@@ -4,11 +4,16 @@ import { useRouter } from "next/navigation";
 
 import { trpc } from "@/trpc/client";
 import { MinifiedNote } from "@/types";
+import { MinifiedTopic } from "@/types/note";
 
 export const useCreateNote = ({
   handleCleanUps,
 }: {
-  handleCleanUps: (note: MinifiedNote) => void;
+  handleCleanUps: (
+    note: MinifiedNote & {
+      topics: MinifiedTopic[];
+    }
+  ) => void;
 }) => {
   const utils = trpc.useUtils();
   const router = useRouter();
@@ -135,7 +140,11 @@ export const useMoveNote = ({
       const prevFolders = utils.folder.getFolders.getData();
 
       utils.folder.getFolders.setData(undefined, (prev) => {
-        let filteredNote: MinifiedNote | null = null;
+        let filteredNote:
+          | (MinifiedNote & {
+              topics: MinifiedTopic[];
+            })
+          | null = null;
 
         const updatedFolders = prev?.map((folder) => {
           if (folder.id === oldFolderId) {
@@ -227,6 +236,65 @@ export const useUpdateNoteCover = ({
     },
     onSettled: (data, _, { noteId }) => {
       utils.note.getNoteCover.invalidate({ noteId });
+    },
+  });
+};
+
+export const useAttachTopics = ({ closeModal }: { closeModal: () => void }) => {
+  const router = useRouter();
+  const utils = trpc.useUtils();
+
+  return trpc.note.attachTopics.useMutation({
+    onSuccess: () => {
+      closeModal();
+      utils.folder.getFolders.invalidate();
+      router.refresh();
+    },
+  });
+};
+
+export const useRemoveTopics = (folderId: string) => {
+  const router = useRouter();
+  const utils = trpc.useUtils();
+
+  return trpc.note.removeTopics.useMutation({
+    onMutate: async ({ noteId, topicIds }) => {
+      await utils.folder.getFolders.cancel();
+
+      const prevFolders = utils.folder.getFolders.getData();
+
+      utils.folder.getFolders.setData(undefined, (prev) =>
+        prev?.map((folder) =>
+          folder.id === folderId
+            ? {
+                ...folder,
+                notes: folder.notes.map((note) =>
+                  note.id === noteId
+                    ? {
+                        ...note,
+                        topics: note.topics.filter(
+                          (topic) => !topicIds.includes(topic.id)
+                        ),
+                      }
+                    : note
+                ),
+              }
+            : folder
+        )
+      );
+
+      return { prevFolders };
+    },
+    onError: (error, _, ctx) => {
+      toast.error(error.message);
+
+      utils.folder.getFolders.setData(undefined, ctx?.prevFolders);
+    },
+    onSuccess: () => {
+      router.refresh();
+    },
+    onSettled: () => {
+      utils.folder.getFolders.invalidate();
     },
   });
 };

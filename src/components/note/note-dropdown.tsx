@@ -16,15 +16,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { MinifiedTopic } from "@/types/note";
 import { ExtendedFolder, MinifiedNote } from "@/types";
 import { EditNoteDialog } from "./mutations/edit-note-dialog";
 import { NoteInfoDialog } from "./mutations/note-info-dialog";
 import { MoveNoteDialog } from "./mutations/move-note-dialog";
 import { DeleteNoteDialog } from "./mutations/delete-note-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { AddTopicDialog } from "./mutations/add-topic-dialog";
 
 interface NoteDropdownProps {
-  note: MinifiedNote;
+  note: MinifiedNote & {
+    topics: MinifiedTopic[];
+  };
   folders: ExtendedFolder[];
   disabled?: boolean;
   setActiveFolderId?: (folderId: string) => void;
@@ -88,7 +92,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
             onClick={() => setIsAddTopicOpen(true)}
           >
             <NotebookText className="h-3.5 w-3.5 mr-2" />
-            Add topics
+            Attach topics
           </DropdownMenuItem>
 
           {!disabled && (
@@ -137,6 +141,13 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           note={note}
           isOpen={isInfoOpen}
           setIsInfoOpen={setIsInfoOpen}
+        />
+      )}
+      {isAddTopicOpen && (
+        <AddTopicDialog
+          note={note}
+          isOpen={isAddTopicOpen}
+          setIsAddTopicOpen={setIsAddTopicOpen}
         />
       )}
     </div>

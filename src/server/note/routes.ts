@@ -59,6 +59,13 @@ export const createNote = privateProcedure
         title: true,
         folderId: true,
         createdAt: true,
+        topics: {
+          select: {
+            id: true,
+            name: true,
+            noteId: true,
+          },
+        },
       },
     });
 
@@ -262,6 +269,11 @@ export const getNote = privateProcedure
         classroomId,
       },
       include: {
+        topics: {
+          orderBy: {
+            updatedAt: "desc",
+          },
+        },
         folder: {
           select: {
             id: true,
@@ -356,6 +368,90 @@ export const updateContent = privateProcedure
       },
       data: {
         content,
+      },
+    });
+  });
+
+/**
+ * To attach topics to a specific note.
+ *
+ * @param {object} input - The input parameters for attaching topics to a specific note.
+ * @param {string} input.noteId - The id of the node.
+ * @param {string[]} input.topics - An array of topic names for the note.
+ */
+export const attachTopics = privateProcedure
+  .input(
+    z.object({
+      noteId: z.string(),
+      topics: z.array(z.string()),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { noteId, topics } = input;
+
+    const existingNote = await db.note.findFirst({
+      where: {
+        id: noteId,
+        creatorId: ctx.userId,
+      },
+      select: { id: true },
+    });
+
+    if (!existingNote) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the note you are looking for.",
+      });
+    }
+
+    const topicRecords = topics.map((name) => ({
+      name,
+      noteId,
+    }));
+
+    await db.topic.createMany({
+      data: topicRecords,
+    });
+  });
+
+/**
+ * To remove topics of a specific note.
+ *
+ * @param {object} input - The input parameters for removing topics of a specific note.
+ * @param {string} input.noteId - The id of the node.
+ * @param {string[]} input.topicIds - An array of topic ids.
+ */
+export const removeTopics = privateProcedure
+  .input(
+    z.object({
+      noteId: z.string(),
+      topicIds: z.array(z.string()),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { noteId, topicIds } = input;
+
+    const existingNote = await db.note.findFirst({
+      where: {
+        id: noteId,
+        creatorId: ctx.userId,
+      },
+      select: { id: true },
+    });
+
+    if (!existingNote) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the note you are looking for.",
+      });
+    }
+
+    await db.topic.deleteMany({
+      where: {
+        noteId,
+        id: {
+          in: topicIds,
+        },
       },
     });
   });
