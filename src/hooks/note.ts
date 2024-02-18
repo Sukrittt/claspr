@@ -31,15 +31,17 @@ export const useCreateNote = ({
 export const useEditNote = ({
   closeModal,
   folderId,
+  onComplete,
 }: {
   closeModal?: () => void;
+  onComplete?: () => void;
   folderId: string;
 }) => {
   const router = useRouter();
   const utils = trpc.useUtils();
 
   return trpc.note.editNote.useMutation({
-    onMutate: async ({ noteId, title, emojiUrl }) => {
+    onMutate: async ({ noteId, title, emojiUrl, classroomId }) => {
       closeModal?.();
 
       await utils.folder.getFolders.cancel();
@@ -57,6 +59,7 @@ export const useEditNote = ({
                         ...note,
                         title: title ?? note.title,
                         emojiUrl: emojiUrl ?? note.emojiUrl,
+                        classroomId: classroomId ?? note.classroomId,
                       }
                     : note
                 ),
@@ -74,6 +77,7 @@ export const useEditNote = ({
     },
     onSuccess: () => {
       router.refresh();
+      onComplete?.();
     },
     onSettled: () => {
       utils.folder.getFolders.invalidate();

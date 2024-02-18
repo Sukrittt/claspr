@@ -1,7 +1,8 @@
 "use client";
+import Link from "next/link";
 import { useAtom } from "jotai";
+import { MoveUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import { MoreHorizontal, MoveUpRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ExtendedNote } from "@/types";
@@ -9,13 +10,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Editor } from "@/components/editor/Editor";
 import { NoteEmojiPicker } from "./note-emoji-picker";
 import { NoteRenameTitle } from "./note-rename-title";
+import { Separator } from "@/components/ui/separator";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NoteCoverImagePicker } from "./note-cover-dialog";
 import { CoverDisplay } from "./cover-image/cover-display";
 import { useNoteCover, useUpdateNoteContent } from "@/hooks/note";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { Separator } from "../ui/separator";
 
 export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
   const [content] = useAtom(contentAtom);
@@ -112,14 +113,20 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
           )}
         </div>
 
-        <div className="absolute -top-5 right-5 border py-0.5 px-2.5 text-xs tracking-tight rounded-full cursor-pointer hover:bg-neutral-100 transition">
-          <CustomTooltip text="Jump to classroom">
-            <div className="flex items-center gap-x-2">
-              <span>DBMS LAB </span>
-              <MoveUpRight className="h-3 w-3" />
-            </div>
-          </CustomTooltip>
-        </div>
+        {note.classroomId && (
+          <div className="absolute -top-5 right-5 border py-0.5 px-2.5 text-xs tracking-tight rounded-full cursor-pointer hover:bg-neutral-100 transition">
+            <CustomTooltip text="Jump to classroom">
+              <Link
+                target="_blank"
+                href={`/c/${note.classroomId}`}
+                className="flex items-center gap-x-2"
+              >
+                <span>{note.classroom?.title}</span>
+                <MoveUpRight className="h-3 w-3" />
+              </Link>
+            </CustomTooltip>
+          </div>
+        )}
       </div>
 
       <div className="p-4 pt-0">

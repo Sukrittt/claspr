@@ -50,3 +50,7 @@ export const useEditClassDescription = ({
     },
   });
 };
+
+export const useUserClassrooms = () => {
+  return trpc.class.getAllClassrooms.useQuery();
+};

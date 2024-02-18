@@ -28,6 +28,7 @@ export const getFolders = privateProcedure.query(async ({ ctx }) => {
           title: true,
           emojiUrl: true,
           createdAt: true,
+          classroomId: true,
           topics: {
             select: {
               id: true,

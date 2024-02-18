@@ -59,6 +59,7 @@ export const createNote = privateProcedure
         title: true,
         folderId: true,
         createdAt: true,
+        classroomId: true,
         topics: {
           select: {
             id: true,
@@ -78,7 +79,8 @@ export const createNote = privateProcedure
  * @param {object} input - The input parameters for editing a note.
  * @param {string} input.noteId - The id of the note.
  * @param {string} input.title - The updated title of the note.
- * @param {string} input.title - The updated emojiUrl of the note.
+ * @param {string} input.emojiUrl - The updated emojiUrl of the note.
+ * @param {string} input.classroomId - The updated classroom to be linked with this note.
  */
 export const editNote = privateProcedure
   .input(
@@ -86,10 +88,11 @@ export const editNote = privateProcedure
       noteId: z.string(),
       title: z.string().max(200).optional(),
       emojiUrl: z.string().nullable().optional(),
+      classroomId: z.string().optional().nullable(),
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const { title, noteId, emojiUrl } = input;
+    const { title, noteId, emojiUrl, classroomId } = input;
 
     const existingNote = await db.note.findFirst({
       where: {
@@ -99,6 +102,7 @@ export const editNote = privateProcedure
       select: {
         title: true,
         emojiUrl: true,
+        classroomId: true,
       },
     });
 
@@ -109,7 +113,9 @@ export const editNote = privateProcedure
       });
     }
 
-    const updatedEmojiUrl = emojiUrl === null ? null : existingNote.emojiUrl;
+    const fallbackEmojiUrl = emojiUrl === null ? null : existingNote.emojiUrl;
+    const fallBackUpdatedClassroomId =
+      classroomId === null ? null : existingNote.classroomId;
 
     await db.note.update({
       where: {
@@ -118,7 +124,8 @@ export const editNote = privateProcedure
       },
       data: {
         title: title ?? existingNote.title,
-        emojiUrl: updatedEmojiUrl,
+        emojiUrl: emojiUrl ?? fallbackEmojiUrl,
+        classroomId: classroomId ?? fallBackUpdatedClassroomId,
       },
     });
   });
@@ -278,6 +285,11 @@ export const getNote = privateProcedure
           select: {
             id: true,
             name: true,
+          },
+        },
+        classroom: {
+          select: {
+            title: true,
           },
         },
       },

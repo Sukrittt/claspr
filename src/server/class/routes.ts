@@ -626,6 +626,80 @@ export const getIsPartOfClass = privateProcedure
   });
 
 /**
+ * To get all the classrooms the user is a part of either as a creator or as a member.
+ *
+ * @returns {Promise<object[]>} - A list of classroom objects from the database.
+ *
+ */
+export const getAllClassrooms = privateProcedure.query(async ({ ctx }) => {
+  const existingUser = await db.user.findUnique({
+    where: {
+      id: ctx.userId,
+    },
+    select: { role: true },
+  });
+
+  if (!existingUser) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "We couldn't find your account.",
+    });
+  }
+
+  const isTeacher = existingUser.role === "TEACHER";
+
+  let membershipWhereClause = {};
+
+  if (isTeacher) {
+    membershipWhereClause = {
+      userId: ctx.userId,
+      isTeacher: true,
+    };
+  } else {
+    membershipWhereClause = {
+      userId: ctx.userId,
+    };
+  }
+
+  const promises = [
+    db.classRoom.findMany({
+      where: {
+        teacherId: ctx.userId,
+      },
+      select: {
+        id: true,
+        title: true,
+      },
+    }),
+    db.membership.findMany({
+      where: membershipWhereClause,
+      select: { classRoomId: true, classRoom: { select: { title: true } } },
+    }),
+  ];
+
+  const [rawTeacher, rawMember] = await Promise.all(promises);
+
+  type TeacherIds = { id: string; title: string }[];
+  type MemberIds = { classRoomId: string; classRoom: { title: string } }[];
+
+  const teacher: TeacherIds = rawTeacher as TeacherIds;
+  const member = rawMember as MemberIds;
+
+  const classroomIds = [
+    ...teacher.map((classroom) => ({
+      classroomId: classroom.id,
+      title: classroom.title,
+    })),
+    ...member.map((membership) => ({
+      classroomId: membership.classRoomId,
+      title: membership.classRoom.title,
+    })),
+  ];
+
+  return classroomIds;
+});
+
+/**
  * To get the folders created inside a classroom.
  *
  * @param {object} input - The input parameters for getting folders of the classroom.

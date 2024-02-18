@@ -21,9 +21,10 @@ import { ExtendedFolder, MinifiedNote } from "@/types";
 import { EditNoteDialog } from "./mutations/edit-note-dialog";
 import { NoteInfoDialog } from "./mutations/note-info-dialog";
 import { MoveNoteDialog } from "./mutations/move-note-dialog";
+import { AddTopicDialog } from "./mutations/add-topic-dialog";
 import { DeleteNoteDialog } from "./mutations/delete-note-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { AddTopicDialog } from "./mutations/add-topic-dialog";
+import { LinkClassroomDialog } from "./mutations/link-classroom-dialog";
 
 interface NoteDropdownProps {
   note: MinifiedNote & {
@@ -148,6 +149,13 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           note={note}
           isOpen={isAddTopicOpen}
           setIsAddTopicOpen={setIsAddTopicOpen}
+        />
+      )}
+      {isLinkClasroomOpen && (
+        <LinkClassroomDialog
+          note={note}
+          isOpen={isLinkClasroomOpen}
+          setIsLinkClasroomOpen={setIsLinkClasroomOpen}
         />
       )}
     </div>

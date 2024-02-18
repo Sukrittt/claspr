@@ -238,13 +238,15 @@ const FolderNotes: React.FC<FolderNotesProps> = ({
                 >
                   <div className="flex items-center gap-x-2">
                     {note.emojiUrl ? (
-                      <div className="h-4 w-4 relative">
-                        <Image
-                          src={note.emojiUrl}
-                          className="object-contain"
-                          alt={note.title}
-                          fill
-                        />
+                      <div className="p-1.5">
+                        <div className="h-4 w-4 relative">
+                          <Image
+                            src={note.emojiUrl}
+                            className="object-contain"
+                            alt={note.title}
+                            fill
+                          />
+                        </div>
                       </div>
                     ) : (
                       <div className="border rounded-md p-1.5 text-gray-800">
