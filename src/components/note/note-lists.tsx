@@ -64,7 +64,10 @@ export const NoteLists: React.FC<NoteListsProps> = ({
               </p>
             </div>
 
-            <div onClick={(e) => e.stopPropagation()}>
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="opacity-0 group-hover:opacity-100 transition"
+            >
               <NoteDropdown
                 note={note}
                 disabled={note.id === activeNoteId}

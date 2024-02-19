@@ -16,6 +16,12 @@ export const NoteRenameTitle = ({ note }: { note: ExtendedNote }) => {
   useEffect(() => {
     if (title === note.title) return;
 
+    setTitle(note.title);
+  }, [note.title, title]);
+
+  useEffect(() => {
+    if (title === note.title) return;
+
     const formattedTitle =
       debouncedTitle.length === 0 ? "Untitled Note" : debouncedTitle.trim();
     ("");

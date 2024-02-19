@@ -1,7 +1,8 @@
 import { toast } from "sonner";
-import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
+import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useCreateMedia } from "@/hooks/media";
 import { uploadFiles } from "@/lib/uploadthing";
@@ -19,6 +20,14 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
 }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleFileClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -75,28 +84,38 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
     }
   }
 
+  useEffect(() => {
+    if (files.length === 0) return;
+
+    onSubmit();
+  }, [files]);
+
   return (
     <div className="space-y-4">
+      <div
+        onClick={handleFileClick}
+        className={cn(
+          "py-1 flex items-center justify-center font-medium text-sm tracking-tight w-full border rounded-md cursor-pointer hover:bg-neutral-100 transition",
+          {
+            "opacity-50": isLoading || isCreatingMedia,
+          }
+        )}
+      >
+        {isLoading || isCreatingMedia ? (
+          <Loader2 className="h-3 w-3 animate-spin my-1" />
+        ) : (
+          "Upload file"
+        )}
+      </div>
       <Input
         disabled={isLoading || isCreatingMedia}
-        className="cursor-pointer hover:bg-neutral-100 transition"
+        ref={fileInputRef}
+        className="hidden"
         onChange={handleFileChange}
         accept={acceptFileExtensions}
         multiple
         type="file"
       />
-      <Button
-        className="w-full"
-        disabled={isLoading || isCreatingMedia}
-        onClick={onSubmit}
-      >
-        {isLoading || isCreatingMedia ? (
-          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-        ) : (
-          "Add Document"
-        )}
-        <span className="sr-only">Add Document</span>
-      </Button>
     </div>
   );
 };

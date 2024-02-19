@@ -55,8 +55,10 @@ export const getSortedFoldersByOrder = (folders: ExtendedFolder[]) => {
 
 export const getFilteredResponse = (text: string) => {
   const underscoreIndex = text.lastIndexOf("^^");
-  const result =
+  const rawResult =
     underscoreIndex !== -1 ? text.substring(0, underscoreIndex) : text;
+
+  const result = rawResult.replace("Question:", "");
 
   return result;
 };

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
-import { LoadingScreen } from "@/components/skeletons/loading-screen";
 import { Note } from "@/components/server-components/Note";
+import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
 interface NotePageProps {
   params: {
@@ -13,7 +13,7 @@ export default async function page({ params }: NotePageProps) {
   const { noteId } = params;
 
   return (
-    <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={<LoadingScreen fullHeight />}>
       <Note noteId={noteId} />
     </Suspense>
   );

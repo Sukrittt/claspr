@@ -5,7 +5,7 @@ import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
 export default function page() {
   return (
-    <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={<LoadingScreen fullHeight />}>
       <Onboarding />
     </Suspense>
   );

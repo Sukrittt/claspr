@@ -83,8 +83,6 @@ export const NoteAi: React.FC<NoteAiProps> = ({
         "\n\n" +
         AiPersonal["FOLLOW_UP"];
 
-      console.log("customUserPrompt", customUserPrompt);
-
       const payload: PromptValidatorType = {
         prompt: customUserPrompt,
         personal: AiPersonal["NOTE_CREATOR_EXPERT"],
