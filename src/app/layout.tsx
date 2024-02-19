@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>{children}</Providers>
         <Toaster
-          loadingIcon={<Loader2 className="h-4 w-4 animate-spin mt-1" />}
+          loadingIcon={<Loader2 className="h-3 w-3 animate-spin mt-1" />}
         />
       </body>
     </html>

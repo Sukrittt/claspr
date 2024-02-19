@@ -332,13 +332,24 @@ export const getNoteByTitle = privateProcedure
 
     const notes = await db.note.findMany({
       where: {
-        title: {
-          contains: title,
-          mode: "insensitive",
-        },
-        creatorId: ctx.userId,
-        noteType,
-        classroomId,
+        OR: [
+          {
+            title: {
+              contains: title,
+              mode: "insensitive",
+            },
+          },
+          {
+            topics: {
+              some: {
+                name: {
+                  contains: title,
+                  mode: "insensitive",
+                },
+              },
+            },
+          },
+        ],
       },
       select: {
         id: true,
