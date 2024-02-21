@@ -33,12 +33,14 @@ interface EditFolderFormProps {
   closeModal: () => void;
   folderId: string;
   folderName: string;
+  classroomId?: string;
 }
 
 export const FolderEditForm: React.FC<EditFolderFormProps> = ({
   closeModal,
   folderId,
   folderName,
+  classroomId,
 }) => {
   // react-hook-form
   const form = useForm<Inputs>({
@@ -50,6 +52,7 @@ export const FolderEditForm: React.FC<EditFolderFormProps> = ({
 
   const { mutate: editFolder } = useEditFolder({
     closeModal,
+    classroomId,
   });
 
   function handlelEditFolder(data: Inputs) {

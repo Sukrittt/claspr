@@ -16,8 +16,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MinifiedTopic } from "@/types/note";
-import { ExtendedFolder, MinifiedNote } from "@/types";
+import { ExtendedFolder } from "@/types";
+import { FormattedNote } from "@/types/note";
 import { EditNoteDialog } from "./mutations/edit-note-dialog";
 import { NoteInfoDialog } from "./mutations/note-info-dialog";
 import { MoveNoteDialog } from "./mutations/move-note-dialog";
@@ -27,12 +27,12 @@ import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { LinkClassroomDialog } from "./mutations/link-classroom-dialog";
 
 interface NoteDropdownProps {
-  note: MinifiedNote & {
-    topics: MinifiedTopic[];
-  };
-  folders: ExtendedFolder[];
+  note: FormattedNote;
   disabled?: boolean;
+  folders: ExtendedFolder[];
   setActiveFolderId?: (folderId: string) => void;
+  disableLinkClassroom?: boolean;
+  classroomId?: string;
 }
 
 export const NoteDropdown: React.FC<NoteDropdownProps> = ({
@@ -40,6 +40,8 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
   folders,
   disabled = false,
   setActiveFolderId,
+  disableLinkClassroom = false,
+  classroomId,
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -81,13 +83,15 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
             <Pen className="h-3.5 w-3.5 mr-2" />
             Edit
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
-            onClick={() => setIsLinkClasroomOpen(true)}
-          >
-            <Link className="h-3.5 w-3.5 mr-2" />
-            Link classroom
-          </DropdownMenuItem>
+          {!disableLinkClassroom && (
+            <DropdownMenuItem
+              className="text-gray-700 text-[13px]"
+              onClick={() => setIsLinkClasroomOpen(true)}
+            >
+              <Link className="h-3.5 w-3.5 mr-2" />
+              Link classroom
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             className="text-gray-700 text-[13px]"
             onClick={() => setIsAddTopicOpen(true)}
@@ -121,6 +125,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           setIsMoveOpen={setIsMoveOpen}
           folders={folders}
           setActiveFolderId={setActiveFolderId}
+          classroomId={classroomId}
         />
       )}
       {isEditOpen && (
@@ -128,6 +133,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           note={note}
           isOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
+          classroomId={classroomId}
         />
       )}
       {isDeleteOpen && !disabled && (
@@ -135,6 +141,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           note={note}
           isOpen={isDeleteOpen}
           setIsDeleteOpen={setIsDeleteOpen}
+          classroomId={classroomId}
         />
       )}
       {isInfoOpen && (
@@ -149,9 +156,10 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           note={note}
           isOpen={isAddTopicOpen}
           setIsAddTopicOpen={setIsAddTopicOpen}
+          classroomId={classroomId}
         />
       )}
-      {isLinkClasroomOpen && (
+      {isLinkClasroomOpen && !disableLinkClassroom && (
         <LinkClassroomDialog
           note={note}
           isOpen={isLinkClasroomOpen}

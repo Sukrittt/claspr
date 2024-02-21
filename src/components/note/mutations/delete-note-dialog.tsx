@@ -19,12 +19,14 @@ type DeleteNoteDialogProps = {
   note: MinifiedNote;
   isOpen: boolean;
   setIsDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  classroomId?: string;
 };
 
 export const DeleteNoteDialog = ({
   note,
   setIsDeleteOpen,
   isOpen,
+  classroomId,
 }: DeleteNoteDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -41,6 +43,7 @@ export const DeleteNoteDialog = ({
   const { mutate: removeNote } = useRemoveNote({
     closeModal,
     folderId: note.folderId,
+    classroomId,
   });
 
   return (

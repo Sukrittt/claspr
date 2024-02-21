@@ -19,12 +19,14 @@ interface FolderDropdownProps {
   folder: ExtendedFolder;
   isNotePage?: boolean;
   setActiveFolderId?: (folderId: string) => void;
+  classroomId?: string;
 }
 
 export const FolderDropdown: React.FC<FolderDropdownProps> = ({
   folder,
   isNotePage = false,
   setActiveFolderId,
+  classroomId,
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -98,6 +100,7 @@ export const FolderDropdown: React.FC<FolderDropdownProps> = ({
           folderName={folder.name}
           isOpen={isEditOpen}
           setIsEditOpen={setIsEditOpen}
+          classroomId={classroomId}
         />
       )}
       {isDeleteOpen && !isNotePage && (
@@ -105,6 +108,7 @@ export const FolderDropdown: React.FC<FolderDropdownProps> = ({
           folderId={folder.id}
           isOpen={isDeleteOpen}
           setIsDeleteOpen={setIsDeleteOpen}
+          classroomId={classroomId}
         />
       )}
       {isInfoOpen && (

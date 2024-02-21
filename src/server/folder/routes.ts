@@ -6,52 +6,81 @@ import { privateProcedure } from "@/server/trpc";
 import { getIsPartOfClassAuth } from "@/server/class/routes";
 
 /**
- * To get the folders created by the user.
+ * To get folders.
  *
+ * @param {object} input - The input parameters for getting folders.
+ * @param {string} input.classroomId - An optional id of the classroom.
  * @returns {Promise<Object[]>} - A list of folder objects from the database.
  */
-export const getFolders = privateProcedure.query(async ({ ctx }) => {
-  const folders = await db.folder.findMany({
-    where: {
-      userId: ctx.userId,
-      classroomId: null,
-    },
-    select: {
-      id: true,
-      name: true,
-      createdAt: true,
-      order: true,
-      notes: {
-        select: {
-          id: true,
-          folderId: true,
-          title: true,
-          emojiUrl: true,
-          createdAt: true,
-          classroomId: true,
-          topics: {
-            select: {
-              id: true,
-              name: true,
-              noteId: true,
+export const getFolders = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string().optional(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const { classroomId } = input;
+
+    let whereClause = {};
+
+    if (classroomId) {
+      whereClause = {
+        classroomId,
+      };
+    } else {
+      whereClause = {
+        userId: ctx.userId,
+      };
+    }
+
+    const folders = await db.folder.findMany({
+      where: whereClause,
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        order: true,
+        notes: {
+          select: {
+            id: true,
+            folderId: true,
+            title: true,
+            emojiUrl: true,
+            createdAt: true,
+            classroomId: true,
+            content: true,
+
+            topics: {
+              select: {
+                id: true,
+                name: true,
+                noteId: true,
+              },
+              orderBy: {
+                updatedAt: "desc",
+              },
             },
-            orderBy: {
-              updatedAt: "desc",
+            creator: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
             },
           },
-        },
-        orderBy: {
-          updatedAt: "desc",
+          orderBy: {
+            updatedAt: "desc",
+          },
         },
       },
-    },
-    orderBy: {
-      order: "desc",
-    },
-  });
+      orderBy: {
+        order: "desc",
+      },
+    });
 
-  return folders;
-});
+    return folders;
+  });
 
 /**
  * To create a new folder.

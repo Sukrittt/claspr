@@ -16,11 +16,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ExtendedFolder } from "@/types";
+import { useFolders } from "@/hooks/folder";
 import { ContainerVariants } from "@/lib/motion";
 import { FolderContext } from "./folder-context";
 import { FolderDropdown } from "./folder-dropdown";
 import { cn, getShortenedText } from "@/lib/utils";
-import { usePersonalFolders } from "@/hooks/folder";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NoteSearch } from "@/components/note/note-search";
 import { NoteDropdown } from "@/components/note/note-dropdown";
@@ -32,7 +32,7 @@ export const FolderCards = () => {
   const [folders, setFolders] = useAtom(folderAtom);
   const [activeFolderId, setActiveFolderId] = useAtom(activeFolderIdAtom);
 
-  const { data: serverFolders, isLoading } = usePersonalFolders();
+  const { data: serverFolders, isLoading } = useFolders();
 
   useEffect(() => {
     if (serverFolders) {

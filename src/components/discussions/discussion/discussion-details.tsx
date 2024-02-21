@@ -16,8 +16,8 @@ import { EditorOutput } from "@/components/editor/EditorOutput";
 import { Replies } from "@/components/discussions/reply/replies";
 import { RenameDiscussionTitle } from "./rename-discussion-title";
 import { ReplyInput } from "@/components/discussions/reply/reply-input";
-import { DiscussionDetailSkeleton } from "@/components/skeletons/discussion-detail-skeleton";
 import { AnswerDetails } from "@/components/discussions/questionnaire/answer-details";
+import { DiscussionDetailSkeleton } from "@/components/skeletons/discussion-detail-skeleton";
 
 interface DiscussionDetailsProps {
   activeDiscussionId: string;

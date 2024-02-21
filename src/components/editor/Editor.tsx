@@ -11,6 +11,7 @@ import { ContainerHeightVariants } from "@/lib/motion";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { AIDialog } from "@/components/conversation/ai-dialog";
 import { NoteAi } from "@/components/note/note-ai";
+import { cn } from "@/lib/utils";
 
 interface EditorProps {
   classroom?: Pick<ClassRoom, "id" | "title" | "description">;
@@ -234,7 +235,9 @@ export const Editor: React.FC<EditorProps> = ({
         animate="animate"
         exit="exit"
         id="editor"
-        className="px-4 pl-10 typography-styles max-w-full"
+        className={cn("px-4 typography-styles max-w-full", {
+          "pl-10": isNotePage,
+        })}
       />
 
       {!disableAI && !isNotePage

@@ -19,6 +19,7 @@ type MoveNoteDialogProps = {
   note: MinifiedNote;
   folders: ExtendedFolder[];
   setActiveFolderId?: (folderId: string) => void;
+  classroomId?: string;
 };
 
 export const MoveNoteDialog = ({
@@ -27,6 +28,7 @@ export const MoveNoteDialog = ({
   folders,
   note,
   setActiveFolderId,
+  classroomId,
 }: MoveNoteDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -58,6 +60,7 @@ export const MoveNoteDialog = ({
               folders={folders}
               note={note}
               setActiveFolderId={setActiveFolderId}
+              classroomId={classroomId}
             />
           </div>
         </DialogHeader>

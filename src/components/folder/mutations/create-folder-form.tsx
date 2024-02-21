@@ -56,6 +56,7 @@ export const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
 
   const handleCleanUps = (folder: MinifiedFolder) => {
     closeModal();
+
     setActiveFolderId?.(folder.id);
 
     const updatedFolder = {
@@ -68,6 +69,7 @@ export const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
 
   const { mutate: createFolder, isLoading } = useCreateFolder({
     handleCleanUps,
+    classroomId,
   });
 
   function handleCreateFolder(data: Inputs) {

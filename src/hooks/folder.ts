@@ -3,26 +3,34 @@ import { trpc } from "@/trpc/client";
 
 import { MinifiedFolder } from "@/types";
 
-export const usePersonalFolders = () => {
-  return trpc.folder.getFolders.useQuery();
+export const useFolders = (classroomId?: string) => {
+  return trpc.folder.getFolders.useQuery({ classroomId });
 };
 
 export const useCreateFolder = ({
   handleCleanUps,
+  classroomId,
 }: {
   handleCleanUps: (folder: MinifiedFolder) => void;
+  classroomId?: string;
 }) => {
   const utils = trpc.useUtils();
 
   return trpc.folder.createFolder.useMutation({
     onSuccess: (folder) => {
       handleCleanUps(folder);
-      utils.folder.getFolders.invalidate();
+      utils.folder.getFolders.invalidate({ classroomId });
     },
   });
 };
 
-export const useEditFolder = ({ closeModal }: { closeModal: () => void }) => {
+export const useEditFolder = ({
+  closeModal,
+  classroomId,
+}: {
+  closeModal: () => void;
+  classroomId?: string;
+}) => {
   const utils = trpc.useUtils();
 
   return trpc.folder.editFolder.useMutation({
@@ -33,7 +41,7 @@ export const useEditFolder = ({ closeModal }: { closeModal: () => void }) => {
 
       const prevFolders = utils.folder.getFolders.getData();
 
-      utils.folder.getFolders.setData(undefined, (prev) =>
+      utils.folder.getFolders.setData({ classroomId }, (prev) =>
         prev?.map((folder) =>
           folder.id === folderId
             ? {
@@ -49,7 +57,7 @@ export const useEditFolder = ({ closeModal }: { closeModal: () => void }) => {
     onError: (error, _, ctx) => {
       toast.error(error.message);
 
-      utils.folder.getFolders.setData(undefined, ctx?.prevFolders);
+      utils.folder.getFolders.setData({ classroomId }, ctx?.prevFolders);
     },
     onSettled: () => {
       utils.folder.getFolders.invalidate();
@@ -57,7 +65,13 @@ export const useEditFolder = ({ closeModal }: { closeModal: () => void }) => {
   });
 };
 
-export const useRemoveFolder = ({ closeModal }: { closeModal: () => void }) => {
+export const useRemoveFolder = ({
+  closeModal,
+  classroomId,
+}: {
+  closeModal: () => void;
+  classroomId?: string;
+}) => {
   const utils = trpc.useUtils();
 
   return trpc.folder.removeFolder.useMutation({
@@ -68,7 +82,7 @@ export const useRemoveFolder = ({ closeModal }: { closeModal: () => void }) => {
 
       const prevFolders = utils.folder.getFolders.getData();
 
-      utils.folder.getFolders.setData(undefined, (prev) =>
+      utils.folder.getFolders.setData({ classroomId }, (prev) =>
         prev?.filter((folder) => folder.id !== folderId)
       );
 
@@ -77,7 +91,7 @@ export const useRemoveFolder = ({ closeModal }: { closeModal: () => void }) => {
     onError: (error, _, ctx) => {
       toast.error(error.message);
 
-      utils.folder.getFolders.setData(undefined, ctx?.prevFolders);
+      utils.folder.getFolders.setData({ classroomId }, ctx?.prevFolders);
     },
     onSettled: () => {
       utils.folder.getFolders.invalidate();

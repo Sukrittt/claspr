@@ -14,7 +14,10 @@ import { UpcomingEvents } from "./upcoming-events";
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomControls } from "./classroom-controls";
 import { Assignments } from "@/components/assignment/assignments";
+import { StudyMaterialLayout } from "@/components/study-materials";
+import { Materials } from "@/components/study-materials/materials";
 import { HelpfulUsers } from "@/components/discussions/helpful-users";
+import { MaterialTabs } from "@/components/study-materials/material-tabs";
 import { DiscussionTabs } from "@/components/discussions/discussion-tabs";
 import { ClassDiscussions } from "@/components/discussions/class-discussions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -73,12 +76,17 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
       </div>
       <div className="grid grid-cols-7 gap-4 h-[95%] pt-4">
         <div className="col-span-5">
+          {/* ASSIGNMENTS */}
           <TabsContent value="assignments" className="h-full">
             <Assignments classroomId={classroom.id} session={session} />
           </TabsContent>
+
+          {/* STUDY MATERIALS */}
           <TabsContent className="h-full" value="study-materials">
-            Study Materials
+            <StudyMaterialLayout classroomId={classroom.id} session={session} />
           </TabsContent>
+
+          {/* DISCUSSIONS */}
           <TabsContent className="h-full" value="discussions">
             <div className="grid grid-cols-8 gap-4">
               <div className="col-span-2 flex flex-col gap-y-6">
@@ -93,6 +101,8 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
               </div>
             </div>
           </TabsContent>
+
+          {/* MEMBERS */}
           <TabsContent className="h-full" value="members">
             <ClassMembers
               members={classroom.students}
@@ -100,6 +110,8 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
               sessionId={session.user.id}
             />
           </TabsContent>
+
+          {/* CONVERSATIONS */}
           <TabsContent className="h-full" value="conversations">
             <ConversationHistory classroomId={classroom.id} />
           </TabsContent>

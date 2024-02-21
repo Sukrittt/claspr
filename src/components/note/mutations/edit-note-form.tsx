@@ -33,11 +33,13 @@ type Inputs = z.infer<typeof folderUpdationSchema>;
 interface EditNoteFormProps {
   closeModal: () => void;
   note: MinifiedNote;
+  classroomId?: string;
 }
 
 export const EditNoteForm: React.FC<EditNoteFormProps> = ({
   closeModal,
   note,
+  classroomId,
 }) => {
   // react-hook-form
   const form = useForm<Inputs>({
@@ -50,6 +52,7 @@ export const EditNoteForm: React.FC<EditNoteFormProps> = ({
   const { mutate: editNote } = useEditNote({
     closeModal,
     folderId: note.folderId,
+    classroomId,
   });
 
   function handlelEditNote(data: Inputs) {

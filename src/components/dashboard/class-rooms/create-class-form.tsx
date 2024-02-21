@@ -92,6 +92,7 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
                   <CustomTooltip text="Enable domain protection">
                     <div>
                       <Switch
+                        tabIndex={-1}
                         id="protected-domain"
                         checked={isDomainProtectionEnabled}
                         onCheckedChange={(val) =>

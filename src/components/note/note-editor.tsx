@@ -93,7 +93,11 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
       </div>
 
       <div className="px-20 pt-1 relative">
-        <NoteRenameTitle note={note} />
+        <NoteRenameTitle
+          noteId={note.id}
+          noteTitle={note.title}
+          folderId={note.folderId}
+        />
 
         <div className="space-y-1">
           {note.topics.length > 0 && (

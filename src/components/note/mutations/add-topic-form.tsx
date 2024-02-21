@@ -1,22 +1,20 @@
 import { toast } from "sonner";
-import { Check, Loader2, Pen, Plus, Trash } from "lucide-react";
 import { useCallback, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Check, Loader2, Pen, Plus, Trash } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { MinifiedNote } from "@/types";
-import { MinifiedTopic } from "@/types/note";
+import { FormattedNote } from "@/types/note";
 import { Input } from "@/components/ui/input";
-import { useAttachTopics, useRemoveTopics } from "@/hooks/note";
 import { Button } from "@/components/ui/button";
+import { useAttachTopics, useRemoveTopics } from "@/hooks/note";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { ContainerHeightVariants, ContainerVariants } from "@/lib/motion";
 
 interface AddTopicFormProps {
   closeModal: () => void;
-  note: MinifiedNote & {
-    topics: MinifiedTopic[];
-  };
+  note: FormattedNote;
+  classroomId?: string;
 }
 
 type SelectionType = {
@@ -28,6 +26,7 @@ type SelectionType = {
 export const AddTopicForm: React.FC<AddTopicFormProps> = ({
   closeModal,
   note,
+  classroomId,
 }) => {
   const [topicName, setTopicName] = useState("");
 
@@ -38,9 +37,10 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
 
   const { mutate: attachTopics, isLoading } = useAttachTopics({
     closeModal,
+    classroomId,
   });
 
-  const { mutate: removeTopics } = useRemoveTopics(note.folderId);
+  const { mutate: removeTopics } = useRemoveTopics(note.folderId, classroomId);
 
   const handleStateUpdates = useCallback(() => {
     setEnteredTopics((prev) => [...prev, topicName]);
@@ -128,8 +128,8 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
 
   //DB UPDATE
   function handleAttachTopics() {
-    if (enteredTopics.length === 0) {
-      toast.error("Please select at least one topic");
+    if (note.topics.length === 0 && enteredTopics.length === 0) {
+      toast.error("Please add at least one topic");
       return;
     }
 

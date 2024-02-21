@@ -1,0 +1,45 @@
+import { Folder } from "lucide-react";
+
+import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+export const MaterialSkeleton = ({ length = 10 }: { length?: number }) => {
+  return (
+    <ScrollArea className="h-[68vh]">
+      {Array.from({ length }).map((_, index) => (
+        <MaterialSkeletonCard key={index} />
+      ))}
+    </ScrollArea>
+  );
+};
+
+const MaterialSkeletonCard = () => {
+  return (
+    <div className="border-b px-3 py-4 flex items-center justify-between">
+      <div className="flex items-center gap-x-4 w-1/2">
+        <Skeleton className="rounded-md h-10 w-12" />
+
+        <div className="space-y-2 w-full">
+          <Skeleton className="h-3 w-1/2" />
+          <Skeleton className="h-3 w-full" />
+        </div>
+      </div>
+
+      <Skeleton className="h-5 w-5" />
+    </div>
+  );
+};
+
+export const MaterialTabsSkeleton = ({ length = 5 }: { length?: number }) => {
+  return Array.from({ length }).map((_, i) => (
+    <div
+      key={i}
+      className="py-1 px-2.5 flex items-center gap-x-2 hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer group"
+    >
+      <div className="border rounded-md p-1.5">
+        <Folder className="h-3.5 w-3.5" />
+      </div>
+      <Skeleton className="h-4 w-full" />
+    </div>
+  ));
+};

@@ -18,12 +18,14 @@ type DeleteFolderDialogProps = {
   folderId: string;
   isOpen: boolean;
   setIsDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  classroomId?: string;
 };
 
 export const DeleteFolderDialog = ({
   folderId,
   setIsDeleteOpen,
   isOpen,
+  classroomId,
 }: DeleteFolderDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -37,7 +39,7 @@ export const DeleteFolderDialog = ({
     setIsDeleteOpen(open);
   };
 
-  const { mutate: removeFolder } = useRemoveFolder({ closeModal });
+  const { mutate: removeFolder } = useRemoveFolder({ closeModal, classroomId });
 
   return (
     <AlertDialog open={open} onOpenChange={handleOpenChange}>

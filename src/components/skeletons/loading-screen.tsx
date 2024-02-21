@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 export const LoadingScreen = ({
   fullHeight = false,
@@ -15,7 +16,7 @@ export const LoadingScreen = ({
         }
       )}
     >
-      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+      <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" />
       Getting things ready...
     </div>
   );

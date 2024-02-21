@@ -9,21 +9,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FormattedNote } from "@/types/note";
 import { AddTopicForm } from "./add-topic-form";
-import { MinifiedNote, MinifiedTopic } from "@/types/note";
 
 type AddTopicDialogProps = {
   isOpen: boolean;
   setIsAddTopicOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  note: MinifiedNote & {
-    topics: MinifiedTopic[];
-  };
+  note: FormattedNote;
+  classroomId?: string;
 };
 
 export const AddTopicDialog = ({
   isOpen,
   setIsAddTopicOpen,
   note,
+  classroomId,
 }: AddTopicDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -49,7 +49,11 @@ export const AddTopicDialog = ({
             Attach topics to your note to make it easier to find
           </DialogDescription>
         </DialogHeader>
-        <AddTopicForm note={note} closeModal={closeModal} />
+        <AddTopicForm
+          note={note}
+          closeModal={closeModal}
+          classroomId={classroomId}
+        />
       </DialogContent>
     </Dialog>
   );

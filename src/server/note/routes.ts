@@ -60,11 +60,21 @@ export const createNote = privateProcedure
         folderId: true,
         createdAt: true,
         classroomId: true,
+        content: true,
+        
         topics: {
           select: {
             id: true,
             name: true,
             noteId: true,
+          },
+        },
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
           },
         },
       },
@@ -332,6 +342,7 @@ export const getNoteByTitle = privateProcedure
 
     const notes = await db.note.findMany({
       where: {
+        classroomId,
         OR: [
           {
             title: {

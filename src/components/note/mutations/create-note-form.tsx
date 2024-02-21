@@ -85,6 +85,7 @@ export const CreateNoteForm: React.FC<CreateNoteFormProps> = ({
 
   const { mutate: createNote, isLoading } = useCreateNote({
     handleCleanUps,
+    classroomId,
   });
 
   function handleCreateNote(data: Inputs) {

@@ -67,12 +67,23 @@ export const createClass = privateProcedure
       },
     });
 
-    await db.folder.create({
+    const createdFolder = await db.folder.create({
       data: {
         name: "New Folder",
-        classroomId: classroom.id,
         userId: ctx.userId,
         order: 1,
+        classroomId: classroom.id,
+      },
+      select: { id: true },
+    });
+
+    await db.note.create({
+      data: {
+        title: "Untitled Note",
+        noteType: "CLASSROOM",
+        folderId: createdFolder.id,
+        classroomId: classroom.id,
+        creatorId: ctx.userId,
       },
     });
 

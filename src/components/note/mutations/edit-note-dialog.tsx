@@ -16,12 +16,14 @@ type EditNoteDialogProps = {
   isOpen: boolean;
   setIsEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
   note: MinifiedNote;
+  classroomId?: string;
 };
 
 export const EditNoteDialog = ({
   isOpen,
   setIsEditOpen,
   note,
+  classroomId,
 }: EditNoteDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -45,7 +47,11 @@ export const EditNoteDialog = ({
           <DialogTitle>Edit Note</DialogTitle>
           <DialogDescription>Quickly rename this note</DialogDescription>
         </DialogHeader>
-        <EditNoteForm note={note} closeModal={closeModal} />
+        <EditNoteForm
+          note={note}
+          closeModal={closeModal}
+          classroomId={classroomId}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -1,54 +1,56 @@
 import { toast } from "sonner";
-import { NoteType } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
 import { trpc } from "@/trpc/client";
-import { MinifiedNote } from "@/types";
-import { MinifiedTopic } from "@/types/note";
+import { FormattedNote } from "@/types/note";
 
 export const useCreateNote = ({
   handleCleanUps,
+  classroomId,
 }: {
-  handleCleanUps: (
-    note: MinifiedNote & {
-      topics: MinifiedTopic[];
-    }
-  ) => void;
+  handleCleanUps: (note: FormattedNote) => void;
+  classroomId?: string;
 }) => {
   const utils = trpc.useUtils();
   const router = useRouter();
 
   return trpc.note.createNote.useMutation({
     onSuccess: (note) => {
-      router.push(`/n/${note.id}`);
+      if (!classroomId) {
+        router.push(`/n/${note.id}`);
+      }
 
       handleCleanUps(note);
-      utils.folder.getFolders.invalidate();
+      utils.folder.getFolders.invalidate({ classroomId });
     },
   });
 };
+
+interface EditNoteProps {
+  closeModal?: () => void;
+  onComplete?: () => void;
+  folderId: string;
+  classroomId?: string;
+}
 
 export const useEditNote = ({
   closeModal,
   folderId,
   onComplete,
-}: {
-  closeModal?: () => void;
-  onComplete?: () => void;
-  folderId: string;
-}) => {
+  classroomId,
+}: EditNoteProps) => {
   const router = useRouter();
   const utils = trpc.useUtils();
 
   return trpc.note.editNote.useMutation({
-    onMutate: async ({ noteId, title, emojiUrl, classroomId }) => {
+    onMutate: async ({ noteId, title, emojiUrl }) => {
       closeModal?.();
 
-      await utils.folder.getFolders.cancel();
+      await utils.folder.getFolders.cancel({ classroomId });
 
-      const prevFolders = utils.folder.getFolders.getData();
+      const prevFolders = utils.folder.getFolders.getData({ classroomId });
 
-      utils.folder.getFolders.setData(undefined, (prev) =>
+      utils.folder.getFolders.setData({ classroomId }, (prev) =>
         prev?.map((folder) =>
           folder.id === folderId
             ? {
@@ -59,7 +61,6 @@ export const useEditNote = ({
                         ...note,
                         title: title ?? note.title,
                         emojiUrl: emojiUrl ?? note.emojiUrl,
-                        classroomId: classroomId ?? note.classroomId,
                       }
                     : note
                 ),
@@ -73,14 +74,14 @@ export const useEditNote = ({
     onError: (error, _, ctx) => {
       toast.error(error.message);
 
-      utils.folder.getFolders.setData(undefined, ctx?.prevFolders);
+      utils.folder.getFolders.setData({ classroomId }, ctx?.prevFolders);
     },
     onSuccess: () => {
       router.refresh();
       onComplete?.();
     },
     onSettled: () => {
-      utils.folder.getFolders.invalidate();
+      utils.folder.getFolders.invalidate({ classroomId });
     },
   });
 };
@@ -88,9 +89,11 @@ export const useEditNote = ({
 export const useRemoveNote = ({
   closeModal,
   folderId,
+  classroomId,
 }: {
   closeModal: () => void;
   folderId: string;
+  classroomId?: string;
 }) => {
   const utils = trpc.useUtils();
 
@@ -98,11 +101,11 @@ export const useRemoveNote = ({
     onMutate: async ({ noteId }) => {
       closeModal();
 
-      await utils.folder.getFolders.cancel();
+      await utils.folder.getFolders.cancel({ classroomId });
 
-      const prevFolders = utils.folder.getFolders.getData();
+      const prevFolders = utils.folder.getFolders.getData({ classroomId });
 
-      utils.folder.getFolders.setData(undefined, (prev) =>
+      utils.folder.getFolders.setData({ classroomId }, (prev) =>
         prev?.map((folder) =>
           folder.id === folderId
             ? {
@@ -118,10 +121,10 @@ export const useRemoveNote = ({
     onError: (error, _, ctx) => {
       toast.error(error.message);
 
-      utils.folder.getFolders.setData(undefined, ctx?.prevFolders);
+      utils.folder.getFolders.setData({ classroomId }, ctx?.prevFolders);
     },
     onSettled: () => {
-      utils.folder.getFolders.invalidate();
+      utils.folder.getFolders.invalidate({ classroomId });
     },
   });
 };
@@ -129,9 +132,11 @@ export const useRemoveNote = ({
 export const useMoveNote = ({
   closeModal,
   oldFolderId,
+  classroomId,
 }: {
   closeModal: () => void;
   oldFolderId: string;
+  classroomId?: string;
 }) => {
   const utils = trpc.useUtils();
 
@@ -139,16 +144,12 @@ export const useMoveNote = ({
     onMutate: async ({ noteId, folderId: newFolderId }) => {
       closeModal();
 
-      await utils.folder.getFolders.cancel();
+      await utils.folder.getFolders.cancel({ classroomId });
 
-      const prevFolders = utils.folder.getFolders.getData();
+      const prevFolders = utils.folder.getFolders.getData({ classroomId });
 
-      utils.folder.getFolders.setData(undefined, (prev) => {
-        let filteredNote:
-          | (MinifiedNote & {
-              topics: MinifiedTopic[];
-            })
-          | null = null;
+      utils.folder.getFolders.setData({ classroomId }, (prev) => {
+        let filteredNote: FormattedNote | null = null;
 
         const updatedFolders = prev?.map((folder) => {
           if (folder.id === oldFolderId) {
@@ -186,10 +187,10 @@ export const useMoveNote = ({
     onError: (error, _, ctx) => {
       toast.error(error.message);
 
-      utils.folder.getFolders.setData(undefined, ctx?.prevFolders);
+      utils.folder.getFolders.setData({ classroomId }, ctx?.prevFolders);
     },
     onSettled: () => {
-      utils.folder.getFolders.invalidate();
+      utils.folder.getFolders.invalidate({ classroomId });
     },
   });
 };
@@ -244,30 +245,36 @@ export const useUpdateNoteCover = ({
   });
 };
 
-export const useAttachTopics = ({ closeModal }: { closeModal: () => void }) => {
+export const useAttachTopics = ({
+  closeModal,
+  classroomId,
+}: {
+  closeModal: () => void;
+  classroomId?: string;
+}) => {
   const router = useRouter();
   const utils = trpc.useUtils();
 
   return trpc.note.attachTopics.useMutation({
     onSuccess: () => {
       closeModal();
-      utils.folder.getFolders.invalidate();
       router.refresh();
+      utils.folder.getFolders.invalidate({ classroomId });
     },
   });
 };
 
-export const useRemoveTopics = (folderId: string) => {
+export const useRemoveTopics = (folderId: string, classroomId?: string) => {
   const router = useRouter();
   const utils = trpc.useUtils();
 
   return trpc.note.removeTopics.useMutation({
     onMutate: async ({ noteId, topicIds }) => {
-      await utils.folder.getFolders.cancel();
+      await utils.folder.getFolders.cancel({ classroomId });
 
-      const prevFolders = utils.folder.getFolders.getData();
+      const prevFolders = utils.folder.getFolders.getData({ classroomId });
 
-      utils.folder.getFolders.setData(undefined, (prev) =>
+      utils.folder.getFolders.setData({ classroomId }, (prev) =>
         prev?.map((folder) =>
           folder.id === folderId
             ? {
@@ -292,27 +299,13 @@ export const useRemoveTopics = (folderId: string) => {
     onError: (error, _, ctx) => {
       toast.error(error.message);
 
-      utils.folder.getFolders.setData(undefined, ctx?.prevFolders);
+      utils.folder.getFolders.setData({ classroomId }, ctx?.prevFolders);
     },
     onSuccess: () => {
       router.refresh();
     },
     onSettled: () => {
-      utils.folder.getFolders.invalidate();
+      utils.folder.getFolders.invalidate({ classroomId });
     },
-  });
-};
-
-interface GetNoteProps {
-  noteId: string;
-  noteType: NoteType;
-  classroomId?: string;
-}
-
-export const useNote = ({ noteId, noteType, classroomId }: GetNoteProps) => {
-  return trpc.note.getNote.useQuery({
-    noteId,
-    noteType,
-    classroomId,
   });
 };

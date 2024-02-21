@@ -1,7 +1,6 @@
 import { Folder } from "@prisma/client";
 
-import { MinifiedNote } from ".";
-import { MinifiedTopic } from "./note";
+import { FormattedNote } from "./note";
 
 export type MinifiedFolder = Pick<
   Folder,
@@ -9,7 +8,5 @@ export type MinifiedFolder = Pick<
 >;
 
 export type ExtendedFolder = MinifiedFolder & {
-  notes: (MinifiedNote & {
-    topics: MinifiedTopic[];
-  })[];
+  notes: FormattedNote[];
 };

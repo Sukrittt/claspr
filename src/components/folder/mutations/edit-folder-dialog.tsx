@@ -17,6 +17,7 @@ type EditFolderDialogProps = {
   setIsEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
   folderId: string;
   folderName: string;
+  classroomId?: string;
 };
 
 export const EditFolderDialog = ({
@@ -24,6 +25,7 @@ export const EditFolderDialog = ({
   setIsEditOpen,
   folderId,
   folderName,
+  classroomId,
 }: EditFolderDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
@@ -51,6 +53,7 @@ export const EditFolderDialog = ({
           folderId={folderId}
           folderName={folderName}
           closeModal={closeModal}
+          classroomId={classroomId}
         />
       </DialogContent>
     </Dialog>

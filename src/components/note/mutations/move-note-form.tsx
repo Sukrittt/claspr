@@ -17,6 +17,7 @@ interface MoveNoteFormProps {
   folders: ExtendedFolder[];
   closeModal: () => void;
   setActiveFolderId?: (folderId: string) => void;
+  classroomId?: string;
 }
 
 export const MoveNoteForm: React.FC<MoveNoteFormProps> = ({
@@ -24,6 +25,7 @@ export const MoveNoteForm: React.FC<MoveNoteFormProps> = ({
   closeModal,
   folders,
   setActiveFolderId,
+  classroomId,
 }) => {
   const oldFolderId = useMemo(
     () => folders.find((folder) => folder.id === note.folderId),
@@ -40,6 +42,7 @@ export const MoveNoteForm: React.FC<MoveNoteFormProps> = ({
   const { mutate: moveNote, isLoading } = useMoveNote({
     closeModal: cleanUp,
     oldFolderId,
+    classroomId,
   });
 
   return (

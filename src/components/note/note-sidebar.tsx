@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronLeft,
-  FolderIcon,
   MonitorX,
   PanelLeft,
   PanelLeftOpen,
@@ -21,9 +20,9 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { NoteLists } from "./note-lists";
+import { useFolders } from "@/hooks/folder";
 import { Button } from "@/components/ui/button";
 import { ContainerVariants } from "@/lib/motion";
-import { usePersonalFolders } from "@/hooks/folder";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { CreateNoteDialog } from "./mutations/create-note-dialog";
@@ -32,7 +31,7 @@ import { FolderDropdown } from "@/components/folder/folder-dropdown";
 import { NoteSidebarSkeleton } from "@/components/skeletons/note-sidebar-skeleton";
 
 export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
-  const { data: folders, isLoading } = usePersonalFolders();
+  const { data: folders, isLoading } = useFolders();
   const [sidebarState, setSidebarState] = useSidebarState();
 
   const [activeFolderId, setActiveFolderId] = useState(note.folder.id);
