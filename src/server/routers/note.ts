@@ -12,6 +12,7 @@ import {
   attachTopics,
   removeTopics,
   getNoteByTitle,
+  updateViewCount,
 } from "@/server/note/routes";
 
 export const noteRouter = createTRPCRouter({
@@ -26,4 +27,5 @@ export const noteRouter = createTRPCRouter({
   attachTopics,
   removeTopics,
   getNoteByTitle,
+  updateViewCount,
 });

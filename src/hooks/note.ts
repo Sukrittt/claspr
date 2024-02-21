@@ -309,3 +309,7 @@ export const useRemoveTopics = (folderId: string, classroomId?: string) => {
     },
   });
 };
+
+export const useUpdateViewCount = () => {
+  return trpc.note.updateViewCount.useMutation();
+};

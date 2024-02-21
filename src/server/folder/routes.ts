@@ -30,6 +30,7 @@ export const getFolders = privateProcedure
     } else {
       whereClause = {
         userId: ctx.userId,
+        classroomId: null,
       };
     }
 
@@ -115,7 +116,7 @@ export const createFolder = privateProcedure
     const userLastOrderFolder = await db.folder.findMany({
       where: {
         userId: ctx.userId,
-        classroomId: null,
+        classroomId,
       },
       select: {
         order: true,

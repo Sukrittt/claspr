@@ -14,9 +14,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { folderAtom } from "@/atoms";
-import { MinifiedNote } from "@/types";
 import { useCreateNote } from "@/hooks/note";
-import { MinifiedTopic } from "@/types/note";
+import { FormattedNote } from "@/types/note";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -58,11 +57,7 @@ export const CreateNoteForm: React.FC<CreateNoteFormProps> = ({
     },
   });
 
-  const handleCleanUps = (
-    note: MinifiedNote & {
-      topics: MinifiedTopic[];
-    }
-  ) => {
+  const handleCleanUps = (note: FormattedNote) => {
     closeModal();
 
     const folderToUpdate = folders.find(

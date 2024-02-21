@@ -61,7 +61,7 @@ export const createNote = privateProcedure
         createdAt: true,
         classroomId: true,
         content: true,
-        
+
         topics: {
           select: {
             id: true,
@@ -537,6 +537,56 @@ export const removeTopics = privateProcedure
         noteId,
         id: {
           in: topicIds,
+        },
+      },
+    });
+  });
+
+/**
+ * To update the view count for the note.
+ *
+ * @param {object} input - The input parameters for updating the view count for the note.
+ * @param {string} input.noteId - The id of the node.
+ */
+export const updateViewCount = privateProcedure
+  .input(
+    z.object({
+      noteId: z.string(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { noteId } = input;
+
+    const existingNote = await db.note.findFirst({
+      where: {
+        id: noteId,
+        creatorId: ctx.userId,
+      },
+      select: { noteType: true, classroomId: true },
+    });
+
+    if (!existingNote || existingNote.noteType === "PERSONAL") {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the note you are looking for.",
+      });
+    }
+
+    const isStudent = await getIsPartOfClassAuth(
+      existingNote.classroomId!, //When note type is not PERSONAL, classroomId WILL be defined.
+      ctx.userId,
+      false
+    );
+
+    if (!isStudent) return;
+
+    await db.note.update({
+      where: {
+        id: noteId,
+      },
+      data: {
+        viewCount: {
+          increment: 1,
         },
       },
     });

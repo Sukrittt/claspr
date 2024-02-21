@@ -368,6 +368,8 @@ model Note {
   folderId String
   folder   Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
 
+  // viewCount Int?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

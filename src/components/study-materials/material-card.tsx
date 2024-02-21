@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { FileText } from "lucide-react";
 
 import { FormattedNote } from "@/types/note";
+import { useUpdateViewCount } from "@/hooks/note";
 import { activeNoteIdAtom, classFolderAtom } from "@/atoms";
 import { NoteDropdown } from "@/components/note/note-dropdown";
 
@@ -18,6 +19,8 @@ export const MaterialCard: React.FC<MaterialCardProps> = ({
 }) => {
   const [folders] = useAtom(classFolderAtom);
   const [, setActiveNoteId] = useAtom(activeNoteIdAtom);
+
+  const { mutate: updateViews } = useUpdateViewCount();
 
   return (
     <div className="border-b px-3 py-4 flex items-center justify-between group">
@@ -39,7 +42,10 @@ export const MaterialCard: React.FC<MaterialCardProps> = ({
 
         <div className="space-y-0.5">
           <h6
-            onClick={() => setActiveNoteId(note.id)}
+            onClick={() => {
+              updateViews({ noteId: note.id });
+              setActiveNoteId(note.id);
+            }}
             className="font-medium tracking-tight text-base hover:underline underline-offset-4 hover:text-neutral-800 transition cursor-pointer w-fit"
           >
             {note.title}
