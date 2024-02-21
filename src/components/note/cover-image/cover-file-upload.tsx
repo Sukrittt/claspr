@@ -33,7 +33,7 @@ export const CoverFileUpload: React.FC<CoverFileUploadProps> = ({
 
   async function uploadByFile(file: File) {
     // upload to uploadthing
-    const [res] = await uploadFiles("imageUpLoader2", {
+    const [res] = await uploadFiles("imageUpLoader", {
       files: [file],
     });
 
