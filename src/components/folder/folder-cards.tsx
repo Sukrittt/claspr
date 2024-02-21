@@ -46,7 +46,7 @@ export const FolderCards = () => {
         <div className="flex items-center justify-between">
           <CardTitle className="text-base pt-1">Your Folders</CardTitle>
           <div className="flex items-center gap-x-2">
-            <NoteSearch />
+            <NoteSearch noteType="PERSONAL" />
             <CreateFolderDialog />
           </div>
         </div>

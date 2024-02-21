@@ -19,7 +19,7 @@ const NoteSearchItem = () => {
       <div className="flex items-center gap-x-2">
         <Skeleton className="h-8 w-8 rounded-md" />
 
-        <Skeleton className="h-3 w-1/2" />
+        <Skeleton className="h-3 w-full" />
       </div>
     </div>
   );

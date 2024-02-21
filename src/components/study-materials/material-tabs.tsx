@@ -16,7 +16,9 @@ import {
   globalLoaderAtom,
 } from "@/atoms";
 import { useSortable } from "@dnd-kit/sortable";
+import { useUpdateViewCount } from "@/hooks/note";
 import { MaterialContext } from "./material-context";
+import { NoteSearch } from "@/components/note/note-search";
 import { MaterialTabsSkeleton } from "@/components/skeletons/material-skeleton";
 import { CreateFolderDialog } from "@/components/folder/mutations/create-folder-dialog";
 
@@ -27,6 +29,9 @@ interface MaterialsProps {
 export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
   const [folders, setFolders] = useAtom(classFolderAtom);
   const [, setIsLoadingFolders] = useAtom(globalLoaderAtom);
+  const [, setActiveNoteId] = useAtom(activeNoteIdAtom);
+
+  const { mutate: updateViews } = useUpdateViewCount();
   const { data: serverFolders, isLoading } = useFolders(classroomId);
 
   useEffect(() => {
@@ -38,6 +43,23 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
   useEffect(() => {
     setIsLoadingFolders(isLoading);
   }, [isLoading]);
+
+  const handleNoteClick = (noteId: string) => {
+    updateViews({ noteId });
+    setActiveNoteId(noteId);
+  };
+
+  const popularVisits = folders.flatMap((folder) => {
+    const sortedNotes = folder.notes
+      .filter((note) => note?.viewCount != null && note.viewCount > 0)
+      .sort((a, b) => b.viewCount! - a.viewCount!) // 'viewCount' will be defined as it has already been filtered out
+      .slice(0, 5);
+
+    return sortedNotes.map((note) => ({
+      noteId: note.id,
+      noteTitle: note.title,
+    }));
+  });
 
   return (
     <AnimatePresence mode="wait">
@@ -51,7 +73,15 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
         <div className="flex items-center justify-between">
           <h3 className="tracking-tight font-medium text-[13px]">Folders</h3>
 
-          <CreateFolderDialog classroomId={classroomId} />
+          <div className="flex items-center gap-x-2">
+            <NoteSearch
+              noteType="CLASSROOM"
+              classroomId={classroomId}
+              handleNoteClick={handleNoteClick}
+              popularVisits={popularVisits}
+            />
+            <CreateFolderDialog classroomId={classroomId} />
+          </div>
         </div>
         <ScrollArea className="h-[68vh]">
           <div className="space-y-2">

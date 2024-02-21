@@ -310,9 +310,9 @@ export const getNote = privateProcedure
   });
 
 /**
- * To get a list of notes by it's title
+ * To get a list of notes by it's title and topics associated with it.
  *
- * @param {object} input - The input parameters for getting notes by it's title.
+ * @param {object} input - The input parameters for getting notes by it's title and it's topics.
  * @param {enum} input.title - The title of the note to be fetched.
  * @param {enum} input.noteType - The type of note to be fetched.
  * @param {enum} input.classroomId - An optional id of the classroom.
@@ -343,6 +343,7 @@ export const getNoteByTitle = privateProcedure
 
     const notes = await db.note.findMany({
       where: {
+        noteType,
         classroomId,
         OR: [
           {
