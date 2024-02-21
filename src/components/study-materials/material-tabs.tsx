@@ -15,6 +15,8 @@ import {
   classFolderAtom,
   globalLoaderAtom,
 } from "@/atoms";
+import { useSortable } from "@dnd-kit/sortable";
+import { MaterialContext } from "./material-context";
 import { MaterialTabsSkeleton } from "@/components/skeletons/material-skeleton";
 import { CreateFolderDialog } from "@/components/folder/mutations/create-folder-dialog";
 
@@ -37,13 +39,6 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
     setIsLoadingFolders(isLoading);
   }, [isLoading]);
 
-  const getFoldersSortedByDate = (folders: ExtendedFolder[]) => {
-    return folders.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  };
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -55,6 +50,7 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
       >
         <div className="flex items-center justify-between">
           <h3 className="tracking-tight font-medium text-[13px]">Folders</h3>
+
           <CreateFolderDialog classroomId={classroomId} />
         </div>
         <ScrollArea className="h-[68vh]">
@@ -64,14 +60,7 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
             ) : !folders || folders.length === 0 ? (
               <p>No folders found.</p>
             ) : (
-              getFoldersSortedByDate(folders).map((folder, index) => (
-                <MaterialTab
-                  key={folder.id}
-                  folder={folder}
-                  isFirstFolder={index === 0}
-                  classroomId={classroomId}
-                />
-              ))
+              <MaterialContext classroomId={classroomId} folders={folders} />
             )}
           </div>
         </ScrollArea>
@@ -82,17 +71,38 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
 
 interface MaterialTabProps {
   folder: ExtendedFolder;
-  isFirstFolder: boolean;
+  isFirstFolder?: boolean;
   classroomId: string;
+  isHolding?: boolean;
 }
 
-const MaterialTab: React.FC<MaterialTabProps> = ({
+export const MaterialTab: React.FC<MaterialTabProps> = ({
   folder,
-  isFirstFolder,
+  isFirstFolder = false,
   classroomId,
+  isHolding = false,
 }) => {
   const [activeFolderId, setActiveFolderId] = useAtom(activeClassFolderIdAtom);
   const [, setActiveNoteId] = useAtom(activeNoteIdAtom);
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: folder.id,
+    data: { content: folder },
+  });
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        transition,
+      }
+    : undefined;
 
   useEffect(() => {
     if (isFirstFolder) {
@@ -101,12 +111,47 @@ const MaterialTab: React.FC<MaterialTabProps> = ({
     }
   }, [isFirstFolder]);
 
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        {...listeners}
+        {...attributes}
+        id="always-on-show"
+        className={cn(
+          "py-1 px-2.5 flex items-center justify-between hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer group",
+          {
+            "bg-neutral-100 font-medium": activeFolderId === folder.id,
+          }
+        )}
+      >
+        <div className="flex items-center gap-x-2">
+          <div className="border rounded-md p-1.5">
+            <Folder className="h-3.5 w-3.5" />
+          </div>
+          <p>{getShortenedText(folder.name, 25)}</p>
+        </div>
+
+        <div className="opacity-0 group-hover:opacity-100 transition">
+          <FolderDropdown folder={folder} classroomId={classroomId} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      id="always-on-show"
       className={cn(
-        "py-1 px-2.5 flex items-center justify-between hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer group",
+        "py-1 px-2.5 flex items-center justify-between focus:outline-none hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer group",
         {
           "bg-neutral-100 font-medium": activeFolderId === folder.id,
+          "cursor-grabbing bg-background/60 opacity-60": isHolding,
         }
       )}
       onClick={() => {
@@ -114,14 +159,20 @@ const MaterialTab: React.FC<MaterialTabProps> = ({
         setActiveNoteId(null);
       }}
     >
-      <div className="flex items-center gap-x-2">
+      <div
+        className={cn("flex items-center gap-x-2", { "opacity-60": isHolding })}
+      >
         <div className="border rounded-md p-1.5">
           <Folder className="h-3.5 w-3.5" />
         </div>
         <p>{getShortenedText(folder.name, 25)}</p>
       </div>
 
-      <div className="opacity-0 group-hover:opacity-100 transition">
+      <div
+        className={cn("opacity-0 group-hover:opacity-100 transition", {
+          "opacity-60": isHolding,
+        })}
+      >
         <FolderDropdown folder={folder} classroomId={classroomId} />
       </div>
     </div>

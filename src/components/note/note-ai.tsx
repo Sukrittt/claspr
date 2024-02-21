@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ExtendedNote } from "@/types";
+import { FormattedNote } from "@/types/note";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn, getFilteredResponse } from "@/lib/utils";
@@ -32,15 +33,17 @@ import { useConversation, useCreateConversation } from "@/hooks/conversation";
  */
 
 interface NoteAiProps {
-  note: ExtendedNote;
+  note: ExtendedNote | FormattedNote;
   moveToEditor: (text: string) => void;
   temperature?: number;
+  customAiTrigger?: JSX.Element;
 }
 
 export const NoteAi: React.FC<NoteAiProps> = ({
   note,
   moveToEditor,
   temperature,
+  customAiTrigger,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -183,21 +186,25 @@ export const NoteAi: React.FC<NoteAiProps> = ({
   return (
     <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
       <DialogTrigger asChild>
-        <motion.div
-          variants={AiDialogVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          className="absolute bottom-6 right-8 group"
-        >
-          <CustomTooltip text="Ask AI">
-            <div>
-              <Button className="rounded-full p-2 h-10 w-10 shadow-lg">
-                <Sparkles className="w-[18px] h-[18px] group-hover:rotate-90 transition duration-300" />
-              </Button>
-            </div>
-          </CustomTooltip>
-        </motion.div>
+        {customAiTrigger ? (
+          customAiTrigger
+        ) : (
+          <motion.div
+            variants={AiDialogVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            className="absolute bottom-6 right-8 group"
+          >
+            <CustomTooltip text="Ask AI">
+              <div>
+                <Button className="rounded-full p-2 h-10 w-10 shadow-lg">
+                  <Sparkles className="w-[18px] h-[18px] group-hover:rotate-90 transition duration-300" />
+                </Button>
+              </div>
+            </CustomTooltip>
+          </motion.div>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>

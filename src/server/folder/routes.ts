@@ -50,6 +50,7 @@ export const getFolders = privateProcedure
             createdAt: true,
             classroomId: true,
             content: true,
+            viewCount: true,
 
             topics: {
               select: {

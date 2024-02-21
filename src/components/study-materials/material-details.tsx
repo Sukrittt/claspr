@@ -58,7 +58,7 @@ export const MaterialDetails: React.FC<MaterialDetailsProps> = ({
       {note.creator.id !== session.user.id ? (
         <EditorOutput content={note.content} />
       ) : (
-        <MaterialContent content={note.content} noteId={note.id} />
+        <MaterialContent note={note} />
       )}
     </div>
   );

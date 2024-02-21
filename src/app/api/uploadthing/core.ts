@@ -4,7 +4,7 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 const f = createUploadthing();
 
 export const ourFileRouter = {
-  imageUpLoader2: f({
+  imageUpLoader: f({
     image: { maxFileSize: "4MB" },
     pdf: { maxFileSize: "4MB" },
     video: { maxFileSize: "4MB" },

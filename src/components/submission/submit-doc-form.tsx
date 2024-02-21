@@ -46,7 +46,7 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
   async function uploadByFile(files: File[]) {
     const fileData = files.map(async (file) => {
       // upload to uploadthing
-      const [res] = await uploadFiles("imageUpLoader2", {
+      const [res] = await uploadFiles("imageUpLoader", {
         files: [file],
       });
 

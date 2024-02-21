@@ -11,6 +11,7 @@ export type MinifiedNote = Pick<
   | "createdAt"
   | "classroomId"
   | "content"
+  | "viewCount"
 >;
 
 export type MinifiedTopic = Pick<Topic, "id" | "name" | "noteId">;

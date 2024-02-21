@@ -151,7 +151,7 @@ function CustomAttachmentRenderer({ data }: any) {
         <File className="text-muted-foreground h-4 w-4" />
         <p>{data.title}</p>
       </div>
-      <ArrowUpRight className="text-muted-foreground h-4 w-4 hidden transition group-hover:block" />
+      <ArrowUpRight className="text-muted-foreground h-4 w-4 opacity-0 transition group-hover:opacity-100" />
     </Link>
   );
 }

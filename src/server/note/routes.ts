@@ -61,6 +61,7 @@ export const createNote = privateProcedure
         createdAt: true,
         classroomId: true,
         content: true,
+        viewCount: true,
 
         topics: {
           select: {
@@ -560,9 +561,8 @@ export const updateViewCount = privateProcedure
     const existingNote = await db.note.findFirst({
       where: {
         id: noteId,
-        creatorId: ctx.userId,
       },
-      select: { noteType: true, classroomId: true },
+      select: { noteType: true, classroomId: true, viewCount: true },
     });
 
     if (!existingNote || existingNote.noteType === "PERSONAL") {
@@ -572,22 +572,20 @@ export const updateViewCount = privateProcedure
       });
     }
 
-    const isStudent = await getIsPartOfClassAuth(
+    const isTeacher = await getIsPartOfClassAuth(
       existingNote.classroomId!, //When note type is not PERSONAL, classroomId WILL be defined.
       ctx.userId,
-      false
+      true
     );
 
-    if (!isStudent) return;
+    if (isTeacher) return;
 
     await db.note.update({
       where: {
         id: noteId,
       },
       data: {
-        viewCount: {
-          increment: 1,
-        },
+        viewCount: existingNote.viewCount ? existingNote.viewCount + 1 : 1,
       },
     });
   });

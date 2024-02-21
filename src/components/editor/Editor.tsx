@@ -4,18 +4,19 @@ import EditorJS from "@editorjs/editorjs";
 import { ClassRoom } from "@prisma/client";
 import { useCallback, useEffect, useRef } from "react";
 
+import { cn } from "@/lib/utils";
 import { ExtendedNote } from "@/types";
+import { FormattedNote } from "@/types/note";
 import { uploadFiles } from "@/lib/uploadthing";
 import { useMounted } from "@/hooks/use-mounted";
+import { NoteAi } from "@/components/note/note-ai";
 import { ContainerHeightVariants } from "@/lib/motion";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { AIDialog } from "@/components/conversation/ai-dialog";
-import { NoteAi } from "@/components/note/note-ai";
-import { cn } from "@/lib/utils";
 
 interface EditorProps {
   classroom?: Pick<ClassRoom, "id" | "title" | "description">;
-  note?: ExtendedNote;
+  note?: ExtendedNote | FormattedNote;
   title?: string;
   content?: any;
   disableAI?: boolean;
@@ -24,6 +25,7 @@ interface EditorProps {
   disableFollowUp?: boolean;
   getDebouncedContent?: boolean;
   isNotePage?: boolean;
+  customAiTrigger?: JSX.Element;
 }
 
 export const Editor: React.FC<EditorProps> = ({
@@ -37,6 +39,7 @@ export const Editor: React.FC<EditorProps> = ({
   isNotePage = false,
   getDebouncedContent,
   placeholder,
+  customAiTrigger,
 }) => {
   const ref = useRef<EditorJS>();
   const mounted = useMounted();
@@ -114,8 +117,10 @@ export const Editor: React.FC<EditorProps> = ({
             shortcut: "CMD+I",
             config: {
               types: "image/*",
-              upLoader2: {
+              uploader: {
                 async uploadByFile(file: File) {
+                  console.log("editor fn", file);
+
                   const res = await uploadByFile(file);
 
                   return {
@@ -132,7 +137,7 @@ export const Editor: React.FC<EditorProps> = ({
             class: Attach,
             config: {
               types: "image/*, video/*, application/pdf, .doc, .docx",
-              upLoader2: {
+              uploader: {
                 async uploadByFile(file: File) {
                   const res = await uploadByFile(file);
 
@@ -181,8 +186,10 @@ export const Editor: React.FC<EditorProps> = ({
   };
 
   async function uploadByFile(file: File) {
+    console.log("file", file);
+
     // upload to uploadthing
-    const [res] = await uploadFiles("imageUpLoader2", {
+    const [res] = await uploadFiles("imageUpLoader", {
       files: [file],
     });
 
@@ -252,7 +259,12 @@ export const Editor: React.FC<EditorProps> = ({
             />
           )
         : note && (
-            <NoteAi moveToEditor={insertBlock} note={note} temperature={0.2} />
+            <NoteAi
+              moveToEditor={insertBlock}
+              note={note}
+              temperature={0.2}
+              customAiTrigger={customAiTrigger}
+            />
           )}
     </div>
   );

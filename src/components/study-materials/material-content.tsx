@@ -1,19 +1,16 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 
+import { FormattedNote } from "@/types/note";
 import { Editor } from "@/components/editor/Editor";
 import { useUpdateNoteContent } from "@/hooks/note";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 
 interface MaterialContentProps {
-  content: any;
-  noteId: string;
+  note: FormattedNote;
 }
 
-export const MaterialContent: React.FC<MaterialContentProps> = ({
-  content,
-  noteId,
-}) => {
+export const MaterialContent: React.FC<MaterialContentProps> = ({ note }) => {
   const [editorContent] = useAtom(contentAtom);
   const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom);
 
@@ -21,7 +18,7 @@ export const MaterialContent: React.FC<MaterialContentProps> = ({
 
   const handleUpdateContent = () => {
     updateContent({
-      noteId,
+      noteId: note.id,
       content: editorContent,
     });
 
@@ -34,5 +31,23 @@ export const MaterialContent: React.FC<MaterialContentProps> = ({
     }
   }, [isSubmitting]);
 
-  return <Editor content={content} getDebouncedContent />;
+  const customAiTrigger = (
+    <div className="absolute -top-14 right-0">
+      <div className="py-[3px] px-3 border rounded-full text-[13px] text-neutral-200 bg-primary font-medium hover:bg-primary/90 transition tracking-tight cursor-pointer">
+        <span>Generate</span>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="relative">
+      <Editor
+        content={note.content}
+        note={note}
+        getDebouncedContent
+        isNotePage
+        customAiTrigger={customAiTrigger}
+      />
+    </div>
+  );
 };

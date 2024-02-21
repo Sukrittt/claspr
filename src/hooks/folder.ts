@@ -99,7 +99,7 @@ export const useRemoveFolder = ({
   });
 };
 
-export const useReorderFolder = () => {
+export const useReorderFolder = (classroomId?: string) => {
   const utils = trpc.useUtils();
 
   return trpc.folder.reorderFolder.useMutation({
@@ -107,7 +107,7 @@ export const useReorderFolder = () => {
       toast.error("Your changes were not saved. Please refresh your page.");
     },
     onSettled: () => {
-      utils.folder.getFolders.invalidate();
+      utils.folder.getFolders.invalidate({ classroomId });
     },
   });
 };

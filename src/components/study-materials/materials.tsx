@@ -13,6 +13,7 @@ import {
   classFolderAtom,
   globalLoaderAtom,
 } from "@/atoms";
+import { MaterialsGraphDialog } from "./materials-graph-dialog";
 
 export const Materials = ({ classroomId }: { classroomId: string }) => {
   const [folders] = useAtom(classFolderAtom);
@@ -21,7 +22,6 @@ export const Materials = ({ classroomId }: { classroomId: string }) => {
 
   const activeFolder = folders.find((folder) => folder.id === activeFolderId);
 
-  // TODO
   if (isLoadingFolders) {
     return <MaterialSkeleton />;
   }
@@ -44,11 +44,18 @@ export const Materials = ({ classroomId }: { classroomId: string }) => {
           <p className="tracking-tight text-sm font-medium">
             {activeFolder?.name}
           </p>
-          <CreateNoteDialog
-            folderId={activeFolder.id}
-            noteType="CLASSROOM"
-            classroomId={classroomId}
-          />
+          <div className="flex items-center gap-x-2">
+            <MaterialsGraphDialog
+              notes={activeFolder.notes}
+              classroomId={classroomId}
+            />
+
+            <CreateNoteDialog
+              folderId={activeFolder.id}
+              noteType="CLASSROOM"
+              classroomId={classroomId}
+            />
+          </div>
         </div>
 
         <div>
