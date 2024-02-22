@@ -112,6 +112,14 @@ export const editAssignmentDetails = privateProcedure
 
     const existingAssignment = await db.assignment.findFirst({
       where: { id: assignmentId },
+      select: {
+        id: true,
+        title: true,
+        dueDate: true,
+        description: true,
+        lateSubmission: true,
+        events: { select: { id: true } },
+      },
     });
 
     if (!existingAssignment) {
@@ -122,18 +130,34 @@ export const editAssignmentDetails = privateProcedure
       });
     }
 
-    await db.assignment.update({
-      where: {
-        id: assignmentId,
-        classRoomId: classroomId,
-      },
-      data: {
-        title: title ?? existingAssignment.title,
-        dueDate: dueDate ?? existingAssignment.dueDate,
-        lateSubmission: lateSubmission ?? existingAssignment.lateSubmission,
-        description: content ?? existingAssignment.description,
-      },
-    });
+    const eventId = existingAssignment.events[0].id;
+
+    const promises = [
+      db.event.update({
+        where: {
+          id: eventId,
+          assignmentId,
+          userId: ctx.userId,
+        },
+        data: {
+          eventDate: dueDate,
+        },
+      }),
+      db.assignment.update({
+        where: {
+          id: assignmentId,
+          classRoomId: classroomId,
+        },
+        data: {
+          title: title ?? existingAssignment.title,
+          dueDate: dueDate ?? existingAssignment.dueDate,
+          lateSubmission: lateSubmission ?? existingAssignment.lateSubmission,
+          description: content ?? existingAssignment.description,
+        },
+      }),
+    ];
+
+    await Promise.all(promises);
   });
 
 /**

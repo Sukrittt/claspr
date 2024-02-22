@@ -21,27 +21,20 @@ export const getEvents = privateProcedure
   .query(async ({ ctx, input }) => {
     const { classroomId } = input;
 
-    const existingClassroom = await db.classRoom.findFirst({
-      where: {
-        id: classroomId,
-      },
-    });
-
-    if (!existingClassroom) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "This classroom no longer exists. Check with your teacher.",
+    if (classroomId) {
+      const existingClassroom = await db.classRoom.findFirst({
+        where: {
+          id: classroomId,
+        },
       });
-    }
 
-    const existingMembership = await db.membership.findFirst({
-      where: {
-        classRoomId: classroomId,
-        userId: ctx.userId,
-        isTeacher: false,
-      },
-      select: { id: true },
-    });
+      if (!existingClassroom) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "This classroom no longer exists. Check with your teacher.",
+        });
+      }
+    }
 
     const currentDate = new Date();
     const sevenDaysLater = addDays(currentDate, 7);
@@ -49,6 +42,23 @@ export const getEvents = privateProcedure
     let assignmentWhereClause = {};
 
     if (classroomId) {
+      const existingMembership = await db.membership.findFirst({
+        where: {
+          classRoomId: classroomId,
+          userId: ctx.userId,
+          isTeacher: false,
+        },
+        select: { id: true },
+      });
+
+      if (!existingMembership) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message:
+            "You need to be a member of this classroom to view your upcoming events.",
+        });
+      }
+
       assignmentWhereClause = {
         classRoomId: classroomId,
         submissions: {
@@ -60,11 +70,19 @@ export const getEvents = privateProcedure
         },
       };
     } else {
+      const existingMemberships = await db.membership.findMany({
+        where: {
+          userId: ctx.userId,
+          isTeacher: false,
+        },
+        select: { id: true },
+      });
+
       assignmentWhereClause = {
         submissions: {
           every: {
             memberId: {
-              not: existingMembership?.id,
+              notIn: existingMemberships.map((membership) => membership.id),
             },
           },
         },
@@ -74,7 +92,6 @@ export const getEvents = privateProcedure
     const classEvents = await db.event.findMany({
       where: {
         assignment: assignmentWhereClause,
-        userId: classroomId ? undefined : ctx.userId,
         eventDate: {
           gte: currentDate,
           lt: sevenDaysLater,
@@ -90,6 +107,7 @@ export const getEvents = privateProcedure
           select: {
             id: true,
             title: true,
+            classRoomId: true,
           },
         },
         user: {

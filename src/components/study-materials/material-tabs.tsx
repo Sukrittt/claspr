@@ -141,6 +141,10 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
     }
   }, [isFirstFolder]);
 
+  // useEffect(() => {
+  //   window.history.pushState(null, "", `?folder=${activeFolderId}`);
+  // }, [activeFolderId]);
+
   if (isDragging) {
     return (
       <div
