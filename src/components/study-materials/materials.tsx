@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { FolderX } from "lucide-react";
+import { Folder, FolderX } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { MaterialCard } from "./material-card";
@@ -26,9 +26,13 @@ export const Materials = ({ classroomId }: { classroomId: string }) => {
     return <MaterialSkeleton />;
   }
 
-  //   TODO
   if (!activeFolder) {
-    return <p>Select a folder to view the notes</p>;
+    return (
+      <div className="h-[60vh] flex flex-col items-center justify-center gap-y-2">
+        <Folder className="h-10 w-10 text-neutral-800" />
+        <p className="text-sm text-muted-foreground">Select a folder</p>
+      </div>
+    );
   }
 
   return (

@@ -1,15 +1,29 @@
 import { Folder } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const MaterialSkeleton = ({ length = 10 }: { length?: number }) => {
   return (
-    <ScrollArea className="h-[68vh]">
-      {Array.from({ length }).map((_, index) => (
-        <MaterialSkeletonCard key={index} />
-      ))}
-    </ScrollArea>
+    <div className="space-y-2">
+      <div className="flex justify-between items-center">
+        <Skeleton className="h-3 w-1/2" />
+        <div className="flex items-center gap-x-4">
+          <Skeleton className="h-4 w-4" />
+          <Skeleton className="h-4 w-4" />
+        </div>
+      </div>
+
+      <div>
+        <Separator />
+        <ScrollArea className="h-[68vh]">
+          {Array.from({ length }).map((_, index) => (
+            <MaterialSkeletonCard key={index} />
+          ))}
+        </ScrollArea>
+      </div>
+    </div>
   );
 };
 

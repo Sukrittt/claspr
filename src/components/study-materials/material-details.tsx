@@ -1,11 +1,16 @@
 import { useAtom } from "jotai";
 import { Session } from "next-auth";
+import { FileX2 } from "lucide-react";
 
 import { MaterialContent } from "./material-content";
 import { Separator } from "@/components/ui/separator";
 import { EditorOutput } from "@/components/editor/EditorOutput";
-import { activeClassFolderIdAtom, classFolderAtom } from "@/atoms";
-import { NoteRenameTitle } from "../note/note-rename-title";
+import { NoteRenameTitle } from "@/components/note/note-rename-title";
+import {
+  activeClassFolderIdAtom,
+  activeNoteIdAtom,
+  classFolderAtom,
+} from "@/atoms";
 
 interface MaterialDetailsProps {
   noteId: string;
@@ -18,13 +23,26 @@ export const MaterialDetails: React.FC<MaterialDetailsProps> = ({
 }) => {
   const [folders] = useAtom(classFolderAtom);
   const [activeFolderId] = useAtom(activeClassFolderIdAtom);
+  const [, setActiveNoteId] = useAtom(activeNoteIdAtom);
 
   const activeFolder = folders.find((folder) => folder.id === activeFolderId);
   const note = activeFolder?.notes.find((note) => note.id === noteId);
 
-  // TODO
   if (!note) {
-    return <p>No note found.</p>;
+    return (
+      <div className="h-[60vh] flex flex-col items-center justify-center gap-y-4">
+        <FileX2 className="h-10 w-10 text-neutral-800" />
+        <div className="space-y-1 text-sm text-muted-foreground flex flex-col items-center">
+          <p>We couldn&rsquo;t find the note you&rsquo;re looking for.</p>
+          <p
+            className="font-semibold hover:underline underline-offset-4 cursor-pointer w-fit"
+            onClick={() => setActiveNoteId(null)}
+          >
+            Go back
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

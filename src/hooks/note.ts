@@ -195,8 +195,13 @@ export const useMoveNote = ({
   });
 };
 
-export const useUpdateNoteContent = () => {
+export const useUpdateNoteContent = (classroomId?: string) => {
+  const utils = trpc.useUtils();
+
   return trpc.note.updateContent.useMutation({
+    onSuccess: () => {
+      utils.folder.getFolders.invalidate({ classroomId });
+    },
     onError: () => {
       toast.error(
         "Your changes were not saved. Please refresh the page and try again."

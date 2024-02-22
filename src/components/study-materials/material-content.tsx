@@ -14,7 +14,9 @@ export const MaterialContent: React.FC<MaterialContentProps> = ({ note }) => {
   const [editorContent] = useAtom(contentAtom);
   const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom);
 
-  const { mutate: updateContent } = useUpdateNoteContent();
+  const { mutate: updateContent } = useUpdateNoteContent(
+    note.classroomId ?? undefined
+  );
 
   const handleUpdateContent = () => {
     updateContent({
@@ -33,7 +35,7 @@ export const MaterialContent: React.FC<MaterialContentProps> = ({ note }) => {
 
   const customAiTrigger = (
     <div className="absolute -top-14 right-0">
-      <div className="py-[3px] px-3 border rounded-full text-[13px] text-neutral-200 bg-primary font-medium hover:bg-primary/90 transition tracking-tight cursor-pointer">
+      <div className="py-[3px] px-3 border rounded-full text-[13px] text-neutral-200 bg-primary font-medium hover:bg-primary/80 transition tracking-tight cursor-pointer">
         <span>Generate</span>
       </div>
     </div>

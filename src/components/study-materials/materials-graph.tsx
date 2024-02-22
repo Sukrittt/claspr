@@ -9,8 +9,8 @@ export const MaterialsGraph: React.FC<MaterialsGraphProps> = ({ data }) => {
   if (data.length === 0) {
     return (
       <div className="flex items-center justify-center h-[350px]">
-        <p className="text-sm font-mono text-muted-foreground">
-          Track how your materials are being used.
+        <p className="text-sm text-muted-foreground">
+          No materials in this folder.
         </p>
       </div>
     );
