@@ -1,18 +1,11 @@
 import Link from "next/link";
+import { toast } from "sonner";
 import { Session } from "next-auth";
 import { format, isAfter } from "date-fns";
-import {
-  CalendarCheck,
-  CalendarClock,
-  CalendarX2,
-  Check,
-  ClipboardList,
-} from "lucide-react";
-import { toast } from "sonner";
+import { ClipboardList } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { cn, timeAgo } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { ExtendedAssignment } from "@/types";
 import { ContainerVariants } from "@/lib/motion";
 import { useMounted } from "@/hooks/use-mounted";
@@ -21,7 +14,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGetAssignments } from "@/hooks/assignment";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
-import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AssignmentSkeleton } from "@/components/skeletons/assignment-skeleton";
 
 interface AssignmentProps {
@@ -105,19 +97,6 @@ const AssignmentCardList: React.FC<AssignmentCardListProps> = ({
   const currentDate = new Date();
   const deadlinePassed = isAfter(currentDate, assignment.dueDate);
 
-  const getToolTipText = () => {
-    if (submissionDetails) {
-      return "Submitted";
-    }
-
-    if (deadlinePassed) {
-      return "Missed";
-    }
-
-    return "Pending";
-  };
-
-  const toolTipText = getToolTipText();
   const noOfSubmissions = assignment.submissions.length;
 
   return (
@@ -127,62 +106,60 @@ const AssignmentCardList: React.FC<AssignmentCardListProps> = ({
       animate="animate"
       exit="exit"
     >
-      <Link
-        href={`/c/${assignment.classRoomId}/a/${assignment.id}`}
+      <div
         onClick={() => toast.loading("Just a moment...", { duration: 1000 })}
-        className="border-b text-sm px-3 py-2 flex items-center justify-between cursor-pointer hover:bg-neutral-100 transition"
+        className="border-b text-sm px-3 py-2 flex items-center gap-x-2"
       >
-        <div className="flex items-center gap-x-2">
-          <UserAvatar
-            user={assignment.creator}
-            className="h-8 w-8 rounded-md"
-          />
-          <div className="space-y-1 w-full">
-            <p className="font-medium text-neutral-700">{assignment.title}</p>
-            <span className="text-[11px] text-muted-foreground">
-              {assignment.creator.name} posted this{" "}
-              {timeAgo(assignment.createdAt)}
+        <UserAvatar user={assignment.creator} className="h-8 w-8 rounded-md" />
+        <div className="flex flex-col gap-y-1 w-full">
+          <Link
+            href={`/c/${assignment.classRoomId}/a/${assignment.id}`}
+            className="font-medium text-neutral-700 hover:underline underline-offset-4 w-fit"
+          >
+            {assignment.title}
+          </Link>
+          <div className="flex items-center gap-x-1 text-[11px] text-muted-foreground">
+            <span>
+              {session.user.id === assignment.creator.id
+                ? "You"
+                : assignment.creator.name}{" "}
+              posted this {timeAgo(assignment.createdAt)}
             </span>
-          </div>
-        </div>
-        {isLoading ? (
-          <Skeleton className="h-5 w-[4.5rem] rounded-full" />
-        ) : isTeacher ? (
-          <div className="flex items-center gap-x-1 font-medium">
-            <div className="border rounded-full p-1 text-neutral-800">
-              <Check className="h-3 w-3" />
-            </div>
-            <span className="text-xs">{noOfSubmissions}</span>
-          </div>
-        ) : (
-          <CustomTooltip text={toolTipText}>
-            <div>
-              <Badge
-                className={cn("text-[10px] py-px", {
-                  "bg-green-600 hover:bg-green-600/80": submissionDetails,
-                  "bg-destructive hover:bg-destructive/80": deadlinePassed,
-                })}
-              >
-                {submissionDetails ? (
+            <span>•</span>
+            {isLoading ? (
+              <Skeleton className="h-3 w-20" />
+            ) : isTeacher ? (
+              <span>
+                {noOfSubmissions} submission{noOfSubmissions !== 1 && "s"}
+              </span>
+            ) : (
+              <>
+                <p
+                  className={cn("font-semibold", {
+                    "text-green-600": !!submissionDetails,
+                    "text-destructive": deadlinePassed,
+                  })}
+                >
+                  {submissionDetails
+                    ? "Submitted"
+                    : deadlinePassed
+                    ? "Missed"
+                    : "Pending"}
+                </p>
+                {!submissionDetails && !deadlinePassed && (
                   <>
-                    <CalendarCheck className="h-3.5 w-3.5 mr-2" />
-                    {format(submissionDetails.createdAt, "dd, MMM")}
-                  </>
-                ) : (
-                  <>
-                    {deadlinePassed ? (
-                      <CalendarX2 className="h-3.5 w-3.5 mr-2" />
-                    ) : (
-                      <CalendarClock className="h-3.5 w-3.5 mr-2" />
-                    )}
-                    {format(assignment.dueDate, "dd, MMM")}
+                    <span>•</span>
+                    Submit before{" "}
+                    <span className="font-semibold">
+                      {format(assignment.dueDate, "do MMM, h:mm a")}
+                    </span>
                   </>
                 )}
-              </Badge>
-            </div>
-          </CustomTooltip>
-        )}
-      </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 };

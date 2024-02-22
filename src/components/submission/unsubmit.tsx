@@ -21,7 +21,11 @@ export const Unsubmit: React.FC<UnsubmitProps> = ({
       disabled={isLoading}
       onClick={() => unsubmit({ assignmentId, submissionId })}
     >
-      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Unsubmit"}
+      {isLoading ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+      ) : (
+        "Unsubmit"
+      )}
     </Button>
   );
 };

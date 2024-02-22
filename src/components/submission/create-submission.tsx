@@ -27,7 +27,7 @@ export const CreateSubmission: React.FC<CreateSubmissionProps> = ({
       onClick={handleCreateSubmission}
     >
       {isLoading ? (
-        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+        <Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" />
       ) : (
         " Submit Assignment"
       )}

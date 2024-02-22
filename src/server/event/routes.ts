@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
 
 /**
- *  Fetching events for next 7 days whose submission is not done by the user in a classroom.
+ *  Fetching events for next 7 days.
  *
  * @param {object} input - The input parameters for getting class events.
  * @param {string} input.classroomId - An optional id of the classroom.
@@ -30,7 +30,7 @@ export const getEvents = privateProcedure
     if (!existingClassroom) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "The classroom no longer exists. Check with your teacher.",
+        message: "This classroom no longer exists. Check with your teacher.",
       });
     }
 
@@ -38,16 +38,10 @@ export const getEvents = privateProcedure
       where: {
         classRoomId: classroomId,
         userId: ctx.userId,
+        isTeacher: false,
       },
+      select: { id: true },
     });
-
-    if (!existingMembership) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message:
-          "You are not a member of this classroom. Please join the classroom to view your upcoming events.",
-      });
-    }
 
     const currentDate = new Date();
     const sevenDaysLater = addDays(currentDate, 7);
@@ -60,7 +54,7 @@ export const getEvents = privateProcedure
         submissions: {
           every: {
             memberId: {
-              not: existingMembership.id,
+              not: existingMembership?.id,
             },
           },
         },
@@ -70,7 +64,7 @@ export const getEvents = privateProcedure
         submissions: {
           every: {
             memberId: {
-              not: existingMembership.id,
+              not: existingMembership?.id,
             },
           },
         },
@@ -80,14 +74,35 @@ export const getEvents = privateProcedure
     const classEvents = await db.event.findMany({
       where: {
         assignment: assignmentWhereClause,
+        userId: classroomId ? undefined : ctx.userId,
         eventDate: {
           gte: currentDate,
           lt: sevenDaysLater,
         },
       },
-      include: {
-        assignment: true,
-        user: true,
+      select: {
+        id: true,
+        title: true,
+        eventDate: true,
+        description: true,
+
+        assignment: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
+      orderBy: {
+        eventDate: "desc",
       },
     });
 

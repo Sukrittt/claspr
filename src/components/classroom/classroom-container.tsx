@@ -10,11 +10,11 @@ import { useSearchParams } from "next/navigation";
 
 import { ClassMembers } from "./class-members";
 import { ClassroomCard } from "./classroom-card";
-import { UpcomingEvents } from "./upcoming-events";
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomControls } from "./classroom-controls";
 import { Assignments } from "@/components/assignment/assignments";
 import { StudyMaterialLayout } from "@/components/study-materials";
+import { UpcomingEvents } from "@/components/event/upcoming-events";
 import { HelpfulUsers } from "@/components/discussions/helpful-users";
 import { DiscussionTabs } from "@/components/discussions/discussion-tabs";
 import { ClassDiscussions } from "@/components/discussions/class-discussions";
@@ -117,7 +117,7 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
         <div className="col-span-2 flex flex-col gap-2 h-full pt-4">
           <ClassroomCard classroom={classroom} sessionId={session.user.id} />
           <div className="flex-1">
-            <UpcomingEvents classroom={classroom} />
+            <UpcomingEvents classroomId={classroom.id} />
           </div>
         </div>
       </div>
