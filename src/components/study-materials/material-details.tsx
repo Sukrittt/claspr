@@ -11,15 +11,18 @@ import {
   activeNoteIdAtom,
   classFolderAtom,
 } from "@/atoms";
+import { useQueryChange } from "@/hooks/use-query-change";
 
 interface MaterialDetailsProps {
   noteId: string;
   session: Session;
+  classroomId: string;
 }
 
 export const MaterialDetails: React.FC<MaterialDetailsProps> = ({
   noteId,
   session,
+  classroomId,
 }) => {
   const [folders] = useAtom(classFolderAtom);
   const [activeFolderId] = useAtom(activeClassFolderIdAtom);
@@ -27,6 +30,8 @@ export const MaterialDetails: React.FC<MaterialDetailsProps> = ({
 
   const activeFolder = folders.find((folder) => folder.id === activeFolderId);
   const note = activeFolder?.notes.find((note) => note.id === noteId);
+
+  const handleQueryChange = useQueryChange();
 
   if (!note) {
     return (
@@ -36,7 +41,12 @@ export const MaterialDetails: React.FC<MaterialDetailsProps> = ({
           <p>We couldn&rsquo;t find the note you&rsquo;re looking for.</p>
           <p
             className="font-semibold hover:underline underline-offset-4 cursor-pointer w-fit"
-            onClick={() => setActiveNoteId(null)}
+            onClick={() => {
+              const initialUrl = `/c/${classroomId}`;
+              handleQueryChange(initialUrl, { note: null });
+
+              setActiveNoteId(null);
+            }}
           >
             Go back
           </p>
@@ -51,6 +61,7 @@ export const MaterialDetails: React.FC<MaterialDetailsProps> = ({
         <NoteRenameTitle
           folderId={note.folderId}
           noteId={note.id}
+          classroomId={classroomId}
           noteTitle={note.title}
           disabled={note.creator.id !== session.user.id}
         />

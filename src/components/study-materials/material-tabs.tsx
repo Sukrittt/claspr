@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { useAtom } from "jotai";
+import { useEffect } from "react";
 import { Folder } from "lucide-react";
 import { useFolders } from "@/hooks/folder";
 import { useSearchParams } from "next/navigation";
@@ -33,6 +33,8 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
   const [, setIsLoadingFolders] = useAtom(globalLoaderAtom);
   const [, setActiveNoteId] = useAtom(activeNoteIdAtom);
 
+  const handleQueryChange = useQueryChange();
+
   const { mutate: updateViews } = useUpdateViewCount();
   const { data: serverFolders, isLoading } = useFolders(classroomId);
 
@@ -48,7 +50,9 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
 
   const handleNoteClick = (noteId: string) => {
     updateViews({ noteId });
+
     setActiveNoteId(noteId);
+    handleQueryChange(`/c/${classroomId}`, { note: noteId });
   };
 
   const popularVisits = folders.flatMap((folder) => {
@@ -64,40 +68,43 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
   });
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        variants={ContainerVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        className="space-y-4 h-full"
-      >
-        <div className="flex items-center justify-between">
-          <h3 className="tracking-tight font-medium text-[13px]">Folders</h3>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <h3 className="tracking-tight font-medium text-[13px]">Folders</h3>
 
-          <div className="flex items-center gap-x-2">
-            <NoteSearch
-              noteType="CLASSROOM"
-              classroomId={classroomId}
-              handleNoteClick={handleNoteClick}
-              popularVisits={popularVisits}
-            />
-            <CreateFolderDialog classroomId={classroomId} />
-          </div>
+        <div className="flex items-center gap-x-2">
+          <NoteSearch
+            noteType="CLASSROOM"
+            classroomId={classroomId}
+            handleNoteClick={handleNoteClick}
+            popularVisits={popularVisits}
+          />
+          <CreateFolderDialog classroomId={classroomId} />
         </div>
-        <ScrollArea className="h-[68vh]">
-          <div className="space-y-2">
-            {isLoading ? (
-              <MaterialTabsSkeleton />
-            ) : !folders || folders.length === 0 ? (
-              <p>No folders found.</p>
-            ) : (
-              <MaterialContext classroomId={classroomId} folders={folders} />
-            )}
-          </div>
-        </ScrollArea>
-      </motion.div>
-    </AnimatePresence>
+      </div>
+      <ScrollArea className="h-[68vh]">
+        <div className="space-y-2">
+          {isLoading ? (
+            <MaterialTabsSkeleton />
+          ) : !folders || folders.length === 0 ? (
+            <p className="text-xs text-muted-foreground tracking-tight">
+              Your folders will appear here.
+            </p>
+          ) : (
+            <AnimatePresence mode="wait">
+              <motion.div
+                variants={ContainerVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <MaterialContext classroomId={classroomId} folders={folders} />
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </div>
+      </ScrollArea>
+    </div>
   );
 };
 
@@ -154,18 +161,18 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
   }, [params]);
 
   useEffect(() => {
-    if (isFirstFolder) {
-      const initialUrl = `/c/${classroomId}`;
+    if (!isFirstFolder || !!activeFolder) return;
 
-      handleQueryChange(initialUrl, {
-        folder: folder.id,
-        tab: "study-materials",
-        note: null,
-      });
+    const initialUrl = `/c/${classroomId}`;
 
-      setActiveFolderId(folder.id);
-      setActiveNoteId(null);
-    }
+    handleQueryChange(initialUrl, {
+      folder: folder.id,
+      tab: "study-materials",
+      note: null,
+    });
+
+    setActiveFolderId(folder.id);
+    setActiveNoteId(null);
   }, [isFirstFolder]);
 
   if (isDragging) {

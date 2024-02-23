@@ -2,7 +2,6 @@ import Image from "next/image";
 import { useAtom } from "jotai";
 import { format } from "date-fns";
 import { FileText } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 import { FormattedNote } from "@/types/note";
 import { useUpdateViewCount } from "@/hooks/note";

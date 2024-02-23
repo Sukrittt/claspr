@@ -24,7 +24,11 @@ export const StudyMaterialLayout: React.FC<StudyMaterialLayoutProps> = ({
       </div>
       <div className="col-span-6">
         {activeNoteId ? (
-          <MaterialDetails noteId={activeNoteId} session={session} />
+          <MaterialDetails
+            classroomId={classroomId}
+            noteId={activeNoteId}
+            session={session}
+          />
         ) : (
           <Materials classroomId={classroomId} />
         )}

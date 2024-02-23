@@ -77,8 +77,11 @@ export const useEditNote = ({
       utils.folder.getFolders.setData({ classroomId }, ctx?.prevFolders);
     },
     onSuccess: () => {
-      router.refresh();
       onComplete?.();
+
+      if (!classroomId) {
+        router.refresh();
+      }
     },
     onSettled: () => {
       utils.folder.getFolders.invalidate({ classroomId });

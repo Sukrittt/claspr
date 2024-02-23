@@ -1,5 +1,6 @@
+"use client";
 import { useAtom } from "jotai";
-import { Folder, FolderX } from "lucide-react";
+import { FolderCheck, FolderX } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { MaterialCard } from "./material-card";
@@ -13,6 +14,7 @@ import {
   classFolderAtom,
   globalLoaderAtom,
 } from "@/atoms";
+import { useMounted } from "@/hooks/use-mounted";
 import { MaterialsGraphDialog } from "./materials-graph-dialog";
 
 export const Materials = ({ classroomId }: { classroomId: string }) => {
@@ -20,17 +22,21 @@ export const Materials = ({ classroomId }: { classroomId: string }) => {
   const [isLoadingFolders] = useAtom(globalLoaderAtom);
   const [activeFolderId] = useAtom(activeClassFolderIdAtom);
 
+  const mounted = useMounted();
+
   const activeFolder = folders.find((folder) => folder.id === activeFolderId);
 
-  if (isLoadingFolders) {
+  if (isLoadingFolders || !mounted) {
     return <MaterialSkeleton />;
   }
 
   if (!activeFolder) {
     return (
       <div className="h-[60vh] flex flex-col items-center justify-center gap-y-2">
-        <Folder className="h-10 w-10 text-neutral-800" />
-        <p className="text-sm text-muted-foreground">Select a folder</p>
+        <FolderCheck className="h-10 w-10 text-neutral-800" />
+        <p className="text-sm text-muted-foreground">
+          Select or create a folder
+        </p>
       </div>
     );
   }

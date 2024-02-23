@@ -28,19 +28,11 @@ export const NoteRenameTitle: React.FC<NoteRenameTitleProps> = ({
   });
 
   useEffect(() => {
-    if (title === noteTitle) return;
-
-    setTitle(noteTitle);
-  }, [noteTitle]);
-
-  useEffect(() => {
     if (title === noteTitle || disabled) return;
 
     const formattedTitle =
       debouncedTitle.length === 0 ? "Untitled Note" : debouncedTitle.trim();
     ("");
-
-    setTitle(formattedTitle);
 
     renameTitle({ title: formattedTitle, noteId });
   }, [debouncedTitle]);
