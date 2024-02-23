@@ -1,12 +1,12 @@
-import qs from "query-string";
+import { useAtom } from "jotai";
 import { format } from "date-fns";
-import { useCallback } from "react";
 import { Session } from "next-auth";
 import { MessageSquare } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
 
 import { ExtendedDiscussion } from "@/types";
+import { activeDiscussionIdAtom } from "@/atoms";
 import AvatarGroup from "@/components/ui/avatar-group";
+import { useQueryChange } from "@/hooks/use-query-change";
 import { tabs } from "@/components/discussions/discussion-tabs";
 import { QuestionStatus } from "@/components/discussions/questionnaire/question-status";
 
@@ -19,38 +19,13 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
   discussion,
   session,
 }) => {
-  const router = useRouter();
-  const params = useSearchParams();
+  const [, setActiveDiscussionId] = useAtom(activeDiscussionIdAtom);
 
   const discussionDetails = tabs.find(
     (tab) => tab.value === discussion.discussionType
   )!; //It will bere there.
 
-  const handleQueryChange = useCallback(
-    (value: string) => {
-      let currentQuery = {};
-
-      if (params) {
-        currentQuery = qs.parse(params.toString());
-      }
-
-      const updatedQuery: any = {
-        ...currentQuery,
-        active: value,
-      };
-
-      const url = qs.stringifyUrl(
-        {
-          url: `/c/${discussion.classroomId}`,
-          query: updatedQuery,
-        },
-        { skipNull: true }
-      );
-
-      router.push(url);
-    },
-    [params]
-  );
+  const handleQueryChange = useQueryChange();
 
   return (
     <div className="border-b px-3 py-4 flex items-center justify-between">
@@ -62,7 +37,14 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
         <div className="space-y-0.5">
           <h6
             className="font-medium tracking-tight text-base hover:underline underline-offset-4 hover:text-neutral-800 transition cursor-pointer w-fit"
-            onClick={() => handleQueryChange(discussion.id)}
+            onClick={() => {
+              setActiveDiscussionId(discussion.id);
+
+              const initialUrl = `/c/${discussion.classroomId}`;
+              handleQueryChange(initialUrl, {
+                discussion: discussion.id,
+              });
+            }}
           >
             {discussion.title}
           </h6>

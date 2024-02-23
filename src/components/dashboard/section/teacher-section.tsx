@@ -58,7 +58,7 @@ export const TeacherSection = () => {
   }, [sectionsForJoinedClassroomsData]);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-4 h-full">
       <Card className="space-y-4">
         <CardHeader className="border-b py-2.5 space-y-0.5">
           <div className="flex justify-between items-end">

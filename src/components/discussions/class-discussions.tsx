@@ -1,11 +1,12 @@
+import { useAtom } from "jotai";
 import { Session } from "next-auth";
 import { DiscussionType } from "@prisma/client";
-import { useSearchParams } from "next/navigation";
 
 import { tabs } from "./discussion-tabs";
 import { Discussions } from "./discussion";
 import { Separator } from "@/components/ui/separator";
 import { DiscussionDetails } from "./discussion/discussion-details";
+import { activeDiscussionIdAtom, activeDiscussionTabAtom } from "@/atoms";
 import { CreateDiscussionDialog } from "./discussion/create-discussion-dialog";
 
 interface ClassDiscussionsProps {
@@ -17,12 +18,11 @@ export const ClassDiscussions: React.FC<ClassDiscussionsProps> = ({
   classroomId,
   session,
 }) => {
-  const params = useSearchParams();
+  const [activeDiscussionTab] = useAtom(activeDiscussionTabAtom);
+  const [activeDiscussionId] = useAtom(activeDiscussionIdAtom);
 
   const activeTab =
-    tabs.find((tab) => tab.value === params?.get("tab")) ?? tabs[0];
-
-  const activeDiscussionId = params?.get("active");
+    tabs.find((tab) => tab.value === activeDiscussionTab) ?? tabs[0];
 
   return (
     <div className="space-y-4">

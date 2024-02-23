@@ -2,9 +2,11 @@ import Image from "next/image";
 import { useAtom } from "jotai";
 import { format } from "date-fns";
 import { FileText } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { FormattedNote } from "@/types/note";
 import { useUpdateViewCount } from "@/hooks/note";
+import { useQueryChange } from "@/hooks/use-query-change";
 import { activeNoteIdAtom, classFolderAtom } from "@/atoms";
 import { NoteDropdown } from "@/components/note/note-dropdown";
 
@@ -17,6 +19,8 @@ export const MaterialCard: React.FC<MaterialCardProps> = ({
   note,
   classroomId,
 }) => {
+  const handleQueryChange = useQueryChange();
+
   const [folders] = useAtom(classFolderAtom);
   const [, setActiveNoteId] = useAtom(activeNoteIdAtom);
 
@@ -43,6 +47,9 @@ export const MaterialCard: React.FC<MaterialCardProps> = ({
         <div className="space-y-0.5">
           <h6
             onClick={() => {
+              const initialUrl = `/c/${classroomId}`;
+              handleQueryChange(initialUrl, { note: note.id });
+
               updateViews({ noteId: note.id });
               setActiveNoteId(note.id);
             }}

@@ -1,10 +1,8 @@
-import { useAtom } from "jotai";
 import { Session } from "next-auth";
 import { UsersRound } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { ExtendedAssignment } from "@/types";
-import { isChangingQueryAtom } from "@/atoms";
 import { ContainerVariants } from "@/lib/motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
@@ -21,12 +19,11 @@ export const NotSubmittedMembers: React.FC<NotSubmittedMembersProps> = ({
   assignment,
   session,
 }) => {
-  const [isChangingQuery] = useAtom(isChangingQueryAtom);
   const { data: students, isLoading } = useNotSubmittedStudents(assignment.id);
 
   return (
     <div className="h-full">
-      {isLoading || isChangingQuery ? (
+      {isLoading ? (
         <NotSubmittedMembersSkeleton />
       ) : !students || students.length === 0 ? (
         <div className="h-full flex flex-col items-center justify-center gap-y-2">

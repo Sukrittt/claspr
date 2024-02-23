@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+"use client";
 import { useSearchParams } from "next/navigation";
 import {
   Hash,
@@ -6,11 +6,12 @@ import {
   Megaphone,
   MessageCircleQuestion,
 } from "lucide-react";
-import Link from "next/link";
 import { useAtom } from "jotai";
+import { useEffect } from "react";
 
 import { cn } from "@/lib/utils";
-import { isChangingQueryAtom } from "@/atoms";
+import { useQueryChange } from "@/hooks/use-query-change";
+import { activeDiscussionIdAtom, activeDiscussionTabAtom } from "@/atoms";
 
 export const tabs = [
   {
@@ -33,27 +34,63 @@ export const tabs = [
     value: "ideas",
     icon: Lightbulb,
   },
-];
+] as const;
+
+export type DiscussionTab = (typeof tabs)[number]["value"];
 
 export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
   const params = useSearchParams();
 
-  const [, setIsChangingQuery] = useAtom(isChangingQueryAtom);
+  const paramDiscussionTab = params.get("active") as DiscussionTab;
+  const paramDiscussionId = params.get("discussion");
 
-  const activeTab = params?.get("tab") ?? "announcements";
+  const [activeTab, setActiveTab] = useAtom(activeDiscussionTabAtom);
+  const [, setActiveDiscussionId] = useAtom(activeDiscussionIdAtom);
+
+  const handleQueryChange = useQueryChange();
 
   useEffect(() => {
-    setIsChangingQuery(false);
+    if (paramDiscussionTab) {
+      setActiveTab(paramDiscussionTab);
+    }
+
+    if (paramDiscussionId) {
+      setActiveDiscussionId(paramDiscussionId);
+    }
   }, [params]);
+
+  useEffect(() => {
+    if (paramDiscussionTab) return;
+
+    const initialUrl = `/c/${classroomId}`;
+
+    handleQueryChange(initialUrl, {
+      active: "announcements",
+      tab: "discussions",
+    });
+
+    setActiveTab("announcements");
+  }, [activeTab]);
 
   return (
     <div className="space-y-4 text-neutral-800">
       <h3 className="tracking-tight font-medium text-[13px]">Categories</h3>
       <div className="flex flex-col gap-y-2">
         {tabs.map((tab, index) => (
-          <Link
-            prefetch={false}
-            href={`/c/${classroomId}?tab=${tab.value}`}
+          <div
+            onClick={() => {
+              setActiveTab(tab.value);
+              setActiveDiscussionId(null);
+
+              const initialUrl = `/c/${classroomId}`;
+
+              handleQueryChange(initialUrl, {
+                active: tab.value,
+                folder: null,
+                note: null,
+                discussion: null,
+              });
+            }}
             key={index}
             className={cn(
               "py-1 px-2.5 flex items-center gap-x-2 hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer",
@@ -61,13 +98,10 @@ export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
                 "bg-neutral-100 font-medium": activeTab === tab.value,
               }
             )}
-            onClick={() => {
-              setIsChangingQuery(true);
-            }}
           >
             <tab.icon className="h-3.5 w-3.5" />
             <p>{tab.label}</p>
-          </Link>
+          </div>
         ))}
       </div>
     </div>

@@ -1,7 +1,5 @@
-import qs from "query-string";
-import { useAtom } from "jotai";
-import { useCallback, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 import {
   Select,
@@ -10,10 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { isChangingQueryAtom } from "@/atoms";
 import { useMounted } from "@/hooks/use-mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ExtendedAssignmentDetails } from "@/types";
+import { useQueryChange } from "@/hooks/use-query-change";
 
 interface AssignmentFilterProps {
   assignment: ExtendedAssignmentDetails;
@@ -22,49 +20,19 @@ interface AssignmentFilterProps {
 export const AssignmentFilter: React.FC<AssignmentFilterProps> = ({
   assignment,
 }) => {
-  const router = useRouter();
   const params = useSearchParams();
-
-  const [, setIsChangingQuery] = useAtom(isChangingQueryAtom);
 
   const mounted = useMounted();
 
-  useEffect(() => {
-    setIsChangingQuery(false);
-  }, [params]);
-
-  const handleQueryChange = useCallback(
-    (value: string) => {
-      let currentQuery = {};
-
-      if (params) {
-        currentQuery = qs.parse(params.toString());
-      }
-
-      const updatedQuery: any = {
-        ...currentQuery,
-        status: value,
-      };
-
-      const url = qs.stringifyUrl(
-        {
-          url: `/c/${assignment.classRoomId}/a/${assignment.id}`,
-          query: updatedQuery,
-        },
-        { skipNull: true }
-      );
-
-      router.push(url);
-    },
-    [params]
-  );
+  const handleQueryChange = useQueryChange();
 
   return (
     <Select
       defaultValue={params?.get("status") ?? "pending"}
       onValueChange={(val) => {
-        setIsChangingQuery(true);
-        handleQueryChange(val);
+        const initialUrl = `/c/${assignment.classRoomId}/a/${assignment.id}`;
+
+        handleQueryChange(initialUrl, { status: val });
       }}
     >
       <SelectTrigger className="w-[200px] font-medium text-[12px]">

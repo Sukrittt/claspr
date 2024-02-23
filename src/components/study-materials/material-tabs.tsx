@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { Folder } from "lucide-react";
 import { useFolders } from "@/hooks/folder";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { ExtendedFolder } from "@/types";
@@ -18,6 +19,7 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { useUpdateViewCount } from "@/hooks/note";
 import { MaterialContext } from "./material-context";
+import { useQueryChange } from "@/hooks/use-query-change";
 import { NoteSearch } from "@/components/note/note-search";
 import { MaterialTabsSkeleton } from "@/components/skeletons/material-skeleton";
 import { CreateFolderDialog } from "@/components/folder/mutations/create-folder-dialog";
@@ -112,8 +114,15 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
   classroomId,
   isHolding = false,
 }) => {
-  const [activeFolderId, setActiveFolderId] = useAtom(activeClassFolderIdAtom);
+  const params = useSearchParams();
+
+  const handleQueryChange = useQueryChange();
+
   const [, setActiveNoteId] = useAtom(activeNoteIdAtom);
+  const [activeFolderId, setActiveFolderId] = useAtom(activeClassFolderIdAtom);
+
+  const activeNote = params.get("note");
+  const activeFolder = params.get("folder");
 
   const {
     attributes,
@@ -135,15 +144,29 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
     : undefined;
 
   useEffect(() => {
+    if (activeFolder) {
+      setActiveFolderId(activeFolder);
+    }
+
+    if (activeNote) {
+      setActiveNoteId(activeNote);
+    }
+  }, [params]);
+
+  useEffect(() => {
     if (isFirstFolder) {
+      const initialUrl = `/c/${classroomId}`;
+
+      handleQueryChange(initialUrl, {
+        folder: folder.id,
+        tab: "study-materials",
+        note: null,
+      });
+
       setActiveFolderId(folder.id);
       setActiveNoteId(null);
     }
   }, [isFirstFolder]);
-
-  // useEffect(() => {
-  //   window.history.pushState(null, "", `?folder=${activeFolderId}`);
-  // }, [activeFolderId]);
 
   if (isDragging) {
     return (
@@ -189,6 +212,9 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
         }
       )}
       onClick={() => {
+        const initialUrl = `/c/${classroomId}`;
+        handleQueryChange(initialUrl, { folder: folder.id, note: null });
+
         setActiveFolderId(folder.id);
         setActiveNoteId(null);
       }}

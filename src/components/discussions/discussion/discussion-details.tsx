@@ -1,17 +1,17 @@
-import qs from "query-string";
+import { useAtom } from "jotai";
 import { format } from "date-fns";
 import { Session } from "next-auth";
-import { useCallback } from "react";
 import { DiscussionType } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
 
 import { ReactionLists } from "./reaction-lists";
 import { ContainerVariants } from "@/lib/motion";
+import { activeDiscussionIdAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useQueryChange } from "@/hooks/use-query-change";
 import { DiscussionDropdown } from "./discussion-dropdown";
-import { UserAvatar } from "@/components/custom/user-avatar";
 import { useGetDiscussionDetails } from "@/hooks/discussion";
+import { UserAvatar } from "@/components/custom/user-avatar";
 import { EditorOutput } from "@/components/editor/EditorOutput";
 import { Replies } from "@/components/discussions/reply/replies";
 import { RenameDiscussionTitle } from "./rename-discussion-title";
@@ -32,36 +32,13 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
   session,
   classroomId,
 }) => {
-  const router = useRouter();
-  const params = useSearchParams();
-
   const { data: discussion, isLoading } = useGetDiscussionDetails({
     discussionId: activeDiscussionId,
     discussionType,
   });
+  const [, setActiveDiscussionId] = useAtom(activeDiscussionIdAtom);
 
-  const handleRemoveActiveTab = useCallback(() => {
-    let currentQuery = {};
-
-    if (params) {
-      currentQuery = qs.parse(params.toString());
-    }
-
-    const updatedQuery: any = {
-      ...currentQuery,
-      active: undefined,
-    };
-
-    const url = qs.stringifyUrl(
-      {
-        url: `/c/${classroomId}`,
-        query: updatedQuery,
-      },
-      { skipNull: true }
-    );
-
-    router.push(url);
-  }, [params]);
+  const handleQueryChange = useQueryChange();
 
   const selectedReply = discussion?.replies.find(
     (reply) =>
@@ -80,7 +57,10 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
             </p>
             <p
               className="font-semibold cursor-pointer hover:underline underline-offset-4"
-              onClick={handleRemoveActiveTab}
+              onClick={() => {
+                setActiveDiscussionId(null);
+                handleQueryChange(`/c/${classroomId}`, { discussion: null });
+              }}
             >
               Go back
             </p>

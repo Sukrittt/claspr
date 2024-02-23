@@ -34,7 +34,7 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
       <CardContent className="p-4 px-0">
         <ScrollArea
           className={cn("h-[25vh] pr-0", {
-            "h-[40vh]": !!classroomId,
+            "h-[30vh]": !!classroomId,
           })}
         >
           <div className="flex flex-col gap-y-2">
@@ -45,7 +45,7 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
                 className={cn(
                   "h-[25vh] flex flex-col text-muted-foreground text-[13px] justify-center items-center gap-y-2",
                   {
-                    "h-[40vh]": !!classroomId,
+                    "h-[30vh]": !!classroomId,
                   }
                 )}
               >

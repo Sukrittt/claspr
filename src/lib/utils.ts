@@ -1,6 +1,7 @@
 import moment from "moment";
 import { twMerge } from "tailwind-merge";
 import { type ClassValue, clsx } from "clsx";
+import { ReadonlyURLSearchParams } from "next/navigation";
 
 import {
   ExtendedFolder,
@@ -17,6 +18,16 @@ export function absoluteUrl(path: string) {
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}${path}`;
   return `http://localhost:${process.env.PORT ?? 3000}${path}`;
 }
+
+export const createUrl = (
+  pathname: string,
+  params: URLSearchParams | ReadonlyURLSearchParams
+) => {
+  const paramsString = params.toString();
+  const queryString = `${paramsString.length ? "?" : ""}${paramsString}`;
+
+  return `${pathname}${queryString}`;
+};
 
 export function timeAgo(timestamp: Date) {
   const postDate = new Date(timestamp);
