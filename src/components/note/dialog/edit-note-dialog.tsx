@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { SectionType } from "@prisma/client";
 
 import {
   Dialog,
@@ -10,23 +9,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FolderEditForm } from "./edit-folder-form";
+import { MinifiedNote } from "@/types";
+import { EditNoteForm } from "@/components/note/form/edit-note-form";
 
-type EditFolderDialogProps = {
+type EditNoteDialogProps = {
   isOpen: boolean;
   setIsEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  folderId: string;
-  folderName: string;
+  note: MinifiedNote;
   classroomId?: string;
 };
 
-export const EditFolderDialog = ({
+export const EditNoteDialog = ({
   isOpen,
   setIsEditOpen,
-  folderId,
-  folderName,
+  note,
   classroomId,
-}: EditFolderDialogProps) => {
+}: EditNoteDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
   const closeModal = () => {
@@ -46,12 +44,11 @@ export const EditFolderDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Folder</DialogTitle>
-          <DialogDescription>Quickly rename this folder</DialogDescription>
+          <DialogTitle>Edit Note</DialogTitle>
+          <DialogDescription>Quickly rename this note</DialogDescription>
         </DialogHeader>
-        <FolderEditForm
-          folderId={folderId}
-          folderName={folderName}
+        <EditNoteForm
+          note={note}
           closeModal={closeModal}
           classroomId={classroomId}
         />

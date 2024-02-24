@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { ContainerVariants } from "@/lib/motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSidebarState } from "@/hooks/use-sidebar-state";
-import { CreateNoteDialog } from "./mutations/create-note-dialog";
+import { CreateNoteDialog } from "./dialog/create-note-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { FolderDropdown } from "@/components/folder/folder-dropdown";
 import { NoteSidebarSkeleton } from "@/components/skeletons/note-sidebar-skeleton";

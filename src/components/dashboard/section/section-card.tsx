@@ -20,7 +20,7 @@ import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithClassrooms } from "@/types";
 import { ClassroomListsWithCreation } from "./classroom-lists";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { CreateClassDialog } from "@/components/dashboard/class-rooms/create-class-dialog";
+import { CreateClassDialog } from "@/components/dashboard/class-rooms/dialog/create-class-dialog";
 
 interface SectionCardProps {
   section: ExtendedSectionWithClassrooms;

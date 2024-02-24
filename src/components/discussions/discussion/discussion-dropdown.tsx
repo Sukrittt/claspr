@@ -8,10 +8,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EditDiscussionDialog } from "./edit-discussion-dialog";
-import { MoveDiscussionDialog } from "./move-discussion-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { DeleteDiscussionDialog } from "./delete-discussion-dialog";
+import { MoveDiscussionDialog } from "./dialog/move-discussion-dialog";
+import { EditDiscussionDialog } from "./dialog/edit-discussion-dialog";
+import { DeleteDiscussionDialog } from "./dialog/delete-discussion-dialog";
 
 interface DiscussionDropdownProps {
   discussionId: string;

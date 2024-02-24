@@ -8,7 +8,7 @@ import { Discussions } from "./discussion";
 import { Separator } from "@/components/ui/separator";
 import { DiscussionDetails } from "./discussion/discussion-details";
 import { activeDiscussionIdAtom, activeDiscussionTabAtom } from "@/atoms";
-import { CreateDiscussionDialog } from "./discussion/create-discussion-dialog";
+import { CreateDiscussionDialog } from "./discussion/dialog/create-discussion-dialog";
 
 interface ClassDiscussionsProps {
   classroomId: string;

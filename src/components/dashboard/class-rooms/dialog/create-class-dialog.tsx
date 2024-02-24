@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateClassForm } from "./create-class-form";
+import { CreateClassForm } from "@/components/dashboard/class-rooms/form/create-class-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 export const CreateClassDialog = ({ sectionId }: { sectionId: string }) => {

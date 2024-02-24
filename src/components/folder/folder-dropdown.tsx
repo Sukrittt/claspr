@@ -9,11 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ExtendedFolder } from "@/types";
-import { EditFolderDialog } from "./mutations/edit-folder-dialog";
-import { FolderInfoDialog } from "./mutations/folder-info-dialog";
+import { EditFolderDialog } from "./dialog/edit-folder-dialog";
+import { FolderInfoDialog } from "./dialog/folder-info-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { DeleteFolderDialog } from "./mutations/delete-folder-dialog";
-import { CreateFolderDialog } from "./mutations/create-folder-dialog";
+import { DeleteFolderDialog } from "./dialog/delete-folder-dialog";
+import { CreateFolderDialog } from "./dialog/create-folder-dialog";
 
 interface FolderDropdownProps {
   folder: ExtendedFolder;

@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MoveNoteForm } from "./move-note-form";
 import { ExtendedFolder, MinifiedNote } from "@/types";
+import { MoveNoteForm } from "@/components/note/form/move-note-form";
 
 type MoveNoteDialogProps = {
   isOpen: boolean;

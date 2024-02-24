@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { SectionType } from "@prisma/client";
 
 import {
   Dialog,
@@ -10,23 +9,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SectionEditForm } from "./section-edit-form";
+import { ExtendedComment } from "@/types";
+import { CommentEditForm } from "@/components/assignment/comment/form/comment-edit-form";
 
-type EditSectionDialogProps = {
-  sectionId: string;
-  sectionName: string;
+type EditCommentDialogProps = {
+  comment: ExtendedComment;
   isOpen: boolean;
-  sectionType: SectionType;
   setIsEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const EditSectionDialog = ({
-  sectionId,
-  sectionName,
+export const EditCommentDialog = ({
+  comment,
+
   setIsEditOpen,
   isOpen,
-  sectionType,
-}: EditSectionDialogProps) => {
+}: EditCommentDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
   const closeModal = () => {
@@ -46,17 +43,13 @@ export const EditSectionDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Section</DialogTitle>
+          <DialogTitle>Edit comment</DialogTitle>
           <DialogDescription>
-            Edit this section to quickly organize your classrooms
+            This comment will be marked as edited.
           </DialogDescription>
         </DialogHeader>
-        <SectionEditForm
-          closeModal={closeModal}
-          sectionId={sectionId}
-          sectionName={sectionName}
-          sectionType={sectionType}
-        />
+
+        <CommentEditForm closeModal={closeModal} comment={comment} />
       </DialogContent>
     </Dialog>
   );

@@ -7,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SubmitLinkDialog } from "./submit-link-dialog";
-import { SubmitDocumentDialog } from "./submit-document-dialog";
+import { SubmitLinkDialog } from "./dialog/submit-link-dialog";
+import { SubmitDocumentDialog } from "./dialog/submit-document-dialog";
 
 interface SubmissionDropdownProps {
   children: React.ReactNode;

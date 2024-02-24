@@ -9,8 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateFolderForm } from "./create-folder-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { CreateFolderForm } from "@/components/folder/form/create-folder-form";
 
 interface CreateFolderDialogProps {
   classroomId?: string;

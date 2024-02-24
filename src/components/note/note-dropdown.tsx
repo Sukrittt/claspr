@@ -18,13 +18,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ExtendedFolder } from "@/types";
 import { FormattedNote } from "@/types/note";
-import { EditNoteDialog } from "./mutations/edit-note-dialog";
-import { NoteInfoDialog } from "./mutations/note-info-dialog";
-import { MoveNoteDialog } from "./mutations/move-note-dialog";
-import { AddTopicDialog } from "./mutations/add-topic-dialog";
-import { DeleteNoteDialog } from "./mutations/delete-note-dialog";
+import { EditNoteDialog } from "./dialog/edit-note-dialog";
+import { NoteInfoDialog } from "./dialog/note-info-dialog";
+import { MoveNoteDialog } from "./dialog/move-note-dialog";
+import { AddTopicDialog } from "./dialog/add-topic-dialog";
+import { DeleteNoteDialog } from "./dialog/delete-note-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { LinkClassroomDialog } from "./mutations/link-classroom-dialog";
+import { LinkClassroomDialog } from "./dialog/link-classroom-dialog";
 
 interface NoteDropdownProps {
   note: FormattedNote;

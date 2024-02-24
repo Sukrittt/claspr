@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Media } from "@prisma/client";
 
 import {
   Dialog,
@@ -9,29 +10,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SubmitDocForm } from "./submit-doc-form";
+import { MediaEditForm } from "@/components/media/form/media-edit-form";
 
-type SubmitDocumentDialogProps = {
+type EditMediaLinkProps = {
+  media: Media;
   isOpen: boolean;
-  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  assignmentId: string;
+  setIsEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const SubmitDocumentDialog = ({
-  setIsDialogOpen,
+export const EditMediaLinkDialog = ({
+  setIsEditOpen,
   isOpen,
-  assignmentId,
-}: SubmitDocumentDialogProps) => {
+  media,
+}: EditMediaLinkProps) => {
   const [open, setOpen] = useState(isOpen);
 
   const closeModal = () => {
     setOpen(false);
-    setIsDialogOpen(false);
+    setIsEditOpen(false);
   };
 
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
-    setIsDialogOpen(open);
+    setIsEditOpen(open);
   };
 
   return (
@@ -41,10 +42,10 @@ export const SubmitDocumentDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a document</DialogTitle>
-          <DialogDescription>Attach a document to your work</DialogDescription>
+          <DialogTitle>Edit Link</DialogTitle>
+          <DialogDescription>Edit the link of the media</DialogDescription>
         </DialogHeader>
-        <SubmitDocForm closeModal={closeModal} assignmentId={assignmentId} />
+        <MediaEditForm closeModal={closeModal} media={media} />
       </DialogContent>
     </Dialog>
   );

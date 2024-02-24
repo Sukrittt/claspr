@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { MinifiedNote } from "@/types";
 import { useUserClassrooms } from "@/hooks/class";
-import { LinkClassroomForm } from "./link-classroom-form";
+import { LinkClassroomForm } from "@/components/note/form/link-classroom-form";
 import { LinkClassroomSkeleton } from "@/components/skeletons/link-classroom-skeleton";
 
 type LinkClassroomDialogProps = {

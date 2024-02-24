@@ -8,7 +8,7 @@ import { ContainerVariants } from "@/lib/motion";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MaterialSkeleton } from "@/components/skeletons/material-skeleton";
-import { CreateNoteDialog } from "@/components/note/mutations/create-note-dialog";
+import { CreateNoteDialog } from "@/components/note/dialog/create-note-dialog";
 import {
   activeClassFolderIdAtom,
   classFolderAtom,

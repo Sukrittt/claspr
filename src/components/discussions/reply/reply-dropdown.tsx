@@ -8,8 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EditReplyDialog } from "./edit-reply-dialog";
-import { DeleteReplyDialog } from "./delete-reply-dialog";
+import { EditReplyDialog } from "./dialog/edit-reply-dialog";
+import { DeleteReplyDialog } from "./dialog/delete-reply-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface ReplyDropdownProps {

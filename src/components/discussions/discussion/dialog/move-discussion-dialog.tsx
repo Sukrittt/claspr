@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MoveDiscussionForm } from "./move-discussion-form";
+import { MoveDiscussionForm } from "@/components/discussions/discussion/form/move-discussion-form";
 
 type MoveDiscussionDialogProps = {
   isOpen: boolean;

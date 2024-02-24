@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ClassEditForm } from "./class-edit-form";
-import { MemberEditForm } from "./member-edit-form";
+import { ClassEditForm } from "@/components/dashboard/class-rooms/form/class-edit-form";
+import { MemberEditForm } from "@/components/dashboard/class-rooms/form/member-edit-form";
 
 type EditClassDialogProps = {
   containerId: string;

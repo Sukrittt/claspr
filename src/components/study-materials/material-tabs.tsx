@@ -22,7 +22,7 @@ import { MaterialContext } from "./material-context";
 import { useQueryChange } from "@/hooks/use-query-change";
 import { NoteSearch } from "@/components/note/note-search";
 import { MaterialTabsSkeleton } from "@/components/skeletons/material-skeleton";
-import { CreateFolderDialog } from "@/components/folder/mutations/create-folder-dialog";
+import { CreateFolderDialog } from "@/components/folder/dialog/create-folder-dialog";
 
 interface MaterialsProps {
   classroomId: string;

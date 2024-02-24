@@ -24,9 +24,9 @@ import { cn, getShortenedText } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NoteSearch } from "@/components/note/note-search";
 import { NoteDropdown } from "@/components/note/note-dropdown";
-import { CreateFolderDialog } from "./mutations/create-folder-dialog";
 import { FolderSkeleton } from "@/components/skeletons/folder-skeleton";
-import { CreateNoteDialog } from "@/components/note/mutations/create-note-dialog";
+import { CreateNoteDialog } from "@/components/note/dialog/create-note-dialog";
+import { CreateFolderDialog } from "@/components/folder/dialog/create-folder-dialog";
 
 export const FolderCards = () => {
   const [folders, setFolders] = useAtom(folderAtom);

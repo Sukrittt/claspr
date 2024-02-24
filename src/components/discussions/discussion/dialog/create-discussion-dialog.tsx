@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { discussionPlaceholders } from "@/config/utils";
-import { CreateDiscussionForm } from "./create-discussions-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { CreateDiscussionForm } from "@/components/discussions/discussion/form/create-discussions-form";
 
 interface CreateDiscussionDialogProps {
   discussionType: DiscussionType;

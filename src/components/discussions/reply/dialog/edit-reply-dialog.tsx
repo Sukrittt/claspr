@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { EditReplyForm } from "./edit-reply-form";
+import { EditReplyForm } from "@/components/discussions/reply/form/edit-reply-form";
 
 type EditReplyDialogProps = {
   isOpen: boolean;

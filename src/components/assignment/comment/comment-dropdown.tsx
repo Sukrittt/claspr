@@ -8,9 +8,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ExtendedComment } from "@/types";
-import { EditCommentDialog } from "./comment-edit-dialog";
-import { CommentDeleteDialog } from "./comment-delete-dialog";
+import { EditCommentDialog } from "./dialog/comment-edit-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { CommentDeleteDialog } from "./dialog/comment-delete-dialog";
 
 interface SectionDropdownProps {
   comment: ExtendedComment;

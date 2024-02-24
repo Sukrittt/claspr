@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { Media } from "@prisma/client";
 
 import {
   Dialog,
@@ -10,29 +9,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MediaEditForm } from "./media-edit-form";
+import { SubmitLinkForm } from "@/components/submission/form/submit-link-form";
 
-type EditMediaLinkProps = {
-  media: Media;
+type SubmitLinkDialogProps = {
   isOpen: boolean;
-  setIsEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  assignmentId: string;
 };
 
-export const EditMediaLinkDialog = ({
-  setIsEditOpen,
+export const SubmitLinkDialog = ({
+  setIsDialogOpen,
   isOpen,
-  media,
-}: EditMediaLinkProps) => {
+  assignmentId,
+}: SubmitLinkDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
   const closeModal = () => {
     setOpen(false);
-    setIsEditOpen(false);
+    setIsDialogOpen(false);
   };
 
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
-    setIsEditOpen(open);
+    setIsDialogOpen(open);
   };
 
   return (
@@ -42,10 +41,10 @@ export const EditMediaLinkDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Link</DialogTitle>
-          <DialogDescription>Edit the link of the media</DialogDescription>
+          <DialogTitle>Add a link</DialogTitle>
+          <DialogDescription>Attach a link to your work</DialogDescription>
         </DialogHeader>
-        <MediaEditForm closeModal={closeModal} media={media} />
+        <SubmitLinkForm assignmentId={assignmentId} closeModal={closeModal} />
       </DialogContent>
     </Dialog>
   );

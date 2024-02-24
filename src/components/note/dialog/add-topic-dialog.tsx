@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FormattedNote } from "@/types/note";
-import { AddTopicForm } from "./add-topic-form";
+import { AddTopicForm } from "@/components/note/form/add-topic-form";
 
 type AddTopicDialogProps = {
   isOpen: boolean;

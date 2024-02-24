@@ -8,8 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EditMediaLinkDialog } from "./media-edit-dialog";
-import { DeleteMediaDialog } from "./media-delete-dialog";
+import { EditMediaLinkDialog } from "./dialog/media-edit-dialog";
+import { DeleteMediaDialog } from "./dialog/media-delete-dialog";
 
 interface MediaDropdownProps {
   media: Media;

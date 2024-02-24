@@ -2,8 +2,8 @@ import { useAtom } from "jotai";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { DiscussionType } from "@prisma/client";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 import { Editor } from "@/components/editor/Editor";
@@ -12,7 +12,7 @@ import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { discussionPlaceholders } from "@/config/utils";
 import { useStartDiscussion } from "@/hooks/discussion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { DiscussionTitleInput } from "./discussion-title-input";
+import { DiscussionTitleInput } from "@/components/discussions/discussion/discussion-title-input";
 
 interface CreateDiscussionFormProps {
   classroomId: string;

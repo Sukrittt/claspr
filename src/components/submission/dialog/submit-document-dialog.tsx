@@ -9,19 +9,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SubmitLinkForm } from "./submit-link-form";
+import { SubmitDocForm } from "@/components/submission/form/submit-doc-form";
 
-type SubmitLinkDialogProps = {
+type SubmitDocumentDialogProps = {
   isOpen: boolean;
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   assignmentId: string;
 };
 
-export const SubmitLinkDialog = ({
+export const SubmitDocumentDialog = ({
   setIsDialogOpen,
   isOpen,
   assignmentId,
-}: SubmitLinkDialogProps) => {
+}: SubmitDocumentDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
   const closeModal = () => {
@@ -41,10 +41,10 @@ export const SubmitLinkDialog = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add a link</DialogTitle>
-          <DialogDescription>Attach a link to your work</DialogDescription>
+          <DialogTitle>Add a document</DialogTitle>
+          <DialogDescription>Attach a document to your work</DialogDescription>
         </DialogHeader>
-        <SubmitLinkForm assignmentId={assignmentId} closeModal={closeModal} />
+        <SubmitDocForm closeModal={closeModal} assignmentId={assignmentId} />
       </DialogContent>
     </Dialog>
   );

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { CopyMinus, MonitorX } from "lucide-react";
 
 import { trpc } from "@/trpc/client";
-import { CreateSectionDialog } from "./create-section-dialog";
+import { CreateSectionDialog } from "./dialog/create-section-dialog";
 import {
   createdClassSections,
   isCloseAllMembershipToggle,

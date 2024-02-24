@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateSectionForm } from "./create-section-form";
+import { CreateSectionForm } from "@/components/dashboard/section/form/create-section-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 export const CreateSectionDialog = ({

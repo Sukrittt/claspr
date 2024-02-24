@@ -8,8 +8,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { JoinClassForm } from "./join-class-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { JoinClassForm } from "@/components/dashboard/class-rooms/form/join-class-form";
 
 export const JoinClassDialog = ({ sectionId }: { sectionId: string }) => {
   return (

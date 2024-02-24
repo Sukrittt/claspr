@@ -11,8 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MarkDefault } from "./mark-default";
-import { EditSectionDialog } from "./edit-section-dialog";
-import { DeleteSectionDialog } from "./delete-section-dialog";
+import { EditSectionDialog } from "./dialog/edit-section-dialog";
+import { DeleteSectionDialog } from "./dialog/delete-section-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface SectionDropdownProps {

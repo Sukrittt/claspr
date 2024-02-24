@@ -9,9 +9,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EditClassDialog } from "./edit-class-dialog";
-import { LeaveClassDialog } from "./leave-class-dialog";
-import { DeleteClassDialog } from "./delete-class-dialog";
+import { EditClassDialog } from "./dialog/edit-class-dialog";
+import { LeaveClassDialog } from "./dialog/leave-class-dialog";
+import { DeleteClassDialog } from "./dialog/delete-class-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface ClassDropdownProps {
