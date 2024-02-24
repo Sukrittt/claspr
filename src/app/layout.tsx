@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import "./styles/globals.css";
 
 import { Providers } from "@/components/providers";
+import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,12 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>
-          <Suspense>{children}</Suspense>
-        </Providers>
-        <Toaster
-          loadingIcon={<Loader2 className="h-3 w-3 animate-spin mt-1" />}
-        />
+        <Suspense fallback={<LoadingScreen />}>
+          <Providers>{children}</Providers>
+          <Toaster
+            loadingIcon={<Loader2 className="h-3 w-3 animate-spin mt-1" />}
+          />
+        </Suspense>
       </body>
     </html>
   );

@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { EventCard } from "./event-card";
 import { useGetUpcomingEvents } from "@/hooks/event";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CreateEventDialog } from "./dialog/create-event-dialog";
 import { UpcomingEventSkeleton } from "@/components/skeletons/upcoming-event-skeleton";
 
 interface UpcomingEventsProps {
@@ -25,11 +26,16 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
 
   return (
     <Card className="h-full">
-      <CardHeader className="border-b py-2.5 space-y-0">
-        <CardTitle className="text-base">Upcoming Events</CardTitle>
-        <CardDescription className="text-[13px]">
-          Your upcoming events for the next 7 days{" "}
-        </CardDescription>
+      <CardHeader className="border-b py-2.5">
+        <div className="flex items-end justify-between">
+          <div>
+            <CardTitle className="text-base">Upcoming Events</CardTitle>
+            <CardDescription className="text-[13px]">
+              Upcoming events for the next 7 days
+            </CardDescription>
+          </div>
+          {!classroomId && <CreateEventDialog />}
+        </div>
       </CardHeader>
       <CardContent className="p-4 px-0">
         <ScrollArea

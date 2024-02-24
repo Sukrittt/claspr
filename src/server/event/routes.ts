@@ -75,56 +75,92 @@ export const getEvents = privateProcedure
           userId: ctx.userId,
           isTeacher: false,
         },
-        select: { id: true },
+        select: { id: true, classRoomId: true },
       });
 
+      const classroomIds = existingMemberships.map(
+        (membership) => membership.classRoomId
+      );
+      const membershipIds = existingMemberships.map(
+        (membership) => membership.id
+      );
+
       assignmentWhereClause = {
+        classRoomId: {
+          in: classroomIds,
+        },
         submissions: {
           every: {
             memberId: {
-              notIn: existingMemberships.map((membership) => membership.id),
+              notIn: membershipIds,
             },
           },
         },
       };
     }
 
-    const classEvents = await db.event.findMany({
-      where: {
-        assignment: assignmentWhereClause,
-        eventDate: {
-          gte: currentDate,
-          lt: sevenDaysLater,
+    const eventPicks = {
+      id: true,
+      title: true,
+      eventDate: true,
+      description: true,
+
+      assignment: {
+        select: {
+          id: true,
+          title: true,
+          classRoomId: true,
         },
       },
-      select: {
-        id: true,
-        title: true,
-        eventDate: true,
-        description: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+    };
 
-        assignment: {
-          select: {
-            id: true,
-            title: true,
-            classRoomId: true,
+    const promises = [
+      db.event.findMany({
+        where: {
+          assignment: assignmentWhereClause,
+          eventDate: {
+            gte: currentDate,
+            lt: sevenDaysLater,
           },
         },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
+        select: eventPicks,
+        orderBy: {
+          eventDate: "asc",
+        },
+      }),
+      db.event.findMany({
+        where: {
+          assignmentId: null,
+          userId: ctx.userId,
+          eventDate: {
+            gte: currentDate,
+            lt: sevenDaysLater,
           },
         },
-      },
-      orderBy: {
-        eventDate: "desc",
-      },
-    });
+        select: eventPicks,
+        orderBy: {
+          eventDate: "asc",
+        },
+      }),
+    ];
 
-    return classEvents;
+    const [classEvents, userEvents] = await Promise.all(promises);
+
+    const events = [...classEvents, ...userEvents];
+
+    const sortedEvents = events.sort(
+      (a, b) => a.eventDate.getTime() - b.eventDate.getTime()
+    );
+
+    return sortedEvents;
   });
 
 /**
@@ -132,7 +168,7 @@ export const getEvents = privateProcedure
  *
  * @param {object} input - The input parameters for creating a new event.
  * @param {string} input.title - The title of the event.
- * @param {string} input.description - The description of the event.
+ * @param {string} input.description - An optional description of the event.
  * @param {string} input.eventDate - The date of the event.
  */
 export const createEvent = privateProcedure

@@ -42,18 +42,19 @@ export const FolderCards = () => {
 
   return (
     <Card>
-      <CardHeader className="border-b py-2.5 space-y-0.5">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base pt-1">Your Folders</CardTitle>
+      <CardHeader className="border-b py-2.5">
+        <div className="flex items-end justify-between">
+          <div>
+            <CardTitle className="text-base pt-1">Your Folders</CardTitle>
+            <CardDescription className="text-[13px] flex gap-x-1 items-center">
+              Create folders to organize your notes
+            </CardDescription>
+          </div>
           <div className="flex items-center gap-x-2">
             <NoteSearch noteType="PERSONAL" />
             <CreateFolderDialog />
           </div>
         </div>
-
-        <CardDescription className="text-[13px] flex gap-x-1 items-center">
-          You can create folders to organize your notes
-        </CardDescription>
       </CardHeader>
       <CardContent className="pt-4 px-0 text-sm">
         <ScrollArea className="h-[29.25vh] pr-0">

@@ -3,7 +3,7 @@
 import { addDays, format } from "date-fns";
 import { Matcher } from "react-day-picker";
 import { useEffect, useState } from "react";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { CalendarCheck, Calendar as CalendarIcon } from "lucide-react";
 
 import {
   Popover,
@@ -21,6 +21,8 @@ interface DatePickerProps {
   setValue: (date: Date | undefined) => void;
   disabled?: Matcher[];
   showScrollArea?: boolean;
+  placeholder?: string;
+  disableTimePicker?: boolean;
 }
 
 export function DatePicker({
@@ -28,6 +30,8 @@ export function DatePicker({
   value,
   disabled,
   showScrollArea = false,
+  disableTimePicker = false,
+  placeholder,
 }: DatePickerProps) {
   const [date, setDate] = useState<Date>();
 
@@ -46,14 +50,27 @@ export function DatePicker({
           variant="outline"
           className={cn(
             "justify-center text-left font-normal h-8 text-xs gap-x-2 w-full",
-            !date && "text-muted-foreground"
+            !date && "text-muted-foreground",
+            !placeholder && "w-fit h-9"
           )}
         >
-          <CalendarIcon className="h-4 w-4" />
-          {value ? (
-            format(new Date(value), "MMMM do, h:mm a")
+          {placeholder ? (
+            <>
+              <CalendarIcon className="h-4 w-4" />
+              {value ? (
+                format(new Date(value), "MMMM do, h:mm a")
+              ) : (
+                <span className="pt-px">{placeholder}</span>
+              )}
+            </>
           ) : (
-            <span className="pt-px">Pick a due date</span>
+            <>
+              {value ? (
+                <CalendarCheck className="h-4 w-4" />
+              ) : (
+                <CalendarIcon className="h-4 w-4" />
+              )}
+            </>
           )}
         </Button>
       </PopoverTrigger>
@@ -71,7 +88,9 @@ export function DatePicker({
             initialFocus
             disabled={disabled}
           />
-          <TimePicker setDate={setDate} date={value ?? date} />
+          {!disableTimePicker && (
+            <TimePicker setDate={setDate} date={value ?? date} />
+          )}
         </ScrollArea>
       </PopoverContent>
     </Popover>

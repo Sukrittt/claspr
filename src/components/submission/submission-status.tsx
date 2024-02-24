@@ -17,13 +17,12 @@ export const SubmissionStatus: React.FC<SubmissionStatusProps> = ({
   return (
     <div className="border border-transparent -mt-2">
       <div className="flex flex-col gap-y-2">
-        <div className="flex">
-          <DatePicker
-            value={date}
-            setValue={setDate}
-            disabled={[{ before: new Date() }, new Date()]}
-          />
-        </div>
+        <DatePicker
+          value={date}
+          setValue={setDate}
+          disabled={[{ before: new Date() }, new Date()]}
+          placeholder="Pick a date for submission"
+        />
         <div className="flex items-center justify-end gap-x-2">
           <Checkbox
             id="late-submission"
