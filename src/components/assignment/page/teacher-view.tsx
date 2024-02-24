@@ -4,8 +4,8 @@ import { Session } from "next-auth";
 import { AnimatePresence, motion } from "framer-motion";
 import { FileText, NotepadText, Speech } from "lucide-react";
 
+import { ContainerVariants } from "@/lib/motion";
 import { ExtendedAssignmentDetails } from "@/types";
-import { ContainerFilterVariants, ContainerVariants } from "@/lib/motion";
 import { Submissions } from "@/components/assignment/submission/submissions";
 import { AssignmentFilter } from "@/components/assignment/assignment-filter";
 import { AssignmentDetails } from "@/components/assignment/assignment-details";
@@ -55,14 +55,7 @@ export const TeacherView: React.FC<TeacherViewProps> = ({
 
           <AnimatePresence mode="wait">
             {tabVal === "submissions" && (
-              <motion.div
-                variants={ContainerFilterVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-              >
-                <AssignmentFilter assignment={assignment} />
-              </motion.div>
+              <AssignmentFilter assignment={assignment} />
             )}
           </AnimatePresence>
         </div>

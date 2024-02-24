@@ -7,7 +7,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 
 import { ClassMembers } from "./class-members";
 import { ClassroomCard } from "./classroom-card";
@@ -71,6 +71,22 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
       discussion: null,
     });
   }, [activeTab]);
+
+  function isValidTab(status: string) {
+    if (!status) return true;
+
+    const tabs = [
+      "assignments",
+      "study-materials",
+      "discussions",
+      "members",
+      "conversations",
+    ];
+
+    return tabs.some((s) => s === status);
+  }
+
+  if (!isValidTab(activeTab)) notFound();
 
   return (
     <Tabs

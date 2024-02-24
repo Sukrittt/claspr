@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { Session } from "next-auth";
 import { DiscussionType } from "@prisma/client";
+import { MousePointerSquare } from "lucide-react";
 
 import { tabs } from "./discussion-tabs";
 import { Discussions } from "./discussion";
@@ -21,8 +22,18 @@ export const ClassDiscussions: React.FC<ClassDiscussionsProps> = ({
   const [activeDiscussionTab] = useAtom(activeDiscussionTabAtom);
   const [activeDiscussionId] = useAtom(activeDiscussionIdAtom);
 
-  const activeTab =
-    tabs.find((tab) => tab.value === activeDiscussionTab) ?? tabs[0];
+  const activeTab = tabs.find((tab) => tab.value === activeDiscussionTab);
+
+  if (!activeTab) {
+    return (
+      <div className="h-[50vh] flex flex-col items-center justify-center gap-y-2">
+        <MousePointerSquare className="h-10 w-10 text-neutral-800" />
+        <p className="text-sm text-muted-foreground">
+          Select a category to start a discussion.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">

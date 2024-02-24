@@ -1,6 +1,6 @@
+import { useAtom } from "jotai";
 import { Session } from "next-auth";
 import { format, isAfter } from "date-fns";
-import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { FileCheck2, FileClock, FilePen, Link as LinkIcon } from "lucide-react";
 
@@ -8,7 +8,6 @@ import { ContainerVariants } from "@/lib/motion";
 import { Separator } from "@/components/ui/separator";
 import { SubmissionReview } from "./submission-review";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getSubmissionStatusFromQuery } from "@/lib/utils";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { useAssignmentSubmissions } from "@/hooks/submission";
 import { NotSubmittedMembers } from "./not-submitted-members";
@@ -19,6 +18,7 @@ import {
   ExtendedSubmission,
   FilterType,
 } from "@/types";
+import { assignmentStatusAtom } from "@/atoms";
 
 interface SubmissionsProps {
   assignment: ExtendedAssignmentDetails;
@@ -29,10 +29,7 @@ export const Submissions: React.FC<SubmissionsProps> = ({
   assignment,
   session,
 }) => {
-  const params = useSearchParams();
-
-  // Search params
-  const status = getSubmissionStatusFromQuery(params.get("status"));
+  const [status] = useAtom(assignmentStatusAtom);
 
   const {
     data: submissions,
@@ -57,7 +54,7 @@ export const Submissions: React.FC<SubmissionsProps> = ({
 
   return (
     <div className="h-full">
-      {params.get("status") === "not-submitted" ? (
+      {status === "not-submitted" ? (
         <NotSubmittedMembers assignment={assignment} session={session} />
       ) : isLoading || isFetching ? (
         <SubmissionDetailsSkeleton />
