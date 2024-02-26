@@ -1,8 +1,8 @@
 "use client";
 
-import { addDays, format } from "date-fns";
 import { Matcher } from "react-day-picker";
 import { useEffect, useState } from "react";
+import { endOfHour, format, isSameDay } from "date-fns";
 import { CalendarCheck, Calendar as CalendarIcon } from "lucide-react";
 
 import {
@@ -14,33 +14,38 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { TimePicker } from "@/components/ui/time-picker";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface DatePickerProps {
   value: Date | undefined;
   setValue: (date: Date | undefined) => void;
   disabled?: Matcher[];
-  showScrollArea?: boolean;
   placeholder?: string;
   disableTimePicker?: boolean;
+  className?: string;
 }
 
 export function DatePicker({
   setValue,
   value,
   disabled,
-  showScrollArea = false,
   disableTimePicker = false,
   placeholder,
+  className,
 }: DatePickerProps) {
   const [date, setDate] = useState<Date>();
-
-  const tomorrow = addDays(new Date(), 1);
 
   useEffect(() => {
     if (!date) return;
 
-    setValue(date);
+    const today = new Date();
+    const nearestHour = endOfHour(today);
+    const changeofDay = !!(value && !isSameDay(date, value));
+
+    if (isSameDay(date, today) && (!value || changeofDay)) {
+      setValue(nearestHour);
+    } else {
+      setValue(date);
+    }
   }, [date, setValue]);
 
   return (
@@ -74,15 +79,16 @@ export function DatePicker({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <ScrollArea
-          className={cn({
-            "h-[300px] pr-0": showScrollArea,
-          })}
+      <PopoverContent className="w-auto p-0 relative">
+        <div
+          className={cn(
+            "absolute -top-60 -left-40 border py-1 bg-popover shadow-md rounded-md",
+            className
+          )}
         >
           <Calendar
             mode="single"
-            today={value || tomorrow}
+            today={value || new Date()}
             selected={date}
             onSelect={setDate}
             initialFocus
@@ -91,7 +97,7 @@ export function DatePicker({
           {!disableTimePicker && (
             <TimePicker setDate={setDate} date={value ?? date} />
           )}
-        </ScrollArea>
+        </div>
       </PopoverContent>
     </Popover>
   );

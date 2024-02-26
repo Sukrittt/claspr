@@ -121,8 +121,9 @@ export const AssignmentDetails: React.FC<AssignmentDetailsProps> = ({
         <DatePicker
           value={date}
           setValue={setDate}
-          disabled={[{ before: new Date() }, new Date()]}
-          showScrollArea
+          disabled={[{ before: new Date() }]}
+          placeholder="Pick a date for submission"
+          className="-left-32"
         />
       </div>
 

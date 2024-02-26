@@ -20,8 +20,9 @@ export const SubmissionStatus: React.FC<SubmissionStatusProps> = ({
         <DatePicker
           value={date}
           setValue={setDate}
-          disabled={[{ before: new Date() }, new Date()]}
+          disabled={[{ before: new Date() }]}
           placeholder="Pick a date for submission"
+          className="-top-72 -left-32"
         />
         <div className="flex items-center justify-end gap-x-2">
           <Checkbox

@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Suspense fallback={<LoadingScreen />}>
+        <Suspense fallback={<LoadingScreen fullHeight />}>
           <Providers>{children}</Providers>
           <Toaster
             loadingIcon={<Loader2 className="h-3 w-3 animate-spin mt-1" />}

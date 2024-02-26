@@ -140,6 +140,7 @@ export const editAssignmentDetails = privateProcedure
           userId: ctx.userId,
         },
         data: {
+          title: title ?? existingAssignment.title,
           eventDate: dueDate,
         },
       }),

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { addDays } from "date-fns";
 import { TRPCError } from "@trpc/server";
+import { addDays, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -10,16 +10,18 @@ import { privateProcedure } from "@/server/trpc";
  *
  * @param {object} input - The input parameters for getting class events.
  * @param {string} input.classroomId - An optional id of the classroom.
+ * @param {string} input.date - An optional date to fetch events for.
  * @returns {Promise<Object[]>} - A list of event objects from the database.
  */
 export const getEvents = privateProcedure
   .input(
     z.object({
-      classroomId: z.string().optional(), //If present then fetch events for that classroom only
+      date: z.date().optional(),
+      classroomId: z.string().optional(),
     })
   )
   .query(async ({ ctx, input }) => {
-    const { classroomId } = input;
+    const { classroomId, date } = input;
 
     if (classroomId) {
       const existingClassroom = await db.classRoom.findFirst({
@@ -40,6 +42,19 @@ export const getEvents = privateProcedure
     const sevenDaysLater = addDays(currentDate, 7);
 
     let assignmentWhereClause = {};
+    let eventDateWhereClause = {};
+
+    if (date) {
+      eventDateWhereClause = {
+        gte: startOfDay(date),
+        lt: addDays(date, 1),
+      };
+    } else {
+      eventDateWhereClause = {
+        gte: startOfDay(currentDate),
+        lt: sevenDaysLater,
+      };
+    }
 
     if (classroomId) {
       const existingMembership = await db.membership.findFirst({
@@ -127,10 +142,7 @@ export const getEvents = privateProcedure
       db.event.findMany({
         where: {
           assignment: assignmentWhereClause,
-          eventDate: {
-            gte: currentDate,
-            lt: sevenDaysLater,
-          },
+          eventDate: eventDateWhereClause,
         },
         select: eventPicks,
         orderBy: {
@@ -141,10 +153,7 @@ export const getEvents = privateProcedure
         where: {
           assignmentId: null,
           userId: ctx.userId,
-          eventDate: {
-            gte: currentDate,
-            lt: sevenDaysLater,
-          },
+          eventDate: eventDateWhereClause,
         },
         select: eventPicks,
         orderBy: {

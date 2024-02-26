@@ -100,8 +100,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
                   <DatePicker
                     value={eventDate}
                     setValue={setEventDate}
-                    disabled={[{ before: new Date() }, new Date()]}
-                    disableTimePicker
+                    disabled={[{ before: new Date() }]}
                   />
                 </div>
                 <FormMessage />

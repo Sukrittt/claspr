@@ -28,7 +28,7 @@ const eventUpdationSchema = z.object({
       (val) => {
         return val.trim().length > 0;
       },
-      { message: "Folder name cannot be empty" }
+      { message: "Event name cannot be empty" }
     ),
   description: z.string().max(500).optional().nullable(),
 });
@@ -66,7 +66,7 @@ export const EditEventForm: React.FC<EditEventFormProps> = ({
     }
 
     if (isBefore(eventDate, new Date())) {
-      toast.error("Event date cannot be set to past date.");
+      toast.error("Event date has already passed. Please select a future date");
       return;
     }
 
