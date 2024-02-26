@@ -21,7 +21,7 @@ export const useEditEvent = ({ closeModal }: { closeModal: () => void }) => {
   const utils = trpc.useUtils();
 
   return trpc.event.editEvent.useMutation({
-    onMutate: async ({ eventId, eventDate, title, description }) => {
+    onMutate: async ({ eventId, eventDate, title }) => {
       closeModal();
 
       await utils.event.getEvents.cancel({ classroomId: undefined });
@@ -36,7 +36,6 @@ export const useEditEvent = ({ closeModal }: { closeModal: () => void }) => {
             ? {
                 ...event,
                 title,
-                description: description ?? event.description,
                 eventDate,
               }
             : event

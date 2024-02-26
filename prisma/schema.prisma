@@ -419,7 +419,7 @@ model Event {
   id String @id @unique @default(cuid())
 
   title       String
-  description String?
+  description Json?
   eventDate   DateTime
 
   assignmentId String?

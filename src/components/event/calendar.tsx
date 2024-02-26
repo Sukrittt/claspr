@@ -11,11 +11,12 @@ import {
   isSameDay,
   startOfWeek,
   endOfWeek,
+  startOfDay,
 } from "date-fns";
 
 import { cn } from "@/lib/utils";
-import { LoadingScreen } from "@/components/skeletons/loading-screen";
 import { Events } from "./events";
+import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
 export const Calendar = () => {
   const [calendarDates, setCalendarDates] = useState<Date[]>([]);
@@ -52,6 +53,11 @@ export const Calendar = () => {
     updateCalendarDates(currentDate);
   }, [currentDate]);
 
+  const handleToday = () => {
+    const today = startOfDay(new Date());
+    setCurrentDate(today);
+  };
+
   const handleNextMonth = () => {
     const nextMonthDate = addMonths(currentDate, 1);
     setCurrentDate(nextMonthDate);
@@ -80,7 +86,10 @@ export const Calendar = () => {
             >
               <ChevronLeft className="w-4 h-4" />
             </div>
-            <span className="font-semibold tracking-tight cursor-pointer border hover:bg-neutral-100 transition py-1 text-sm px-6 rounded-lg">
+            <span
+              onClick={handleToday}
+              className="font-semibold tracking-tight cursor-pointer border hover:bg-neutral-100 transition py-1 text-sm px-6 rounded-lg"
+            >
               Today
             </span>
             <div
@@ -96,7 +105,7 @@ export const Calendar = () => {
             {calendarDates.map((date) => (
               <div
                 key={date.toISOString()}
-                className="flex flex-col gap-y-2 h-full w-full"
+                className="flex flex-col gap-y-4 h-full w-full"
               >
                 <div
                   className={cn("rounded-xl border p-4 w-full", {
@@ -129,9 +138,7 @@ export const Calendar = () => {
                   </div>
                 </div>
 
-                <div className="h-full rounded-xl border w-full p-2">
-                  <Events date={date} />
-                </div>
+                <Events date={date} />
               </div>
             ))}
           </div>

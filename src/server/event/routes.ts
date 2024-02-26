@@ -182,14 +182,12 @@ export const getEvents = privateProcedure
  *
  * @param {object} input - The input parameters for creating a new event.
  * @param {string} input.title - The title of the event.
- * @param {string} input.description - An optional description of the event.
  * @param {string} input.eventDate - The date of the event.
  */
 export const createEvent = privateProcedure
   .input(
     z.object({
       title: z.string().min(3).max(100),
-      description: z.string().max(500).optional(),
       eventDate: z.date().min(new Date()),
     })
   )
@@ -216,7 +214,6 @@ export const editEvent = privateProcedure
     z.object({
       eventId: z.string(),
       title: z.string().min(3).max(100),
-      description: z.string().max(500).optional().nullable(),
       eventDate: z.date().min(new Date()),
     })
   )
@@ -243,7 +240,6 @@ export const editEvent = privateProcedure
       },
       data: {
         title: input.title,
-        description: input.description,
         eventDate: input.eventDate,
       },
     });

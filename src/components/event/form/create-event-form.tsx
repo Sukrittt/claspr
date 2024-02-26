@@ -30,7 +30,6 @@ const eventCreationSchema = z.object({
       },
       { message: "Event name cannot be empty" }
     ),
-  description: z.string().max(500).optional(),
 });
 
 type Inputs = z.infer<typeof eventCreationSchema>;
