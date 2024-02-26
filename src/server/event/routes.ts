@@ -104,6 +104,7 @@ export const getEvents = privateProcedure
       title: true,
       eventDate: true,
       description: true,
+      createdAt: true,
 
       assignment: {
         select: {
@@ -187,6 +188,89 @@ export const createEvent = privateProcedure
     await db.event.create({
       data: {
         ...input,
+        userId: ctx.userId,
+      },
+    });
+  });
+
+/**
+ * To edit event details.
+ *
+ * @param {object} input - The input parameters for editing an existing event.
+ * @param {string} input.eventId - The id of the event to update.
+ * @param {string} input.title - The updated title of the event.
+ * @param {string} input.description - An optional description of the event.
+ * @param {string} input.eventDate - The updated date of the event.
+ */
+export const editEvent = privateProcedure
+  .input(
+    z.object({
+      eventId: z.string(),
+      title: z.string().min(3).max(100),
+      description: z.string().max(500).optional().nullable(),
+      eventDate: z.date().min(new Date()),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const existingEvent = await db.event.findFirst({
+      where: {
+        id: input.eventId,
+        userId: ctx.userId,
+      },
+      select: { id: true },
+    });
+
+    if (!existingEvent) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not authorized to edit this event.",
+      });
+    }
+
+    await db.event.update({
+      where: {
+        id: input.eventId,
+        userId: ctx.userId,
+      },
+      data: {
+        title: input.title,
+        description: input.description,
+        eventDate: input.eventDate,
+      },
+    });
+  });
+
+/**
+ * To remove an event.
+ *
+ * @param {object} input - The input parameters for removing an existing event.
+ * @param {string} input.eventId - The id of the event to update.
+ */
+export const removeEvent = privateProcedure
+  .input(
+    z.object({
+      eventId: z.string(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const existingEvent = await db.event.findFirst({
+      where: {
+        id: input.eventId,
+        userId: ctx.userId,
+      },
+      select: { id: true },
+    });
+
+    if (!existingEvent) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not authorized to edit this event.",
+      });
+    }
+
+    await db.event.delete({
+      where: {
+        id: input.eventId,
         userId: ctx.userId,
       },
     });

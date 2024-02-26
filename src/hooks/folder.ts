@@ -37,9 +37,11 @@ export const useEditFolder = ({
     onMutate: async ({ folderId, name }) => {
       closeModal();
 
-      await utils.folder.getFolders.cancel();
+      await utils.folder.getFolders.cancel({ classroomId });
 
-      const prevFolders = utils.folder.getFolders.getData();
+      const prevFolders = utils.folder.getFolders.getData({
+        classroomId: undefined,
+      });
 
       utils.folder.getFolders.setData({ classroomId }, (prev) =>
         prev?.map((folder) =>
@@ -78,9 +80,11 @@ export const useRemoveFolder = ({
     onMutate: async ({ folderId }) => {
       closeModal();
 
-      await utils.folder.getFolders.cancel();
+      await utils.folder.getFolders.cancel({ classroomId });
 
-      const prevFolders = utils.folder.getFolders.getData();
+      const prevFolders = utils.folder.getFolders.getData({
+        classroomId: undefined,
+      });
 
       utils.folder.getFolders.setData({ classroomId }, (prev) =>
         prev?.filter((folder) => folder.id !== folderId)

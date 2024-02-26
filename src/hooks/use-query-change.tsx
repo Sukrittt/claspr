@@ -27,7 +27,7 @@ export function useQueryChange() {
         { skipNull: true }
       );
 
-      router.push(url);
+      router.replace(url);
     },
     [params]
   );
