@@ -154,7 +154,11 @@ export const getEvents = privateProcedure
 
     const [classEvents, userEvents] = await Promise.all(promises);
 
-    const events = [...classEvents, ...userEvents];
+    let events = [...classEvents];
+
+    if (!classroomId) {
+      events = [...events, ...userEvents];
+    }
 
     const sortedEvents = events.sort(
       (a, b) => a.eventDate.getTime() - b.eventDate.getTime()
