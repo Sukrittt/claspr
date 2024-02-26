@@ -51,7 +51,6 @@ export const EditEventForm: React.FC<EditEventFormProps> = ({
     resolver: zodResolver(eventUpdationSchema),
     defaultValues: {
       title: event.title,
-      description: event.description,
     },
   });
 
