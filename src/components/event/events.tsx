@@ -1,20 +1,17 @@
-import { format } from "date-fns";
-import { MessageSquareText } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { EventItem } from "./event-item";
 import { EventSheet } from "./event-sheet";
 import { ContainerVariants } from "@/lib/motion";
 import { useGetUpcomingEvents } from "@/hooks/event";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useQueryChange } from "@/hooks/use-query-change";
 
 export const Events = ({ date }: { date: Date }) => {
   const params = useSearchParams();
   const { data: events, isLoading } = useGetUpcomingEvents(undefined, date);
 
   const activeEvent = params.get("active");
-  const handleQueryChange = useQueryChange();
 
   return (
     <ScrollArea className="h-[60vh] pr-0">
@@ -37,22 +34,7 @@ export const Events = ({ date }: { date: Date }) => {
                 event={event}
                 isActive={event.id === activeEvent}
               >
-                <div
-                  onClick={() =>
-                    handleQueryChange("/calendar", { active: event.id })
-                  }
-                  className="rounded-xl border py-2 px-4 tracking-tight space-y-2 cursor-pointer hover:bg-neutral-100 transition"
-                >
-                  <p className="text-sm text-neutral-800">{event.title}</p>
-                  <div className="flex items-center justify-between">
-                    <p className="text-muted-foreground text-xs">
-                      {format(event.eventDate, "MMMM do, h:mm a")}
-                    </p>
-                    {event.description && (
-                      <MessageSquareText className="h-3 w-3 text-muted-foreground" />
-                    )}
-                  </div>
-                </div>
+                <EventItem event={event} />
               </EventSheet>
             ))}
           </motion.div>

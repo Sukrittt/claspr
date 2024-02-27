@@ -10,11 +10,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { ExtendedEvent } from "@/types";
-import { Editor } from "@/components/editor/Editor";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useQueryChange } from "@/hooks/use-query-change";
-import { useMounted } from "@/hooks/use-mounted";
 import { EventEditor } from "./event-editor";
+import { useMounted } from "@/hooks/use-mounted";
+import { useQueryChange } from "@/hooks/use-query-change";
 
 interface EventSheetProps {
   isActive?: boolean;

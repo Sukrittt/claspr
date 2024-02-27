@@ -2,20 +2,17 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
-  format,
   startOfMonth,
   endOfMonth,
   addMonths,
   subMonths,
   eachDayOfInterval,
-  isSameDay,
   startOfWeek,
   endOfWeek,
   startOfDay,
 } from "date-fns";
 
-import { cn } from "@/lib/utils";
-import { Events } from "./events";
+import { EventContext } from "./event-context";
 import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
 export const Calendar = () => {
@@ -101,47 +98,7 @@ export const Calendar = () => {
           </div>
         </div>
         <div className="space-y-2 h-full">
-          <div className="grid grid-cols-7 place-items-center gap-4 h-[95%]">
-            {calendarDates.map((date) => (
-              <div
-                key={date.toISOString()}
-                className="flex flex-col gap-y-4 h-full w-full"
-              >
-                <div
-                  className={cn("rounded-xl border p-4 w-full", {
-                    "bg-neutral-800": isSameDay(date, new Date()),
-                  })}
-                >
-                  <div className="flex items-center justify-center h-full">
-                    <div className="flex flex-col gap-y-2 items-center">
-                      <span
-                        className={cn(
-                          "text-sm tracking-tight text-muted-foreground",
-                          {
-                            "text-neutral-100": isSameDay(date, new Date()),
-                          }
-                        )}
-                      >
-                        {format(date, "EEEE")}
-                      </span>
-                      <span
-                        className={cn(
-                          "text-2xl font-semibold text-neutral-800",
-                          {
-                            "text-neutral-100": isSameDay(date, new Date()),
-                          }
-                        )}
-                      >
-                        {format(date, "d")}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <Events date={date} />
-              </div>
-            ))}
-          </div>
+          <EventContext calendarDates={calendarDates} />
         </div>
       </div>
     </div>
