@@ -1,10 +1,11 @@
 import qs from "query-string";
 import { useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function useQueryChange() {
   const router = useRouter();
   const params = useSearchParams();
+  const pathname = usePathname();
 
   const handleQueryChange = useCallback(
     (initialUrl: string, query: any) => {
@@ -27,7 +28,11 @@ export function useQueryChange() {
         { skipNull: true }
       );
 
-      router.replace(url);
+      if (pathname === initialUrl) {
+        router.replace(url);
+      } else {
+        router.push(url);
+      }
     },
     [params]
   );
