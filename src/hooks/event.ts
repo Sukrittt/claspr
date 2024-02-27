@@ -17,12 +17,12 @@ export const useCreateEvent = ({ closeModal }: { closeModal: () => void }) => {
   });
 };
 
-export const useEditEvent = ({ closeModal }: { closeModal: () => void }) => {
+export const useEditEvent = ({ closeModal }: { closeModal?: () => void }) => {
   const utils = trpc.useUtils();
 
   return trpc.event.editEvent.useMutation({
-    onMutate: async ({ eventId, eventDate, title }) => {
-      closeModal();
+    onMutate: async ({ eventId, eventDate, title, description }) => {
+      closeModal?.();
 
       await utils.event.getEvents.cancel({ classroomId: undefined });
 
@@ -35,8 +35,9 @@ export const useEditEvent = ({ closeModal }: { closeModal: () => void }) => {
           event.id === eventId
             ? {
                 ...event,
-                title,
-                eventDate,
+                title: title ?? event.title,
+                description: description ?? event.description,
+                eventDate: eventDate ?? event.eventDate,
               }
             : event
         )

@@ -205,25 +205,28 @@ export const createEvent = privateProcedure
  *
  * @param {object} input - The input parameters for editing an existing event.
  * @param {string} input.eventId - The id of the event to update.
- * @param {string} input.title - The updated title of the event.
+ * @param {string} input.title - An optional title of the event.
  * @param {string} input.description - An optional description of the event.
- * @param {string} input.eventDate - The updated date of the event.
+ * @param {string} input.eventDate - An optional date of the event.
  */
 export const editEvent = privateProcedure
   .input(
     z.object({
       eventId: z.string(),
-      title: z.string().min(3).max(100),
-      eventDate: z.date().min(new Date()),
+      title: z.string().max(100).optional(),
+      description: z.any().optional(),
+      eventDate: z.date().min(new Date()).optional(),
     })
   )
   .mutation(async ({ ctx, input }) => {
+    const { eventId, title, description, eventDate } = input;
+
     const existingEvent = await db.event.findFirst({
       where: {
-        id: input.eventId,
+        id: eventId,
         userId: ctx.userId,
       },
-      select: { id: true },
+      select: { id: true, title: true, description: true, eventDate: true },
     });
 
     if (!existingEvent) {
@@ -235,12 +238,13 @@ export const editEvent = privateProcedure
 
     await db.event.update({
       where: {
-        id: input.eventId,
+        id: eventId,
         userId: ctx.userId,
       },
       data: {
-        title: input.title,
-        eventDate: input.eventDate,
+        title: title ?? existingEvent.title,
+        description: description ?? existingEvent.description,
+        eventDate: eventDate ?? existingEvent.eventDate,
       },
     });
   });

@@ -14,6 +14,7 @@ import { Editor } from "@/components/editor/Editor";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQueryChange } from "@/hooks/use-query-change";
 import { useMounted } from "@/hooks/use-mounted";
+import { EventEditor } from "./event-editor";
 
 interface EventSheetProps {
   isActive?: boolean;
@@ -52,14 +53,7 @@ export const EventSheet: React.FC<EventSheetProps> = ({
             </DrawerDescription>
           </DrawerHeader>
 
-          <ScrollArea className="h-[50vh]">
-            <Editor
-              disableAI
-              content={event.description}
-              placeholder="What is this event about?"
-              //   getDebouncedContent
-            />
-          </ScrollArea>
+          <EventEditor event={event} />
         </div>
       </DrawerContent>
     </Drawer>
