@@ -13,6 +13,7 @@ import { ExtendedEvent } from "@/types";
 import { Editor } from "@/components/editor/Editor";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQueryChange } from "@/hooks/use-query-change";
+import { useMounted } from "@/hooks/use-mounted";
 
 interface EventSheetProps {
   isActive?: boolean;
@@ -25,6 +26,7 @@ export const EventSheet: React.FC<EventSheetProps> = ({
   event,
   isActive = false,
 }) => {
+  const mounted = useMounted();
   const [open, setOpen] = useState(false);
   const handleQueryChange = useQueryChange();
 
@@ -33,7 +35,7 @@ export const EventSheet: React.FC<EventSheetProps> = ({
   }, [isActive]);
 
   useEffect(() => {
-    if (open) return;
+    if (open || !mounted) return;
 
     handleQueryChange("/calendar", { active: null });
   }, [open]);
