@@ -12,7 +12,12 @@ import { useGetUpcomingEvents } from "@/hooks/event";
 import { activeDateAtom, overDateAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export const Events = ({ date }: { date: Date }) => {
+interface EventsProps {
+  date: Date;
+  sessionId: string;
+}
+
+export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
   const params = useSearchParams();
 
   const [overDate, setOverDate] = useAtom(overDateAtom);
@@ -93,6 +98,7 @@ export const Events = ({ date }: { date: Date }) => {
                 key={event.id}
                 event={event}
                 isActive={event.id === activeEvent}
+                sessionId={sessionId}
               >
                 <EventItem event={event} />
               </EventSheet>

@@ -21,7 +21,15 @@ import { EventItem } from "./event-item";
 import { useEditEvent } from "@/hooks/event";
 import { activeDateAtom, overDateAtom } from "@/atoms";
 
-export const EventContext = ({ calendarDates }: { calendarDates: Date[] }) => {
+interface EventContextProps {
+  calendarDates: Date[];
+  sessionId: string;
+}
+
+export const EventContext: React.FC<EventContextProps> = ({
+  calendarDates,
+  sessionId,
+}) => {
   const [activeEventEl, setActiveEventEl] = useState<ExtendedEvent | null>(
     null
   );
@@ -44,6 +52,9 @@ export const EventContext = ({ calendarDates }: { calendarDates: Date[] }) => {
 
     const activeEvent = active.data.current?.content as ExtendedEvent;
 
+    // Only allow the user to drag their own events
+    if (activeEvent.user.id !== sessionId) return;
+
     setActiveDateObj({
       event: activeEvent,
       dateColumn: startOfDay(activeEvent.eventDate),
@@ -59,6 +70,9 @@ export const EventContext = ({ calendarDates }: { calendarDates: Date[] }) => {
 
     const overDate = over.data.current?.content as Date;
     const activeEvent = active.data.current?.content as ExtendedEvent;
+
+    // Only allow the user to drag their own events
+    if (activeEvent.user.id !== sessionId) return;
 
     const activeEventId = activeEvent.id;
     const activeEventDate = activeEvent.eventDate;
@@ -86,7 +100,11 @@ export const EventContext = ({ calendarDates }: { calendarDates: Date[] }) => {
     >
       <div className="grid grid-cols-7 place-items-center gap-4 h-[95%]">
         {calendarDates.map((date) => (
-          <DateColumn key={date.toISOString()} date={date} />
+          <DateColumn
+            key={date.toISOString()}
+            date={date}
+            sessionId={sessionId}
+          />
         ))}
       </div>
 
@@ -100,7 +118,12 @@ export const EventContext = ({ calendarDates }: { calendarDates: Date[] }) => {
   );
 };
 
-const DateColumn = ({ date }: { date: Date }) => {
+interface DateColumnProps {
+  date: Date;
+  sessionId: string;
+}
+
+const DateColumn: React.FC<DateColumnProps> = ({ date, sessionId }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: date.toISOString(),
     data: {
@@ -135,7 +158,7 @@ const DateColumn = ({ date }: { date: Date }) => {
         </div>
       </div>
 
-      <Events date={date} />
+      <Events date={date} sessionId={sessionId} />
     </div>
   );
 };

@@ -15,7 +15,7 @@ import {
 import { EventContext } from "./event-context";
 import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
-export const Calendar = () => {
+export const Calendar = ({ sessionId }: { sessionId: string }) => {
   const [calendarDates, setCalendarDates] = useState<Date[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -98,7 +98,7 @@ export const Calendar = () => {
           </div>
         </div>
         <div className="space-y-2 h-full">
-          <EventContext calendarDates={calendarDates} />
+          <EventContext calendarDates={calendarDates} sessionId={sessionId} />
         </div>
       </div>
     </div>

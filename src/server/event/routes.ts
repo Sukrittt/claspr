@@ -125,6 +125,7 @@ export const getEvents = privateProcedure
         select: {
           id: true,
           title: true,
+          description: true,
           classRoomId: true,
         },
       },

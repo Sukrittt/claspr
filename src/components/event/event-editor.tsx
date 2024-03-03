@@ -6,8 +6,13 @@ import { useEditEvent } from "@/hooks/event";
 import { Editor } from "@/components/editor/Editor";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { EditorOutput } from "@/components/editor/EditorOutput";
 
-export const EventEditor = ({ event }: { event: ExtendedEvent }) => {
+interface EventEditorProps {
+  event: ExtendedEvent;
+}
+
+export const EventEditor: React.FC<EventEditorProps> = ({ event }) => {
   const [content] = useAtom(contentAtom);
   const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom);
 
@@ -29,12 +34,16 @@ export const EventEditor = ({ event }: { event: ExtendedEvent }) => {
 
   return (
     <ScrollArea className="h-[50vh]">
-      <Editor
-        disableAI
-        content={event.description}
-        placeholder="What is this event about?"
-        getDebouncedContent
-      />
+      {!event.assignment?.description ? (
+        <Editor
+          disableAI
+          content={event.description}
+          placeholder="What is this event about?"
+          getDebouncedContent
+        />
+      ) : (
+        <EditorOutput content={event.assignment.description} />
+      )}
     </ScrollArea>
   );
 };

@@ -1,5 +1,12 @@
-import { Calendar } from "@/components/event/calendar";
+import { Suspense } from "react";
+
+import { Event } from "@/components/server-components/Event";
+import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
 export default function page() {
-  return <Calendar />;
+  return (
+    <Suspense fallback={<LoadingScreen fullHeight />}>
+      <Event />
+    </Suspense>
+  );
 }

@@ -12,18 +12,21 @@ import {
 import { ExtendedEvent } from "@/types";
 import { EventEditor } from "./event-editor";
 import { useMounted } from "@/hooks/use-mounted";
+import { RenameEventTitle } from "./rename-event-title";
 import { useQueryChange } from "@/hooks/use-query-change";
 
 interface EventSheetProps {
   isActive?: boolean;
   children: React.ReactNode;
   event: ExtendedEvent;
+  sessionId: string;
 }
 
 export const EventSheet: React.FC<EventSheetProps> = ({
   children,
   event,
   isActive = false,
+  sessionId,
 }) => {
   const mounted = useMounted();
   const [open, setOpen] = useState(false);
@@ -45,7 +48,13 @@ export const EventSheet: React.FC<EventSheetProps> = ({
       <DrawerContent>
         <div className="max-w-2xl mx-auto w-full">
           <DrawerHeader>
-            <DrawerTitle>{event.title}</DrawerTitle>
+            <DrawerTitle>
+              <RenameEventTitle
+                eventId={event.id}
+                initialTitle={event.title}
+                isEditable={event.user.id === sessionId}
+              />
+            </DrawerTitle>
             <DrawerDescription>
               {format(event.eventDate, "MMMM do, h:mm a")}
             </DrawerDescription>

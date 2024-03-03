@@ -8,5 +8,8 @@ export type MinifiedEvent = Pick<
 
 export type ExtendedEvent = MinifiedEvent & {
   user: MinifiedUser;
-  assignment: Pick<Assignment, "id" | "title" | "classRoomId"> | null;
+  assignment: Pick<
+    Assignment,
+    "id" | "title" | "classRoomId" | "description"
+  > | null;
 };
