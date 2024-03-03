@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 
 import {
+  ExtendedEvent,
   ExtendedFolder,
   ExtendedSectionWithClassrooms,
   ExtendedSectionWithMemberships,
@@ -36,3 +37,11 @@ export const activeNoteIdAtom = atom<string | null>(null);
 // For Discussion
 export const activeDiscussionTabAtom = atom<DiscussionTab | null>(null);
 export const activeDiscussionIdAtom = atom<string | null>(null);
+
+// For Calendar
+export const activeDateAtom = atom<{
+  event: ExtendedEvent;
+  dateColumn: Date;
+} | null>(null);
+
+export const overDateAtom = atom<Date | null>(null);

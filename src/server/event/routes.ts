@@ -216,7 +216,6 @@ export const editEvent = privateProcedure
       title: z.string().max(100).optional(),
       description: z.any().optional(),
       eventDate: z.date().optional(),
-      initialDate: z.date().optional(), // For optimistic updates (USED FOR CLIENT ONLY)
     })
   )
   .mutation(async ({ ctx, input }) => {

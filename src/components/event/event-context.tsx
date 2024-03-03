@@ -12,17 +12,22 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { useAtom } from "jotai";
 
 import { cn } from "@/lib/utils";
 import { Events } from "./events";
 import { ExtendedEvent } from "@/types";
 import { EventItem } from "./event-item";
 import { useEditEvent } from "@/hooks/event";
+import { activeDateAtom, overDateAtom } from "@/atoms";
 
 export const EventContext = ({ calendarDates }: { calendarDates: Date[] }) => {
   const [activeEventEl, setActiveEventEl] = useState<ExtendedEvent | null>(
     null
   );
+
+  const [, setOverDate] = useAtom(overDateAtom);
+  const [, setActiveDateObj] = useAtom(activeDateAtom);
 
   const { mutate: moveEvent } = useEditEvent({ closeModal: undefined });
 
@@ -37,7 +42,14 @@ export const EventContext = ({ calendarDates }: { calendarDates: Date[] }) => {
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
 
-    setActiveEventEl(active.data.current?.content as ExtendedEvent);
+    const activeEvent = active.data.current?.content as ExtendedEvent;
+
+    setActiveDateObj({
+      event: activeEvent,
+      dateColumn: startOfDay(activeEvent.eventDate),
+    });
+
+    setActiveEventEl(activeEvent);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -53,14 +65,16 @@ export const EventContext = ({ calendarDates }: { calendarDates: Date[] }) => {
 
     if (isSameDay(activeEventDate, overDate)) return;
 
-    const newActiveDate = startOfDay(activeEventDate);
+    //CLIENT UPDATE
+    setOverDate(overDate);
 
     //SERVER UPDATE
     moveEvent({
       eventId: activeEventId,
       eventDate: overDate,
-      initialDate: newActiveDate, //USED FOR CLIENT ONLY
     });
+
+    setActiveEventEl(null);
   };
 
   return (
