@@ -22,7 +22,7 @@ export const EventItem: React.FC<EventItemProps> = ({
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: event.id,
-      disabled: event.user.id !== sessionId,
+      disabled: event.userId !== sessionId,
       data: { content: event },
     });
 

@@ -53,7 +53,7 @@ export const EventContext: React.FC<EventContextProps> = ({
     const activeEvent = active.data.current?.content as ExtendedEvent;
 
     // Only allow the user to drag their own events
-    if (activeEvent.user.id !== sessionId) return;
+    if (activeEvent.userId !== sessionId) return;
 
     setActiveDateObj({
       event: activeEvent,
@@ -72,7 +72,7 @@ export const EventContext: React.FC<EventContextProps> = ({
     const activeEvent = active.data.current?.content as ExtendedEvent;
 
     // Only allow the user to drag their own events
-    if (activeEvent.user.id !== sessionId) return;
+    if (activeEvent.userId !== sessionId) return;
 
     const activeEventId = activeEvent.id;
     const activeEventDate = activeEvent.eventDate;

@@ -120,6 +120,7 @@ export const getEvents = privateProcedure
       eventDate: true,
       description: true,
       createdAt: true,
+      userId: true,
 
       assignment: {
         select: {
@@ -127,14 +128,6 @@ export const getEvents = privateProcedure
           title: true,
           description: true,
           classRoomId: true,
-        },
-      },
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          image: true,
         },
       },
     };

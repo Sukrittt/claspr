@@ -3,11 +3,10 @@ import { MinifiedUser } from ".";
 
 export type MinifiedEvent = Pick<
   Event,
-  "id" | "title" | "eventDate" | "description" | "createdAt"
+  "id" | "title" | "eventDate" | "description" | "createdAt" | "userId"
 >;
 
 export type ExtendedEvent = MinifiedEvent & {
-  user: MinifiedUser;
   assignment: Pick<
     Assignment,
     "id" | "title" | "classRoomId" | "description"

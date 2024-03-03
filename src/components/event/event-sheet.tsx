@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
@@ -9,9 +10,11 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { cn } from "@/lib/utils";
 import { ExtendedEvent } from "@/types";
 import { EventEditor } from "./event-editor";
 import { useMounted } from "@/hooks/use-mounted";
+import { buttonVariants } from "@/components/ui/button";
 import { RenameEventTitle } from "./rename-event-title";
 import { useQueryChange } from "@/hooks/use-query-change";
 
@@ -52,12 +55,27 @@ export const EventSheet: React.FC<EventSheetProps> = ({
               <RenameEventTitle
                 eventId={event.id}
                 initialTitle={event.title}
-                isEditable={event.user.id === sessionId}
+                isEditable={event.userId === sessionId}
               />
             </DrawerTitle>
-            <DrawerDescription>
-              {format(event.eventDate, "MMMM do, h:mm a")}
-            </DrawerDescription>
+
+            <div className="flex items-center justify-between">
+              <DrawerDescription>
+                {format(event.eventDate, "MMMM do, h:mm a")}
+              </DrawerDescription>
+
+              {event.assignment && (
+                <Link
+                  href={`/c/${event.assignment.classRoomId}/a/${event.assignment.id}`}
+                  className={cn(
+                    buttonVariants({ variant: "link" }),
+                    "text-muted-foreground"
+                  )}
+                >
+                  View Assignment
+                </Link>
+              )}
+            </div>
           </DrawerHeader>
 
           <EventEditor event={event} />
