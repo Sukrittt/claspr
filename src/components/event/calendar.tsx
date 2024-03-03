@@ -60,8 +60,6 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
   const handleNextWeek = () => {
     const nextMonthDate = startOfWeek(addWeeks(currentDate, 1));
 
-    console.log("nextMonthDate", nextMonthDate);
-
     setCurrentDate(nextMonthDate);
   };
 
