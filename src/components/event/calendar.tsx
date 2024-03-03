@@ -4,12 +4,12 @@ import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import {
   startOfMonth,
   endOfMonth,
-  addMonths,
-  subMonths,
   eachDayOfInterval,
   startOfWeek,
   endOfWeek,
   startOfDay,
+  addWeeks,
+  subWeeks,
 } from "date-fns";
 
 import { EventContext } from "./event-context";
@@ -57,13 +57,16 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
     setCurrentDate(today);
   };
 
-  const handleNextMonth = () => {
-    const nextMonthDate = addMonths(currentDate, 1);
+  const handleNextWeek = () => {
+    const nextMonthDate = startOfWeek(addWeeks(currentDate, 1));
+
+    console.log("nextMonthDate", nextMonthDate);
+
     setCurrentDate(nextMonthDate);
   };
 
-  const handlePreviousMonth = () => {
-    const previousMonthDate = subMonths(currentDate, 1);
+  const handlePreviousWeek = () => {
+    const previousMonthDate = startOfWeek(subWeeks(currentDate, 1));
     setCurrentDate(previousMonthDate);
   };
 
@@ -88,7 +91,7 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
             </CreateEventDialog>
             <div
               className="border hover:bg-neutral-100 transition p-1.5 cursor-pointer rounded-lg"
-              onClick={handlePreviousMonth}
+              onClick={handlePreviousWeek}
             >
               <ChevronLeft className="w-4 h-4" />
             </div>
@@ -100,7 +103,7 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
             </span>
             <div
               className="border hover:bg-neutral-100 transition p-1.5 cursor-pointer rounded-lg"
-              onClick={handleNextMonth}
+              onClick={handleNextWeek}
             >
               <ChevronRight className="w-4 h-4" />
             </div>
