@@ -48,6 +48,12 @@ export function DatePicker({
     }
   }, [date, setValue]);
 
+  useEffect(() => {
+    if (date) return;
+
+    setDate(value);
+  }, [value]);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
