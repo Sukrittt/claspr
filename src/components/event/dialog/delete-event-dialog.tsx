@@ -13,6 +13,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useRemoveEvent } from "@/hooks/event";
+import { useQueryChange } from "@/hooks/use-query-change";
 
 type DeleteEventDialogProps = {
   eventId: string;
@@ -26,10 +27,12 @@ export const DeleteEventDialog = ({
   isOpen,
 }: DeleteEventDialogProps) => {
   const [open, setOpen] = useState(isOpen);
+  const handleQueryChange = useQueryChange();
 
   const closeModal = () => {
     setOpen(false);
     setIsDeleteOpen(false);
+    handleQueryChange("/calendar", { active: null });
   };
 
   const handleOpenChange = (open: boolean) => {

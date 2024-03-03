@@ -2,8 +2,8 @@ import { format } from "date-fns";
 import { useDraggable } from "@dnd-kit/core";
 import { MessageSquareText } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { ExtendedEvent } from "@/types";
+import { cn, getShortenedText } from "@/lib/utils";
 import { useQueryChange } from "@/hooks/use-query-change";
 
 interface EventItemProps {
@@ -35,7 +35,9 @@ export const EventItem: React.FC<EventItemProps> = ({
   if (isDragging) {
     return (
       <div className="rounded-xl border py-2 px-4 tracking-tight space-y-2 cursor-pointer bg-neutral-100 transition">
-        <p className="text-sm text-neutral-800">{event.title}</p>
+        <p className="text-sm text-neutral-800">
+          {getShortenedText(event.title, 50)}
+        </p>
         <div className="flex items-center justify-between">
           <p className="text-muted-foreground text-xs">
             {format(event.eventDate, "MMMM do, h:mm a")}
@@ -62,7 +64,9 @@ export const EventItem: React.FC<EventItemProps> = ({
         }
       )}
     >
-      <p className="text-sm text-neutral-800">{event.title}</p>
+      <p className="text-sm text-neutral-800">
+        {getShortenedText(event.title, 50)}
+      </p>
       <div className="flex items-center justify-between">
         <p className="text-muted-foreground text-xs">
           {format(event.eventDate, "MMMM do, h:mm a")}

@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
-import { isBefore } from "date-fns";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,7 +22,7 @@ const eventCreationSchema = z.object({
   title: z
     .string()
     .min(1)
-    .max(50)
+    .max(200)
     .refine(
       (val) => {
         return val.trim().length > 0;
@@ -59,11 +58,6 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
       return;
     }
 
-    if (isBefore(eventDate, new Date())) {
-      toast.error("Event date cannot be set to past date.");
-      return;
-    }
-
     createEvent({
       ...data,
       eventDate,
@@ -96,11 +90,7 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
                       {...field}
                     />
                   </FormControl>
-                  <DatePicker
-                    value={eventDate}
-                    setValue={setEventDate}
-                    disabled={[{ before: new Date() }]}
-                  />
+                  <DatePicker value={eventDate} setValue={setEventDate} />
                 </div>
                 <FormMessage />
               </FormItem>

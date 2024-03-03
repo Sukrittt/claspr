@@ -10,11 +10,11 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { cn } from "@/lib/utils";
 import { ExtendedEvent } from "@/types";
 import { EventEditor } from "./event-editor";
 import { useMounted } from "@/hooks/use-mounted";
-import { buttonVariants } from "@/components/ui/button";
+import { EventDropdown } from "./event-dropdown";
+import { Separator } from "@/components/ui/separator";
 import { RenameEventTitle } from "./rename-event-title";
 import { useQueryChange } from "@/hooks/use-query-change";
 
@@ -51,29 +51,33 @@ export const EventSheet: React.FC<EventSheetProps> = ({
       <DrawerContent>
         <div className="max-w-2xl mx-auto w-full">
           <DrawerHeader>
-            <DrawerTitle>
-              <RenameEventTitle
-                eventId={event.id}
-                initialTitle={event.title}
-                isEditable={event.userId === sessionId}
-              />
-            </DrawerTitle>
+            <div className="flex justify-between">
+              <DrawerTitle>
+                <RenameEventTitle
+                  eventId={event.id}
+                  initialTitle={event.title}
+                  isEditable={event.userId === sessionId}
+                />
+              </DrawerTitle>
+              {event.userId === sessionId && <EventDropdown event={event} />}
+            </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center gap-x-2">
               <DrawerDescription>
                 {format(event.eventDate, "MMMM do, h:mm a")}
               </DrawerDescription>
 
               {event.assignment && (
-                <Link
-                  href={`/c/${event.assignment.classRoomId}/a/${event.assignment.id}`}
-                  className={cn(
-                    buttonVariants({ variant: "link" }),
-                    "text-muted-foreground"
-                  )}
-                >
-                  View Assignment
-                </Link>
+                <>
+                  <Separator orientation="vertical" className="h-4" />
+
+                  <Link
+                    href={`/c/${event.assignment.classRoomId}/a/${event.assignment.id}`}
+                    className="text-muted-foreground text-[13px] hover:underline underline-offset-4"
+                  >
+                    View Assignment
+                  </Link>
+                </>
               )}
             </div>
           </DrawerHeader>

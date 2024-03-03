@@ -181,8 +181,8 @@ export const getEvents = privateProcedure
 export const createEvent = privateProcedure
   .input(
     z.object({
-      title: z.string().min(3).max(100),
-      eventDate: z.date().min(new Date()),
+      title: z.string().min(3).max(200),
+      eventDate: z.date(),
     })
   )
   .mutation(async ({ ctx, input }) => {
@@ -207,7 +207,7 @@ export const editEvent = privateProcedure
   .input(
     z.object({
       eventId: z.string(),
-      title: z.string().max(100).optional(),
+      title: z.string().max(500).optional(),
       description: z.any().optional(),
       eventDate: z.date().optional(),
     })

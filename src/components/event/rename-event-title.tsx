@@ -23,6 +23,12 @@ export const RenameEventTitle: React.FC<RenameEventTitleProps> = ({
   useEffect(() => {
     if (title === initialTitle) return;
 
+    setTitle(initialTitle);
+  }, [initialTitle]);
+
+  useEffect(() => {
+    if (title === initialTitle) return;
+
     const formattedTitle =
       debouncedTitle.length === 0
         ? "Untitled Discussion"

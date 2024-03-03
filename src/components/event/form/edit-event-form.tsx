@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
-import { isBefore } from "date-fns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -23,14 +22,13 @@ const eventUpdationSchema = z.object({
   title: z
     .string()
     .min(1)
-    .max(50)
+    .max(200)
     .refine(
       (val) => {
         return val.trim().length > 0;
       },
       { message: "Event name cannot be empty" }
     ),
-  description: z.string().max(500).optional().nullable(),
 });
 
 type Inputs = z.infer<typeof eventUpdationSchema>;
@@ -61,11 +59,6 @@ export const EditEventForm: React.FC<EditEventFormProps> = ({
   function handlelEditEvent(data: Inputs) {
     if (!eventDate) {
       toast.error("Please select a date for the event");
-      return;
-    }
-
-    if (isBefore(eventDate, new Date())) {
-      toast.error("Event date has already passed. Please select a future date");
       return;
     }
 
@@ -101,12 +94,7 @@ export const EditEventForm: React.FC<EditEventFormProps> = ({
                       {...field}
                     />
                   </FormControl>
-                  <DatePicker
-                    value={eventDate}
-                    setValue={setEventDate}
-                    disabled={[{ before: new Date() }, new Date()]}
-                    disableTimePicker
-                  />
+                  <DatePicker value={eventDate} setValue={setEventDate} />
                 </div>
                 <FormMessage />
               </FormItem>
