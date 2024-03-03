@@ -11,6 +11,7 @@ import { ContainerVariants } from "@/lib/motion";
 import { useGetUpcomingEvents } from "@/hooks/event";
 import { activeDateAtom, overDateAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { EventSkeleton } from "@/components/skeletons/event-skeleton";
 
 interface EventsProps {
   date: Date;
@@ -81,7 +82,7 @@ export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
   return (
     <ScrollArea className="h-[60vh] pr-0">
       {isLoading ? (
-        <p>Loading...</p>
+        <EventSkeleton />
       ) : !events || events.length === 0 ? (
         <></>
       ) : (
