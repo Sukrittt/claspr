@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import {
   startOfMonth,
   endOfMonth,
@@ -13,6 +13,8 @@ import {
 } from "date-fns";
 
 import { EventContext } from "./event-context";
+import { CreateEventDialog } from "./dialog/create-event-dialog";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
 export const Calendar = ({ sessionId }: { sessionId: string }) => {
@@ -77,6 +79,13 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
             {currentMonth}, {currentYear}
           </h3>
           <div className="flex items-center gap-x-2 text-neutral-700">
+            <CreateEventDialog>
+              <div className="border hover:bg-neutral-100 transition p-1.5 cursor-pointer rounded-lg">
+                <CustomTooltip text="Create Event">
+                  <Plus className="h-3.5 w-3.5" />
+                </CustomTooltip>
+              </div>
+            </CreateEventDialog>
             <div
               className="border hover:bg-neutral-100 transition p-1.5 cursor-pointer rounded-lg"
               onClick={handlePreviousMonth}
