@@ -85,12 +85,17 @@ export const CreateEventForm: React.FC<CreateEventFormProps> = ({
                 <div className="flex items-center gap-x-2">
                   <FormControl>
                     <Input
+                      disabled={isLoading}
                       type="text"
                       placeholder="E.g: Prepare for maths exam"
                       {...field}
                     />
                   </FormControl>
-                  <DatePicker value={eventDate} setValue={setEventDate} />
+                  <DatePicker
+                    isLoading={isLoading}
+                    value={eventDate}
+                    setValue={setEventDate}
+                  />
                 </div>
                 <FormMessage />
               </FormItem>

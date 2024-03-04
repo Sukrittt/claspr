@@ -22,6 +22,7 @@ interface DatePickerProps {
   placeholder?: string;
   disableTimePicker?: boolean;
   className?: string;
+  isLoading?: boolean;
 }
 
 export function DatePicker({
@@ -31,8 +32,10 @@ export function DatePicker({
   disableTimePicker = false,
   placeholder,
   className,
+  isLoading = false,
 }: DatePickerProps) {
   const [date, setDate] = useState<Date>();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (!date) return;
@@ -54,10 +57,22 @@ export function DatePicker({
     setDate(value);
   }, [value]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Enter" || e.key === "Escape") {
+        e.preventDefault();
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={(val) => setOpen(val)}>
       <PopoverTrigger asChild>
         <Button
+          disabled={isLoading}
           variant="outline"
           className={cn(
             "justify-center text-left font-normal h-8 text-xs gap-x-2 w-full",

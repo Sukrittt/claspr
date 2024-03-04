@@ -51,7 +51,7 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        setOpen((prev) => !prev);
       }
     };
     window.addEventListener("keydown", handleKeyDown);

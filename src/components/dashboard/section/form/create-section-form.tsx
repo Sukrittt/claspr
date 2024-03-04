@@ -102,6 +102,7 @@ export const CreateSectionForm: React.FC<CreateSectionFormProps> = ({
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isLoading}
                     type="text"
                     placeholder="E.g: First Semester"
                     {...field}

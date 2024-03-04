@@ -111,6 +111,7 @@ export const CreateNoteForm: React.FC<CreateNoteFormProps> = ({
                 <FormLabel>Title</FormLabel>
                 <FormControl>
                   <Input
+                    disabled={isLoading}
                     type="text"
                     placeholder="E.g: Number Theory: Chapter One"
                     {...field}

@@ -92,6 +92,7 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
                   <CustomTooltip text="Enable domain protection">
                     <div>
                       <Switch
+                        disabled={isLoading}
                         tabIndex={-1}
                         id="protected-domain"
                         checked={isDomainProtectionEnabled}
@@ -104,6 +105,7 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
                 </div>
                 <FormControl>
                   <Input
+                    disabled={isLoading}
                     type="text"
                     placeholder="E.g: Science Class"
                     {...field}

@@ -97,7 +97,12 @@ export const CreateFolderForm: React.FC<CreateFolderFormProps> = ({
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="E.g: Maths" {...field} />
+                  <Input
+                    disabled={isLoading}
+                    type="text"
+                    placeholder="E.g: Maths"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

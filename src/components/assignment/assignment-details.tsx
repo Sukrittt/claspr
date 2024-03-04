@@ -122,6 +122,7 @@ export const AssignmentDetails: React.FC<AssignmentDetailsProps> = ({
           value={date}
           setValue={setDate}
           disabled={[{ before: new Date() }]}
+          isLoading={isLoading}
           placeholder="Pick a date for submission"
           className="-left-32"
         />

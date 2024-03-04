@@ -11,6 +11,7 @@ import {
   activeNoteIdAtom,
   classFolderAtom,
 } from "@/atoms";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQueryChange } from "@/hooks/use-query-change";
 
 interface MaterialDetailsProps {
@@ -84,11 +85,13 @@ export const MaterialDetails: React.FC<MaterialDetailsProps> = ({
         </div>
       </div>
 
-      {note.creator.id !== session.user.id ? (
-        <EditorOutput content={note.content} />
-      ) : (
-        <MaterialContent note={note} />
-      )}
+      <ScrollArea className="h-[65vh]">
+        {note.creator.id !== session.user.id ? (
+          <EditorOutput content={note.content} />
+        ) : (
+          <MaterialContent note={note} />
+        )}
+      </ScrollArea>
     </div>
   );
 };

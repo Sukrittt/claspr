@@ -1,7 +1,7 @@
 import { toast } from "sonner";
-import { useState } from "react";
 import Markdown from "react-markdown";
 import { ClassRoom } from "@prisma/client";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpLeft, Check, Copy, Loader2, Sparkles } from "lucide-react";
@@ -191,6 +191,17 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
     toast.success("Moved to editor.");
     setOpen(false);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "i" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
