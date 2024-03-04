@@ -51,8 +51,8 @@ export const EventSheet: React.FC<EventSheetProps> = ({
       <DrawerContent>
         <div className="max-w-2xl mx-auto w-full">
           <DrawerHeader>
-            <div className="flex justify-between">
-              <DrawerTitle>
+            <div className="flex justify-between w-full">
+              <DrawerTitle className="w-full">
                 <RenameEventTitle
                   eventId={event.id}
                   initialTitle={event.title}
