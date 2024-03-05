@@ -6,7 +6,6 @@ export const useGetUpcomingEvents = (classroomId?: string, date?: Date) => {
   return trpc.event.getEvents.useQuery({
     classroomId,
     date,
-    currentDate: new Date(),
   });
 };
 

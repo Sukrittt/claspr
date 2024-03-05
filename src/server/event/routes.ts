@@ -11,7 +11,6 @@ import { privateProcedure } from "@/server/trpc";
  * @param {object} input - The input parameters for getting class events.
  * @param {string} input.date - An optional date to fetch events for.
  * @param {string} input.classroomId - An optional id of the classroom.
- * @param {string} input.currentDate - The current date of the client. (VERCEL SERVER CAUSING ISSUES WITH CURRENT DATE)
  * @returns {Promise<Object[]>} - A list of event objects from the database.
  */
 export const getEvents = privateProcedure
@@ -19,11 +18,10 @@ export const getEvents = privateProcedure
     z.object({
       date: z.date().optional(),
       classroomId: z.string().optional(),
-      currentDate: z.date().optional(),
     })
   )
   .query(async ({ ctx, input }) => {
-    const { classroomId, date, currentDate: clientDate } = input;
+    const { classroomId, date } = input;
 
     if (classroomId) {
       const existingClassroom = await db.classRoom.findFirst({
@@ -40,7 +38,7 @@ export const getEvents = privateProcedure
       }
     }
 
-    const currentDate = clientDate ?? new Date(); // client date will always be defined in this case.
+    const currentDate = new Date();
     const sevenDaysLater = addDays(currentDate, 7);
 
     let assignmentWhereClause = {};

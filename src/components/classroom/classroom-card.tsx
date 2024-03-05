@@ -63,18 +63,11 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
       title: "Assignments",
       description: classroom._count.assignments,
     },
-    // {
-    //   title: "Pending",
-    //   description: pendingAssignments?.length,
-    //   isStudent: true,
-    // },
     {
       title: "Study Materials",
       description: classroom._count.notes,
     },
   ];
-
-  console.log("pendingAssignments", pendingAssignments, isFetching);
 
   return (
     <Card>
