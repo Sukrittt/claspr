@@ -16,6 +16,7 @@ import {
   getIsPartOfClass,
   getClassroomFolders,
   getAllClassrooms,
+  getPendingAssignments,
 } from "@/server/class/routes";
 
 export const classRouter = createTRPCRouter({
@@ -35,4 +36,5 @@ export const classRouter = createTRPCRouter({
   getIsPartOfClass,
   getClassroomFolders,
   getAllClassrooms,
+  getPendingAssignments,
 });

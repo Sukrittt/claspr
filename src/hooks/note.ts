@@ -20,6 +20,7 @@ export const useCreateNote = ({
         router.push(`/n/${note.id}`);
       }
 
+      router.refresh();
       handleCleanUps(note);
       utils.folder.getFolders.invalidate({ classroomId });
     },

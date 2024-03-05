@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ExtendedClassroomDetails } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useClassroomDescription } from "@/hooks/class";
+import { useClassroomDescription, usePendingAssignments } from "@/hooks/class";
 import { AddDescriptionDialog } from "./add-description-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
@@ -28,6 +28,8 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
   sessionId,
 }) => {
   const [copied, setCopied] = useState(false);
+  const { data: pendingAssignments, isLoading: isFetching } =
+    usePendingAssignments(classroom.id);
   const { data: description, isLoading } = useClassroomDescription(
     classroom.id
   );
@@ -59,18 +61,20 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
     },
     {
       title: "Assignments",
-      description: "2", //change this
+      description: classroom._count.assignments,
     },
-    {
-      title: "Pending",
-      description: "0", //change this
-      isStudent: true,
-    },
+    // {
+    //   title: "Pending",
+    //   description: pendingAssignments?.length,
+    //   isStudent: true,
+    // },
     {
       title: "Study Materials",
-      description: "5", //change this
+      description: classroom._count.notes,
     },
   ];
+
+  console.log("pendingAssignments", pendingAssignments, isFetching);
 
   return (
     <Card>
@@ -124,7 +128,6 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
       <CardContent className="pt-6 text-sm">
         <div className="grid grid-cols-2 gap-4 text-gray-800">
           {classDetails.map((details, index) => {
-            if (details.isStudent && isTeacher) return null;
             if (details.action && !isTeacher) return null;
 
             return (
@@ -156,6 +159,20 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
               </div>
             );
           })}
+          {!isTeacher && (
+            <div className="flex justify-between items-center">
+              <p className="text-muted-foreground">Pending</p>
+              {isFetching ? (
+                <Skeleton className="h-4 w-4" />
+              ) : (
+                <CustomTooltip text="View pending assignments">
+                  <p className="text-[13px]">
+                    {pendingAssignments?.length ?? 0}
+                  </p>
+                </CustomTooltip>
+              )}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

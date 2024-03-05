@@ -54,3 +54,7 @@ export const useEditClassDescription = ({
 export const useUserClassrooms = () => {
   return trpc.class.getAllClassrooms.useQuery();
 };
+
+export const usePendingAssignments = (classroomId: string) => {
+  return trpc.class.getPendingAssignments.useQuery({ classroomId });
+};

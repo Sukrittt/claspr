@@ -15,6 +15,10 @@ export type ExtendedMembership = Pick<
 };
 
 export type ExtendedClassroomDetails = ClassRoom & {
+  _count: {
+    assignments: number;
+    notes: number;
+  };
   teacher: MinifiedUser;
   students: ExtendedMembershipDetails[];
 };

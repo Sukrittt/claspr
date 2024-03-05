@@ -517,6 +517,12 @@ export const getClassroom = privateProcedure
         id: classroomId,
       },
       include: {
+        _count: {
+          select: {
+            assignments: true,
+            notes: true,
+          },
+        },
         students: {
           include: {
             user: {
@@ -606,6 +612,74 @@ export const getDescription = privateProcedure
     }
 
     return existingClassroom.description;
+  });
+
+/**
+ * To get the assignments which the student has not submitted yet.
+ *
+ * @param {object} input - The input parameters for getting pending assignments.
+ * @param {string} input.classroomId - The id of the classroom.
+ * @returns {Promise<Object[]>} - A list of assignment objects.
+ */
+export const getPendingAssignments = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .query(async ({ input, ctx }) => {
+    const { classroomId } = input;
+
+    const existingMembership = await db.membership.findFirst({
+      where: {
+        classRoomId: classroomId,
+        userId: ctx.userId,
+        isTeacher: false,
+      },
+      select: { id: true },
+    });
+
+    if (!existingMembership) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message:
+          "You need to be a student of this classroom to view your pending assignments.",
+      });
+    }
+
+    const existingClassroom = await db.classRoom.findFirst({
+      where: {
+        id: classroomId,
+        assignments: {
+          some: {
+            submissions: {
+              none: {
+                memberId: existingMembership.id,
+              },
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+        assignments: {
+          select: {
+            id: true,
+            title: true,
+            dueDate: true,
+          },
+        },
+      },
+    });
+
+    if (!existingClassroom) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find this classroom. Please try again later.",
+      });
+    }
+
+    return existingClassroom.assignments;
   });
 
 /**
