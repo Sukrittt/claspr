@@ -18,10 +18,11 @@ export const getEvents = privateProcedure
     z.object({
       date: z.date().optional(),
       classroomId: z.string().optional(),
+      clientDate: z.date().optional(),
     })
   )
   .query(async ({ ctx, input }) => {
-    const { classroomId, date } = input;
+    const { classroomId, date, clientDate } = input;
 
     if (classroomId) {
       const existingClassroom = await db.classRoom.findFirst({
@@ -38,7 +39,7 @@ export const getEvents = privateProcedure
       }
     }
 
-    const currentDate = new Date();
+    const currentDate = clientDate ?? new Date();
     const sevenDaysLater = addDays(currentDate, 7);
 
     let assignmentWhereClause = {};

@@ -2,10 +2,15 @@ import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
 
-export const useGetUpcomingEvents = (classroomId?: string, date?: Date) => {
+export const useGetUpcomingEvents = (
+  classroomId?: string,
+  date?: Date,
+  clientDate?: Date
+) => {
   return trpc.event.getEvents.useQuery({
     classroomId,
     date,
+    clientDate,
   });
 };
 

@@ -1,3 +1,4 @@
+"use client";
 import { useAtom } from "jotai";
 import { isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
@@ -20,13 +21,15 @@ interface EventsProps {
 
 export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
   const params = useSearchParams();
+  const [currentDate] = useState(new Date());
 
   const [overDate, setOverDate] = useAtom(overDateAtom);
   const [activeDateObj, setActiveDateObj] = useAtom(activeDateAtom);
 
   const { data: serverEvents, isLoading } = useGetUpcomingEvents(
     undefined,
-    date
+    date,
+    currentDate
   );
 
   const [events, setEvents] = useState<ExtendedEvent[] | undefined>(
