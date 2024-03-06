@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils";
 import { listOfReactions } from "@/config/utils";
 import { ContainerVariants } from "@/lib/motion";
 import { useAddReaction } from "@/hooks/discussion";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface ReactionListsProps {
   discussionId?: string;
@@ -34,7 +34,7 @@ export const ReactionLists: React.FC<ReactionListsProps> = ({
   const [open, setOpen] = useState(false);
 
   const selectedReaction = reactions.find(
-    (reaction) => reaction.userId === session.user.id
+    (reaction) => reaction.user.id === session.user.id
   );
 
   const [selectedReactionValue, setSelectedReactionValue] = useState<
@@ -158,7 +158,7 @@ const ReactionsDisplay: React.FC<ReactionsDisplayProps> = ({
           const userReacted = reactions.some(
             (reaction) =>
               reaction.reaction === reactionType &&
-              reaction.userId === session.user.id
+              reaction.user.id === session.user.id
           );
 
           return (

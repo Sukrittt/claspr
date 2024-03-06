@@ -2,9 +2,10 @@ import { User } from "@prisma/client";
 import { CheckCircle2 } from "lucide-react";
 
 import { timeAgo } from "@/lib/utils";
+import { MinifiedUser } from "@/types";
 
 interface AnswerDetailsProps {
-  answeredBy: User;
+  answeredBy: MinifiedUser;
   text: string;
   answeredAt: Date;
 }

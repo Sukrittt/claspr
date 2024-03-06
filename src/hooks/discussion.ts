@@ -1,7 +1,8 @@
 import { toast } from "sonner";
-import { Discussion, DiscussionType } from "@prisma/client";
+import { DiscussionType } from "@prisma/client";
 
 import { trpc } from "@/trpc/client";
+import { ExtendedDiscussion } from "@/types";
 
 interface GetDiscussionProps {
   classroomId: string;
@@ -36,15 +37,34 @@ export const useStartDiscussion = ({
   const utils = trpc.useUtils();
 
   return trpc.discussion.startDiscussion.useMutation({
-    onSuccess: () => {
-      utils.discussion.getDiscussions.invalidate();
+    onSuccess: (discussion) => {
+      utils.discussion.getDiscussions.setData(
+        {
+          classroomId: discussion.classroomId,
+          discussionType: discussion.discussionType,
+        },
+        (prev) => {
+          if (!prev) return;
+
+          const formattedDiscussion: ExtendedDiscussion = {
+            ...discussion,
+            replies: [],
+            _count: {
+              replies: 0,
+            },
+          };
+
+          return [formattedDiscussion, ...prev];
+        }
+      );
+
       toast.success("Your discussion has been started successfully.");
       closeModal();
     },
   });
 };
 
-interface GeDetailedtDiscussionProps {
+interface GetDetailedtDiscussionProps {
   discussionId: string;
   discussionType: DiscussionType;
 }
@@ -52,7 +72,7 @@ interface GeDetailedtDiscussionProps {
 export const useGetDiscussionDetails = ({
   discussionId,
   discussionType,
-}: GeDetailedtDiscussionProps) => {
+}: GetDetailedtDiscussionProps) => {
   return trpc.discussion.getDiscussionDetails.useQuery({
     discussionId,
     discussionType,

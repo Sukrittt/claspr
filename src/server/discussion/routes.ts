@@ -53,7 +53,7 @@ export const startDiscussion = privateProcedure
       });
     }
 
-    await db.discussion.create({
+    const discussion = await db.discussion.create({
       data: {
         title,
         content,
@@ -61,7 +61,28 @@ export const startDiscussion = privateProcedure
         classroomId,
         creatorId: ctx.userId,
       },
+      select: {
+        id: true,
+        title: true,
+        discussionType: true,
+        classroomId: true,
+        createdAt: true,
+        creatorId: true,
+        isEdited: true,
+        content: true,
+
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
     });
+
+    return discussion;
   });
 
 /**
@@ -111,16 +132,47 @@ export const getDiscussions = privateProcedure
       orderBy: {
         createdAt: "desc",
       },
-      include: {
-        creator: true,
+      select: {
+        id: true,
+        title: true,
+        discussionType: true,
+        classroomId: true,
+        createdAt: true,
+        creatorId: true,
+        isEdited: true,
+        content: true,
+
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
         _count: {
           select: {
             replies: true,
           },
         },
         replies: {
-          include: {
-            creator: true,
+          select: {
+            id: true,
+            selected: true,
+            text: true,
+            createdAt: true,
+            creatorId: true,
+            isEdited: true,
+            discussionId: true,
+
+            creator: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
           },
           distinct: ["creatorId"],
           take: 3,
@@ -154,8 +206,24 @@ export const getDiscussionDetails = privateProcedure
 
     const discussion = await db.discussion.findFirst({
       where: { id: discussionId, discussionType },
-      include: {
-        creator: true,
+      select: {
+        id: true,
+        title: true,
+        discussionType: true,
+        classroomId: true,
+        createdAt: true,
+        creatorId: true,
+        isEdited: true,
+        content: true,
+
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
         replies: {
           where: {
             replyId: null,
@@ -163,14 +231,54 @@ export const getDiscussionDetails = privateProcedure
           orderBy: {
             createdAt: "desc",
           },
-          include: {
-            creator: true,
+          select: {
+            id: true,
+            selected: true,
+            text: true,
+            createdAt: true,
+            creatorId: true,
+            isEdited: true,
+            discussionId: true,
+
+            creator: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
             replies: {
-              include: {
-                creator: true,
+              select: {
+                id: true,
+                selected: true,
+                text: true,
+                createdAt: true,
+                creatorId: true,
+                isEdited: true,
+                discussionId: true,
+
+                creator: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    image: true,
+                  },
+                },
                 reactions: {
-                  include: {
-                    user: true,
+                  select: {
+                    id: true,
+                    reaction: true,
+
+                    user: {
+                      select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        image: true,
+                      },
+                    },
                   },
                 },
               },
@@ -180,14 +288,28 @@ export const getDiscussionDetails = privateProcedure
             },
             reactions: {
               include: {
-                user: true,
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    image: true,
+                  },
+                },
               },
             },
           },
         },
         reactions: {
           include: {
-            user: true,
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
           },
           where: {
             replyId: null,
@@ -251,7 +373,7 @@ export const addReply = privateProcedure
       });
     }
 
-    await db.reply.create({
+    const reply = await db.reply.create({
       data: {
         text,
         discussionId,
@@ -259,6 +381,8 @@ export const addReply = privateProcedure
         creatorId: ctx.userId,
       },
     });
+
+    return reply;
   });
 
 /**
@@ -266,7 +390,7 @@ export const addReply = privateProcedure
  *
  * @param {object} input - The input parameters for adding a reaction.
  * @param {string} input.discussionId - An optional id of discussion.
- * @param {string} input.replyId - An optional replyId when reaction attaached to a reply.
+ * @param {string} input.replyId - An optional replyId when reaction attached to a reply.
  * @param {enum} input.reactionType - An optional type of reaction to add to the discussion or reply.
  */
 export const addReaction = privateProcedure
@@ -282,7 +406,7 @@ export const addReaction = privateProcedure
 
     const existingDiscussion = await db.discussion.findFirst({
       where: { id: discussionId },
-      select: { id: true, classroomId: true },
+      select: { id: true, classroomId: true, discussionType: true},
     });
 
     if (!existingDiscussion) {
@@ -300,7 +424,7 @@ export const addReaction = privateProcedure
     if (!isPartOfClass) {
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: "You are not a part of this classroom to start a discussion.",
+        message: "You are not a part of this classroom.",
       });
     }
 
@@ -313,7 +437,10 @@ export const addReaction = privateProcedure
       select: { id: true, reaction: true },
     });
 
+
+    // If the user has already reacted to the discussion or reply.
     if (existingReaction) {
+      // If the user has already reacted with the same reaction type.
       if (existingReaction.reaction === reactionType) {
         await db.reaction.delete({
           where: {
@@ -323,7 +450,9 @@ export const addReaction = privateProcedure
             replyId,
           },
         });
-      } else {
+      }
+      // If the user has already reacted with a different reaction type.
+      else {
         await db.reaction.update({
           data: {
             reaction: reactionType,
@@ -335,8 +464,11 @@ export const addReaction = privateProcedure
             replyId,
           },
         });
+
       }
-    } else {
+    }
+    // If the user has not reacted to the discussion or reply.
+    else {
       await db.reaction.create({
         data: {
           discussionId,
@@ -345,7 +477,9 @@ export const addReaction = privateProcedure
           userId: ctx.userId,
         },
       });
+
     }
+
   });
 
 /**

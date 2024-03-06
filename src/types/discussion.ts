@@ -1,31 +1,58 @@
 import { Comment, Discussion, Reaction, Reply, User } from "@prisma/client";
 
+import { MinifiedUser } from ".";
+
 export type ExtendedComment = Comment & {
   sender: User;
   receiver: User | null;
 };
 
-export type ExtendedDiscussion = Discussion & {
-  creator: User;
+type MinifiedDiscussion = Pick<
+  Discussion,
+  | "id"
+  | "title"
+  | "content"
+  | "discussionType"
+  | "classroomId"
+  | "createdAt"
+  | "creatorId"
+  | "isEdited"
+>;
+
+export type ExtendedDiscussion = MinifiedDiscussion & {
+  creator: MinifiedUser;
   _count: {
     replies: number;
   };
-  replies: (Reply & {
-    creator: User;
+  replies: (MinifiedReply & {
+    creator: MinifiedUser;
   })[];
 };
 
-export type ExtendedReaction = Reaction & {
-  user: User;
+type MinifiedReply = Pick<
+  Reply,
+  | "id"
+  | "text"
+  | "discussionId"
+  | "creatorId"
+  | "createdAt"
+  | "selected"
+  | "isEdited"
+>;
+
+type MinifiedReaction = Pick<Reaction, "id" | "reaction">;
+
+export type ExtendedReaction = MinifiedReaction & {
+  user: MinifiedUser;
 };
 
-export type ExtendedReply = Reply & {
-  creator: User;
+export type ExtendedReply = MinifiedReply & {
+  creator: MinifiedUser;
   reactions: ExtendedReaction[];
 };
 
-export type ExtendedDetailedReply = Reply & {
-  creator: User;
+export type ExtendedDetailedReply = MinifiedReply & {
+  creator: MinifiedUser;
   replies: ExtendedReply[];
   reactions: ExtendedReaction[];
 };
