@@ -137,7 +137,7 @@ const AssignmentCardList: React.FC<AssignmentCardListProps> = ({
                 <p
                   className={cn("font-semibold", {
                     "text-green-600": !!submissionDetails,
-                    "text-destructive": deadlinePassed,
+                    "text-destructive": !!!submissionDetails && deadlinePassed,
                   })}
                 >
                   {submissionDetails
