@@ -17,6 +17,7 @@ import {
   getClassroomFolders,
   getAllClassrooms,
   getPendingAssignments,
+  editClassroomDetails,
 } from "@/server/class/routes";
 
 export const classRouter = createTRPCRouter({
@@ -37,4 +38,5 @@ export const classRouter = createTRPCRouter({
   getClassroomFolders,
   getAllClassrooms,
   getPendingAssignments,
+  editClassroomDetails,
 });

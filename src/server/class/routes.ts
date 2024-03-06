@@ -553,7 +553,7 @@ export const getClassroom = privateProcedure
  * To add a descripton to a class by a teacher.
  *
  * @param {object} input - The input parameters for creating class.
- * @param {string} input.description - The title for the classroom.
+ * @param {string} input.description - The description for the classroom.
  * @param {string} input.classroomId - The id of the classroom.
  * @param {string} input.membershipId - The id of the member to allow joined teachers for updation.
  */
@@ -878,3 +878,42 @@ export const getIsPartOfClassAuth = async (
 
   return isPartOfClass;
 };
+
+/**
+ * To edit classroom details by a teacher.
+ *
+ * @param {object} input - The input parameters for editing classroom details.
+ * @param {string} input.classroomId - The id of the classroom.
+ * @param {string} input.title - The updated title for the classroom.
+ * @param {string} input.domain - The updated domain for the classroom.
+ * @param {string} input.description - The updated description for the classroom.
+ */
+export const editClassroomDetails = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+      title: z.string().min(3).max(200),
+      domain: z.string().max(200).nullable(),
+      description: z.string().max(200).nullable(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { classroomId, description, domain, title } = input;
+
+    const existingClassroom = await db.classRoom.findFirst({
+      where: { id: classroomId },
+      select: { teacherId: true },
+    });
+
+    if (!existingClassroom || existingClassroom.teacherId !== ctx.userId) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not authorized to edit this class.",
+      });
+    }
+
+    await db.classRoom.update({
+      where: { id: classroomId },
+      data: { description, protectedDomain: domain, title },
+    });
+  });

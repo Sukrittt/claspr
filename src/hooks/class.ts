@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import { trpc } from "@/trpc/client";
 
@@ -57,4 +58,18 @@ export const useUserClassrooms = () => {
 
 export const usePendingAssignments = (classroomId: string) => {
   return trpc.class.getPendingAssignments.useQuery({ classroomId });
+};
+
+export const useEditClassroom = () => {
+  const utils = trpc.useUtils();
+  const router = useRouter();
+
+  return trpc.class.editClassroomDetails.useMutation({
+    onSuccess: (_, { classroomId }) => {
+      toast.success("Classroom details updated successfully.");
+
+      router.refresh();
+      utils.class.getDescription.invalidate({ classroomId });
+    },
+  });
 };

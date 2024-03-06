@@ -4,6 +4,7 @@ import {
   ClipboardList,
   LibraryBig,
   MessageSquare,
+  Settings,
   UsersRound,
 } from "lucide-react";
 import { useEffect } from "react";
@@ -22,6 +23,7 @@ import { DiscussionTabs } from "@/components/discussions/discussion-tabs";
 import { ClassDiscussions } from "@/components/discussions/class-discussions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ConversationHistory } from "@/components/conversation/conversation-history";
+import { ClassroomSettings } from "./classroom-settings";
 
 interface ClassroomContainerProps {
   classroom: ExtendedClassroomDetails;
@@ -33,7 +35,8 @@ type ClassroomOptions =
   | "study-materials"
   | "discussions"
   | "members"
-  | "conversations";
+  | "conversations"
+  | "settings";
 
 export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
   classroom,
@@ -46,6 +49,10 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
 
   const handleTabChange = (value: string) => {
     const typedValue = value as ClassroomOptions;
+
+    if (typedValue === "settings" && classroom.teacherId !== session.user.id) {
+      return;
+    }
 
     const initialUrl = `/c/${classroom.id}`;
 
@@ -75,12 +82,16 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
   function isValidTab(status: string) {
     if (!status) return true;
 
+    if (status === "settings" && classroom.teacherId !== session.user.id)
+      return false;
+
     const tabs = [
       "assignments",
       "study-materials",
       "discussions",
       "members",
       "conversations",
+      "settings",
     ];
 
     return tabs.some((s) => s === status);
@@ -126,6 +137,14 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
               <span>AI Chat</span>
             </div>
           </TabsTrigger>
+          {classroom.teacherId === session.user.id && (
+            <TabsTrigger value="settings">
+              <div className="flex items-center gap-x-2">
+                <Settings className="w-4 h-4" />
+                <span>Settings</span>
+              </div>
+            </TabsTrigger>
+          )}
         </TabsList>
         <ClassroomControls classroom={classroom} sessionId={session.user.id} />
       </div>
@@ -170,6 +189,13 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
           <TabsContent className="h-full" value="conversations">
             <ConversationHistory classroomId={classroom.id} />
           </TabsContent>
+
+          {/* SETTINGS */}
+          {classroom.teacherId === session.user.id && (
+            <TabsContent className="h-full" value="settings">
+              <ClassroomSettings classroom={classroom} />
+            </TabsContent>
+          )}
         </div>
 
         <div className="col-span-2 flex flex-col gap-2 h-full pt-4">

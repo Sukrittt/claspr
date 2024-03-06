@@ -57,7 +57,9 @@ export const ConversationHistory = ({
             disabled={conversations?.length === 0}
           />
         </div>
+
         <Separator />
+
         {isLoading ? (
           <ConversationSkeleton />
         ) : (!conversations || conversations.length === 0) && !isLoading ? (
