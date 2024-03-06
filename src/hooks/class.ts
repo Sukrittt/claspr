@@ -73,3 +73,21 @@ export const useEditClassroom = () => {
     },
   });
 };
+
+export const useRemoveClassroom = ({
+  mutations,
+}: {
+  mutations: () => void;
+}) => {
+  const router = useRouter();
+
+  return trpc.class.removeClass.useMutation({
+    onMutate: () => {
+      mutations();
+    },
+    onSuccess: () => {
+      toast.success("Classroom deleted successfully.");
+      router.push("/dashboard");
+    },
+  });
+};
