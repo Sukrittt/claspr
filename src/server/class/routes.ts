@@ -210,22 +210,23 @@ export const leaveClass = privateProcedure
       membershipId: z.string(),
     })
   )
-  .mutation(async ({ input, ctx }) => {
+  .mutation(async ({ input }) => {
     const { membershipId } = input;
 
     const existingMembership = await db.membership.findFirst({
-      where: { id: membershipId, userId: ctx.userId },
+      where: { id: membershipId },
+      select: { id: true },
     });
 
     if (!existingMembership) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "You are not a member of this classroom.",
+        message: "Not a member of this classroom.",
       });
     }
 
     await db.membership.delete({
-      where: { id: membershipId, userId: ctx.userId },
+      where: { id: membershipId },
     });
   });
 

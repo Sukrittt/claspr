@@ -24,6 +24,7 @@ export const useEditClassDescription = ({
 }: {
   closeModal: () => void;
 }) => {
+  const router = useRouter();
   const utils = trpc.useUtils();
 
   return trpc.class.addDescription.useMutation({
@@ -48,6 +49,7 @@ export const useEditClassDescription = ({
     },
     onSettled: (data, _, { classroomId }) => {
       utils.class.getDescription.invalidate({ classroomId });
+      router.refresh();
     },
   });
 };
@@ -88,6 +90,19 @@ export const useRemoveClassroom = ({
     onSuccess: () => {
       toast.success("Classroom deleted successfully.");
       router.push("/dashboard");
+    },
+  });
+};
+
+export const useKickMember = ({ closeModal }: { closeModal: () => void }) => {
+  const router = useRouter();
+
+  return trpc.class.leaveClass.useMutation({
+    onSuccess: () => {
+      toast.success("Student kicked successfully.");
+
+      closeModal();
+      router.refresh();
     },
   });
 };
