@@ -119,7 +119,7 @@ export const SubmitLinkForm: React.FC<SubmitLinkFormProps> = ({
         form="link-submission-form"
       >
         {isLoading ? (
-          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          <Loader2 className="h-3 w-3 mr-2 animate-spin" />
         ) : (
           "Add Link"
         )}

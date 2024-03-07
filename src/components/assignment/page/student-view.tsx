@@ -28,16 +28,16 @@ export const StudentView: React.FC<StudentViewProps> = ({
             <h2 className="text-xl font-semibold tracking-tight">
               {assignment.title}
             </h2>
-            <div className="flex items-center justify-between text-muted-foreground text-sm">
-              <div className="flex items-center gap-x-1">
-                <UserAvatar user={assignment.creator} className="h-5 w-5" />
-                <span>{assignment.creator.name}</span>
-                <span>•</span>
-                <span>Updated {timeAgo(assignment.updatedAt)}</span>
-              </div>
+            <div className="flex items-center gap-x-1 text-xs text-muted-foreground">
+              <UserAvatar user={assignment.creator} className="h-4 w-4" />
+              <span>{assignment.creator.name}</span>
 
+              <span>•</span>
+              <span>Updated {timeAgo(assignment.updatedAt)}</span>
+
+              <span>•</span>
               <SubmissionDetails assignment={assignment}>
-                <span className="text-[12px]">
+                <span>
                   Submit before{" "}
                   <span className="font-semibold">
                     {format(assignment.dueDate, "do MMM, h:mm a")}

@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomSorting } from "./classroom-sorting";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface ClassroomControlProps {
   classroom: ExtendedClassroomDetails;
@@ -30,7 +31,9 @@ export const ClassroomControls: React.FC<ClassroomControlProps> = ({
       {isTeacher && (
         <Link
           href={`/c/${classroom.id}/create`}
-          className={buttonVariants()}
+          className={cn(buttonVariants(), {
+            "opacity-50 cursor-default": loading,
+          })}
           onClick={() => setLoading(true)}
         >
           {loading ? (

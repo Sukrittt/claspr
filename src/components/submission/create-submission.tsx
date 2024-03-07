@@ -1,5 +1,16 @@
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useCreateSubmission } from "@/hooks/submission";
 
@@ -12,7 +23,10 @@ export const CreateSubmission: React.FC<CreateSubmissionProps> = ({
   disabled,
   assignmentId,
 }) => {
-  const { mutate: createSubmission, isLoading } = useCreateSubmission();
+  const [open, setOpen] = useState(false);
+  const { mutate: createSubmission, isLoading } = useCreateSubmission({
+    closeModal: () => setOpen(false),
+  });
 
   const handleCreateSubmission = () => {
     createSubmission({
@@ -21,16 +35,35 @@ export const CreateSubmission: React.FC<CreateSubmissionProps> = ({
   };
 
   return (
-    <Button
-      disabled={disabled || isLoading}
-      className="h-8 text-xs w-full"
-      onClick={handleCreateSubmission}
-    >
-      {isLoading ? (
-        <Loader2 className="h-3.5 w-3.5 mr-2 animate-spin" />
-      ) : (
-        " Submit Assignment"
-      )}
-    </Button>
+    <AlertDialog open={open} onOpenChange={(val) => setOpen(val)}>
+      <AlertDialogTrigger asChild>
+        <Button disabled={disabled || isLoading} className="h-8 text-xs w-full">
+          Submit Assignment
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Do you want to turn in your work?</AlertDialogTitle>
+          <AlertDialogDescription>
+            You can unsubmit your work anytime, but you cannot submit again if
+            late submission is not allowed by your teacher.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <Button
+            disabled={isLoading}
+            onClick={handleCreateSubmission}
+            className="pt-2"
+          >
+            {isLoading ? (
+              <Loader2 className="h-3 w-[52px] animate-spin" />
+            ) : (
+              "Continue"
+            )}
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

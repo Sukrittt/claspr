@@ -31,12 +31,13 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = ({
     if (lateSubmission) {
       return (
         <CustomTooltip
-          text={`Submitted on ${format(submission.createdAt, "dd MMM, yy")}`}
+          text={`Submitted late on ${format(
+            submission.createdAt,
+            "dd MMM, yy"
+          )}`}
         >
-          <div>
-            <Badge className="bg-yellow-600 hover:bg-yellow-600/80">
-              Late Submission
-            </Badge>
+          <div className="text-yellow-600 hover:text-yellow-600/80">
+            Late Submission
           </div>
         </CustomTooltip>
       );
@@ -46,20 +47,20 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = ({
           text={`Submitted on ${format(submission.createdAt, "dd MMM, yy")}`}
         >
           <div>
-            <Badge className="bg-green-600 hover:bg-green-600/80">
+            <div className="text-green-600 hover:text-green-600/80">
               Submitted
-            </Badge>
+            </div>
           </div>
         </CustomTooltip>
       );
     }
   } else {
     return deadlinePassed ? (
-      <CustomTooltip text="You have not submitted this assignment">
+      <CustomTooltip text="You have not yet submitted this assignment">
         <div>
-          <Badge className="bg-destructive hover:bg-destructive/80">
+          <div className="tracking-tight text-[13px] text-destructive hover:text-destructive/80">
             Deadline Passed
-          </Badge>
+          </div>
         </div>
       </CustomTooltip>
     ) : (
