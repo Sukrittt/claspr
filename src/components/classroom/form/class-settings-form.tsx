@@ -127,7 +127,7 @@ export const ClassroomSettingsForm: React.FC<ClassroomSettingsProps> = ({
                       <Input
                         type="text"
                         disabled={isLoading}
-                        placeholder="E.g: google.com"
+                        placeholder="E.g: gmail.com"
                         value={value}
                         {...remainingFields}
                       />

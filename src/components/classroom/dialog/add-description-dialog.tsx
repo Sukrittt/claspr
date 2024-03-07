@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { AddDescriptionForm } from "./add-description-form";
+import { AddDescriptionForm } from "@/components/classroom/form/add-description-form";
 
 interface AddDescriptionDialogProps {
   classroomId: string;

@@ -14,9 +14,9 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ExtendedClassroomDetails } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useClassroomDescription, usePendingAssignments } from "@/hooks/class";
-import { AddDescriptionDialog } from "./add-description-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { AddDescriptionDialog } from "./dialog/add-description-dialog";
+import { useClassroomDescription, usePendingAssignments } from "@/hooks/class";
 
 interface ClassroomCardProps {
   classroom: ExtendedClassroomDetails;

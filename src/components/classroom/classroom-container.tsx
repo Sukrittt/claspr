@@ -179,6 +179,7 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
           {/* MEMBERS */}
           <TabsContent className="h-full" value="members">
             <ClassMembers
+              protectedDomain={classroom.protectedDomain}
               members={classroom.students}
               creator={classroom.teacher}
               sessionId={session.user.id}

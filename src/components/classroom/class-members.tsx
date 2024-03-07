@@ -6,17 +6,20 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { KickMemberDialog } from "./dialog/class-kick-member";
 import { ExtendedMembershipDetails, MinifiedUser } from "@/types";
+import { CustomTooltip } from "../custom/custom-tooltip";
 
 interface ClassMembersProps {
   members: ExtendedMembershipDetails[];
   creator: MinifiedUser;
   sessionId: string;
+  protectedDomain: string | null;
 }
 
 export const ClassMembers: React.FC<ClassMembersProps> = ({
   members,
   creator,
   sessionId,
+  protectedDomain,
 }) => {
   return (
     <AnimatePresence mode="wait">
@@ -60,6 +63,7 @@ export const ClassMembers: React.FC<ClassMembersProps> = ({
                 key={member.id}
                 member={member}
                 sessionId={sessionId}
+                protectedDomain={protectedDomain}
               />
             ))}
           </div>
@@ -72,10 +76,17 @@ export const ClassMembers: React.FC<ClassMembersProps> = ({
 interface MemberCardProps {
   member: ExtendedMembershipDetails;
   sessionId: string;
+  protectedDomain: string | null;
 }
 
-const MemberCard: React.FC<MemberCardProps> = ({ member, sessionId }) => {
+const MemberCard: React.FC<MemberCardProps> = ({
+  member,
+  sessionId,
+  protectedDomain,
+}) => {
   const joinedAs = member.isTeacher ? "Teacher" : "Student";
+
+  const validEmail = member.user.email?.split("@")[1] === protectedDomain;
 
   return (
     <AnimatePresence mode="wait">
@@ -91,7 +102,13 @@ const MemberCard: React.FC<MemberCardProps> = ({ member, sessionId }) => {
             <p className="font-medium text-neutral-700">{member.user.name}</p>
 
             <div className="flex items-center gap-x-1 text-muted-foreground text-[11px]">
-              <p>{member.user.email}</p>
+              {protectedDomain && !validEmail ? (
+                <CustomTooltip text="Member's email does not match the domain of this classroom.">
+                  <p className="text-yellow-500">{member.user.email}!</p>
+                </CustomTooltip>
+              ) : (
+                <p>{member.user.email}</p>
+              )}
 
               <span>•</span>
 
