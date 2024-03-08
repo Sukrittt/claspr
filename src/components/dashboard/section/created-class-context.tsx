@@ -24,7 +24,11 @@ import { getSortedSectionsByOrder } from "@/lib/utils";
 import { SectionCard, SectionItem } from "./section-card";
 import { ExtendedClassroom, ExtendedSectionWithClassrooms } from "@/types";
 
-export const CreatedClassContext = () => {
+export const CreatedClassContext = ({
+  isMenu = false,
+}: {
+  isMenu?: boolean;
+}) => {
   const [sectionsForCreatedClassrooms, setCreatedClassSections] =
     useAtom(createdClassSections);
 
@@ -271,13 +275,17 @@ export const CreatedClassContext = () => {
         strategy={verticalListSortingStrategy}
       >
         {sectionsForCreatedClassrooms.map((section) => (
-          <SectionCard key={section.id} section={section} />
+          <SectionCard key={section.id} section={section} isMenu={isMenu} />
         ))}
       </SortableContext>
       {createPortal(
         <DragOverlay>
           {activeClassEl && (
-            <CreatedClassroom classroom={activeClassEl} isHolding />
+            <CreatedClassroom
+              classroom={activeClassEl}
+              isHolding
+              isMenu={isMenu}
+            />
           )}
         </DragOverlay>,
         document.body
@@ -285,7 +293,7 @@ export const CreatedClassContext = () => {
       {createPortal(
         <DragOverlay>
           {activeSectionEl && (
-            <SectionItem section={activeSectionEl} isHolding />
+            <SectionItem section={activeSectionEl} isHolding isMenu={isMenu} />
           )}
         </DragOverlay>,
         document.body

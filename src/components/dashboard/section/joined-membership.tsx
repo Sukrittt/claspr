@@ -11,16 +11,18 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 
-import { cn } from "@/lib/utils";
 import { ExtendedMembership } from "@/types";
+import { cn, getShortenedText } from "@/lib/utils";
 import { ClassDropdown } from "@/components/dashboard/class-rooms/class-dropdown";
 
 export const JoinedMembership = ({
   membership,
   isHolding = false,
+  isMenu = false,
 }: {
   membership: ExtendedMembership;
   isHolding?: boolean;
+  isMenu?: boolean;
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -52,7 +54,9 @@ export const JoinedMembership = ({
       <div id="portal-item">
         <div className="flex items-center gap-x-1 py-1.5 px-2 tracking-tight text-gray-800">
           <GripVertical className="w-4 h-4 text-gray-800" />
-          <p>{membership.classRoom.title}</p>
+          <p>
+            {getShortenedText(membership.classRoom.title, isMenu ? 18 : 50)}
+          </p>
         </div>
       </div>
     );
@@ -80,7 +84,12 @@ export const JoinedMembership = ({
       >
         <div className="flex items-center gap-x-1">
           <GripVertical className="w-4 h-4 text-gray-800" />
-          <p>{membership.renamedClassroom ?? membership.classRoom.title}</p>
+          <p>
+            {getShortenedText(
+              membership.renamedClassroom ?? membership.classRoom.title,
+              isMenu ? 18 : 50
+            )}
+          </p>
         </div>
         <DndContext sensors={sensors} collisionDetection={closestCenter}>
           <div

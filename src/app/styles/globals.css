@@ -99,3 +99,7 @@
 .cdx-block {
   max-width: 100% !important;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

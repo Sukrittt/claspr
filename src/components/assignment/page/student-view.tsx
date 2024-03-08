@@ -22,7 +22,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
 }) => {
   return (
     <div className="px-20 py-8 grid grid-cols-8 gap-8">
-      <div className="col-span-5 xl:col-span-6 space-y-4">
+      <div className="col-span-5 xl:col-span-6 space-y-4 border p-4 rounded-md">
         <div className="space-y-4">
           <div className="space-y-1">
             <h2 className="text-xl font-semibold tracking-tight">

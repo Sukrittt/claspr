@@ -23,9 +23,13 @@ import { CreateClassDialog } from "@/components/dashboard/class-rooms/dialog/cre
 
 interface SectionCardProps {
   section: ExtendedSectionWithClassrooms;
+  isMenu?: boolean;
 }
 
-export const SectionCard: React.FC<SectionCardProps> = ({ section }) => {
+export const SectionCard: React.FC<SectionCardProps> = ({
+  section,
+  isMenu,
+}) => {
   const {
     attributes,
     listeners,
@@ -60,7 +64,11 @@ export const SectionCard: React.FC<SectionCardProps> = ({ section }) => {
         exit="exit"
         className="focus:outline-none"
       >
-        <SectionItem section={section} isDragging={isDragging} />
+        <SectionItem
+          section={section}
+          isDragging={isDragging}
+          isMenu={isMenu}
+        />
       </motion.div>
     </AnimatePresence>
   );
@@ -70,10 +78,12 @@ export const SectionItem = ({
   section,
   isHolding = false,
   isDragging = false,
+  isMenu = false,
 }: {
   section: ExtendedSectionWithClassrooms;
   isHolding?: boolean;
   isDragging?: boolean;
+  isMenu?: boolean;
 }) => {
   const [closeAllToggle] = useAtom(isCloseAllCreationToggle);
   const [showClassrooms, setShowClassrooms] = useState(section.isDefault);
@@ -116,7 +126,7 @@ export const SectionItem = ({
           />
           <div className="flex items-center gap-x-2">
             <EmojiPopover emojiUrl={section.emojiUrl} sectionId={section.id} />
-            <p>{section.name}</p>
+            <p className="text-[13.5px]">{section.name}</p>
           </div>
         </div>
         {showClassrooms && (
@@ -163,7 +173,7 @@ export const SectionItem = ({
                 sectionId={section.id}
               />
             </div>
-            <p>{section.name}</p>
+            <p className="text-[13.5px]">{section.name}</p>
           </div>
         </div>
 
@@ -198,7 +208,10 @@ export const SectionItem = ({
               "opacity-60": isHolding,
             })}
           >
-            <ClassroomListsWithCreation classrooms={section.classrooms} />
+            <ClassroomListsWithCreation
+              classrooms={section.classrooms}
+              isMenu={isMenu}
+            />
           </div>
         )}
       </AnimatePresence>

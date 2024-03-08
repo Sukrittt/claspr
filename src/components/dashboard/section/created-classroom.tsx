@@ -11,16 +11,18 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 
-import { cn } from "@/lib/utils";
 import { MinifiedClassroom } from "@/types";
+import { cn, getShortenedText } from "@/lib/utils";
 import { ClassDropdown } from "@/components/dashboard/class-rooms/class-dropdown";
 
 export const CreatedClassroom = ({
   classroom,
   isHolding = false,
+  isMenu = false,
 }: {
   classroom: MinifiedClassroom;
   isHolding?: boolean;
+  isMenu?: boolean;
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -52,7 +54,7 @@ export const CreatedClassroom = ({
       <div id="portal-item">
         <div className="flex items-center gap-x-1 opacity-60 py-1.5 px-2 tracking-tight text-gray-800 class-item">
           <GripVertical className="w-4 h-4 text-gray-800" />
-          <p>{classroom.title}</p>
+          <p>{getShortenedText(classroom.title, isMenu ? 18 : 50)}</p>
         </div>
       </div>
     );
@@ -80,7 +82,7 @@ export const CreatedClassroom = ({
       >
         <div className="flex items-center gap-x-1">
           <GripVertical className="w-4 h-4 text-gray-800 cursor-grab" />
-          <p>{classroom.title}</p>
+          <p>{getShortenedText(classroom.title, isMenu ? 18 : 50)}</p>
         </div>
 
         <DndContext sensors={sensors} collisionDetection={closestCenter}>

@@ -23,10 +23,12 @@ import { JoinClassDialog } from "@/components/dashboard/class-rooms/dialog/join-
 
 interface SectionCardProps {
   section: ExtendedSectionWithMemberships;
+  isMenu?: boolean;
 }
 
 export const MembershipSectionCard: React.FC<SectionCardProps> = ({
   section,
+  isMenu = false,
 }) => {
   const {
     attributes,
@@ -61,7 +63,11 @@ export const MembershipSectionCard: React.FC<SectionCardProps> = ({
         exit="exit"
         className="focus:outline-none"
       >
-        <MembershipItem section={section} isDragging={isDragging} />
+        <MembershipItem
+          section={section}
+          isDragging={isDragging}
+          isMenu={isMenu}
+        />
       </motion.div>
     </AnimatePresence>
   );
@@ -71,10 +77,12 @@ export const MembershipItem = ({
   section,
   isHolding = false,
   isDragging = false,
+  isMenu = false,
 }: {
   section: ExtendedSectionWithMemberships;
   isHolding?: boolean;
   isDragging?: boolean;
+  isMenu?: boolean;
 }) => {
   const [showClassrooms, setShowClassrooms] = useState(section.isDefault);
   const [closeAllToggle] = useAtom(isCloseAllMembershipToggle);
@@ -117,11 +125,14 @@ export const MembershipItem = ({
           />
           <div className="flex items-center gap-x-2">
             <EmojiPopover emojiUrl={section.emojiUrl} sectionId={section.id} />
-            <p>{section.name}</p>
+            <p className="text-[13.5px]">{section.name}</p>
           </div>
         </div>
         {showClassrooms && (
-          <ClassroomListsWithMembership memberships={section.memberships} />
+          <ClassroomListsWithMembership
+            memberships={section.memberships}
+            isMenu={isMenu}
+          />
         )}
       </>
     );
@@ -158,7 +169,7 @@ export const MembershipItem = ({
                 sectionId={section.id}
               />
             </div>
-            <p>{section.name}</p>
+            <p className="text-[13.5px]">{section.name}</p>
           </div>
         </div>
 
@@ -193,7 +204,10 @@ export const MembershipItem = ({
               "opacity-60": isHolding,
             })}
           >
-            <ClassroomListsWithMembership memberships={section.memberships} />
+            <ClassroomListsWithMembership
+              memberships={section.memberships}
+              isMenu={isMenu}
+            />
           </div>
         )}
       </AnimatePresence>

@@ -11,6 +11,9 @@ export const Dashboard = async () => {
     where: {
       id: session?.user.id,
     },
+    select: {
+      role: true,
+    },
   });
 
   if (!session || !dbUser) redirect("/sign-in");

@@ -43,7 +43,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "\\" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setSidebarState({
           isOpen: !sidebarState.isOpen,
@@ -75,7 +75,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
             </Link>
           )}
           {sidebarState.isOpen ? (
-            <CustomTooltip text="Ctrl + k">
+            <CustomTooltip text="Ctrl + \">
               <PanelLeft
                 className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition"
                 onClick={() =>
@@ -86,7 +86,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
               />
             </CustomTooltip>
           ) : (
-            <CustomTooltip text="Ctrl + k">
+            <CustomTooltip text="Ctrl + \">
               <PanelLeftOpen
                 className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition absolute -left-2 top-1"
                 onClick={() =>

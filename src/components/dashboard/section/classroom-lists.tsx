@@ -4,14 +4,16 @@ import { ContainerHeightVariants } from "@/lib/motion";
 import { CreatedClassroom } from "./created-classroom";
 import { JoinedMembership } from "./joined-membership";
 import { ExtendedMembership, MinifiedClassroom } from "@/types";
+import { cn } from "@/lib/utils";
 
 interface ClassroomListsWithCreationProps {
   classrooms: MinifiedClassroom[];
+  isMenu?: boolean;
 }
 
 export const ClassroomListsWithCreation: React.FC<
   ClassroomListsWithCreationProps
-> = ({ classrooms }) => {
+> = ({ classrooms, isMenu }) => {
   if (classrooms.length === 0) {
     return (
       <motion.p
@@ -19,7 +21,9 @@ export const ClassroomListsWithCreation: React.FC<
         initial="initial"
         animate="animate"
         exit="exit"
-        className="text-gray-800 pl-[52px] text-sm pt-1"
+        className={cn("text-gray-800 pl-[52px] text-sm pt-1", {
+          "pl-9 text-xs": isMenu,
+        })}
       >
         No classrooms in this section.
       </motion.p>
@@ -32,10 +36,16 @@ export const ClassroomListsWithCreation: React.FC<
       initial="initial"
       animate="animate"
       exit="exit"
-      className="flex flex-col pl-[52px] text-sm"
+      className={cn("flex flex-col pl-[52px] text-sm", {
+        "pl-6": isMenu,
+      })}
     >
       {classrooms.map((classroom) => (
-        <CreatedClassroom classroom={classroom} key={classroom.id} />
+        <CreatedClassroom
+          classroom={classroom}
+          key={classroom.id}
+          isMenu={isMenu}
+        />
       ))}
     </motion.div>
   );
@@ -43,11 +53,12 @@ export const ClassroomListsWithCreation: React.FC<
 
 interface ClassroomListsWithMembershipProps {
   memberships: ExtendedMembership[];
+  isMenu?: boolean;
 }
 
 export const ClassroomListsWithMembership: React.FC<
   ClassroomListsWithMembershipProps
-> = ({ memberships }) => {
+> = ({ memberships, isMenu = false }) => {
   if (memberships.length === 0) {
     return (
       <motion.p
@@ -55,7 +66,9 @@ export const ClassroomListsWithMembership: React.FC<
         initial="initial"
         animate="animate"
         exit="exit"
-        className="text-gray-800 pl-[52px] text-sm pt-1"
+        className={cn("text-gray-800 pl-[52px] text-sm pt-1", {
+          "pl-9 text-xs": isMenu,
+        })}
       >
         No classrooms in this section.
       </motion.p>
@@ -63,7 +76,11 @@ export const ClassroomListsWithMembership: React.FC<
   }
 
   return (
-    <div className="flex flex-col pl-[52px] text-sm">
+    <div
+      className={cn("flex flex-col pl-[52px] text-sm", {
+        "pl-6": isMenu,
+      })}
+    >
       <motion.div
         variants={ContainerHeightVariants}
         initial="initial"
@@ -71,7 +88,11 @@ export const ClassroomListsWithMembership: React.FC<
         exit="exit"
       >
         {memberships.map((membership) => (
-          <JoinedMembership key={membership.id} membership={membership} />
+          <JoinedMembership
+            key={membership.id}
+            membership={membership}
+            isMenu={isMenu}
+          />
         ))}
       </motion.div>
     </div>

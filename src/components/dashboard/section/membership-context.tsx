@@ -17,17 +17,17 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { trpc } from "@/trpc/client";
-import { JoinedMembership } from "./joined-membership";
 import {
   MembershipItem,
   MembershipSectionCard,
 } from "./membership-section-card";
+import { trpc } from "@/trpc/client";
 import { joinedClassSections } from "@/atoms";
 import { getSortedSectionsByOrder } from "@/lib/utils";
+import { JoinedMembership } from "./joined-membership";
 import { ExtendedMembership, ExtendedSectionWithMemberships } from "@/types";
 
-export const MembershipContext = () => {
+export const MembershipContext = ({ isMenu = false }: { isMenu?: boolean }) => {
   const [sectionsForJoinedClassrooms, setJoinedClassSections] =
     useAtom(joinedClassSections);
 
@@ -270,12 +270,20 @@ export const MembershipContext = () => {
         strategy={verticalListSortingStrategy}
       >
         {sectionsForJoinedClassrooms.map((section) => (
-          <MembershipSectionCard key={section.id} section={section} />
+          <MembershipSectionCard
+            key={section.id}
+            section={section}
+            isMenu={isMenu}
+          />
         ))}
         {createPortal(
           <DragOverlay>
             {activeClassEl && (
-              <JoinedMembership membership={activeClassEl} isHolding />
+              <JoinedMembership
+                membership={activeClassEl}
+                isHolding
+                isMenu={isMenu}
+              />
             )}
           </DragOverlay>,
           document.body
@@ -283,7 +291,11 @@ export const MembershipContext = () => {
         {createPortal(
           <DragOverlay>
             {activeSectionEl && (
-              <MembershipItem section={activeSectionEl} isHolding />
+              <MembershipItem
+                section={activeSectionEl}
+                isHolding
+                isMenu={isMenu}
+              />
             )}
           </DragOverlay>,
           document.body

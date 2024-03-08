@@ -84,7 +84,7 @@ export const TeacherSection = () => {
           </div>
         </CardHeader>
         <CardContent className="mt-0 px-3">
-          <ScrollArea className="h-[30vh]">
+          <ScrollArea className="h-[70vh]">
             <div className="flex flex-col gap-y-2">
               {isFetchingFirstSection || isFetchingFirstSectionRefetch ? (
                 <SectionSkeleton />
@@ -97,7 +97,7 @@ export const TeacherSection = () => {
                       You shouldn&rsquo;t be seeing this.
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      We are working on fixing your issue.
+                      We are working on fixing this issue.
                     </p>
                   </div>
                 </div>
@@ -133,7 +133,7 @@ export const TeacherSection = () => {
           </div>
         </CardHeader>
         <CardContent className="mt-0 px-3">
-          <ScrollArea className="h-[30vh]">
+          <ScrollArea className="h-[70vh]">
             <div className="flex flex-col gap-y-2">
               {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
                 <SectionSkeleton />

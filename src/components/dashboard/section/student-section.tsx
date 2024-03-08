@@ -62,7 +62,7 @@ export const StudentSection = () => {
         </div>
       </CardHeader>
       <CardContent className="mt-0 px-3">
-        <ScrollArea className="h-[30vh]">
+        <ScrollArea className="h-[70vh]">
           <div className="flex flex-col gap-y-2">
             {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
               <SectionSkeleton />
