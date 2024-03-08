@@ -1,5 +1,6 @@
 "use client";
-import { PartyPopper } from "lucide-react";
+import Link from "next/link";
+import { CalendarDays, PartyPopper } from "lucide-react";
 
 import {
   Card,
@@ -13,6 +14,7 @@ import { EventCard } from "./event-card";
 import { useGetUpcomingEvents } from "@/hooks/event";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CreateEventDialog } from "./dialog/create-event-dialog";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { UpcomingEventSkeleton } from "@/components/skeletons/upcoming-event-skeleton";
 
 interface UpcomingEventsProps {
@@ -34,7 +36,18 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
               Upcoming events for the next 7 days
             </CardDescription>
           </div>
-          {!classroomId && <CreateEventDialog />}
+
+          <div className="flex items-center gap-x-2">
+            <CustomTooltip text="Your Calendar">
+              <Link
+                href="/calendar"
+                className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+              >
+                <CalendarDays className="h-3.5 w-3.5" />
+              </Link>
+            </CustomTooltip>
+            {!classroomId && <CreateEventDialog />}
+          </div>
         </div>
       </CardHeader>
       <CardContent className="p-4 px-0">
