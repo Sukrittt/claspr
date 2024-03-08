@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronLeft,
@@ -41,6 +41,19 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
     [activeFolderId, folders]
   );
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setSidebarState({
+          isOpen: !sidebarState.isOpen,
+        });
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [sidebarState.isOpen, setSidebarState]);
+
   return (
     <aside
       className={cn(
@@ -62,7 +75,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
             </Link>
           )}
           {sidebarState.isOpen ? (
-            <CustomTooltip text="Close sidebar">
+            <CustomTooltip text="Ctrl + k">
               <PanelLeft
                 className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition"
                 onClick={() =>
@@ -73,7 +86,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
               />
             </CustomTooltip>
           ) : (
-            <CustomTooltip text="Open sidebar">
+            <CustomTooltip text="Ctrl + k">
               <PanelLeftOpen
                 className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition absolute -left-2 top-1"
                 onClick={() =>
@@ -98,7 +111,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
                     You shouldn&rsquo;t be seeing this.
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    We are working on fixing your issue.
+                    We are working on fixing this issue.
                   </p>
                 </div>
               </div>

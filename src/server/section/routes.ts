@@ -139,14 +139,6 @@ export const updateSection = privateProcedure
       });
     }
 
-    //cannot edit name of default section
-    // if (existingSection.isDefault && !emojiUrl) {
-    //   throw new TRPCError({
-    //     code: "BAD_REQUEST",
-    //     message: "You cannot rename your default section.",
-    //   });
-    // }
-
     //mark the existing default section as false
     if (isDefault && sectionType) {
       const userDefaultSection = await db.section.findFirst({

@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -18,6 +18,17 @@ export const CreateEventDialog = ({
   children?: React.ReactNode;
 }) => {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "i" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
