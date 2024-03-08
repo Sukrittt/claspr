@@ -27,7 +27,6 @@ import {
 } from "@/config/ai";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AiDialogVariants, ContainerVariants } from "@/lib/motion";
-import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
 import { useConversation, useCreateConversation } from "@/hooks/conversation";
 
 interface ClassAIDialogProps {
@@ -311,37 +310,38 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
             "-mt-4": res.length === 0,
           })}
         >
-          {isFetchingConversations ? (
-            <AiInputSkeleton />
-          ) : (
-            <div className="flex gap-x-2">
-              <Input
-                className="focus-visible:ring-transparent h-8"
-                placeholder="Type your prompt here."
-                disabled={isLoading || isGenerating}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleAskAI(input);
-                  }
-                }}
-              />
-              <Button
-                className="h-8"
-                disabled={isLoading || isGenerating || input.length === 0}
-                onClick={() => handleAskAI(input)}
-              >
-                {isLoading ? (
-                  <div className="h-5 w-6 flex items-center justify-center">
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                  </div>
-                ) : (
-                  "Ask"
-                )}
-              </Button>
-            </div>
-          )}
+          <div className="flex gap-x-2">
+            <Input
+              className="focus-visible:ring-transparent h-8"
+              placeholder="Type your prompt here."
+              disabled={isLoading || isGenerating}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleAskAI(input);
+                }
+              }}
+            />
+            <Button
+              className="h-8"
+              disabled={
+                isLoading ||
+                isFetchingConversations ||
+                isGenerating ||
+                input.length === 0
+              }
+              onClick={() => handleAskAI(input)}
+            >
+              {isLoading ? (
+                <div className="h-5 w-6 flex items-center justify-center">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                </div>
+              ) : (
+                "Ask"
+              )}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

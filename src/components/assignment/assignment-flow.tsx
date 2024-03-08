@@ -8,8 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Editor } from "@/components/editor/Editor";
 import { AssignmentForm } from "./assignment-form";
+import { Editor } from "@/components/editor/Editor";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCreateAssignment } from "@/hooks/assignment";
@@ -118,7 +118,7 @@ export const AssignmentFlow: React.FC<AssignmentFlowProps> = ({
                 position: "static", // For some reason, 'static' tailwind class does not work here
               }}
             >
-              <Editor title={title} classroom={classroom} />
+              <Editor title={title} classroom={classroom} disableFollowUp />
             </ScrollArea>
             <SubmissionStatus
               date={date}

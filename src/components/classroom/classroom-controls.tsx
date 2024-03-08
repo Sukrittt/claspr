@@ -2,10 +2,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
-import { ExtendedClassroomDetails } from "@/types";
-import { ClassroomSorting } from "./classroom-sorting";
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ExtendedClassroomDetails } from "@/types";
+import { buttonVariants } from "@/components/ui/button";
 
 interface ClassroomControlProps {
   classroom: ExtendedClassroomDetails;
@@ -27,7 +26,6 @@ export const ClassroomControls: React.FC<ClassroomControlProps> = ({
 
   return (
     <div className="flex items-center gap-x-2">
-      <ClassroomSorting classroomId={classroom.id} />
       {isTeacher && (
         <Link
           href={`/c/${classroom.id}/create`}

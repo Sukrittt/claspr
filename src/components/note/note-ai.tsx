@@ -1,6 +1,6 @@
 import { toast } from "sonner";
-import { useState } from "react";
 import Markdown from "react-markdown";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpLeft, Check, Copy, Loader2, Sparkles } from "lucide-react";
@@ -23,7 +23,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AiDialogVariants, ContainerVariants } from "@/lib/motion";
 import { AiPersonal, previousConversationTrainingText } from "@/config/ai";
-import { AiInputSkeleton } from "@/components/skeletons/ai-input-skeleton";
 import { useConversation, useCreateConversation } from "@/hooks/conversation";
 
 /**
@@ -183,6 +182,17 @@ export const NoteAi: React.FC<NoteAiProps> = ({
     setOpen(false);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "i" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <Dialog open={open} onOpenChange={(val) => setOpen(val)}>
       <DialogTrigger asChild>
@@ -295,37 +305,38 @@ export const NoteAi: React.FC<NoteAiProps> = ({
             "-mt-4": res.length === 0,
           })}
         >
-          {isFetchingConversations ? (
-            <AiInputSkeleton />
-          ) : (
-            <div className="flex gap-x-2">
-              <Input
-                className="focus-visible:ring-transparent h-8"
-                placeholder="Type your prompt here."
-                disabled={isLoading || isGenerating}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleAskAI(input);
-                  }
-                }}
-              />
-              <Button
-                className="h-8"
-                disabled={isLoading || isGenerating || input.length === 0}
-                onClick={() => handleAskAI(input)}
-              >
-                {isLoading ? (
-                  <div className="h-5 w-6 flex items-center justify-center">
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                  </div>
-                ) : (
-                  "Ask"
-                )}
-              </Button>
-            </div>
-          )}
+          <div className="flex gap-x-2">
+            <Input
+              className="focus-visible:ring-transparent h-8"
+              placeholder="Type your prompt here."
+              disabled={isLoading || isGenerating}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleAskAI(input);
+                }
+              }}
+            />
+            <Button
+              className="h-8"
+              disabled={
+                isLoading ||
+                isFetchingConversations ||
+                isGenerating ||
+                input.length === 0
+              }
+              onClick={() => handleAskAI(input)}
+            >
+              {isLoading ? (
+                <div className="h-5 w-6 flex items-center justify-center">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                </div>
+              ) : (
+                "Ask"
+              )}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
