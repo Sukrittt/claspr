@@ -423,7 +423,7 @@ model Event {
   eventDate   DateTime
 
   assignmentId String?
-  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
+  assignment   Assignment? @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

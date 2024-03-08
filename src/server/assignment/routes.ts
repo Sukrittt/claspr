@@ -38,13 +38,14 @@ export const createAssignment = privateProcedure
 
     const existingClassroom = await db.classRoom.findFirst({
       where: { id: classRoomId },
+      select: { id: true },
     });
 
     if (!existingClassroom) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message:
-          "The classroom no longer exists. Please create a new classroom.",
+          "This classroom no longer exists. Please create a new classroom.",
       });
     }
 
@@ -411,6 +412,52 @@ export const getNotSubmittedStudents = privateProcedure
     });
 
     return notSubmittedMembers;
+  });
+
+/**
+ * To delete an assignment.
+ *
+ * @param {object} input - The input parameters for deleting an assignment.
+ * @param {string} input.assignmentId - The id of the assignment.
+ */
+export const deleteAssignment = privateProcedure
+  .input(
+    z.object({
+      assignmentId: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    const { assignmentId } = input;
+
+    const existingAssignment = await db.assignment.findFirst({
+      where: { id: assignmentId },
+      select: { classRoomId: true },
+    });
+
+    if (!existingAssignment) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "This assignment no longer exists.",
+      });
+    }
+
+    const isTeacher = await isTeacherAuthed(
+      existingAssignment.classRoomId,
+      ctx.userId
+    );
+
+    if (!isTeacher) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not authorized to delete this assignment.",
+      });
+    }
+
+    await db.assignment.delete({
+      where: {
+        id: assignmentId,
+      },
+    });
   });
 
 export const isTeacherAuthed = async (classRoomId: string, userId: string) => {

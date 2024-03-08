@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 import { useKickMember } from "@/hooks/class";
 import { Button } from "@/components/ui/button";
 
@@ -28,7 +29,11 @@ export const KickMemberDialog = ({ memberId }: KickMemberDialogProps) => {
   return (
     <AlertDialog open={open} onOpenChange={(val) => setOpen(val)}>
       <AlertDialogTrigger asChild>
-        <span className="cursor-pointer hover:underline underline-offset-4">
+        <span
+          className={cn("cursor-pointer hover:underline underline-offset-4", {
+            "opacity-50 cursor-default": isLoading,
+          })}
+        >
           Kick member
         </span>
       </AlertDialogTrigger>

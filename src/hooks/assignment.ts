@@ -54,3 +54,13 @@ export const useEditAssignmentDetails = (disableEditing?: () => void) => {
     },
   });
 };
+
+export const useDeleteAssignment = (classroomId: string) => {
+  const router = useRouter();
+
+  return trpc.assignment.deleteAssignment.useMutation({
+    onSuccess: () => {
+      router.push(`/c/${classroomId}`);
+    },
+  });
+};

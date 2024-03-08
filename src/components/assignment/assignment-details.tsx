@@ -21,6 +21,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { DatePicker } from "@/components/ui/date-picker";
 import { useEditAssignmentDetails } from "@/hooks/assignment";
+import { DeleteAssignmentDialog } from "./delete-assignment-dialog";
 
 interface AssignmentDetailsProps {
   assignment: ExtendedAssignmentDetails;
@@ -150,6 +151,25 @@ export const AssignmentDetails: React.FC<AssignmentDetailsProps> = ({
       >
         {isLoading ? <Loader2 className="h-3 w-[22px] animate-spin" /> : "Save"}
       </Button>
+
+      <div className="space-y-2 pt-2">
+        <h3 className="text-base font-semibold tracking-tight">Danger Zone</h3>
+
+        <div className="border rounded-md p-4 flex items-center justify-between">
+          <div className="space-y-1">
+            <p className="font-semibold text-sm">Delete this assignment</p>
+            <p className="text-xs">
+              Once you delete an assignment, there is no going back. Please be
+              certain.
+            </p>
+          </div>
+
+          <DeleteAssignmentDialog
+            assignmentId={assignment.id}
+            classroomId={assignment.classRoomId}
+          />
+        </div>
+      </div>
     </div>
   );
 };
