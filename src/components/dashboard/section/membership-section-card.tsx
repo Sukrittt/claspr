@@ -9,7 +9,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
-import { ChevronRight, Info } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";
@@ -19,7 +19,6 @@ import { isCloseAllMembershipToggle } from "@/atoms";
 import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithMemberships } from "@/types";
 import { ClassroomListsWithMembership } from "./classroom-lists";
-import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { JoinClassDialog } from "@/components/dashboard/class-rooms/dialog/join-class-dialog";
 
 interface SectionCardProps {
@@ -175,19 +174,14 @@ export const MembershipItem = ({
               }
             )}
           >
-            {section.isDefault ? (
-              <CustomTooltip text="Default section for your classrooms">
-                <Info className="h-3.5 w-3.5" />
-              </CustomTooltip>
-            ) : (
-              <SectionDropdown
-                sectionId={section.id}
-                sectionName={section.name}
-                isDropdownOpen={isDropdownOpen}
-                setIsDropdownOpen={setIsDropdownOpen}
-                sectionType={section.sectionType}
-              />
-            )}
+            <SectionDropdown
+              sectionId={section.id}
+              sectionName={section.name}
+              isDropdownOpen={isDropdownOpen}
+              setIsDropdownOpen={setIsDropdownOpen}
+              sectionType={section.sectionType}
+              isDefault={section.isDefault}
+            />
             <JoinClassDialog sectionId={section.id} />
           </div>
         </DndContext>

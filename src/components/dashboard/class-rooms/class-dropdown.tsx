@@ -34,7 +34,7 @@ export const ClassDropdown: React.FC<ClassDropdownProps> = ({
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  //This is just a workaround to prevent dropdown drag event to be propogated.
+  //This is just a workaround to prevent dropdown drag event to be propagated.
   //Note. stopPropagation() does NOT work here.
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: "DUMMY",

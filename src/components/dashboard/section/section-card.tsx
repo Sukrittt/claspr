@@ -9,7 +9,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
-import { ChevronRight, Info } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";
@@ -19,7 +19,6 @@ import { isCloseAllCreationToggle } from "@/atoms";
 import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithClassrooms } from "@/types";
 import { ClassroomListsWithCreation } from "./classroom-lists";
-import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { CreateClassDialog } from "@/components/dashboard/class-rooms/dialog/create-class-dialog";
 
 interface SectionCardProps {
@@ -180,19 +179,14 @@ export const SectionItem = ({
               }
             )}
           >
-            {section.isDefault ? (
-              <CustomTooltip text="Default section for your classrooms">
-                <Info className="h-3.5 w-3.5 text-gray-700" />
-              </CustomTooltip>
-            ) : (
-              <SectionDropdown
-                sectionId={section.id}
-                sectionName={section.name}
-                isDropdownOpen={isDropdownOpen}
-                setIsDropdownOpen={setIsDropdownOpen}
-                sectionType={section.sectionType}
-              />
-            )}
+            <SectionDropdown
+              sectionId={section.id}
+              sectionName={section.name}
+              isDropdownOpen={isDropdownOpen}
+              setIsDropdownOpen={setIsDropdownOpen}
+              sectionType={section.sectionType}
+              isDefault={section.isDefault}
+            />
             <CreateClassDialog sectionId={section.id} />
           </div>
         </DndContext>

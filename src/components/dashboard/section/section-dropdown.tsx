@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MarkDefault } from "./mark-default";
 import { EditSectionDialog } from "./dialog/edit-section-dialog";
-import { DeleteSectionDialog } from "./dialog/delete-section-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { DeleteSectionDialog } from "./dialog/delete-section-dialog";
 
 interface SectionDropdownProps {
   sectionId: string;
@@ -21,6 +21,7 @@ interface SectionDropdownProps {
   isDropdownOpen: boolean;
   sectionType: SectionType;
   setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isDefault: boolean;
 }
 
 export const SectionDropdown: React.FC<SectionDropdownProps> = ({
@@ -29,11 +30,12 @@ export const SectionDropdown: React.FC<SectionDropdownProps> = ({
   sectionType,
   isDropdownOpen,
   setIsDropdownOpen,
+  isDefault,
 }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  //This is just a workaround to prevent dropdown drag event to be propogated.
+  //This is just a workaround to prevent dropdown drag event to be propagated.
   //Note. stopPropagation() does NOT work here.
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: "DUMMY",
@@ -63,17 +65,24 @@ export const SectionDropdown: React.FC<SectionDropdownProps> = ({
               <Pen className="h-3.5 w-3.5 mr-2" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-gray-700 text-[13px]"
-              onClick={() => setIsDeleteOpen(true)}
-            >
-              <Trash className="h-3.5 w-3.5 mr-2" />
-              Delete
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-gray-700 text-[13px]">
-              <MarkDefault sectionId={sectionId} sectionType={sectionType} />
-            </DropdownMenuItem>
+            {!isDefault && (
+              <>
+                <DropdownMenuItem
+                  className="text-gray-700 text-[13px]"
+                  onClick={() => setIsDeleteOpen(true)}
+                >
+                  <Trash className="h-3.5 w-3.5 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-gray-700 text-[13px]">
+                  <MarkDefault
+                    sectionId={sectionId}
+                    sectionType={sectionType}
+                  />
+                </DropdownMenuItem>
+              </>
+            )}
           </>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -86,7 +95,7 @@ export const SectionDropdown: React.FC<SectionDropdownProps> = ({
           setIsEditOpen={setIsEditOpen}
         />
       )}
-      {isDeleteOpen && (
+      {isDeleteOpen && !isDefault && (
         <DeleteSectionDialog
           sectionId={sectionId}
           sectionType={sectionType}
