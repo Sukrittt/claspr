@@ -15,15 +15,12 @@ export const AssignmentSkeleton = ({ length = 10 }: { length?: number }) => {
 
 const AssignmentSkeletonCard = () => {
   return (
-    <div className="border-b text-sm px-3 py-2 flex items-center justify-between hover:bg-neutral-100 transition">
-      <div className="flex items-center gap-x-2 w-full">
-        <Skeleton className="h-8 w-8 rounded-md" />
-        <div className="space-y-1 w-full">
-          <Skeleton className="h-4 w-1/2" />
-          <Skeleton className="h-4 w-1/3" />
-        </div>
+    <div className="border-b text-sm px-3 py-2 flex items-center gap-x-2">
+      <Skeleton className="h-8 w-8 rounded-md" />
+      <div className="space-y-1 w-full">
+        <Skeleton className="h-3.5 w-1/2" />
+        <Skeleton className="h-3.5 w-1/3" />
       </div>
-      <Skeleton className="h-5 w-[4.5rem] rounded-full" />
     </div>
   );
 };

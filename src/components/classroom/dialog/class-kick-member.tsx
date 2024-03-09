@@ -30,9 +30,12 @@ export const KickMemberDialog = ({ memberId }: KickMemberDialogProps) => {
     <AlertDialog open={open} onOpenChange={(val) => setOpen(val)}>
       <AlertDialogTrigger asChild>
         <span
-          className={cn("cursor-pointer hover:underline underline-offset-4", {
-            "opacity-50 cursor-default": isLoading,
-          })}
+          className={cn(
+            "cursor-pointer hover:underline underline-offset-4 hover:text-destructive transition",
+            {
+              "opacity-50 cursor-default": isLoading,
+            }
+          )}
         >
           Kick member
         </span>

@@ -146,6 +146,7 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
             </TabsTrigger>
           )}
         </TabsList>
+
         <ClassroomControls classroom={classroom} sessionId={session.user.id} />
       </div>
       <div className="grid grid-cols-7 gap-4 h-[95%] pt-4">

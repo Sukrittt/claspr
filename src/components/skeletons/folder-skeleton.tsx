@@ -14,7 +14,7 @@ export const FolderSkeleton = ({ length = 5 }: { length?: number }) => {
 
 const FolderSkeletonCard = () => {
   return (
-    <div className="flex items-center justify-between group pb-2 px-6 text-gray-800 text-sm border-b cursor-pointer focus:outline-none">
+    <div className="flex items-center justify-between group pb-2 px-6 text-gray-800 text-sm border-b focus:outline-none">
       <div className="flex items-center gap-x-3 w-full">
         <div className="border rounded-md p-1.5">
           <Folder className="h-3.5 w-3.5" />

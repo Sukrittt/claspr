@@ -70,6 +70,7 @@ export const Materials = ({ classroomId }: { classroomId: string }) => {
 
         <div>
           <Separator />
+
           {activeFolder.notes.length === 0 ? (
             <div className="h-[50vh] flex flex-col items-center justify-center gap-y-2">
               <FolderX className="h-10 w-10 text-neutral-800" />

@@ -212,7 +212,7 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
       {...attributes}
       id="always-on-show"
       className={cn(
-        "py-1 px-2.5 flex items-center justify-between focus:outline-none hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer group",
+        "py-1 px-2.5 mb-2 flex items-center justify-between focus:outline-none hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer group",
         {
           "bg-neutral-100 font-medium": activeFolderId === folder.id,
           "cursor-grabbing bg-background/60 opacity-60": isHolding,

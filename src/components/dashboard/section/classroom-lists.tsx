@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 
+import { cn } from "@/lib/utils";
 import { ContainerHeightVariants } from "@/lib/motion";
 import { CreatedClassroom } from "./created-classroom";
 import { JoinedMembership } from "./joined-membership";
 import { ExtendedMembership, MinifiedClassroom } from "@/types";
-import { cn } from "@/lib/utils";
 
 interface ClassroomListsWithCreationProps {
   classrooms: MinifiedClassroom[];
@@ -36,9 +36,12 @@ export const ClassroomListsWithCreation: React.FC<
       initial="initial"
       animate="animate"
       exit="exit"
-      className={cn("flex flex-col pl-[52px] text-sm", {
-        "pl-6": isMenu,
-      })}
+      className={cn(
+        "flex flex-col pl-[52px] text-sm max-h-[25vh] no-scrollbar overflow-y-auto",
+        {
+          "pl-6": isMenu,
+        }
+      )}
     >
       {classrooms.map((classroom) => (
         <CreatedClassroom
@@ -77,9 +80,12 @@ export const ClassroomListsWithMembership: React.FC<
 
   return (
     <div
-      className={cn("flex flex-col pl-[52px] text-sm", {
-        "pl-6": isMenu,
-      })}
+      className={cn(
+        "flex flex-col pl-[52px] text-sm max-h-[25vh] no-scrollbar overflow-y-auto",
+        {
+          "pl-6": isMenu,
+        }
+      )}
     >
       <motion.div
         variants={ContainerHeightVariants}

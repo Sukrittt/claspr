@@ -1,7 +1,6 @@
 "use client";
 import { format, isAfter } from "date-fns";
 
-import { Badge } from "@/components/ui/badge";
 import { ExtendedAssignment } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetSubmission } from "@/hooks/submission";
@@ -20,7 +19,7 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = ({
 
   const currentDate = new Date();
 
-  if (isLoading) return <Skeleton className="h-4 w-16" />;
+  if (isLoading) return <Skeleton className="h-3.5 w-32" />;
 
   // If the submission is handed in after the due date, it is considered late
   const lateSubmission = isAfter(submission?.createdAt!, assignment.dueDate);

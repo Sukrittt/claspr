@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { BarChart3 } from "lucide-react";
 
 import {
@@ -23,6 +24,8 @@ export const MaterialsGraphDialog: React.FC<MaterialsGraphDialogProps> = ({
   notes,
   classroomId,
 }) => {
+  const [open, setOpen] = useState(false);
+
   const { data: isTeacher, isLoading } = useGetPartOfClass({
     classroomId,
     isTeacher: true,
@@ -33,6 +36,17 @@ export const MaterialsGraphDialog: React.FC<MaterialsGraphDialogProps> = ({
     total: note.viewCount ?? 0,
   }));
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "m" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   if (isLoading) {
     return <Skeleton className="h-4 w-4" />;
   }
@@ -40,10 +54,10 @@ export const MaterialsGraphDialog: React.FC<MaterialsGraphDialogProps> = ({
   if (!isTeacher) return null;
 
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={(val) => setOpen(val)}>
       <DrawerTrigger asChild>
         <div>
-          <CustomTooltip text="Notes Usage">
+          <CustomTooltip text="Ctrl + m">
             <div className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200">
               <BarChart3 className="h-3.5 w-3.5" />
               <div className="sr-only">Notes usage</div>
