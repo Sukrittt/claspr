@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useAtom } from "jotai";
+import { Session } from "next-auth";
 import { UserType } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { CopyMinus, Menu } from "lucide-react";
 
 import { Logout } from "./logout";
-import { menuItems, otherItems } from "@/config/menu";
+import { otherItems } from "@/config/menu";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -21,8 +22,15 @@ import {
   isCloseAllMembershipToggle,
   joinedClassSections,
 } from "@/atoms";
+import { getShortenedText } from "@/lib/utils";
+import { UserAvatar } from "@/components/custom/user-avatar";
 
-export const MobileSidebar = ({ role }: { role: UserType }) => {
+interface HamburgMenuProps {
+  role: UserType;
+  session: Session;
+}
+
+export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -63,8 +71,17 @@ export const MobileSidebar = ({ role }: { role: UserType }) => {
         side="left"
         className="flex flex-col gap-y-4 pl-3 w-[250px] md:w-[300px]"
       >
-        <div className="grid grid-cols-2 gap-2 pt-6">
-          {menuItems.map((item, index) => (
+        <div className="pt-0 flex items-center gap-x-2">
+          <UserAvatar user={session.user} className="h-6 w-6" />
+
+          <div className="text-[13px] tracking-tight">
+            <p>{getShortenedText(session.user?.name ?? "", 25)}</p>
+            <p className="text-muted-foreground">
+              {getShortenedText(session.user?.email ?? "", 25)}
+            </p>
+          </div>
+
+          {/* {menuItems.map((item, index) => (
             <CustomTooltip key={index} text={item.label}>
               <Link
                 href={item.href}
@@ -74,7 +91,7 @@ export const MobileSidebar = ({ role }: { role: UserType }) => {
                 <p className="sr-only">{item.label}</p>
               </Link>
             </CustomTooltip>
-          ))}
+          ))} */}
         </div>
 
         {role === "TEACHER" && (
@@ -95,7 +112,7 @@ export const MobileSidebar = ({ role }: { role: UserType }) => {
                 <CreateSectionDialog sectionType="CREATION" />
               </div>
             </div>
-            <div className="overflow-y-auto no-scrollbar max-h-[40vh]">
+            <div className="overflow-y-auto no-scrollbar max-h-[30vh]">
               <div className="flex flex-col gap-y-2">
                 {!sectionsForCreatedClassrooms ||
                 sectionsForCreatedClassrooms.length == 0 ? (
@@ -126,7 +143,7 @@ export const MobileSidebar = ({ role }: { role: UserType }) => {
             </div>
           </div>
 
-          <div className="overflow-y-auto no-scrollbar max-h-[40vh]">
+          <div className="overflow-y-auto no-scrollbar max-h-[30vh]">
             <div className="flex flex-col gap-y-2">
               {!sectionsForJoinedClassrooms ||
               sectionsForJoinedClassrooms.length == 0 ? (

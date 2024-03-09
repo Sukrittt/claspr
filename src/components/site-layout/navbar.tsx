@@ -4,7 +4,7 @@ import { Home, MoreHorizontal } from "lucide-react";
 
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
-import { MobileSidebar } from "./mobile-sidebar";
+import { HamburgMenu } from "./hamburg-menu";
 import { buttonVariants } from "@/components/ui/button";
 import { UserDropdown } from "@/components/custom/user-dropdown";
 
@@ -23,7 +23,7 @@ export const Navbar = async () => {
   return (
     <nav className="py-3 border-b border-slate-300 px-8 lg:px-20 h-[6vh] flex items-center justify-between">
       <div className="flex items-center gap-x-4">
-        <MobileSidebar role={dbUser.role} />
+        {session && <HamburgMenu role={dbUser.role} session={session} />}
 
         <Link href="/" className="font-bold tracking-tight">
           <div className="text-neutral-700 hover:bg-neutral-200 cursor-pointer p-1 rounded-md transition">

@@ -1,17 +1,4 @@
-import { Bug, CalendarDays, Home, Settings } from "lucide-react";
-
-export const menuItems = [
-  {
-    label: "Home",
-    icon: Home,
-    href: "/",
-  },
-  {
-    label: "Calendar",
-    icon: CalendarDays,
-    href: "/calendar",
-  },
-];
+import { Bug, Settings } from "lucide-react";
 
 export const otherItems = [
   {
