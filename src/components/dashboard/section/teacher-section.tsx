@@ -1,9 +1,7 @@
 "use client";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
-import { CopyMinus, MonitorX } from "lucide-react";
+import { CopyMinus } from "lucide-react";
 
-import { trpc } from "@/trpc/client";
 import { CreateSectionDialog } from "./dialog/create-section-dialog";
 import {
   createdClassSections,
@@ -28,34 +26,8 @@ export const TeacherSection = () => {
   const [, setCloseAllCreationToggle] = useAtom(isCloseAllCreationToggle);
   const [, setCloseAllMembershipToggle] = useAtom(isCloseAllMembershipToggle);
 
-  const [sectionsForCreatedClassrooms, setCreatedClassSections] =
-    useAtom(createdClassSections);
-  const [sectionsForJoinedClassrooms, setJoinedClassSections] =
-    useAtom(joinedClassSections);
-
-  const {
-    data: sectionsForCreatedClassroomsData,
-    isLoading: isFetchingFirstSection,
-    isFetching: isFetchingFirstSectionRefetch,
-  } = trpc.section.getSectionsForCreatedClassrooms.useQuery();
-
-  const {
-    data: sectionsForJoinedClassroomsData,
-    isLoading: isFetchingSecondSection,
-    isFetching: isFetchingSecondSectionRefetch,
-  } = trpc.section.getSectionsForJoinedClassrooms.useQuery();
-
-  useEffect(() => {
-    if (sectionsForCreatedClassroomsData) {
-      setCreatedClassSections(sectionsForCreatedClassroomsData);
-    }
-  }, [sectionsForCreatedClassroomsData]);
-
-  useEffect(() => {
-    if (sectionsForJoinedClassroomsData) {
-      setJoinedClassSections(sectionsForJoinedClassroomsData);
-    }
-  }, [sectionsForJoinedClassroomsData]);
+  const [sectionsForCreatedClassrooms] = useAtom(createdClassSections);
+  const [sectionsForJoinedClassrooms] = useAtom(joinedClassSections);
 
   return (
     <div className="grid grid-cols-2 gap-4 h-full">
@@ -86,21 +58,9 @@ export const TeacherSection = () => {
         <CardContent className="mt-0 px-3">
           <ScrollArea className="h-[70vh]">
             <div className="flex flex-col gap-y-2">
-              {isFetchingFirstSection || isFetchingFirstSectionRefetch ? (
+              {!sectionsForCreatedClassrooms ||
+              sectionsForCreatedClassrooms.length === 0 ? (
                 <SectionSkeleton />
-              ) : !sectionsForCreatedClassrooms ||
-                sectionsForCreatedClassrooms.length === 0 ? (
-                <div className="pt-12 flex flex-col items-center justify-center gap-y-2">
-                  <MonitorX className="h-10 w-10 text-neutral-800" />
-                  <div className="space-y-1 text-center">
-                    <p className="text-sm text-muted-foreground">
-                      You shouldn&rsquo;t be seeing this.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      We are working on fixing this issue.
-                    </p>
-                  </div>
-                </div>
               ) : (
                 <CreatedClassContext />
               )}
@@ -135,21 +95,9 @@ export const TeacherSection = () => {
         <CardContent className="mt-0 px-3">
           <ScrollArea className="h-[70vh]">
             <div className="flex flex-col gap-y-2">
-              {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
+              {!sectionsForJoinedClassrooms ||
+              sectionsForJoinedClassrooms.length === 0 ? (
                 <SectionSkeleton />
-              ) : !sectionsForJoinedClassrooms ||
-                sectionsForJoinedClassrooms.length === 0 ? (
-                <div className="pt-12 flex flex-col items-center justify-center gap-y-2">
-                  <MonitorX className="h-10 w-10 text-neutral-800" />
-                  <div className="space-y-1 text-center">
-                    <p className="text-sm text-muted-foreground">
-                      You shouldn&rsquo;t be seeing this.
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      We are working on fixing your issue.
-                    </p>
-                  </div>
-                </div>
               ) : (
                 <MembershipContext />
               )}

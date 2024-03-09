@@ -24,6 +24,7 @@ import {
 } from "@/atoms";
 import { getShortenedText } from "@/lib/utils";
 import { UserAvatar } from "@/components/custom/user-avatar";
+import { trpc } from "@/trpc/client";
 
 interface HamburgMenuProps {
   role: UserType;
@@ -37,8 +38,28 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
   const [, setCloseAllCreationToggle] = useAtom(isCloseAllCreationToggle);
   const [, setCloseAllMembershipToggle] = useAtom(isCloseAllMembershipToggle);
 
-  const [sectionsForCreatedClassrooms] = useAtom(createdClassSections);
-  const [sectionsForJoinedClassrooms] = useAtom(joinedClassSections);
+  const [sectionsForCreatedClassrooms, setCreatedClassSections] =
+    useAtom(createdClassSections);
+  const [sectionsForJoinedClassrooms, setJoinedClassSections] =
+    useAtom(joinedClassSections);
+
+  const { data: sectionsForCreatedClassroomsData } =
+    trpc.section.getSectionsForCreatedClassrooms.useQuery({ role });
+
+  const { data: sectionsForJoinedClassroomsData } =
+    trpc.section.getSectionsForJoinedClassrooms.useQuery();
+
+  useEffect(() => {
+    if (sectionsForCreatedClassroomsData) {
+      setCreatedClassSections(sectionsForCreatedClassroomsData);
+    }
+  }, [sectionsForCreatedClassroomsData]);
+
+  useEffect(() => {
+    if (sectionsForJoinedClassroomsData) {
+      setJoinedClassSections(sectionsForJoinedClassroomsData);
+    }
+  }, [sectionsForJoinedClassroomsData]);
 
   useEffect(() => {
     setIsOpen(false);

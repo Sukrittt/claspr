@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { SectionType } from "@prisma/client";
+import { SectionType, UserType } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -391,13 +391,24 @@ export const moveSection = privateProcedure
     }
   });
 
+const RoleEnum = z.nativeEnum(UserType);
+
 /**
  * To get a list of all sections created under the creation classrooms.
  *
  * @returns {Promise<Object[]>} - A list of section objects from the database.
  */
-export const getSectionsForCreatedClassrooms = privateProcedure.query(
-  async ({ ctx }) => {
+export const getSectionsForCreatedClassrooms = privateProcedure
+  .input(
+    z.object({
+      role: RoleEnum,
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const { role } = input;
+
+    if (role === "STUDENT") return [];
+
     const sectionsForCreatedClassrooms = await db.section.findMany({
       where: {
         creatorId: ctx.userId,
@@ -428,8 +439,7 @@ export const getSectionsForCreatedClassrooms = privateProcedure.query(
     });
 
     return sectionsForCreatedClassrooms;
-  }
-);
+  });
 
 /**
  * To get a list of all sections created under the joined classrooms.

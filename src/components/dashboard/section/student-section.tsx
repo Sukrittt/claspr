@@ -1,13 +1,11 @@
 "use client";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
-import { CopyMinus, MonitorX } from "lucide-react";
+import { CopyMinus } from "lucide-react";
 
-import { trpc } from "@/trpc/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MembershipContext } from "./membership-context";
-import { CreateSectionDialog } from "./dialog/create-section-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { CreateSectionDialog } from "./dialog/create-section-dialog";
 import {
   Card,
   CardContent,
@@ -21,20 +19,7 @@ import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
 export const StudentSection = () => {
   const [, setCloseAllMembershipToggle] = useAtom(isCloseAllMembershipToggle);
 
-  const [sectionsForJoinedClassrooms, setJoinedClassSections] =
-    useAtom(joinedClassSections);
-
-  const {
-    data: sectionsForJoinedClassroomsData,
-    isLoading: isFetchingSecondSection,
-    isFetching: isFetchingSecondSectionRefetch,
-  } = trpc.section.getSectionsForJoinedClassrooms.useQuery();
-
-  useEffect(() => {
-    if (sectionsForJoinedClassroomsData) {
-      setJoinedClassSections(sectionsForJoinedClassroomsData);
-    }
-  }, [sectionsForJoinedClassroomsData]);
+  const [sectionsForJoinedClassrooms] = useAtom(joinedClassSections);
 
   return (
     <Card className="space-y-4">
@@ -64,21 +49,9 @@ export const StudentSection = () => {
       <CardContent className="mt-0 px-3">
         <ScrollArea className="h-[70vh]">
           <div className="flex flex-col gap-y-2">
-            {isFetchingSecondSection || isFetchingSecondSectionRefetch ? (
+            {!sectionsForJoinedClassrooms ||
+            sectionsForJoinedClassrooms.length === 0 ? (
               <SectionSkeleton />
-            ) : !sectionsForJoinedClassrooms ||
-              sectionsForJoinedClassrooms.length === 0 ? (
-              <div className="pt-12 flex flex-col items-center justify-center gap-y-2">
-                <MonitorX className="h-10 w-10 text-neutral-800" />
-                <div className="space-y-1 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    You shouldn&rsquo;t be seeing this.
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    We are working on fixing your issue.
-                  </p>
-                </div>
-              </div>
             ) : (
               <MembershipContext />
             )}
