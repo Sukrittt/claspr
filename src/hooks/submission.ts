@@ -7,6 +7,10 @@ export const useGetSubmission = (assignmentId: string) => {
   return trpc.submission.getSubmission.useQuery({ assignmentId });
 };
 
+export const useGetAllSubmissions = (classroomId: string) => {
+  return trpc.submission.getAllSubmissions.useQuery({ classroomId });
+};
+
 export const useCreateSubmission = ({
   closeModal,
 }: {

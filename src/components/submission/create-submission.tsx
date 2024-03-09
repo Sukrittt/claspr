@@ -45,8 +45,8 @@ export const CreateSubmission: React.FC<CreateSubmissionProps> = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Do you want to turn in your work?</AlertDialogTitle>
           <AlertDialogDescription>
-            You can unsubmit your work anytime, but you cannot submit again if
-            late submission is not allowed by your teacher.
+            You have the option to retract your submission at any time. However,
+            if late submissions are not permitted, you cannot resubmit.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -173,6 +173,58 @@ export const getSubmission = privateProcedure
   });
 
 /**
+ * To get all submissions made in a particular class.
+ *
+ * @param {object} input - The input parameters to get all submissions.
+ * @param {string} input.classroomId - The id of the classroom.
+ * @returns {Promise<Object[]>} - A list of submission objects from the database.
+ */
+export const getAllSubmissions = privateProcedure
+  .input(
+    z.object({
+      classroomId: z.string(),
+    })
+  )
+  .query(async ({ ctx, input }) => {
+    const { classroomId } = input;
+
+    const submissions = await db.submission.findMany({
+      where: {
+        assignment: {
+          classRoomId: classroomId,
+        },
+        member: {
+          userId: ctx.userId,
+        },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        assignment: {
+          select: {
+            id: true,
+            title: true,
+            dueDate: true,
+          },
+        },
+        media: {
+          select: {
+            id: true,
+            url: true,
+            mediaType: true,
+            label: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return submissions;
+  });
+
+/**
  * To unsubmit a submission.
  *
  * @param {object} input - The input parameters for unsubmitting a submission.

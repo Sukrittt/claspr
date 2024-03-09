@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { StudentWork } from "./student-work";
 import { ExtendedClassroomDetails } from "@/types";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -26,7 +27,7 @@ export const ClassroomControls: React.FC<ClassroomControlProps> = ({
 
   return (
     <div className="flex items-center gap-x-2">
-      {isTeacher && (
+      {isTeacher ? (
         <Link
           href={`/c/${classroom.id}/create`}
           className={cn(buttonVariants(), {
@@ -42,6 +43,8 @@ export const ClassroomControls: React.FC<ClassroomControlProps> = ({
             "Create assignment"
           )}
         </Link>
+      ) : (
+        <StudentWork classroomId={classroom.id} />
       )}
     </div>
   );

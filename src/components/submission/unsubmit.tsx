@@ -45,8 +45,8 @@ export const Unsubmit: React.FC<UnsubmitProps> = ({
             Do you want to unsubmit your work?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            You can submit your work anytime before the deadline if late
-            submission is allowed by your teacher.
+            You may submit your work at any time before the deadline, provided
+            that your teacher permits late submissions.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

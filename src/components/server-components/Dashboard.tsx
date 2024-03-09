@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
-import { DashboardLayout } from "@/components/dashboard-layout";
+import { DashboardLayout } from "@/components/site-layout/dashboard-layout";
 
 export const Dashboard = async () => {
   const session = await getAuthSession();

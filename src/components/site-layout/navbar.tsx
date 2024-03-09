@@ -1,12 +1,11 @@
 import Link from "next/link";
+import { Home } from "lucide-react";
 import { redirect } from "next/navigation";
-import { Home, MoreHorizontal } from "lucide-react";
 
 import { db } from "@/lib/db";
 import { getAuthSession } from "@/lib/auth";
 import { HamburgMenu } from "./hamburg-menu";
 import { buttonVariants } from "@/components/ui/button";
-import { UserDropdown } from "@/components/custom/user-dropdown";
 
 export const Navbar = async () => {
   const session = await getAuthSession();
@@ -32,13 +31,7 @@ export const Navbar = async () => {
         </Link>
       </div>
 
-      {session ? (
-        <UserDropdown user={session.user}>
-          <div className="text-neutral-700 hover:bg-neutral-200 cursor-pointer p-1 rounded-md transition">
-            <MoreHorizontal className="h-4 w-4" />
-          </div>
-        </UserDropdown>
-      ) : (
+      {!session && (
         <Link href="/sign-in" className={buttonVariants()}>
           Sign In
         </Link>

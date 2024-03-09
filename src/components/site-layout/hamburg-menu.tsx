@@ -22,9 +22,11 @@ import {
   isCloseAllMembershipToggle,
   joinedClassSections,
 } from "@/atoms";
+import { trpc } from "@/trpc/client";
 import { getShortenedText } from "@/lib/utils";
 import { UserAvatar } from "@/components/custom/user-avatar";
-import { trpc } from "@/trpc/client";
+// import { Button } from "../ui/button";
+// import { sendEmail } from "@/services/email";
 
 interface HamburgMenuProps {
   role: UserType;
@@ -101,18 +103,6 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
               {getShortenedText(session.user?.email ?? "", 25)}
             </p>
           </div>
-
-          {/* {menuItems.map((item, index) => (
-            <CustomTooltip key={index} text={item.label}>
-              <Link
-                href={item.href}
-                className="flex items-center justify-center h-8 border hover:bg-neutral-100 transition rounded-md"
-              >
-                <item.icon className="h-4 w-4 text-neutral-700" />
-                <p className="sr-only">{item.label}</p>
-              </Link>
-            </CustomTooltip>
-          ))} */}
         </div>
 
         {role === "TEACHER" && (
@@ -192,6 +182,18 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
 
           <Logout />
         </div>
+
+        {/* <Button
+          onClick={() =>
+            sendEmail({
+              from: "sukritsaha27@gmail.com",
+              to: "sukritsaha27@gmail.com",
+              subject: "Test Email",
+            })
+          }
+        >
+          Test Email
+        </Button> */}
       </SheetContent>
     </Sheet>
   );
