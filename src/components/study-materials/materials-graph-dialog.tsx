@@ -38,7 +38,7 @@ export const MaterialsGraphDialog: React.FC<MaterialsGraphDialogProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "m" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "g" && (e.metaKey || e.altKey)) {
         e.preventDefault();
         setOpen((prev) => !prev);
       }

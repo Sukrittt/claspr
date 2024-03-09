@@ -184,7 +184,7 @@ export const NoteAi: React.FC<NoteAiProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "i" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "a" && (e.metaKey || e.altKey)) {
         e.preventDefault();
         setOpen((prev) => !prev);
       }
