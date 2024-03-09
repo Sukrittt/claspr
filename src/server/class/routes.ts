@@ -640,13 +640,7 @@ export const getPendingAssignments = privateProcedure
       select: { id: true },
     });
 
-    if (!existingMembership) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message:
-          "You need to be a student of this classroom to view your pending assignments.",
-      });
-    }
+    if (!existingMembership) return [];
 
     const existingClassroom = await db.classRoom.findFirst({
       where: {
@@ -668,6 +662,7 @@ export const getPendingAssignments = privateProcedure
             id: true,
             title: true,
             dueDate: true,
+            createdAt: true,
           },
         },
       },

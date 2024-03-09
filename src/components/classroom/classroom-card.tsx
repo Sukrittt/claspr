@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AddDescriptionDialog } from "./dialog/add-description-dialog";
 import { useClassroomDescription, usePendingAssignments } from "@/hooks/class";
+import { PendingAssignmentsDialog } from "./dialog/pending-assignments-dialog";
 
 interface ClassroomCardProps {
   classroom: ExtendedClassroomDetails;
@@ -158,11 +159,10 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
               {isFetching ? (
                 <Skeleton className="h-4 w-4" />
               ) : (
-                <CustomTooltip text="View pending assignments">
-                  <p className="text-[13px]">
-                    {pendingAssignments?.length ?? 0}
-                  </p>
-                </CustomTooltip>
+                <PendingAssignmentsDialog
+                  classroomId={classroom.id}
+                  pendingAssignments={pendingAssignments}
+                />
               )}
             </div>
           )}
