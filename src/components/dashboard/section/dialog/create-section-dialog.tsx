@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { SectionType } from "@prisma/client";
 
 import {
@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateSectionForm } from "@/components/dashboard/section/form/create-section-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { CreateSectionForm } from "@/components/dashboard/section/form/create-section-form";
 
 export const CreateSectionDialog = ({
   sectionType,
@@ -19,6 +19,19 @@ export const CreateSectionDialog = ({
   sectionType: SectionType;
 }) => {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const checkKey = sectionType === "CREATION" ? "c" : "j";
+
+      if (e.key === checkKey && (e.metaKey || e.altKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [sectionType]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

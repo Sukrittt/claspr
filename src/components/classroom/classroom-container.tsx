@@ -14,6 +14,7 @@ import { ClassMembers } from "./class-members";
 import { ClassroomCard } from "./classroom-card";
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomControls } from "./classroom-controls";
+import { ClassroomSettings } from "./classroom-settings";
 import { useQueryChange } from "@/hooks/use-query-change";
 import { Assignments } from "@/components/assignment/assignments";
 import { StudyMaterialLayout } from "@/components/study-materials";
@@ -23,7 +24,6 @@ import { DiscussionTabs } from "@/components/discussions/discussion-tabs";
 import { ClassDiscussions } from "@/components/discussions/class-discussions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ConversationHistory } from "@/components/conversation/conversation-history";
-import { ClassroomSettings } from "./classroom-settings";
 
 interface ClassroomContainerProps {
   classroom: ExtendedClassroomDetails;

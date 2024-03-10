@@ -9,8 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CreateClassForm } from "@/components/dashboard/class-rooms/form/create-class-form";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { CreateClassForm } from "@/components/dashboard/class-rooms/form/create-class-form";
 
 export const CreateClassDialog = ({ sectionId }: { sectionId: string }) => {
   //This is just a workaround to prevent dropdown drag event to be propogated.
