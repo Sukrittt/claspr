@@ -20,7 +20,7 @@ export const Logout = () => {
     <div
       onClick={handleLogout}
       className={cn(
-        "text-xs text-muted-foreground flex items-center gap-x-2 hover:bg-neutral-100 cursor-pointer transition rounded-md py-1 px-2",
+        "text-xs text-muted-foreground flex items-center gap-x-2 hover:bg-neutral-100 cursor-pointer transition rounded-md py-1 px-2 font-medium",
         {
           "opacity-50 cursor-default": loading,
         }

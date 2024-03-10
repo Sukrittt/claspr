@@ -116,15 +116,6 @@ dependencies:
   '@radix-ui/react-tooltip':
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
-  '@react-email/components':
-    specifier: 0.0.15
-    version: 0.0.15(@types/react@18.2.47)(react-email@2.1.0)(react@18.2.0)
-  '@react-email/render':
-    specifier: ^0.0.12
-    version: 0.0.12
-  '@react-email/tailwind':
-    specifier: ^0.0.14
-    version: 0.0.14(react@18.2.0)
   '@tanstack/react-query':
     specifier: ^4.35.3
     version: 4.36.1(react-dom@18.2.0)(react@18.2.0)

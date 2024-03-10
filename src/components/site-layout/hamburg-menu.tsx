@@ -9,7 +9,10 @@ import { usePathname } from "next/navigation";
 import { CopyMinus, Menu } from "lucide-react";
 
 import { Logout } from "./logout";
+import { trpc } from "@/trpc/client";
 import { otherItems } from "@/config/menu";
+import { getShortenedText } from "@/lib/utils";
+import { UserAvatar } from "@/components/custom/user-avatar";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -22,11 +25,6 @@ import {
   isCloseAllMembershipToggle,
   joinedClassSections,
 } from "@/atoms";
-import { trpc } from "@/trpc/client";
-import { getShortenedText } from "@/lib/utils";
-import { UserAvatar } from "@/components/custom/user-avatar";
-// import { Button } from "../ui/button";
-// import { sendEmail } from "@/services/email";
 
 interface HamburgMenuProps {
   role: UserType;
@@ -182,18 +180,6 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
 
           <Logout />
         </div>
-
-        {/* <Button
-          onClick={() =>
-            sendEmail({
-              from: "sukritsaha27@gmail.com",
-              to: "sukritsaha27@gmail.com",
-              subject: "Test Email",
-            })
-          }
-        >
-          Test Email
-        </Button> */}
       </SheetContent>
     </Sheet>
   );
