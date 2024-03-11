@@ -19,7 +19,9 @@ export const Classroom = async ({ classroomId }: { classroomId: string }) => {
     select: { role: true },
   });
 
-  if (!user || !user.role) redirect("/sign-in");
+  if (!user) redirect("/sign-in");
+
+  if (!user.role) redirect("/onboarding");
 
   if (!classroom) notFound();
 
