@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, startOfDay } from "date-fns";
+import { addDays, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -48,7 +48,7 @@ export const getEvents = privateProcedure
     if (date) {
       eventDateWhereClause = {
         gte: startOfDay(date),
-        lt: endOfDay(date),
+        lt: startOfDay(addDays(date, 1)),
       };
     } else {
       eventDateWhereClause = {
