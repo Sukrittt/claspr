@@ -27,6 +27,7 @@ export const config = {
     "/",
     "/dashboard",
     "/calendar",
+    "/report",
     "/c/:path*",
     "/onboarding",
     "/sign-in",

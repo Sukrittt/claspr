@@ -12,7 +12,7 @@ export const otherItems = [
     href: "/shortcuts",
   },
   {
-    label: "Report a Bug",
+    label: "Report",
     icon: Bug,
     href: "/report",
   },

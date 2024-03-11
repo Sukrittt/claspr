@@ -193,6 +193,7 @@ export const updateCover = privateProcedure
  *
  * @param {object} input - The input parameters for getting note cover image.
  * @param {string} input.noteId - The id of the note.
+ * @return {Promise<Object>} - The cover image and gradient class of the note.
  */
 export const getNoteCover = privateProcedure
   .input(

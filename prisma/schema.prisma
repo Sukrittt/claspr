@@ -6,10 +6,8 @@ generator client {
 }
 
 datasource db {
-  // provider     = "mysql"
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // relationMode = "prisma"
 }
 
 model Account {
@@ -75,6 +73,7 @@ model User {
   folders         Folder[]
   notes           Note[]
   events          Event[]
+  reports         Report[]
 }
 
 enum SectionType {
@@ -427,6 +426,32 @@ model Event {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ReportType {
+  BUG_REPORT
+  FEATURE_REQUEST
+  GENERAL
+}
+
+enum ReportStatus {
+  PENDING
+  RESOLVED
+  REJECTED
+}
+
+model Report {
+  id String @id @unique @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  reportType   ReportType
+  reportStatus ReportStatus? @default(PENDING)
+  body         String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

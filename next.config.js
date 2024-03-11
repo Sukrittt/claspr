@@ -5,10 +5,24 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "cdn.jsdelivr.net",
-        pathname: "**",
+        pathname: "**/**",
+      },
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        pathname: "**/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "**/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.notion.so",
+        pathname: "**/**",
       },
     ],
-    domains: ["utfs.io", "images.unsplash.com", "www.notion.so"],
   },
 };
 
