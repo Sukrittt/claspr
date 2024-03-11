@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { Folder } from "lucide-react";
+import { UserType } from "@prisma/client";
 import { useFolders } from "@/hooks/folder";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -26,9 +27,13 @@ import { CreateFolderDialog } from "@/components/folder/dialog/create-folder-dia
 
 interface MaterialsProps {
   classroomId: string;
+  userRole: UserType;
 }
 
-export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
+export const MaterialTabs: React.FC<MaterialsProps> = ({
+  classroomId,
+  userRole,
+}) => {
   const [folders, setFolders] = useAtom(classFolderAtom);
   const [, setIsLoadingFolders] = useAtom(globalLoaderAtom);
   const [, setActiveNoteId] = useAtom(activeNoteIdAtom);
@@ -79,7 +84,9 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({ classroomId }) => {
             handleNoteClick={handleNoteClick}
             popularVisits={popularVisits}
           />
-          <CreateFolderDialog classroomId={classroomId} />
+          {userRole === "TEACHER" && (
+            <CreateFolderDialog classroomId={classroomId} />
+          )}
         </div>
       </div>
       <ScrollArea className="h-[68vh]">

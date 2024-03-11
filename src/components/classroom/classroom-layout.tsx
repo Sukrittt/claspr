@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { Session } from "next-auth";
+import { UserType } from "@prisma/client";
 
 import { trpc } from "@/trpc/client";
 import { useMounted } from "@/hooks/use-mounted";
@@ -11,11 +12,13 @@ import { AIDialog } from "@/components/conversation/ai-dialog";
 interface ClassroomLayoutProps {
   classroom: ExtendedClassroomDetails;
   session: Session;
+  userRole: UserType;
 }
 
 export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
   classroom,
   session,
+  userRole,
 }) => {
   const mounted = useMounted();
 
@@ -35,7 +38,11 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
 
   return (
     <div className="px-20 py-6 h-[95%]">
-      <ClassroomContainer classroom={classroom} session={session} />
+      <ClassroomContainer
+        classroom={classroom}
+        session={session}
+        userRole={userRole}
+      />
       <AIDialog classroom={classroom} hasFollowUp addInfo={additionalInfo} />
     </div>
   );

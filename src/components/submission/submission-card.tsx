@@ -23,8 +23,8 @@ import {
 import { Unsubmit } from "./unsubmit";
 import { useGetMedia } from "@/hooks/media";
 import { getShortenedText } from "@/lib/utils";
-import { ExtendedAssignmentDetails } from "@/types";
 import { ContainerVariants } from "@/lib/motion";
+import { ExtendedAssignmentDetails } from "@/types";
 import { useGetSubmission } from "@/hooks/submission";
 import { SubmissionDropdown } from "./submission-dropdown";
 import {

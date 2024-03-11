@@ -70,7 +70,7 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
 
   return (
     <div>
-      <CustomTooltip text="ctrl + k">
+      <CustomTooltip text="Alt + n">
         <div
           className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
           onClick={() => setOpen(true)}

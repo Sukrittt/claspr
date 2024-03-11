@@ -57,7 +57,7 @@ export const MaterialsGraphDialog: React.FC<MaterialsGraphDialogProps> = ({
     <Drawer open={open} onOpenChange={(val) => setOpen(val)}>
       <DrawerTrigger asChild>
         <div>
-          <CustomTooltip text="Ctrl + m">
+          <CustomTooltip text="Akt + g">
             <div className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200">
               <BarChart3 className="h-3.5 w-3.5" />
               <div className="sr-only">Notes usage</div>

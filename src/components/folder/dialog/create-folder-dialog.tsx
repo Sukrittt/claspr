@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -28,6 +28,17 @@ export const CreateFolderDialog: React.FC<CreateFolderDialogProps> = ({
   isNotePage = false,
 }) => {
   const [open, setOpen] = useState(isOpen);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "f" && (e.metaKey || e.altKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <Dialog

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import {
@@ -24,9 +24,21 @@ export const Unsubmit: React.FC<UnsubmitProps> = ({
   submissionId,
 }) => {
   const [open, setOpen] = useState(false);
+
   const { mutate: unsubmit, isLoading } = useUnsubmitSubmission({
     closeModal: () => setOpen(false),
   });
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "u" && (e.metaKey || e.altKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <AlertDialog open={open} onOpenChange={(val) => setOpen(val)}>

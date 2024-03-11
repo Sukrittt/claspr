@@ -1,7 +1,7 @@
 "use client";
 import { toast } from "sonner";
-import { useState } from "react";
 import { Check, Copy, Info } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   Card,
@@ -35,13 +35,13 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
     classroom.id
   );
 
-  const handleCopyCode = () => {
+  const handleCopyCode = useCallback(() => {
     navigator.clipboard.writeText(classroom.classCode);
     setCopied(true);
 
     toast.success("Code copied to clipboard.");
     setTimeout(() => setCopied(false), 2000);
-  };
+  }, [classroom.classCode]);
 
   const studentDetails = classroom.students.find(
     (student) => student.userId === sessionId
@@ -69,6 +69,19 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
       description: classroom._count.notes,
     },
   ];
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isTeacher) return;
+
+      if (e.key === "c" && (e.metaKey || e.altKey)) {
+        e.preventDefault();
+        handleCopyCode();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isTeacher, handleCopyCode]);
 
   return (
     <Card>

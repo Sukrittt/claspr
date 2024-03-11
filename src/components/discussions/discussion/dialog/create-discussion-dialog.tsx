@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { DiscussionType } from "@prisma/client";
 
 import {
@@ -26,6 +26,17 @@ export const CreateDiscussionDialog: React.FC<CreateDiscussionDialogProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const dialogDetails = discussionPlaceholders[discussionType];
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "s" && (e.metaKey || e.altKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

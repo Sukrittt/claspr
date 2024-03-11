@@ -1,5 +1,6 @@
 "use client";
 import { useAtom } from "jotai";
+import { UserType } from "@prisma/client";
 import { FolderCheck, FolderX } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -17,7 +18,15 @@ import {
 import { useMounted } from "@/hooks/use-mounted";
 import { MaterialsGraphDialog } from "./materials-graph-dialog";
 
-export const Materials = ({ classroomId }: { classroomId: string }) => {
+interface MaterialsProps {
+  classroomId: string;
+  userRole: UserType;
+}
+
+export const Materials: React.FC<MaterialsProps> = ({
+  classroomId,
+  userRole,
+}) => {
   const [folders] = useAtom(classFolderAtom);
   const [isLoadingFolders] = useAtom(globalLoaderAtom);
   const [activeFolderId] = useAtom(activeClassFolderIdAtom);
@@ -55,16 +64,20 @@ export const Materials = ({ classroomId }: { classroomId: string }) => {
             {activeFolder?.name}
           </p>
           <div className="flex items-center gap-x-2">
-            <MaterialsGraphDialog
-              notes={activeFolder.notes}
-              classroomId={classroomId}
-            />
+            {userRole === "TEACHER" && (
+              <>
+                <MaterialsGraphDialog
+                  notes={activeFolder.notes}
+                  classroomId={classroomId}
+                />
 
-            <CreateNoteDialog
-              folderId={activeFolder.id}
-              noteType="CLASSROOM"
-              classroomId={classroomId}
-            />
+                <CreateNoteDialog
+                  folderId={activeFolder.id}
+                  noteType="CLASSROOM"
+                  classroomId={classroomId}
+                />
+              </>
+            )}
           </div>
         </div>
 

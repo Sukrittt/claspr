@@ -8,6 +8,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { useEffect } from "react";
+import { UserType } from "@prisma/client";
 import { notFound, useSearchParams } from "next/navigation";
 
 import { ClassMembers } from "./class-members";
@@ -28,6 +29,7 @@ import { ConversationHistory } from "@/components/conversation/conversation-hist
 interface ClassroomContainerProps {
   classroom: ExtendedClassroomDetails;
   session: Session;
+  userRole: UserType;
 }
 
 type ClassroomOptions =
@@ -41,6 +43,7 @@ type ClassroomOptions =
 export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
   classroom,
   session,
+  userRole,
 }) => {
   const params = useSearchParams();
 
@@ -158,7 +161,11 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
 
           {/* STUDY MATERIALS */}
           <TabsContent className="h-full" value="study-materials">
-            <StudyMaterialLayout classroomId={classroom.id} session={session} />
+            <StudyMaterialLayout
+              classroomId={classroom.id}
+              session={session}
+              userRole={userRole}
+            />
           </TabsContent>
 
           {/* DISCUSSIONS */}
