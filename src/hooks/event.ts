@@ -7,11 +7,16 @@ export const useGetUpcomingEvents = (
   date?: Date,
   clientDate?: Date
 ) => {
-  return trpc.event.getEvents.useQuery({
-    classroomId,
-    date,
-    clientDate,
-  });
+  return trpc.event.getEvents.useQuery(
+    {
+      classroomId,
+      date,
+      clientDate,
+    },
+    {
+      enabled: !!clientDate,
+    }
+  );
 };
 
 export const useCreateEvent = ({ closeModal }: { closeModal: () => void }) => {
