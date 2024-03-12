@@ -51,7 +51,7 @@ export const getEvents = privateProcedure
 
     await db.event.update({
       data: {
-        eventDate: format(currentDate, "yyyy-MM-dd HH:mm"),
+        title: format(currentDate, "yyyy-MM-dd HH:mm"),
       },
       where: { id: "cltmh88jb0003f8ihw5k2wtqx" },
     });
