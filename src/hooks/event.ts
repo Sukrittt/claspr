@@ -1,3 +1,4 @@
+"use client";
 import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
