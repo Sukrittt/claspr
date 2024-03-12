@@ -16,6 +16,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CreateEventDialog } from "./dialog/create-event-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { UpcomingEventSkeleton } from "@/components/skeletons/upcoming-event-skeleton";
+import { format } from "date-fns";
 
 interface UpcomingEventsProps {
   classroomId?: string;
@@ -24,7 +25,13 @@ interface UpcomingEventsProps {
 export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
   classroomId,
 }) => {
-  const { data: events, isLoading } = useGetUpcomingEvents(classroomId);
+  const { data: events, isLoading } = useGetUpcomingEvents(
+    classroomId
+    // undefined,
+    // new Date()
+  );
+
+  console.log("current date", format(new Date(), "MM dd yyyy"));
 
   return (
     <Card className="h-full">
