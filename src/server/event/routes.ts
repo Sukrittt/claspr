@@ -4,6 +4,7 @@ import { addDays, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
+import { getIsPartOfClassAuth } from "../class/routes";
 
 /**
  *  Fetching events for next 7 days.
@@ -58,61 +59,127 @@ export const getEvents = privateProcedure
     }
 
     if (classroomId) {
-      const existingMembership = await db.membership.findFirst({
-        where: {
+      const isTeacher = await getIsPartOfClassAuth(
+        classroomId,
+        ctx.userId,
+        true
+      );
+
+      if (!isTeacher) {
+        const existingMembership = await db.membership.findFirst({
+          where: {
+            classRoomId: classroomId,
+            userId: ctx.userId,
+            isTeacher: false,
+          },
+          select: { id: true },
+        });
+
+        if (!existingMembership) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message:
+              "You need to be a member of this classroom to view your upcoming events.",
+          });
+        }
+
+        assignmentWhereClause = {
           classRoomId: classroomId,
-          userId: ctx.userId,
-          isTeacher: false,
-        },
-        select: { id: true },
+          submissions: {
+            every: {
+              memberId: {
+                not: existingMembership?.id,
+              },
+            },
+          },
+        };
+      } else {
+        // When a teacher inside a classroom
+        assignmentWhereClause = {
+          classRoomId: classroomId,
+        };
+      }
+    } else {
+      const existingUser = await db.user.findFirst({
+        where: { id: ctx.userId },
+        select: { role: true },
       });
 
-      if (!existingMembership) {
+      if (!existingUser) {
         throw new TRPCError({
-          code: "FORBIDDEN",
-          message:
-            "You need to be a member of this classroom to view your upcoming events.",
+          code: "NOT_FOUND",
+          message: "We couldn't find your account. Please sign in.",
         });
       }
 
-      assignmentWhereClause = {
-        classRoomId: classroomId,
-        submissions: {
-          every: {
-            memberId: {
-              not: existingMembership?.id,
+      if (existingUser.role === "STUDENT") {
+        const existingMemberships = await db.membership.findMany({
+          where: {
+            userId: ctx.userId,
+            isTeacher: false,
+          },
+          select: { id: true, classRoomId: true },
+        });
+
+        const classroomIds = existingMemberships.map(
+          (membership) => membership.classRoomId
+        );
+        const membershipIds = existingMemberships.map(
+          (membership) => membership.id
+        );
+
+        assignmentWhereClause = {
+          classRoomId: {
+            in: classroomIds,
+          },
+          submissions: {
+            every: {
+              memberId: {
+                notIn: membershipIds,
+              },
             },
           },
-        },
-      };
-    } else {
-      const existingMemberships = await db.membership.findMany({
-        where: {
-          userId: ctx.userId,
-          isTeacher: false,
-        },
-        select: { id: true, classRoomId: true },
-      });
-
-      const classroomIds = existingMemberships.map(
-        (membership) => membership.classRoomId
-      );
-      const membershipIds = existingMemberships.map(
-        (membership) => membership.id
-      );
-
-      assignmentWhereClause = {
-        classRoomId: {
-          in: classroomIds,
-        },
-        submissions: {
-          every: {
-            memberId: {
-              notIn: membershipIds,
+        };
+      } else if (existingUser.role === "TEACHER") {
+        const promises = [
+          db.classRoom.findMany({
+            where: {
+              teacherId: ctx.userId,
             },
+            select: { id: true },
+          }),
+          db.membership.findMany({
+            where: {
+              userId: ctx.userId,
+              isTeacher: true,
+            },
+            select: { classRoomId: true },
+          }),
+        ];
+
+        const [existingClassrooms, existingMemberships] = await Promise.all(
+          promises
+        );
+
+        const typedExistingMemberships = existingMemberships as {
+          classRoomId: string;
+        }[];
+        const typedExistingClassrooms = existingClassrooms as { id: string }[];
+
+        const classroomIds = typedExistingMemberships.map(
+          (membership) => membership.classRoomId
+        );
+
+        const teacherClassroomIds = typedExistingClassrooms.map(
+          (classroom) => classroom.id
+        );
+
+        assignmentWhereClause = {
+          classRoomId: {
+            in: [...classroomIds, ...teacherClassroomIds],
           },
-        },
-      };
+        };
+      }
     }
 
     const eventPicks = {
