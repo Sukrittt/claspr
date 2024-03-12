@@ -17,6 +17,7 @@ import { CreateEventDialog } from "./dialog/create-event-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { UpcomingEventSkeleton } from "@/components/skeletons/upcoming-event-skeleton";
 import { format } from "date-fns";
+import { useEffect, useState } from "react";
 
 interface UpcomingEventsProps {
   classroomId?: string;
@@ -25,10 +26,16 @@ interface UpcomingEventsProps {
 export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
   classroomId,
 }) => {
+  const [clientDate, setClientDate] = useState<Date | undefined>(undefined);
+
+  useEffect(() => {
+    setClientDate(new Date());
+  }, []);
+
   const { data: events, isLoading } = useGetUpcomingEvents(
-    classroomId
-    // undefined,
-    // new Date()
+    classroomId,
+    undefined,
+    clientDate
   );
 
   console.log("current date", format(new Date(), "MM dd yyyy"));
@@ -64,7 +71,7 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
           })}
         >
           <div className="flex flex-col gap-y-2">
-            {isLoading ? (
+            {isLoading || !clientDate ? (
               <UpcomingEventSkeleton />
             ) : !events || events.length === 0 ? (
               <div
