@@ -4,7 +4,27 @@ import { addDays, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
-import { getIsPartOfClassAuth } from "../class/routes";
+import { getIsPartOfClassAuth } from "@/server/class/routes";
+
+function customAddDays(date: Date, days: number) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+
+  return result;
+}
+
+function getUTCDate(date: Date) {
+  return new Date(
+    Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      date.getUTCHours(),
+      date.getUTCMinutes(),
+      date.getUTCSeconds()
+    )
+  );
+}
 
 /**
  *  Fetching events for next 7 days.
@@ -40,8 +60,10 @@ export const getEvents = privateProcedure
       }
     }
 
-    const currentDate = clientDate ?? new Date();
-    const sevenDaysLater = addDays(currentDate, 7);
+    const rawCurrentDate = new Date();
+    const currentDate = getUTCDate(rawCurrentDate);
+
+    const sevenDaysLater = customAddDays(currentDate, 7);
 
     let assignmentWhereClause = {};
     let eventDateWhereClause = {};
@@ -49,7 +71,7 @@ export const getEvents = privateProcedure
     if (date) {
       eventDateWhereClause = {
         gte: startOfDay(date),
-        lt: startOfDay(addDays(date, 1)),
+        lt: startOfDay(customAddDays(date, 1)),
       };
     } else {
       eventDateWhereClause = {
