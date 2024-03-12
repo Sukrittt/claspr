@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, startOfDay } from "date-fns";
+import { addDays, format, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -11,19 +11,6 @@ function customAddDays(date: Date, days: number) {
   result.setDate(result.getDate() + days);
 
   return result;
-}
-
-function getUTCDate(date: Date) {
-  return new Date(
-    Date.UTC(
-      date.getUTCFullYear(),
-      date.getUTCMonth(),
-      date.getUTCDate(),
-      date.getUTCHours(),
-      date.getUTCMinutes(),
-      date.getUTCSeconds()
-    )
-  );
 }
 
 /**
@@ -60,8 +47,14 @@ export const getEvents = privateProcedure
       }
     }
 
-    const rawCurrentDate = new Date();
-    const currentDate = getUTCDate(rawCurrentDate);
+    const currentDate = clientDate ?? new Date();
+
+    await db.event.update({
+      data: {
+        eventDate: format(currentDate, "yyyy-MM-dd HH:mm"),
+      },
+      where: { id: "cltmh88jb0003f8ihw5k2wtqx" },
+    });
 
     const sevenDaysLater = customAddDays(currentDate, 7);
 
