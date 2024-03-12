@@ -18,6 +18,7 @@ import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { UpcomingEventSkeleton } from "@/components/skeletons/upcoming-event-skeleton";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { useMounted } from "@/hooks/use-mounted";
 
 interface UpcomingEventsProps {
   classroomId?: string;
@@ -26,11 +27,14 @@ interface UpcomingEventsProps {
 export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
   classroomId,
 }) => {
+  const mounted = useMounted();
   const [clientDate, setClientDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
+    if (!mounted) return;
+
     setClientDate(new Date());
-  }, []);
+  }, [mounted]);
 
   const { data: events, isLoading } = useGetUpcomingEvents(
     classroomId,
@@ -38,7 +42,8 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
     clientDate
   );
 
-  console.log("current date", format(new Date(), "MM dd yyyy"));
+  console.log("current date", format(clientDate ?? new Date(), "MM dd yyyy"));
+  console.log("has client date", !!clientDate);
 
   return (
     <Card className="h-full">

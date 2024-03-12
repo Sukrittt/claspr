@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { startOfDay } from "date-fns";
+import { format, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -48,6 +48,13 @@ export const getEvents = privateProcedure
     }
 
     const currentDate = clientDate ?? new Date();
+
+    await db.event.update({
+      data: {
+        title: format(currentDate, "dd MMMM yyyy hh:mm a"),
+      },
+      where: { id: "cltmh88jb0003f8ihw5k2wtqx" },
+    });
 
     const sevenDaysLater = customAddDays(currentDate, 7);
 
