@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
@@ -8,24 +8,11 @@ export const useGetUpcomingEvents = (
   date?: Date,
   clientDate?: Date
 ) => {
-  return trpc.event.getEvents.useQuery(
-    {
-      classroomId,
-      date,
-      clientDate,
-    },
-    {
-      enabled: false,
-      queryKey: [
-        "event.getEvents",
-        {
-          classroomId,
-          date,
-          clientDate,
-        },
-      ],
-    }
-  );
+  return trpc.event.getEvents.useQuery({
+    classroomId,
+    date,
+    clientDate,
+  });
 };
 
 export const useCreateEvent = ({ closeModal }: { closeModal: () => void }) => {
