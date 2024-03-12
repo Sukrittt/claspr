@@ -30,17 +30,29 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
   const mounted = useMounted();
   const [clientDate, setClientDate] = useState<Date | undefined>(undefined);
 
+  const {
+    data: events,
+    isLoading,
+    refetch,
+  } = useGetUpcomingEvents(classroomId, undefined, clientDate);
+
   useEffect(() => {
     if (!mounted) return;
 
     setClientDate(new Date());
-  }, [mounted]);
+    console.log("client date", format(new Date(), "MM dd yyyy"));
 
-  const { data: events, isLoading } = useGetUpcomingEvents(
-    classroomId,
-    undefined,
-    clientDate
-  );
+    refetch({
+      queryKey: [
+        "event.getEvents",
+        {
+          classroomId,
+          date: undefined,
+          clientDate: new Date(),
+        },
+      ],
+    });
+  }, [mounted, refetch, classroomId]);
 
   console.log("current date", format(clientDate ?? new Date(), "MM dd yyyy"));
   console.log("has client date", !!clientDate);

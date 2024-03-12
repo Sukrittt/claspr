@@ -14,7 +14,14 @@ export const useGetUpcomingEvents = (
       clientDate,
     },
     {
-      enabled: !!clientDate,
+      queryKey: [
+        "event.getEvents",
+        {
+          classroomId,
+          date,
+          clientDate,
+        },
+      ],
     }
   );
 };

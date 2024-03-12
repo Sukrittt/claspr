@@ -30,8 +30,6 @@ export const getEvents = privateProcedure
     })
   )
   .query(async ({ ctx, input }) => {
-    console.log("isFetching...");
-
     const { classroomId, date, clientDate } = input;
 
     if (classroomId) {
