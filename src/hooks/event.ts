@@ -15,6 +15,7 @@ export const useGetUpcomingEvents = (
       clientDate,
     },
     {
+      enabled: false,
       queryKey: [
         "event.getEvents",
         {
