@@ -49,6 +49,11 @@ export const getEvents = privateProcedure
 
     const currentDate = clientDate ?? new Date();
 
+    console.log(
+      "clientDate",
+      clientDate && format(clientDate, "dd MMMM yyyy hh:mm a")
+    );
+
     await db.event.update({
       data: {
         title: format(currentDate, "dd MMMM yyyy hh:mm a"),

@@ -29,7 +29,7 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
   classroomId,
 }) => {
   const mounted = useMounted();
-  const [clientDate, setClientDate] = useState<Date | undefined>(undefined);
+  const [clientDate, setClientDate] = useState<Date | undefined>(new Date());
 
   // const {
   //   data: events,
@@ -37,21 +37,41 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
   //   refetch,
   // } = useGetUpcomingEvents(classroomId, undefined, clientDate);
 
-  const { data: events, isLoading } = trpc.event.getEvents.useQuery({
-    classroomId,
-    date: undefined,
-    clientDate,
-  });
+  const {
+    data: events,
+    isLoading,
+    refetch,
+  } = trpc.event.getEvents.useQuery(
+    {
+      classroomId,
+      date: undefined,
+      clientDate,
+    }
+    // {
+    //   queryKey: [
+    //     "event.getEvents",
+    //     { classroomId, date: undefined, clientDate },
+    //   ],
+    //   enabled: false,
+    // }
+  );
 
   useEffect(() => {
     if (!mounted) return;
 
     setClientDate(new Date());
+    // refetch({
+    //   queryKey: [
+    //     "event.getEvents",
+    //     { classroomId, date: undefined, clientDate },
+    //   ],
+    // });
     console.log("client date", format(new Date(), "MM dd yyyy"));
-  }, [mounted]);
+  }, [mounted, classroomId, refetch]);
 
   console.log("current date", format(clientDate ?? new Date(), "MM dd yyyy"));
   console.log("has client date", !!clientDate);
+  console.log("isLoading", isLoading);
 
   return (
     <Card className="h-full">
