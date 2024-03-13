@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, format, startOfDay } from "date-fns";
+import { addDays, endOfDay, format, isSameDay, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -58,18 +58,17 @@ export const getEvents = privateProcedure
 
       console.log("providedDate", format(providedDate, "MMMM do, h:mm a"));
 
-      console.log("start", format(startOfDay(providedDate), "MMMM do, h:mm a"));
-      console.log("end", format(endOfDay(providedDate), "MMMM do, h:mm a"));
-
-      await db.event.update({
-        data: {
-          title: `${format(
-            startOfDay(providedDate),
-            "MMMM do, h:mm a"
-          )} to ${format(endOfDay(providedDate), "MMMM do, h:mm a")}`,
-        },
-        where: { id: "cltq5vl4h00011h1xwyhuhziy" },
-      });
+      if (isSameDay(providedDate, currentDate)) {
+        await db.event.update({
+          data: {
+            title: `${format(
+              startOfDay(providedDate),
+              "MMMM do, h:mm a"
+            )} to ${format(endOfDay(providedDate), "MMMM do, h:mm a")}`,
+          },
+          where: { id: "cltq5vl4h00011h1xwyhuhziy" },
+        });
+      }
 
       eventDateWhereClause = {
         gte: startOfDay(providedDate),
