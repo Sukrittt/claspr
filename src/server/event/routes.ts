@@ -56,8 +56,6 @@ export const getEvents = privateProcedure
 
       const providedDate = startOfDay(new Date(indianTimeZoneDateString));
 
-      console.log("providedDate", format(providedDate, "MMMM do, h:mm a"));
-
       eventDateWhereClause = {
         gte: startOfDay(providedDate),
         lte: endOfDay(providedDate),
@@ -309,6 +307,14 @@ export const editEvent = privateProcedure
       });
     }
 
+    const indianTimeZoneDateString = new Date(
+      existingEvent.eventDate ?? eventDate
+    ).toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+
+    const updatedDate = new Date(indianTimeZoneDateString);
+
     await db.event.update({
       where: {
         id: eventId,
@@ -317,7 +323,7 @@ export const editEvent = privateProcedure
       data: {
         title: title ?? existingEvent.title,
         description: description ?? existingEvent.description,
-        eventDate: eventDate ?? existingEvent.eventDate,
+        eventDate: updatedDate,
       },
     });
   });

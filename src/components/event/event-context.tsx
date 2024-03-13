@@ -82,6 +82,8 @@ export const EventContext: React.FC<EventContextProps> = ({
     //CLIENT UPDATE
     setOverDate(overDate);
 
+    console.log("over date", format(overDate, "MMM do, h:mm a"));
+
     //SERVER UPDATE
     moveEvent({
       eventId: activeEventId,
