@@ -21,15 +21,13 @@ interface EventsProps {
 
 export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
   const params = useSearchParams();
-  const [currentDate] = useState(new Date());
 
   const [overDate, setOverDate] = useAtom(overDateAtom);
   const [activeDateObj, setActiveDateObj] = useAtom(activeDateAtom);
 
   const { data: serverEvents, isLoading } = useGetUpcomingEvents(
     undefined,
-    date,
-    currentDate
+    date
   );
 
   const [events, setEvents] = useState<ExtendedEvent[] | undefined>(

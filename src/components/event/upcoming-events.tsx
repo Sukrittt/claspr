@@ -16,10 +16,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CreateEventDialog } from "./dialog/create-event-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { UpcomingEventSkeleton } from "@/components/skeletons/upcoming-event-skeleton";
-import { format } from "date-fns";
-import { useEffect, useState } from "react";
-import { useMounted } from "@/hooks/use-mounted";
-import { trpc } from "@/trpc/client";
 
 interface UpcomingEventsProps {
   classroomId?: string;
@@ -28,30 +24,8 @@ interface UpcomingEventsProps {
 export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
   classroomId,
 }) => {
-  const mounted = useMounted();
-  const [clientDate, setClientDate] = useState<Date | undefined>(new Date());
+  const { data: events, isLoading } = useGetUpcomingEvents(classroomId);
 
-  const {
-    data: events,
-    isLoading,
-    refetch,
-  } = useGetUpcomingEvents(classroomId, undefined, clientDate);
-
-  useEffect(() => {
-    if (!mounted) return;
-
-    setClientDate(new Date());
-    console.log("client date", format(new Date(), "MM dd yyyy"));
-
-    setTimeout(() => {
-      refetch({
-        queryKey: ["event.getEvents", classroomId, undefined, clientDate],
-      });
-    }, 3000);
-  }, [mounted, classroomId, refetch]);
-
-  // console.log("current date", format(clientDate ?? new Date(), "MM dd yyyy"));
-  // console.log("has client date", !!clientDate);
   console.log("event count", events?.length);
   console.log("isLoading", isLoading);
 
@@ -86,7 +60,7 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
           })}
         >
           <div className="flex flex-col gap-y-2">
-            {isLoading || !clientDate ? (
+            {isLoading ? (
               <UpcomingEventSkeleton />
             ) : !events || events.length === 0 ? (
               <div

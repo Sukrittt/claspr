@@ -1,4 +1,5 @@
 import { z } from "zod";
+import moment from "moment-timezone";
 import { TRPCError } from "@trpc/server";
 import { format, startOfDay } from "date-fns";
 
@@ -32,8 +33,6 @@ export const getEvents = privateProcedure
   .query(async ({ ctx, input }) => {
     const { classroomId, date, clientDate } = input;
 
-    console.log("fetching...");
-
     if (classroomId) {
       const existingClassroom = await db.classRoom.findFirst({
         where: {
@@ -49,7 +48,8 @@ export const getEvents = privateProcedure
       }
     }
 
-    const currentDate = clientDate ?? new Date();
+    const indianTimeZone = moment().tz("Asia/Kolkata").format();
+    const currentDate = new Date(indianTimeZone);
 
     console.log(
       "clientDate",

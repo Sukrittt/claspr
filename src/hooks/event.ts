@@ -3,25 +3,11 @@ import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
 
-export const useGetUpcomingEvents = (
-  classroomId?: string,
-  date?: Date,
-  clientDate?: Date
-) => {
-  return trpc.event.getEvents.useQuery(
-    {
-      classroomId,
-      date,
-      clientDate,
-    },
-    {
-      queryKey: [
-        "event.getEvents",
-        { classroomId, date: undefined, clientDate },
-      ],
-      enabled: false,
-    }
-  );
+export const useGetUpcomingEvents = (classroomId?: string, date?: Date) => {
+  return trpc.event.getEvents.useQuery({
+    classroomId,
+    date,
+  });
 };
 
 export const useCreateEvent = ({ closeModal }: { closeModal: () => void }) => {
