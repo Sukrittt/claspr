@@ -32,6 +32,8 @@ export const getEvents = privateProcedure
   .query(async ({ ctx, input }) => {
     const { classroomId, date, clientDate } = input;
 
+    console.log("fetching...");
+
     if (classroomId) {
       const existingClassroom = await db.classRoom.findFirst({
         where: {

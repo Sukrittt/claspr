@@ -2,38 +2,26 @@
 import { toast } from "sonner";
 
 import { trpc } from "@/trpc/client";
-import { useMounted } from "./use-mounted";
-import { useEffect, useState } from "react";
 
 export const useGetUpcomingEvents = (
   classroomId?: string,
   date?: Date,
   clientDate?: Date
 ) => {
-  const mounted = useMounted();
-  const [localDate, setLocalDate] = useState<Date | undefined>(new Date());
-
-  useEffect(() => {
-    if (!mounted) return;
-
-    setLocalDate(new Date());
-  }, [mounted]);
-
-  if (!mounted) return;
-
-  const { data, isLoading, refetch } = trpc.event.getEvents.useQuery({
-    classroomId,
-    date,
-    clientDate: localDate,
-  });
-
-  return { data, isLoading, refetch };
-
-  // return trpc.event.getEvents.useQuery({
-  //   classroomId,
-  //   date,
-  //   clientDate,
-  // });
+  return trpc.event.getEvents.useQuery(
+    {
+      classroomId,
+      date,
+      clientDate,
+    },
+    {
+      queryKey: [
+        "event.getEvents",
+        { classroomId, date: undefined, clientDate },
+      ],
+      enabled: false,
+    }
+  );
 };
 
 export const useCreateEvent = ({ closeModal }: { closeModal: () => void }) => {
