@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, startOfDay } from "date-fns";
+import { addDays, endOfDay, format, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -50,9 +50,15 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
+      const indianTimeZoneDateString = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      });
+
+      const providedDate = startOfDay(new Date(indianTimeZoneDateString));
+
       eventDateWhereClause = {
-        gte: startOfDay(date),
-        lte: endOfDay(date),
+        gte: startOfDay(providedDate),
+        lte: endOfDay(providedDate),
       };
     } else {
       eventDateWhereClause = {

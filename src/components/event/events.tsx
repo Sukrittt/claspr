@@ -1,6 +1,6 @@
 "use client";
 import { useAtom } from "jotai";
-import { format, isSameDay } from "date-fns";
+import { isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -29,8 +29,6 @@ export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
     undefined,
     date
   );
-
-  console.log("date", format(date, "do MMM, yyy hh:mm a"));
 
   const [events, setEvents] = useState<ExtendedEvent[] | undefined>(
     serverEvents
