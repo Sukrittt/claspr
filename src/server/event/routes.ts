@@ -308,7 +308,7 @@ export const editEvent = privateProcedure
     }
 
     const indianTimeZoneDateString = new Date(
-      existingEvent.eventDate ?? eventDate
+      eventDate ?? existingEvent.eventDate
     ).toLocaleString("en-US", {
       timeZone: "Asia/Kolkata",
     });
