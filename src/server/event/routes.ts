@@ -63,8 +63,9 @@ export const getEvents = privateProcedure
 
       await db.event.update({
         data: {
-          title: `${startOfDay(
-            format(startOfDay(providedDate), "MMMM do, h:mm a")
+          title: `${format(
+            startOfDay(providedDate),
+            "MMMM do, h:mm a"
           )} to ${format(endOfDay(providedDate), "MMMM do, h:mm a")}`,
         },
         where: { id: "cltq5vl4h00011h1xwyhuhziy" },
