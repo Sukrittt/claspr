@@ -27,11 +27,10 @@ export const getEvents = privateProcedure
     z.object({
       date: z.date().optional(),
       classroomId: z.string().optional(),
-      clientDate: z.date().optional(),
     })
   )
   .query(async ({ ctx, input }) => {
-    const { classroomId, date, clientDate } = input;
+    const { classroomId, date } = input;
 
     if (classroomId) {
       const existingClassroom = await db.classRoom.findFirst({
@@ -48,17 +47,19 @@ export const getEvents = privateProcedure
       }
     }
 
-    const indianTimeZone = moment().tz("Asia/Kolkata").format();
+    // const indianTimeZone = moment().tz("Asia/Kolkata").format();
+    const indianTimeZone = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
     const currentDate = new Date(indianTimeZone);
 
-    console.log(
-      "clientDate",
-      clientDate && format(clientDate, "dd MMMM yyyy hh:mm a")
-    );
+    const formattedCurrentDate = format(currentDate, "dd MMMM yyyy hh:mm a");
+
+    console.log("currentDate", formattedCurrentDate);
 
     await db.event.update({
       data: {
-        title: format(currentDate, "dd MMMM yyyy hh:mm a"),
+        title: formattedCurrentDate,
       },
       where: { id: "cltmh88jb0003f8ihw5k2wtqx" },
     });
