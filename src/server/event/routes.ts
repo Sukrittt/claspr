@@ -56,6 +56,15 @@ export const getEvents = privateProcedure
 
       const providedDate = startOfDay(new Date(indianTimeZoneDateString));
 
+      const fmtDate = format(providedDate, "do MMM, yyyy hh:mm a");
+
+      await db.event.update({
+        data: {
+          title: `${startOfDay(fmtDate)} to ${endOfDay(fmtDate)}`,
+        },
+        where: { id: "cltq3rjdm00016zinxtdrb6z2" },
+      });
+
       eventDateWhereClause = {
         gte: startOfDay(providedDate),
         lte: endOfDay(providedDate),
