@@ -43,16 +43,24 @@ export const getEvents = privateProcedure
       timeZone: "Asia/Kolkata",
     });
 
-    const currentDate = new Date(indianTimeZone);
+    const currentDate = startOfDay(new Date(indianTimeZone));
     const sevenDaysLater = startOfDay(addDays(currentDate, 7));
 
     let assignmentWhereClause = {};
     let eventDateWhereClause = {};
 
     if (date) {
+      const dateInIndianTimeZone = new Date(date).toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      });
+
+      const dateInIndianTimeZoneStartOfDay = startOfDay(
+        new Date(dateInIndianTimeZone)
+      );
+
       eventDateWhereClause = {
-        gte: startOfDay(date),
-        lt: startOfDay(addDays(date, 1)),
+        gte: startOfDay(dateInIndianTimeZoneStartOfDay),
+        lt: startOfDay(addDays(dateInIndianTimeZoneStartOfDay, 1)),
       };
     } else {
       eventDateWhereClause = {
