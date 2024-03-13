@@ -19,6 +19,7 @@ import { UpcomingEventSkeleton } from "@/components/skeletons/upcoming-event-ske
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { useMounted } from "@/hooks/use-mounted";
+import { trpc } from "@/trpc/client";
 
 interface UpcomingEventsProps {
   classroomId?: string;
@@ -42,13 +43,16 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
     setClientDate(new Date());
     console.log("client date", format(new Date(), "MM dd yyyy"));
 
-    refetch({
-      queryKey: ["event.getEvents", classroomId, undefined, clientDate],
-    });
+    setTimeout(() => {
+      refetch({
+        queryKey: ["event.getEvents", classroomId, undefined, clientDate],
+      });
+    }, 3000);
   }, [mounted, classroomId, refetch]);
 
-  console.log("current date", format(clientDate ?? new Date(), "MM dd yyyy"));
-  console.log("has client date", !!clientDate);
+  // console.log("current date", format(clientDate ?? new Date(), "MM dd yyyy"));
+  // console.log("has client date", !!clientDate);
+  console.log("event count", events?.length);
   console.log("isLoading", isLoading);
 
   return (
