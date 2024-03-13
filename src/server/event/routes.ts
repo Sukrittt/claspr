@@ -307,13 +307,13 @@ export const editEvent = privateProcedure
       });
     }
 
-    const indianTimeZoneDateString = new Date(
-      eventDate ?? existingEvent.eventDate
-    ).toLocaleString("en-US", {
-      timeZone: "Asia/Kolkata",
-    });
+    // const indianTimeZoneDateString = new Date(
+    //   eventDate ?? existingEvent.eventDate
+    // ).toLocaleString("en-US", {
+    //   timeZone: "Asia/Kolkata",
+    // });
 
-    const updatedDate = new Date(indianTimeZoneDateString);
+    // const updatedDate = new Date(indianTimeZoneDateString);
 
     await db.event.update({
       where: {
@@ -323,7 +323,8 @@ export const editEvent = privateProcedure
       data: {
         title: title ?? existingEvent.title,
         description: description ?? existingEvent.description,
-        eventDate: updatedDate,
+        // eventDate: updatedDate,
+        eventDate: eventDate ?? existingEvent.eventDate,
       },
     });
   });
