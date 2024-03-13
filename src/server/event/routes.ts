@@ -58,18 +58,6 @@ export const getEvents = privateProcedure
 
       console.log("providedDate", format(providedDate, "MMMM do, h:mm a"));
 
-      if (isSameDay(providedDate, currentDate)) {
-        await db.event.update({
-          data: {
-            title: `${format(
-              startOfDay(providedDate),
-              "MMMM do, h:mm a"
-            )} to ${format(endOfDay(providedDate), "MMMM do, h:mm a")}`,
-          },
-          where: { id: "cltq5vl4h00011h1xwyhuhziy" },
-        });
-      }
-
       eventDateWhereClause = {
         gte: startOfDay(providedDate),
         lte: endOfDay(providedDate),
