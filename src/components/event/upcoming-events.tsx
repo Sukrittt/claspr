@@ -26,9 +26,6 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
 }) => {
   const { data: events, isLoading } = useGetUpcomingEvents(classroomId);
 
-  console.log("event count", events?.length);
-  console.log("isLoading", isLoading);
-
   return (
     <Card className="h-full">
       <CardHeader className="border-b py-2.5">

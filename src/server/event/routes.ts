@@ -1,18 +1,10 @@
 import { z } from "zod";
-import moment from "moment-timezone";
 import { TRPCError } from "@trpc/server";
-import { format, startOfDay } from "date-fns";
+import { addDays, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
 import { getIsPartOfClassAuth } from "@/server/class/routes";
-
-function customAddDays(date: Date, days: number) {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-
-  return result;
-}
 
 /**
  *  Fetching events for next 7 days.
@@ -47,24 +39,12 @@ export const getEvents = privateProcedure
       }
     }
 
-    // const indianTimeZone = moment().tz("Asia/Kolkata").format();
     const indianTimeZone = new Date().toLocaleString("en-US", {
       timeZone: "Asia/Kolkata",
     });
+
     const currentDate = new Date(indianTimeZone);
-
-    const formattedCurrentDate = format(currentDate, "dd MMMM yyyy hh:mm a");
-
-    console.log("currentDate", formattedCurrentDate);
-
-    await db.event.update({
-      data: {
-        title: formattedCurrentDate,
-      },
-      where: { id: "cltmh88jb0003f8ihw5k2wtqx" },
-    });
-
-    const sevenDaysLater = customAddDays(currentDate, 7);
+    const sevenDaysLater = startOfDay(addDays(currentDate, 7));
 
     let assignmentWhereClause = {};
     let eventDateWhereClause = {};
@@ -72,7 +52,7 @@ export const getEvents = privateProcedure
     if (date) {
       eventDateWhereClause = {
         gte: startOfDay(date),
-        lt: startOfDay(customAddDays(date, 1)),
+        lt: startOfDay(addDays(date, 1)),
       };
     } else {
       eventDateWhereClause = {
