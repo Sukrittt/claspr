@@ -50,19 +50,24 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      const indianTimeZoneDateString = new Date().toLocaleString("en-US", {
+      const indianTimeZoneDateString = new Date(date).toLocaleString("en-US", {
         timeZone: "Asia/Kolkata",
       });
 
       const providedDate = startOfDay(new Date(indianTimeZoneDateString));
 
-      const fmtDate = format(providedDate, "do MMM, yyyy hh:mm a");
+      console.log("providedDate", format(providedDate, "MMMM do, h:mm a"));
+
+      console.log("start", format(startOfDay(providedDate), "MMMM do, h:mm a"));
+      console.log("end", format(endOfDay(providedDate), "MMMM do, h:mm a"));
 
       await db.event.update({
         data: {
-          title: `${startOfDay(fmtDate)} to ${endOfDay(fmtDate)}`,
+          title: `${startOfDay(
+            format(startOfDay(providedDate), "MMMM do, h:mm a")
+          )} to ${format(endOfDay(providedDate), "MMMM do, h:mm a")}`,
         },
-        where: { id: "cltq3rjdm00016zinxtdrb6z2" },
+        where: { id: "cltq5vl4h00011h1xwyhuhziy" },
       });
 
       eventDateWhereClause = {
