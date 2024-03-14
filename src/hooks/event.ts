@@ -21,7 +21,13 @@ export const useCreateEvent = ({ closeModal }: { closeModal: () => void }) => {
   });
 };
 
-export const useEditEvent = ({ closeModal }: { closeModal?: () => void }) => {
+export const useEditEvent = ({
+  closeModal,
+  date,
+}: {
+  closeModal?: () => void;
+  date?: Date;
+}) => {
   const utils = trpc.useUtils();
 
   return trpc.event.editEvent.useMutation({
@@ -30,13 +36,15 @@ export const useEditEvent = ({ closeModal }: { closeModal?: () => void }) => {
 
       await utils.event.getEvents.cancel({
         classroomId: undefined,
+        date,
       });
 
       const prevEvents = utils.event.getEvents.getData({
         classroomId: undefined,
+        date,
       });
 
-      utils.event.getEvents.setData({ classroomId: undefined }, (prev) =>
+      utils.event.getEvents.setData({ classroomId: undefined, date }, (prev) =>
         prev?.map((event) =>
           event.id === eventId
             ? {
@@ -55,13 +63,14 @@ export const useEditEvent = ({ closeModal }: { closeModal?: () => void }) => {
       toast.error(error.message);
 
       utils.event.getEvents.setData(
-        { classroomId: undefined },
+        { classroomId: undefined, date },
         ctx?.prevEvents
       );
     },
     onSettled: (res) => {
       utils.event.getEvents.invalidate({
         classroomId: undefined,
+        date,
       });
     },
   });

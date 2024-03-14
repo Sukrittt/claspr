@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { format, startOfDay } from "date-fns";
 
 import {
   Drawer,
@@ -57,6 +57,7 @@ export const EventSheet: React.FC<EventSheetProps> = ({
                   eventId={event.id}
                   initialTitle={event.title}
                   isEditable={event.userId === sessionId}
+                  date={startOfDay(event.eventDate)}
                 />
               </DrawerTitle>
               {event.userId === sessionId && <EventDropdown event={event} />}

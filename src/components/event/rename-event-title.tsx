@@ -8,17 +8,19 @@ interface RenameEventTitleProps {
   initialTitle: string;
   eventId: string;
   isEditable: boolean;
+  date: Date;
 }
 
 export const RenameEventTitle: React.FC<RenameEventTitleProps> = ({
   eventId,
   initialTitle,
   isEditable,
+  date,
 }) => {
   const [title, setTitle] = useState(initialTitle);
   const debouncedTitle = useDebounce(title, 500);
 
-  const { mutate: renameEvent } = useEditEvent({ closeModal: undefined });
+  const { mutate: renameEvent } = useEditEvent({ closeModal: undefined, date });
 
   useEffect(() => {
     if (title === initialTitle) return;

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
+import { startOfDay } from "date-fns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -54,6 +55,7 @@ export const EditEventForm: React.FC<EditEventFormProps> = ({
 
   const { mutate: editEvent } = useEditEvent({
     closeModal,
+    date: startOfDay(event.eventDate),
   });
 
   function handlelEditEvent(data: Inputs) {
@@ -65,7 +67,7 @@ export const EditEventForm: React.FC<EditEventFormProps> = ({
     editEvent({
       ...data,
       eventId: event.id,
-      eventDate: eventDate,
+      eventDate,
     });
   }
 

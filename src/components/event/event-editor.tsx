@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+import { startOfDay } from "date-fns";
 
 import { ExtendedEvent } from "@/types";
 import { useEditEvent } from "@/hooks/event";
@@ -16,7 +17,10 @@ export const EventEditor: React.FC<EventEditorProps> = ({ event }) => {
   const [content] = useAtom(contentAtom);
   const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom);
 
-  const { mutate: updateContent } = useEditEvent({ closeModal: undefined });
+  const { mutate: updateContent } = useEditEvent({
+    closeModal: undefined,
+    date: startOfDay(event.eventDate),
+  });
 
   const handleUpdateContent = () => {
     updateContent({
