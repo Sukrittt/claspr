@@ -56,15 +56,17 @@ export const getEvents = privateProcedure
 
       const providedDate = new Date(indianTimeZoneDateString);
 
-      await db.event.update({
-        data: {
-          title: `${format(
-            startOfDay(providedDate),
-            "MMMM do, h:mm a"
-          )} to ${format(endOfDay(providedDate), "MMM do, h:mm a")}`,
-        },
-        where: { id: "cltq7m23500058ilnmzdp75we" },
-      });
+      if (isSameDay(providedDate, currentDate)) {
+        await db.event.update({
+          data: {
+            title: `${format(
+              startOfDay(providedDate),
+              "MMMM do, h:mm a"
+            )} to ${format(endOfDay(providedDate), "MMM do, h:mm a")}`,
+          },
+          where: { id: "cltq7m23500058ilnmzdp75we" },
+        });
+      }
 
       eventDateWhereClause = {
         gte: startOfDay(providedDate),
