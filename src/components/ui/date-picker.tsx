@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { TimePicker } from "@/components/ui/time-picker";
+import { CustomTooltip } from "../custom/custom-tooltip";
 
 interface DatePickerProps {
   value: Date | undefined;
@@ -90,13 +91,17 @@ export function DatePicker({
               )}
             </>
           ) : (
-            <>
+            <div>
               {value ? (
-                <CalendarCheck className="h-4 w-4" />
+                <CustomTooltip
+                  text={format(new Date(value), "MMMM do, h:mm a")}
+                >
+                  <CalendarCheck className="h-4 w-4" />
+                </CustomTooltip>
               ) : (
                 <CalendarIcon className="h-4 w-4" />
               )}
-            </>
+            </div>
           )}
         </Button>
       </PopoverTrigger>
