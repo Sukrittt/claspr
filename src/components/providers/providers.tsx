@@ -7,6 +7,7 @@ import { httpBatchLink } from "@trpc/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { trpc } from "@/trpc/client";
+import { ThemeProvider } from "./theme-providers";
 
 interface IError {
   code: string;
@@ -47,7 +48,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <JotaiProvider>{children}</JotaiProvider>
+        <JotaiProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </JotaiProvider>
       </QueryClientProvider>
     </trpc.Provider>
   );

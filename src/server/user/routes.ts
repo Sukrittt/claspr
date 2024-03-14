@@ -31,6 +31,9 @@ export const registerUser = publicProcedure
       where: {
         email,
       },
+      select: {
+        id: true,
+      },
     });
 
     if (existingUser) {
@@ -181,6 +184,42 @@ export const onBoardUser = privateProcedure
         noteType: "PERSONAL",
         folderId: createdFolder.id,
         creatorId: ctx.userId,
+      },
+    });
+  });
+
+/**
+ * Delete user's from the database.
+ *
+ * @param {object} input - The input parameters for deleting the account of a user.
+ * @param {string} input.userId - The id of the user.
+ */
+export const deleteAccount = publicProcedure
+  .input(
+    z.object({
+      userId: z.string(),
+    })
+  )
+  .mutation(async ({ input }) => {
+    const { userId } = input;
+
+    const existingUser = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: { id: true },
+    });
+
+    if (!existingUser) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "We couldn't find your account. Please try again later.",
+      });
+    }
+
+    await db.user.delete({
+      where: {
+        id: userId,
       },
     });
   });

@@ -12,6 +12,7 @@ import { Logout } from "./logout";
 import { trpc } from "@/trpc/client";
 import { otherItems } from "@/config/menu";
 import { getShortenedText } from "@/lib/utils";
+import { SettingsDialog } from "../settings/settings-dialog";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
@@ -165,6 +166,8 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
         </div>
 
         <div className="space-y-2 pt-6">
+          <SettingsDialog sessionId={session.user.id} />
+
           {otherItems.map((item, index) => (
             <Link
               href={item.href}

@@ -12,7 +12,7 @@ export const Logout = () => {
     setLoading(true);
 
     signOut({
-      callbackUrl: `${window.location.origin}/sign-in`,
+      callbackUrl: `${window.location.origin}`,
     });
   };
 
