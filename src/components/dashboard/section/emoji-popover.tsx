@@ -1,7 +1,9 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useAtom } from "jotai";
+import { useEffect, useState } from "react";
 import { Bookmark } from "lucide-react";
+import { SectionType } from "@prisma/client";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 
 import {
@@ -11,22 +13,79 @@ import {
 } from "@/components/ui/popover";
 import { trpc } from "@/trpc/client";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { createdClassSections, joinedClassSections } from "@/atoms";
 
 interface EmojiPopoverProps {
   emojiUrl: string | null;
   sectionId: string;
+  sectionType: SectionType;
 }
 
 export const EmojiPopover: React.FC<EmojiPopoverProps> = ({
   emojiUrl,
   sectionId,
+  sectionType,
 }) => {
+  const [, setCreatedClassSections] = useAtom(createdClassSections);
+  const [, setJoinedClassSections] = useAtom(joinedClassSections);
+
   const [selectedEmoji, setSelectedEmoji] = useState({
     name: "",
     url: emojiUrl,
   });
 
-  const { mutate: updateEmoji } = trpc.section.updateSection.useMutation();
+  useEffect(() => {
+    if (emojiUrl === selectedEmoji.url) return;
+
+    setSelectedEmoji({
+      name: "",
+      url: emojiUrl,
+    });
+  }, [emojiUrl]);
+
+  const handleOptimisticUpdate = (emojiUrl: string) => {
+    if (sectionType === "CREATION") {
+      setCreatedClassSections((prev) => {
+        const index = prev.findIndex((section) => section.id === sectionId);
+
+        if (index !== -1) {
+          const updatedSections = [...prev];
+
+          updatedSections[index] = {
+            ...updatedSections[index],
+            emojiUrl,
+          };
+
+          return updatedSections;
+        }
+
+        return prev;
+      });
+    } else {
+      setJoinedClassSections((prev) => {
+        const index = prev.findIndex((section) => section.id === sectionId);
+
+        if (index !== -1) {
+          const updatedSections = [...prev];
+
+          updatedSections[index] = {
+            ...updatedSections[index],
+            emojiUrl,
+          };
+
+          return updatedSections;
+        }
+
+        return prev;
+      });
+    }
+  };
+
+  const { mutate: updateEmoji } = trpc.section.updateSection.useMutation({
+    onMutate: ({ emojiUrl }) => {
+      handleOptimisticUpdate(emojiUrl ?? "");
+    },
+  });
 
   return (
     <Popover>

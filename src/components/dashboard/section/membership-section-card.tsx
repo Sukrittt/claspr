@@ -124,7 +124,11 @@ export const MembershipItem = ({
             })}
           />
           <div className="flex items-center gap-x-2">
-            <EmojiPopover emojiUrl={section.emojiUrl} sectionId={section.id} />
+            <EmojiPopover
+              sectionType="MEMBERSHIP"
+              emojiUrl={section.emojiUrl}
+              sectionId={section.id}
+            />
             <p className="text-[13.5px]">{section.name}</p>
           </div>
         </div>
@@ -166,6 +170,7 @@ export const MembershipItem = ({
             >
               <EmojiPopover
                 emojiUrl={section.emojiUrl}
+                sectionType="MEMBERSHIP"
                 sectionId={section.id}
               />
             </div>
