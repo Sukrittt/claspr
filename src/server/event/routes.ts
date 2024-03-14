@@ -64,7 +64,8 @@ export const getEvents = privateProcedure
       const formattedDate = new Date(date);
 
       eventDateWhereClause = {
-        gte: startOfDay(formattedDate),
+        // gte: startOfDay(formattedDate),
+        gte: formattedDate,
         lte: endOfDay(formattedDate),
       };
     } else {
