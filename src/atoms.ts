@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { ReportStatus } from "@prisma/client";
 
 import {
   ExtendedEvent,
@@ -45,3 +46,6 @@ export const activeDateAtom = atom<{
 } | null>(null);
 
 export const overDateAtom = atom<Date | null>(null);
+
+// For Reports
+export const activeReportStatusAtom = atom<ReportStatus | null>(null);

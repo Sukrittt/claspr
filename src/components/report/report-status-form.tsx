@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { ReportType } from "@prisma/client";
+import { ReportStatus } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -10,7 +10,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
@@ -20,55 +19,51 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useReportIssue } from "@/hooks/report";
+import { useEditReport } from "@/hooks/report";
 import { Button } from "@/components/ui/button";
 import { useMounted } from "@/hooks/use-mounted";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 
-const reportContentInputSchema = z.object({
-  content: z
-    .string()
-    .min(1)
-    .max(500)
-    .refine(
-      (val) => {
-        return val.trim().length > 0;
-      },
-      { message: "Report content cannot be empty" }
-    ),
-  reportType: z.nativeEnum(ReportType),
+const reportStatusUpdateSchema = z.object({
+  reportStatus: z.nativeEnum(ReportStatus),
 });
 
-type Inputs = z.infer<typeof reportContentInputSchema>;
+type Inputs = z.infer<typeof reportStatusUpdateSchema>;
 
-export const ReportForm = () => {
+interface ReportStatusFormProps {
+  closeModal: () => void;
+  reportId: string;
+  reportStatus: ReportStatus | null;
+}
+
+export const ReportStatusForm: React.FC<ReportStatusFormProps> = ({
+  closeModal,
+  reportId,
+  reportStatus,
+}) => {
   const mounted = useMounted();
 
   // react-hook-form
   const form = useForm<Inputs>({
-    resolver: zodResolver(reportContentInputSchema),
+    resolver: zodResolver(reportStatusUpdateSchema),
     defaultValues: {
-      content: "",
-      reportType: ReportType.BUG_REPORT,
+      reportStatus: reportStatus ?? "PENDING",
     },
   });
 
-  const cleanUp = () => {
-    form.reset();
-  };
-
-  const { mutate: reportIssue, isLoading } = useReportIssue({ cleanUp });
+  const { mutate: updateReportStatus, isLoading } = useEditReport({
+    closeModal,
+  });
 
   function onSubmit(data: Inputs) {
-    reportIssue({
-      body: data.content,
-      reportType: data.reportType,
+    updateReportStatus({
+      reportId,
+      reportStatus: data.reportStatus,
     });
   }
 
   return (
-    <div className="space-y-4 max-w-5xl mx-auto">
+    <div className="w-full space-y-4">
       <Form {...form}>
         <form
           id="issue-report-form"
@@ -77,10 +72,9 @@ export const ReportForm = () => {
         >
           <FormField
             control={form.control}
-            name="reportType"
+            name="reportStatus"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>How can we help?</FormLabel>
                 <Select
                   disabled={isLoading}
                   onValueChange={field.onChange}
@@ -96,32 +90,11 @@ export const ReportForm = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="BUG_REPORT">Report a Bug</SelectItem>
-                    <SelectItem value="FEATURE_REQUEST">
-                      Request a feature
-                    </SelectItem>
-                    <SelectItem value="GENERAL">General Feedback</SelectItem>
+                    <SelectItem value="PENDING">Pending</SelectItem>
+                    <SelectItem value="RESOLVED">Resolved</SelectItem>
+                    <SelectItem value="REJECTED">Rejected</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    disabled={isLoading}
-                    className="h-[120px]"
-                    placeholder="Describe the issue in detail"
-                    {...field}
-                  />
-                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -133,9 +106,9 @@ export const ReportForm = () => {
         {isLoading ? (
           <Loader2 className="mr-2 h-3 w-3 animate-spin" aria-hidden="true" />
         ) : (
-          "Submit"
+          "Save"
         )}
-        <span className="sr-only">Submit Report</span>
+        <span className="sr-only">Save</span>
       </Button>
     </div>
   );

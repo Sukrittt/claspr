@@ -82,19 +82,56 @@ export const updateReport = privateProcedure
   });
 
 /**
+ * To delete a report.
+ *
+ * @param {object} input - The input parameters for deleting a report.
+ * @param {enum} input.reportId - The id of the report.
+ */
+export const removeReport = privateProcedure
+  .input(
+    z.object({
+      reportId: z.string(),
+    })
+  )
+  .mutation(async ({ input }) => {
+    const { reportId } = input;
+
+    const existingReport = await db.report.findFirst({
+      where: {
+        id: reportId,
+      },
+      select: { id: true },
+    });
+
+    if (!existingReport) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message:
+          "We couldn't find the report you are looking for. Please try again later.",
+      });
+    }
+
+    await db.report.delete({
+      where: {
+        id: reportId,
+      },
+    });
+  });
+
+/**
  * To get app reports.
  *
  * @param {object} input - The input parameters for getting reports.
  * @return {object} - A list of report objects.
  */
 export const getReports = privateProcedure
-  // .input(
-  //   z.object({
-  //     // TODO: Add pagination
-  //   })
-  // )
+  .input(
+    z.object({
+      reportStatus: ReportStatusEnum.optional(),
+    })
+  )
   .query(async ({ ctx, input }) => {
-    // const {  } = input;
+    const { reportStatus } = input;
 
     if (ctx.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
       throw new TRPCError({
@@ -104,6 +141,9 @@ export const getReports = privateProcedure
     }
 
     const reports = await db.report.findMany({
+      where: {
+        reportStatus,
+      },
       orderBy: {
         createdAt: "desc",
       },
