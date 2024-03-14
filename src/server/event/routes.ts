@@ -57,27 +57,15 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      // const indianTimeZoneDateString = new Date(date).toLocaleString("en-US", {
-      //   timeZone: "Asia/Kolkata",
-      // });
+      const indianTimeZoneDateString = new Date(date).toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      });
 
-      // const providedDate = new Date(indianTimeZoneDateString);
-
-      if (isSameDay(date, subDays(currentDate, 3))) {
-        await db.event.update({
-          data: {
-            title: `${format(startOfDay(date), "MMMM do, h:mm a")} to ${format(
-              endOfDay(date),
-              "MMM do, h:mm a"
-            )}`,
-          },
-          where: { id: "cltq7m23500058ilnmzdp75we" },
-        });
-      }
+      const providedDate = new Date(indianTimeZoneDateString);
 
       eventDateWhereClause = {
-        gte: startOfDay(date),
-        lte: endOfDay(date),
+        gte: startOfDay(providedDate),
+        lte: endOfDay(providedDate),
       };
     } else {
       eventDateWhereClause = {
