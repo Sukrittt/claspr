@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, format, isSameDay, startOfDay } from "date-fns";
+import {
+  addDays,
+  endOfDay,
+  format,
+  isSameDay,
+  startOfDay,
+  subDays,
+} from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -56,15 +63,17 @@ export const getEvents = privateProcedure
 
       // const providedDate = new Date(indianTimeZoneDateString);
 
-      await db.event.update({
-        data: {
-          title: `${format(startOfDay(date), "MMMM do, h:mm a")} to ${format(
-            endOfDay(date),
-            "MMM do, h:mm a"
-          )}`,
-        },
-        where: { id: "cltq7m23500058ilnmzdp75we" },
-      });
+      if (isSameDay(date, subDays(currentDate, 3))) {
+        await db.event.update({
+          data: {
+            title: `${format(startOfDay(date), "MMMM do, h:mm a")} to ${format(
+              endOfDay(date),
+              "MMM do, h:mm a"
+            )}`,
+          },
+          where: { id: "cltq7m23500058ilnmzdp75we" },
+        });
+      }
 
       eventDateWhereClause = {
         gte: startOfDay(date),
