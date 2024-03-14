@@ -73,7 +73,7 @@ export const AssignmentFilter: React.FC<AssignmentFilterProps> = ({
 
   return (
     <Select
-      defaultValue={activeStatus}
+      defaultValue={activeStatus ?? "pending"}
       onValueChange={(val) => {
         const initialUrl = `/c/${assignment.classRoomId}/a/${assignment.id}`;
 
