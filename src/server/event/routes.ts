@@ -57,40 +57,15 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      const indianTimeZoneDateString = new Date(date).toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
-      });
+      // const indianTimeZoneDateString = new Date(date).toLocaleString("en-US", {
+      //   timeZone: "Asia/Kolkata",
+      // });
 
-      const providedDate = new Date(indianTimeZoneDateString);
-      const providedDateUTC = new Date(
-        providedDate.getUTCFullYear(),
-        providedDate.getUTCMonth(),
-        providedDate.getUTCDate()
-      );
-
-      // Set the start and end of the provided date in UTC timezone
-      const startOfProvidedDateUTC = new Date(
-        providedDateUTC.getUTCFullYear(),
-        providedDateUTC.getUTCMonth(),
-        providedDateUTC.getUTCDate(),
-        0,
-        0,
-        0,
-        0
-      );
-      const endOfProvidedDateUTC = new Date(
-        providedDateUTC.getUTCFullYear(),
-        providedDateUTC.getUTCMonth(),
-        providedDateUTC.getUTCDate(),
-        23,
-        59,
-        59,
-        999
-      );
+      const formattedDate = new Date(date);
 
       eventDateWhereClause = {
-        gte: startOfProvidedDateUTC,
-        lte: endOfProvidedDateUTC,
+        gte: startOfDay(formattedDate),
+        lte: endOfDay(formattedDate),
       };
     } else {
       eventDateWhereClause = {
@@ -339,14 +314,6 @@ export const editEvent = privateProcedure
       });
     }
 
-    // const indianTimeZoneDateString = new Date(
-    //   eventDate ?? existingEvent.eventDate
-    // ).toLocaleString("en-US", {
-    //   timeZone: "Asia/Kolkata",
-    // });
-
-    // const updatedDate = new Date(indianTimeZoneDateString);
-
     await db.event.update({
       where: {
         id: eventId,
@@ -355,7 +322,6 @@ export const editEvent = privateProcedure
       data: {
         title: title ?? existingEvent.title,
         description: description ?? existingEvent.description,
-        // eventDate: updatedDate,
         eventDate: eventDate ?? existingEvent.eventDate,
       },
     });
