@@ -62,12 +62,35 @@ export const getEvents = privateProcedure
       });
 
       const providedDate = new Date(indianTimeZoneDateString);
+      const providedDateUTC = new Date(
+        providedDate.getUTCFullYear(),
+        providedDate.getUTCMonth(),
+        providedDate.getUTCDate()
+      );
 
-      const providedDateUTC = new Date(providedDate.toUTCString());
+      // Set the start and end of the provided date in UTC timezone
+      const startOfProvidedDateUTC = new Date(
+        providedDateUTC.getUTCFullYear(),
+        providedDateUTC.getUTCMonth(),
+        providedDateUTC.getUTCDate(),
+        0,
+        0,
+        0,
+        0
+      );
+      const endOfProvidedDateUTC = new Date(
+        providedDateUTC.getUTCFullYear(),
+        providedDateUTC.getUTCMonth(),
+        providedDateUTC.getUTCDate(),
+        23,
+        59,
+        59,
+        999
+      );
 
       eventDateWhereClause = {
-        gte: startOfDay(providedDateUTC),
-        lte: endOfDay(providedDateUTC),
+        gte: startOfProvidedDateUTC,
+        lte: endOfProvidedDateUTC,
       };
     } else {
       eventDateWhereClause = {
