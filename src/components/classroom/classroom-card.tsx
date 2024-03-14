@@ -29,8 +29,10 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
   sessionId,
 }) => {
   const [copied, setCopied] = useState(false);
+
   const { data: pendingAssignments, isLoading: isFetching } =
     usePendingAssignments(classroom.id);
+
   const { data: description, isLoading } = useClassroomDescription(
     classroom.id
   );
@@ -168,14 +170,21 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
           })}
           {!isTeacher && (
             <div className="flex justify-between items-center">
-              <p className="text-muted-foreground">Pending</p>
               {isFetching ? (
-                <Skeleton className="h-4 w-4" />
+                <>
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-4" />
+                </>
               ) : (
-                <PendingAssignmentsDialog
-                  classroomId={classroom.id}
-                  pendingAssignments={pendingAssignments}
-                />
+                <>
+                  <PendingAssignmentsDialog
+                    classroomId={classroom.id}
+                    pendingAssignments={pendingAssignments}
+                  />
+                  <p className="text-muted-foreground text-[13px]">
+                    {pendingAssignments?.length}
+                  </p>
+                </>
               )}
             </div>
           )}
