@@ -54,15 +54,15 @@ export const getEvents = privateProcedure
       //   timeZone: "Asia/Kolkata",
       // });
 
-      const formattedDate = new Date(date);
-      const updatedStartOfDay = new Date(startOfDay(formattedDate));
-      const updatedEndOfDay = new Date(endOfDay(formattedDate));
+      // const formattedDate = new Date(date);
+      // const updatedStartOfDay = new Date(startOfDay(formattedDate));
+      // const updatedEndOfDay = new Date(endOfDay(formattedDate));
 
       eventDateWhereClause = {
-        gte: updatedStartOfDay,
-        lte: updatedEndOfDay,
-        // gte: startOfDay(formattedDate),
-        // lte: endOfDay(formattedDate),
+        // gte: updatedStartOfDay,
+        // lte: updatedEndOfDay,
+        gte: startOfDay(new Date()),
+        lte: endOfDay(new Date()),
       };
     } else {
       eventDateWhereClause = {
