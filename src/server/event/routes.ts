@@ -63,9 +63,11 @@ export const getEvents = privateProcedure
 
       const providedDate = new Date(indianTimeZoneDateString);
 
+      const providedDateUTC = new Date(providedDate.toISOString());
+
       eventDateWhereClause = {
-        gte: startOfDay(providedDate),
-        lte: endOfDay(providedDate),
+        gte: startOfDay(providedDateUTC),
+        lte: endOfDay(providedDateUTC),
       };
     } else {
       eventDateWhereClause = {
