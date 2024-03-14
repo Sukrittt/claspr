@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, isSameDay, startOfDay } from "date-fns";
+import { addDays, endOfDay, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -54,23 +54,10 @@ export const getEvents = privateProcedure
       //   timeZone: "Asia/Kolkata",
       // });
 
-      const formattedDate = new Date(date);
-      const updatedStartOfDay = new Date(startOfDay(formattedDate));
-      const updatedEndOfDay = new Date(endOfDay(formattedDate));
-
-      if (isSameDay(new Date(), date)) {
-        eventDateWhereClause = {
-          // gte: updatedStartOfDay,
-          // lte: updatedEndOfDay,
-          gte: startOfDay(new Date()),
-          lte: endOfDay(new Date()),
-        };
-      } else {
-        eventDateWhereClause = {
-          gte: updatedStartOfDay,
-          lte: updatedEndOfDay,
-        };
-      }
+      eventDateWhereClause = {
+        gte: startOfDay(date),
+        lte: endOfDay(date),
+      };
     } else {
       eventDateWhereClause = {
         gte: startOfDay(currentDate),
