@@ -1,13 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import {
-  addDays,
-  endOfDay,
-  format,
-  isSameDay,
-  startOfDay,
-  subDays,
-} from "date-fns";
+import { addDays, endOfDay, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -62,11 +55,14 @@ export const getEvents = privateProcedure
       // });
 
       const formattedDate = new Date(date);
+      const updatedStartOfDay = new Date(startOfDay(formattedDate));
+      const updatedEndOfDay = new Date(endOfDay(formattedDate));
 
       eventDateWhereClause = {
+        gte: updatedStartOfDay,
+        lte: updatedEndOfDay,
         // gte: startOfDay(formattedDate),
-        gte: formattedDate,
-        lte: endOfDay(formattedDate),
+        // lte: endOfDay(formattedDate),
       };
     } else {
       eventDateWhereClause = {
