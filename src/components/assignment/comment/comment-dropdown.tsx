@@ -44,14 +44,14 @@ export const CommentDropdown: React.FC<SectionDropdownProps> = ({
         <DropdownMenuContent className="min-w-40">
           <>
             <DropdownMenuItem
-              className="text-gray-700 text-[13px]"
+              className="text-gray-700 dark:text-gray-300 text-[13px]"
               onClick={() => setIsEditOpen(true)}
             >
               <Pen className="h-3.5 w-3.5 mr-2" />
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="text-gray-700 text-[13px]"
+              className="text-gray-700 dark:text-gray-300 text-[13px]"
               onClick={() => setIsDeleteOpen(true)}
             >
               <Trash className="h-3.5 w-3.5 mr-2" />

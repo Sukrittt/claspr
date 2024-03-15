@@ -41,7 +41,7 @@ export const UpcomingEvents: React.FC<UpcomingEventsProps> = ({
             <CustomTooltip text="Your Calendar">
               <Link
                 href="/calendar"
-                className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
               >
                 <CalendarDays className="h-3.5 w-3.5" />
               </Link>

@@ -50,7 +50,7 @@ export const SectionDropdown: React.FC<SectionDropdownProps> = ({
         <DropdownMenuTrigger asChild>
           <div>
             <CustomTooltip text="More options">
-              <div className="text-gray-700 hover:bg-neutral-300 p-1 rounded-md transition">
+              <div className="text-gray-700 dark:text-gray-300 hover:bg-neutral-300 dark:hover:text-gray-400 dark:hover:bg-neutral-800 dark:text-foreground p-1 rounded-md transition">
                 <MoreHorizontal className="h-4 w-4" />
               </div>
             </CustomTooltip>
@@ -59,7 +59,7 @@ export const SectionDropdown: React.FC<SectionDropdownProps> = ({
         <DropdownMenuContent className="min-w-40">
           <>
             <DropdownMenuItem
-              className="text-gray-700 text-[13px]"
+              className="text-gray-700 dark:text-gray-300 text-[13px]"
               onClick={() => setIsEditOpen(true)}
             >
               <Pen className="h-3.5 w-3.5 mr-2" />
@@ -68,14 +68,14 @@ export const SectionDropdown: React.FC<SectionDropdownProps> = ({
             {!isDefault && (
               <>
                 <DropdownMenuItem
-                  className="text-gray-700 text-[13px]"
+                  className="text-gray-700 dark:text-gray-300 text-[13px]"
                   onClick={() => setIsDeleteOpen(true)}
                 >
                   <Trash className="h-3.5 w-3.5 mr-2" />
                   Delete
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-gray-700 text-[13px]">
+                <DropdownMenuItem className="text-gray-700 dark:text-gray-300 text-[13px]">
                   <MarkDefault
                     sectionId={sectionId}
                     sectionType={sectionType}

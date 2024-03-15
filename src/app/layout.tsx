@@ -1,6 +1,4 @@
-import { Toaster } from "sonner";
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./styles/globals.css";
@@ -25,9 +23,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <Suspense fallback={<LoadingScreen fullHeight />}>
           <Providers>{children}</Providers>
-          <Toaster
-            loadingIcon={<Loader2 className="h-3 w-3 animate-spin mt-1" />}
-          />
         </Suspense>
       </body>
     </html>

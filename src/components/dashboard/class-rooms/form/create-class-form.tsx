@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -56,9 +55,6 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
     {
       onSuccess: (classRoom) => {
         router.push(`/c/${classRoom.id}`);
-      },
-      onMutate: () => {
-        toast.loading("Just a moment...", { duration: 1000 });
       },
     }
   );

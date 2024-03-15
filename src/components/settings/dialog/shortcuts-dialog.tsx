@@ -17,7 +17,7 @@ export const ShortcutsDialog = () => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <p className="flex cursor-pointer items-center gap-x-2 hover:bg-neutral-100 text-muted-foreground transition rounded-md py-1 px-2">
+        <p className="flex cursor-pointer items-center gap-x-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-300 text-muted-foreground transition rounded-md py-1 px-2">
           <Zap className="h-3.5 w-3.5" />
           <span className="tracking-tight font-medium text-[13px]">
             Shortcuts
@@ -31,7 +31,7 @@ export const ShortcutsDialog = () => {
               {shortcuts.map((shortcut, index) => (
                 <div className="space-y-4" key={index}>
                   <div className="space-y-2">
-                    <p className="text-[15px] font-semibold tracking-tight text-neutral-800">
+                    <p className="text-[15px] font-semibold tracking-tight text-neutral-800 dark:text-foreground">
                       {shortcut.label}
                     </p>
                     <Separator />

@@ -17,7 +17,7 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
   };
 
   const roleCardClass =
-    "flex flex-col gap-y-1 px-5 py-3 border cursor-pointer hover:bg-neutral-100 transition rounded-md";
+    "flex flex-col gap-y-1 px-5 py-3 border cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition rounded-md";
 
   return (
     <AnimatePresence mode="wait">
@@ -29,7 +29,7 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
         exit="exit"
       >
         <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100">
+          <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-foreground">
             Select Your Role
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
@@ -50,7 +50,7 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
                 alt="Teacher"
               />
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-foreground">
                   Teacher
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -67,7 +67,7 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
             <div className="flex items-center gap-x-3">
               <Image src="/student.png" width={40} height={40} alt="Student" />
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-foreground">
                   Student
                 </h3>
                 <p className="text-sm text-muted-foreground">

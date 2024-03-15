@@ -46,7 +46,7 @@ export const DeleteAccount = ({ sessionId }: { sessionId: string }) => {
   return (
     <AlertDialog open={open} onOpenChange={(val) => setOpen(val)}>
       <AlertDialogTrigger asChild>
-        <div className="h-6 w-6 rounded-md cursor-pointer hover:bg-neutral-200 transition flex items-center justify-center">
+        <div className="h-6 w-6 rounded-md cursor-pointer text-muted-foreground dark:hover:text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-800 transition flex items-center justify-center">
           <ChevronRight className="h-4 w-4" />
         </div>
       </AlertDialogTrigger>

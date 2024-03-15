@@ -94,7 +94,7 @@ export const MarkDefault: React.FC<MarkDefaultProps> = ({
       className="flex items-center"
       onClick={() => markAsDefault({ sectionId, isDefault: true, sectionType })}
     >
-      <BadgeCheck className="h-3.5 w-3.5 text-gray-700 mr-2" />
+      <BadgeCheck className="h-3.5 w-3.5 text-gray-700 dark:text-gray-300 mr-2" />
       <p>Mark as default</p>
     </div>
   );

@@ -23,12 +23,12 @@ export const MediaDropdown: React.FC<MediaDropdownProps> = ({ media }) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <MoreVertical className="h-4 w-4 text-gray-800 hover:text-gray-700 transition cursor-pointer" />
+          <MoreVertical className="h-4 w-4 text-gray-800 hover:text-gray-700 dark:text-gray-300 transition cursor-pointer" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-40">
           {media.mediaType === "LINK" && (
             <DropdownMenuItem
-              className="text-gray-700 text-[13px]"
+              className="text-gray-700 dark:text-gray-300 text-[13px]"
               onClick={() => setIsEditOpen(true)}
             >
               <Pencil className="h-3.5 w-3.5 mr-2" />
@@ -36,7 +36,7 @@ export const MediaDropdown: React.FC<MediaDropdownProps> = ({ media }) => {
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsDeleteOpen(true)}
           >
             <Trash className="h-3.5 w-3.5 mr-2" />

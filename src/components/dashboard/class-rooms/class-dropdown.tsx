@@ -49,7 +49,7 @@ export const ClassDropdown: React.FC<ClassDropdownProps> = ({
         <DropdownMenuTrigger asChild>
           <div>
             <CustomTooltip text="More options">
-              <div className="text-gray-700 hover:bg-neutral-400/30 p-1 rounded-md transition">
+              <div className="text-gray-700 dark:text-gray-300 hover:bg-neutral-400/30 p-1 rounded-md transition">
                 <MoreHorizontal className="h-4 w-4" />
               </div>
             </CustomTooltip>
@@ -57,14 +57,14 @@ export const ClassDropdown: React.FC<ClassDropdownProps> = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-40 mr-2">
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsEditOpen(true)}
           >
             <Pen className="h-3.5 w-3.5 mr-2" />
             Edit
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsDeleteOpen(true)}
           >
             {sectionType === "CREATION" ? (

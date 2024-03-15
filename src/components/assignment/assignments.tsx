@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { toast } from "sonner";
 import { Session } from "next-auth";
 import { format, isAfter } from "date-fns";
 import { ClipboardList } from "lucide-react";
@@ -101,10 +100,7 @@ const AssignmentCardList: React.FC<AssignmentCardListProps> = ({
       animate="animate"
       exit="exit"
     >
-      <div
-        onClick={() => toast.loading("Just a moment...", { duration: 1000 })}
-        className="border-b text-sm px-3 py-2 flex items-center gap-x-2"
-      >
+      <div className="border-b text-sm px-3 py-2 flex items-center gap-x-2">
         <UserAvatar user={assignment.creator} className="h-8 w-8 rounded-md" />
         <div className="flex flex-col gap-y-1 w-full">
           <Link

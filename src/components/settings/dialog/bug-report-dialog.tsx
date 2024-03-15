@@ -19,7 +19,7 @@ export const BugReportDialog = ({ session }: { session: Session }) => {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <p className="flex cursor-pointer items-center gap-x-2 hover:bg-neutral-100 text-muted-foreground transition rounded-md py-1 px-2">
+        <p className="flex cursor-pointer items-center gap-x-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-300 text-muted-foreground transition rounded-md py-1 px-2">
           <Bug className="h-3.5 w-3.5" />
           <span className="tracking-tight font-medium text-[13px]">Report</span>
         </p>

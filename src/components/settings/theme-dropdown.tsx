@@ -30,7 +30,7 @@ export const ThemeDropdown = () => {
 
   return (
     <Select value={theme} onValueChange={(val) => setTheme(val as Theme)}>
-      <SelectTrigger className="w-fit border-none hover:bg-neutral-200 transition">
+      <SelectTrigger className="w-fit gap-1 px-2.5 border-none hover:bg-neutral-200 dark:hover:bg-neutral-800 transition">
         <SelectValue placeholder="Theme" />
       </SelectTrigger>
       <SelectContent>

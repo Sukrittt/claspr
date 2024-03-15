@@ -62,7 +62,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
         <DropdownMenuTrigger asChild>
           <div>
             <CustomTooltip text="More options">
-              <div className="text-gray-700 hover:bg-neutral-300 p-1 rounded-md transition">
+              <div className="text-gray-700 dark:text-gray-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-300 p-1 rounded-md transition">
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </div>
             </CustomTooltip>
@@ -70,14 +70,14 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-40">
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsMoveOpen(true)}
           >
             <SendToBack className="h-3.5 w-3.5 mr-2" />
             Move
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsEditOpen(true)}
           >
             <Pen className="h-3.5 w-3.5 mr-2" />
@@ -85,7 +85,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
           </DropdownMenuItem>
           {!disableLinkClassroom && (
             <DropdownMenuItem
-              className="text-gray-700 text-[13px]"
+              className="text-gray-700 dark:text-gray-300 text-[13px]"
               onClick={() => setIsLinkClasroomOpen(true)}
             >
               <Link className="h-3.5 w-3.5 mr-2" />
@@ -93,7 +93,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsAddTopicOpen(true)}
           >
             <NotebookText className="h-3.5 w-3.5 mr-2" />
@@ -102,7 +102,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
 
           {!disabled && (
             <DropdownMenuItem
-              className="text-gray-700 text-[13px]"
+              className="text-gray-700 dark:text-gray-300 text-[13px]"
               onClick={() => setIsDeleteOpen(true)}
             >
               <Trash className="h-3.5 w-3.5 mr-2" />
@@ -110,7 +110,7 @@ export const NoteDropdown: React.FC<NoteDropdownProps> = ({
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsInfoOpen(true)}
           >
             <Info className="h-3.5 w-3.5 mr-2" />

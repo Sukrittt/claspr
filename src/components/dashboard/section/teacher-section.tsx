@@ -35,17 +35,17 @@ export const TeacherSection = () => {
         <CardHeader className="border-b py-2.5 space-y-0.5">
           <div className="flex justify-between items-end">
             <div>
-              <CardTitle className="text-base font-semibold text-gray-800">
+              <CardTitle className="text-base font-semibold">
                 Your Sections
               </CardTitle>
-              <CardDescription className="text-muted-foreground text-sm">
+              <CardDescription className="text-muted-foreground text-[13px]">
                 Sections containing created classrooms
               </CardDescription>
             </div>
             <div className="flex items-center gap-x-2">
               <CustomTooltip text="Collapse All">
                 <div
-                  className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                  className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                   onClick={() => setCloseAllCreationToggle((prev) => !!!prev)}
                 >
                   <CopyMinus className="w-3.5 h-3.5" />
@@ -72,17 +72,17 @@ export const TeacherSection = () => {
         <CardHeader className="border-b py-2.5 space-y-0.5">
           <div className="flex justify-between items-end">
             <div>
-              <CardTitle className="text-base font-semibold text-gray-800">
+              <CardTitle className="text-base font-semibold">
                 Your Sections
               </CardTitle>
-              <CardDescription className="text-muted-foreground text-sm">
+              <CardDescription className="text-muted-foreground text-[13px]">
                 Sections containing joined classrooms
               </CardDescription>
             </div>
             <div className="flex items-center gap-x-2">
               <CustomTooltip text="Collapse All">
                 <div
-                  className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                  className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                   onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
                 >
                   <CopyMinus className="w-3.5 h-3.5" />

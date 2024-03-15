@@ -82,7 +82,7 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
       <SheetTrigger asChild>
         <div>
           <CustomTooltip text="Ctrl + \">
-            <div className="text-neutral-700 hover:bg-neutral-200 cursor-pointer p-1 rounded-md transition">
+            <div className="text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-800 cursor-pointer p-1 rounded-md transition">
               <Menu className="h-4 w-4" />
               <span className="sr-only">Toggle Menu</span>
             </div>
@@ -113,7 +113,7 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
               <div className="flex items-center gap-x-2">
                 <CustomTooltip text="Collapse All">
                   <div
-                    className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                    className="p-1 rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                     onClick={() => setCloseAllCreationToggle((prev) => !!!prev)}
                   >
                     <CopyMinus className="w-3.5 h-3.5" />
@@ -143,7 +143,7 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
             <div className="flex items-center gap-x-2">
               <CustomTooltip text="Collapse All">
                 <div
-                  className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                  className="p-1 rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                   onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
                 >
                   <CopyMinus className="w-3.5 h-3.5" />

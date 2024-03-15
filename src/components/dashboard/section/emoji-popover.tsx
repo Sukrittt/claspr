@@ -14,6 +14,7 @@ import {
 import { trpc } from "@/trpc/client";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { createdClassSections, joinedClassSections } from "@/atoms";
+import { useTheme } from "next-themes";
 
 interface EmojiPopoverProps {
   emojiUrl: string | null;
@@ -26,6 +27,8 @@ export const EmojiPopover: React.FC<EmojiPopoverProps> = ({
   sectionId,
   sectionType,
 }) => {
+  const { theme } = useTheme();
+
   const [, setCreatedClassSections] = useAtom(createdClassSections);
   const [, setJoinedClassSections] = useAtom(joinedClassSections);
 
@@ -87,10 +90,20 @@ export const EmojiPopover: React.FC<EmojiPopoverProps> = ({
     },
   });
 
+  const getTheme = () => {
+    if (theme === "dark") {
+      return Theme.DARK;
+    } else if (theme === "light") {
+      return Theme.LIGHT;
+    } else {
+      return Theme.AUTO;
+    }
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <span className="p-1 rounded-md hover:bg-neutral-300 hover:text-gray-700 transition block">
+        <span className="p-1 rounded-md hover:bg-neutral-300 dark:hover:bg-neutral-700 hover:text-gray-700 dark:text-gray-300 dark:hover:text-neutral-300 transition block">
           {selectedEmoji.url ? (
             <div className="h-4 w-4 relative">
               <Image
@@ -109,7 +122,7 @@ export const EmojiPopover: React.FC<EmojiPopoverProps> = ({
       </PopoverTrigger>
       <PopoverContent className="w-full bg-transparent border-0">
         <EmojiPicker
-          theme={Theme.LIGHT}
+          theme={getTheme()}
           onEmojiClick={(e) => {
             setSelectedEmoji({ name: e.names[0], url: e.imageUrl });
             updateEmoji({ sectionId, emojiUrl: e.imageUrl });

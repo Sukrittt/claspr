@@ -10,9 +10,6 @@ export const useCreateMedia = ({ closeModal }: { closeModal: () => void }) => {
   const utils = trpc.useUtils();
 
   return trpc.media.createMedia.useMutation({
-    onMutate: () => {
-      toast.loading("Adding your work...");
-    },
     onSuccess: () => {
       closeModal();
       toast.success("Your work has been uploaded");

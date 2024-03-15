@@ -10,7 +10,7 @@ export const LoadingScreen = ({
   return (
     <div
       className={cn(
-        "h-[85vh] flex items-center justify-center text-gray-700 text-sm",
+        "h-[85vh] flex items-center justify-center text-gray-700 dark:text-gray-300 text-sm",
         {
           "h-screen": fullHeight,
         }

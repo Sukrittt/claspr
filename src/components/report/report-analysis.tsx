@@ -10,10 +10,10 @@ import { ContainerVariants } from "@/lib/motion";
 import { cn, getShortenedText } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ReportStatusFilter } from "./report-status-filter";
 import { ReportStatusDialog } from "./report-status-dialog";
-import { UserAvatar } from "@/components/custom/user-avatar";
 import { DeleteReportDialog } from "./report-delete-dialog";
+import { ReportStatusFilter } from "./report-status-filter";
+import { UserAvatar } from "@/components/custom/user-avatar";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { ReportSkeleton } from "@/components/skeletons/report-skeleton";
 
@@ -86,7 +86,7 @@ export const ReportAnalysis = () => {
     <div className="space-y-4">
       <div className="flex items-end justify-between">
         <div className="space-y-1">
-          <h1 className="font-extrabold text-2xl text-neutral-800">
+          <h1 className="font-extrabold text-2xl text-neutral-800 dark:text-foreground">
             Report Analysis
           </h1>
           <p className="text-muted-foreground tracking-tight">
@@ -104,7 +104,7 @@ export const ReportAnalysis = () => {
           <ReportSkeleton />
         ) : !reports || reports.length === 0 ? (
           <div className="h-[40vh] flex flex-col items-center justify-center gap-y-2">
-            <ClipboardX className="h-10 w-10 text-neutral-800" />
+            <ClipboardX className="h-10 w-10 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
               Nothing to show here.
             </p>
@@ -131,7 +131,7 @@ export const ReportAnalysis = () => {
                     <div className="flex gap-x-2">
                       <UserAvatar user={report.user} className="h-5 w-5" />
 
-                      <p className="tracking-tight font-medium text-neutral-800 text-sm">
+                      <p className="tracking-tight font-medium text-neutral-800 dark:text-foreground text-sm">
                         {report.body}
                       </p>
                     </div>

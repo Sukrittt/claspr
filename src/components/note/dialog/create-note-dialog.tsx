@@ -36,7 +36,7 @@ export const CreateNoteDialog: React.FC<CreateNoteDialogProps> = ({
         ) : (
           <div>
             <CustomTooltip text="Create Note">
-              <div className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200">
+              <div className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200">
                 <Plus className="h-3.5 w-3.5" />
                 <div className="sr-only">Create Note</div>
               </div>

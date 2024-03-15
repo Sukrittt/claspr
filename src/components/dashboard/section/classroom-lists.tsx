@@ -21,9 +21,12 @@ export const ClassroomListsWithCreation: React.FC<
         initial="initial"
         animate="animate"
         exit="exit"
-        className={cn("text-gray-800 pl-[52px] text-sm pt-1", {
-          "pl-9 text-xs": isMenu,
-        })}
+        className={cn(
+          "text-gray-800 dark:text-muted-foreground pl-[52px] text-[13.5px] pt-1",
+          {
+            "pl-9 text-xs": isMenu,
+          }
+        )}
       >
         No classrooms in this section.
       </motion.p>
@@ -69,9 +72,12 @@ export const ClassroomListsWithMembership: React.FC<
         initial="initial"
         animate="animate"
         exit="exit"
-        className={cn("text-gray-800 pl-[52px] text-sm pt-1", {
-          "pl-9 text-xs": isMenu,
-        })}
+        className={cn(
+          "text-gray-800 dark:text-muted-foreground pl-[52px] text-[13.5px] pt-1",
+          {
+            "pl-9 text-xs": isMenu,
+          }
+        )}
       >
         No classrooms in this section.
       </motion.p>

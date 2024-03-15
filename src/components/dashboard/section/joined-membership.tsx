@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { toast } from "sonner";
 import { useState } from "react";
 import { GripVertical } from "lucide-react";
 import {
@@ -52,8 +51,8 @@ export const JoinedMembership = ({
   if (isDragging) {
     return (
       <div id="portal-item">
-        <div className="flex items-center gap-x-1 py-1.5 px-2 tracking-tight text-gray-800">
-          <GripVertical className="w-4 h-4 text-gray-800" />
+        <div className="flex items-center gap-x-1 py-1.5 px-2 tracking-tight text-gray-800 dark:text-foreground">
+          <GripVertical className="w-4 h-4 text-gray-800 dark:text-neutral-400" />
           <p>
             {getShortenedText(membership.classRoom.title, isMenu ? 18 : 50)}
           </p>
@@ -71,19 +70,17 @@ export const JoinedMembership = ({
       id="always-on-show"
     >
       <Link
-        onClick={() =>
-          toast.loading("Getting your data together...", { duration: 2000 })
-        }
         href={`/c/${membership.classRoom.id}`}
         className={cn(
-          "text-gray-800 tracking-tight group hover:bg-neutral-200 transition rounded-md py-1 px-2 flex items-center justify-between",
+          "text-gray-800 dark:text-foreground tracking-tight group hover:bg-neutral-200 dark:hover:bg-neutral-700/60 transition rounded-md py-1 px-2 flex items-center justify-between",
           {
-            "bg-neutral-200 text-sm opacity-60 cursor-grabbing": isHolding,
+            "bg-neutral-200 dark:bg-neutral-700/60 text-sm opacity-60 cursor-grabbing":
+              isHolding,
           }
         )}
       >
         <div className="flex items-center gap-x-1">
-          <GripVertical className="w-4 h-4 text-gray-800" />
+          <GripVertical className="w-4 h-4 text-gray-800 dark:text-neutral-400" />
           <p>
             {getShortenedText(
               membership.renamedClassroom ?? membership.classRoom.title,

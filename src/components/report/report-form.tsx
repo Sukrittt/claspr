@@ -72,7 +72,7 @@ export const ReportForm = ({ closeModal }: { closeModal: () => void }) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <p className="text-[15px] font-semibold tracking-tight text-neutral-800">
+        <p className="text-[15px] font-semibold tracking-tight text-neutral-800 dark:text-foreground">
           Report a bug
         </p>
         <Separator />

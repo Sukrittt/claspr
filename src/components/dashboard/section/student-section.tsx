@@ -26,7 +26,7 @@ export const StudentSection = () => {
       <CardHeader className="border-b py-2.5 space-y-0.5">
         <div className="flex justify-between items-end">
           <div>
-            <CardTitle className="text-base font-semibold text-gray-800">
+            <CardTitle className="text-base font-semibold">
               Your Sections
             </CardTitle>
             <CardDescription className="text-muted-foreground text-sm">
@@ -36,7 +36,7 @@ export const StudentSection = () => {
           <div className="flex items-center gap-x-2 pr-4">
             <CustomTooltip text="Collapse All">
               <div
-                className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+                className="p-1 rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200"
                 onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
               >
                 <CopyMinus className="w-3.5 h-3.5" />

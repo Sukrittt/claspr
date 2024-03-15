@@ -7,7 +7,7 @@ export const SectionSkeleton = ({ length = 4 }: { length?: number }) => {
     <div className="w-full space-y-2">
       {Array.from({ length }).map((_, i) => (
         <div key={i} className="flex items-center gap-x-1 px-2">
-          <ChevronRight className="w-4 h-4 text-gray-800" />
+          <ChevronRight className="w-4 h-4 text-gray-800 dark:text-foreground" />
           <div className="flex items-center gap-x-2 w-full">
             <Skeleton className="h-6 w-6" />
             <Skeleton className="h-6 w-full" />

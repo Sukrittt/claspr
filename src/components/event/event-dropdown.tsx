@@ -28,7 +28,7 @@ export const EventDropdown: React.FC<EventDropdownProps> = ({ event }) => {
         <DropdownMenuTrigger asChild>
           <div>
             <CustomTooltip text="More options">
-              <div className="text-gray-700 hover:bg-neutral-300 p-1 rounded-md transition cursor-pointer">
+              <div className="text-gray-700 dark:text-gray-300 hover:bg-neutral-300 p-1 rounded-md transition cursor-pointer">
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </div>
             </CustomTooltip>
@@ -36,21 +36,21 @@ export const EventDropdown: React.FC<EventDropdownProps> = ({ event }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-40">
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsEditOpen(true)}
           >
             <Pen className="h-3.5 w-3.5 mr-2" />
             Edit
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsDeleteOpen(true)}
           >
             <Trash className="h-3.5 w-3.5 mr-2" />
             Delete
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsInfoOpen(true)}
           >
             <Info className="h-3.5 w-3.5 mr-2" />

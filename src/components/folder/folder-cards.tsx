@@ -160,7 +160,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
       id="always-on-show"
       onClick={() => setFolderActive(folder.id)}
       className={cn(
-        "flex items-center justify-between group pb-2 px-6 text-gray-800 text-sm border-b cursor-pointer focus:outline-none",
+        "flex items-center justify-between group pb-2 px-6 text-gray-800 dark:text-foreground text-sm border-b cursor-pointer focus:outline-none",
         {
           "cursor-grabbing bg-background/60 opacity-60 pt-2": isHolding,
         }

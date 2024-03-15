@@ -31,7 +31,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
       <div className="space-y-0.5">
         <p
           onClick={handleEventClick}
-          className="text-[14px] tracking-tight text-neutral-800 font-medium hover:underline underline-offset-4 cursor-pointer"
+          className="text-[14px] tracking-tight text-neutral-800 dark:text-foreground font-medium hover:underline underline-offset-4 cursor-pointer"
         >
           {getShortenedText(event.title, 30)}{" "}
           {event.assignment && (
@@ -47,7 +47,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
         <CustomTooltip text="Calendar View">
           <div
             onClick={() => handleQueryChange("/calendar", { active: event.id })}
-            className="text-gray-700 hover:bg-neutral-300 p-1 rounded-md transition cursor-pointer"
+            className="text-gray-700 dark:text-gray-300 hover:bg-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 p-1 rounded-md transition cursor-pointer"
           >
             <CalendarClock className="h-3.5 w-3.5" />
           </div>

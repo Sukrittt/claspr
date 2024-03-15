@@ -1,13 +1,14 @@
 "use client";
-import { toast } from "sonner";
 import { useState } from "react";
 import superjson from "superjson";
+import { toast } from "sonner";
 import { Provider as JotaiProvider } from "jotai";
 import { httpBatchLink } from "@trpc/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { trpc } from "@/trpc/client";
 import { ThemeProvider } from "./theme-providers";
+import { ToastProvider } from "./toast-provider";
 
 interface IError {
   code: string;
@@ -20,9 +21,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            //remove this
+            // REMOVE THIS
             refetchOnWindowFocus: false,
             refetchOnReconnect: false,
+            // REMOVE THIS
           },
           mutations: {
             onError: (error) => {
@@ -51,11 +53,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <JotaiProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
+            defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <>
+              <ToastProvider />
+              {children}
+            </>
           </ThemeProvider>
         </JotaiProvider>
       </QueryClientProvider>

@@ -72,7 +72,7 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
     <div>
       <CustomTooltip text="Alt + n">
         <div
-          className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200"
+          className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
           onClick={() => setOpen(true)}
         >
           <Search className="h-3.5 w-3.5" />
@@ -114,12 +114,12 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
                     handleNoteClick?.(noteId);
                     setOpen(false);
                   }}
-                  className="flex items-center gap-x-2 hover:bg-neutral-100 transition cursor-pointer px-4 py-2"
+                  className="flex items-center gap-x-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition cursor-pointer px-4 py-2"
                 >
-                  <div className="border rounded-md p-1.5 text-gray-800">
+                  <div className="border rounded-md p-1.5 text-gray-800 dark:text-foreground">
                     <FileText className="h-3.5 w-3.5" />
                   </div>
-                  <p className="text-sm text-neutral-800 tracking-tight">
+                  <p className="text-sm text-neutral-800 dark:text-foreground tracking-tight">
                     {getShortenedText(noteTitle, 30)}
                   </p>
                 </div>
@@ -163,7 +163,7 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
                         router.push(`/n/${note.id}`);
                       }}
                       key={note.id}
-                      className="py-2 px-4 hover:bg-neutral-100 transition cursor-pointer"
+                      className="py-2 px-4 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
                     >
                       <div className="flex items-center gap-x-2">
                         {note.emojiUrl ? (
@@ -178,12 +178,12 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
                             </div>
                           </div>
                         ) : (
-                          <div className="border rounded-md p-1.5 text-gray-800">
+                          <div className="border rounded-md p-1.5 text-gray-800 dark:text-foreground">
                             <FileText className="h-3.5 w-3.5" />
                           </div>
                         )}
 
-                        <p className="text-sm text-neutral-800 tracking-tight">
+                        <p className="text-sm text-neutral-800 dark:text-foreground tracking-tight">
                           {getShortenedText(note.title, 30)}
                         </p>
                       </div>

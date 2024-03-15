@@ -28,14 +28,14 @@ export const SubmissionDropdown: React.FC<SubmissionDropdownProps> = ({
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent className="min-w-40">
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsLinkOpen(true)}
           >
             <Link className="h-3.5 w-3.5 mr-2" />
             Link
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-gray-700 text-[13px]"
+            className="text-gray-700 dark:text-gray-300 text-[13px]"
             onClick={() => setIsDocumentOpen(true)}
           >
             <File className="h-3.5 w-3.5 mr-2" />

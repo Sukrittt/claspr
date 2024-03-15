@@ -66,7 +66,6 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
     }
 
     try {
-      toast.loading("Uploading your file...", { duration: 4000 });
       setIsLoading(true);
 
       const fileObjs = await uploadByFile(files);
