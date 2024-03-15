@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useAtom } from "jotai";
 import { Session } from "next-auth";
 import { UserType } from "@prisma/client";
@@ -10,13 +9,12 @@ import { CopyMinus, Menu } from "lucide-react";
 
 import { Logout } from "./logout";
 import { trpc } from "@/trpc/client";
-import { otherItems } from "@/config/menu";
 import { getShortenedText } from "@/lib/utils";
-import { SettingsDialog } from "../settings/settings-dialog";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { SettingsDialog } from "@/components/settings/dialog/settings-dialog";
 import { MembershipContext } from "@/components/dashboard/section/membership-context";
 import { CreatedClassContext } from "@/components/dashboard/section/created-class-context";
 import { CreateSectionDialog } from "@/components/dashboard/section/dialog/create-section-dialog";
@@ -26,6 +24,8 @@ import {
   isCloseAllMembershipToggle,
   joinedClassSections,
 } from "@/atoms";
+import { ShortcutsDialog } from "@/components/settings/dialog/shortcuts-dialog";
+import { BugReportDialog } from "@/components/settings/dialog/bug-report-dialog";
 
 interface HamburgMenuProps {
   role: UserType;
@@ -167,19 +167,8 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
 
         <div className="space-y-2 pt-6">
           <SettingsDialog sessionId={session.user.id} />
-
-          {otherItems.map((item, index) => (
-            <Link
-              href={item.href}
-              key={index}
-              className="flex items-center gap-x-2 hover:bg-neutral-100 text-muted-foreground transition rounded-md py-1 px-2"
-            >
-              <item.icon className="h-3.5 w-3.5" />
-              <p className="tracking-tight font-medium text-[13px]">
-                {item.label}
-              </p>
-            </Link>
-          ))}
+          <ShortcutsDialog />
+          <BugReportDialog session={session} />
 
           <Logout />
         </div>

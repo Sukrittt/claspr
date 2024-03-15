@@ -1,21 +1,14 @@
 "use client";
-import { useState } from "react";
 import { Settings } from "lucide-react";
 
-import { Support } from "./support";
-import { Appearance } from "./appearance";
 import { Separator } from "@/components/ui/separator";
+import { Support } from "@/components/settings/support";
+import { Appearance } from "@/components/settings/appearance";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export const SettingsDialog = ({ sessionId }: { sessionId: string }) => {
-  const [open, setOpen] = useState(false);
-
-  const handleOpenChange = (open: boolean) => {
-    setOpen(open);
-  };
-
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog>
       <DialogTrigger asChild>
         <p className="flex cursor-pointer items-center gap-x-2 hover:bg-neutral-100 text-muted-foreground transition rounded-md py-1 px-2">
           <Settings className="h-3.5 w-3.5" />

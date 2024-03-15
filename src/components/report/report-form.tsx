@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { useMounted } from "@/hooks/use-mounted";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 
 const reportContentInputSchema = z.object({
   content: z
@@ -42,7 +43,7 @@ const reportContentInputSchema = z.object({
 
 type Inputs = z.infer<typeof reportContentInputSchema>;
 
-export const ReportForm = () => {
+export const ReportForm = ({ closeModal }: { closeModal: () => void }) => {
   const mounted = useMounted();
 
   // react-hook-form
@@ -55,6 +56,7 @@ export const ReportForm = () => {
   });
 
   const cleanUp = () => {
+    closeModal();
     form.reset();
   };
 
@@ -68,7 +70,14 @@ export const ReportForm = () => {
   }
 
   return (
-    <div className="space-y-4 max-w-5xl mx-auto">
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <p className="text-[15px] font-semibold tracking-tight text-neutral-800">
+          Report a bug
+        </p>
+        <Separator />
+      </div>
+
       <Form {...form}>
         <form
           id="issue-report-form"

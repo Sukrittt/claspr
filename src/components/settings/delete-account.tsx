@@ -6,7 +6,6 @@ import { ChevronRight, Loader2 } from "lucide-react";
 import { trpc } from "@/trpc/client";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,

@@ -83,7 +83,7 @@ export const ReportAnalysis = () => {
   };
 
   return (
-    <div className="space-y-4 py-8 px-10 h-screen max-w-5xl mx-auto">
+    <div className="space-y-4">
       <div className="flex items-end justify-between">
         <div className="space-y-1">
           <h1 className="font-extrabold text-2xl text-neutral-800">
@@ -99,11 +99,11 @@ export const ReportAnalysis = () => {
 
       <Separator />
 
-      <ScrollArea className="h-[70vh]">
+      <ScrollArea className="h-[40vh]">
         {isLoading ? (
           <ReportSkeleton />
         ) : !reports || reports.length === 0 ? (
-          <div className="h-[70vh] flex flex-col items-center justify-center gap-y-2">
+          <div className="h-[40vh] flex flex-col items-center justify-center gap-y-2">
             <ClipboardX className="h-10 w-10 text-neutral-800" />
             <p className="text-sm text-muted-foreground">
               Nothing to show here.

@@ -1,3 +1,4 @@
+"use client";
 import { format } from "date-fns";
 import { useDraggable } from "@dnd-kit/core";
 import { MessageSquareText } from "lucide-react";

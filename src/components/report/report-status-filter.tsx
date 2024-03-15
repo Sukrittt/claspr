@@ -49,7 +49,7 @@ export const ReportStatusFilter = () => {
   useEffect(() => {
     if (activeStatus) return;
 
-    const initialUrl = "/report";
+    const initialUrl = "/dashboard";
 
     handleQueryChange(initialUrl, {
       "report-status": "PENDING",
@@ -64,7 +64,7 @@ export const ReportStatusFilter = () => {
     <Select
       defaultValue={activeStatus ?? "PENDING"}
       onValueChange={(val) => {
-        const initialUrl = "/report";
+        const initialUrl = "/dashboard";
 
         handleQueryChange(initialUrl, { "report-status": val });
         setReportStatus(val as ReportStatus);
