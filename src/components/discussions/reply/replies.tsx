@@ -121,6 +121,7 @@ const ReplyCard: React.FC<ReplyCardProps> = ({
                 )}
 
               <ReactionLists
+                discussionId={discussionId}
                 replyId={reply.id}
                 reactions={reply.reactions}
                 session={session}

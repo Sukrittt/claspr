@@ -404,10 +404,12 @@ export const addReaction = privateProcedure
   .mutation(async ({ input, ctx }) => {
     const { discussionId, reactionType, replyId } = input;
 
+
     const existingDiscussion = await db.discussion.findFirst({
       where: { id: discussionId },
-      select: { id: true, classroomId: true, discussionType: true},
+      select: { id: true, classroomId: true, discussionType: true },
     });
+
 
     if (!existingDiscussion) {
       throw new TRPCError({
@@ -437,7 +439,6 @@ export const addReaction = privateProcedure
       select: { id: true, reaction: true },
     });
 
-
     // If the user has already reacted to the discussion or reply.
     if (existingReaction) {
       // If the user has already reacted with the same reaction type.
@@ -464,7 +465,6 @@ export const addReaction = privateProcedure
             replyId,
           },
         });
-
       }
     }
     // If the user has not reacted to the discussion or reply.
@@ -477,9 +477,7 @@ export const addReaction = privateProcedure
           userId: ctx.userId,
         },
       });
-
     }
-
   });
 
 /**

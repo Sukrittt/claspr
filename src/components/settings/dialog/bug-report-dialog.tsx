@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
 import { Bug } from "lucide-react";
-
 import { Session } from "next-auth";
-import { Separator } from "@/components/ui/separator";
+
 import { ReportForm } from "@/components/report/report-form";
 import { ReportAnalysis } from "@/components/report/report-analysis";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
