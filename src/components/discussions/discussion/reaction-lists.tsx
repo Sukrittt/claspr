@@ -61,7 +61,7 @@ export const ReactionLists: React.FC<ReactionListsProps> = ({
   const handleReactionChange = (val: string) => {
     const validValue = val.length > 0;
 
-    //a workaround to take the previous state value because when reaction is removed, I am not getting which reaction was removed.
+    // A workaround to take the previous state value of reaction because when a reaction is removed, I am not getting the reaction which was removed.
     handleAddReaction(
       validValue ? (val as ReactionType) : selectedReactionValue
     );
@@ -77,8 +77,8 @@ export const ReactionLists: React.FC<ReactionListsProps> = ({
     <div className="flex items-center gap-x-2">
       <Popover open={open} onOpenChange={(val) => setOpen(val)}>
         <PopoverTrigger asChild>
-          <div className="border p-1 w-fit rounded-full cursor-pointer hover:bg-neutral-200/70 transition">
-            <Smile className="h-4 w-4 text-neutral-800" />
+          <div className="border p-1 w-fit rounded-full cursor-pointer hover:bg-neutral-200/70 dark:hover:bg-neutral-800/70 transition">
+            <Smile className="h-4 w-4 text-neutral-800 dark:text-foreground" />
           </div>
         </PopoverTrigger>
         <PopoverContent className="p-1">
@@ -90,7 +90,10 @@ export const ReactionLists: React.FC<ReactionListsProps> = ({
           >
             {listOfReactions.map((reaction) => (
               <ToggleGroupItem
-                className="h-8"
+                className={cn("h-8", {
+                  "dark:bg-neutral-800":
+                    selectedReactionValue === reaction.value,
+                })}
                 key={reaction.value}
                 value={reaction.value}
               >
@@ -170,9 +173,10 @@ const ReactionsDisplay: React.FC<ReactionsDisplayProps> = ({
               key={reactionType}
               onClick={() => handleReactionChange(reactionType)}
               className={cn(
-                "border rounded-lg px-2 py-0.5 text-xs flex items-center gap-x-2 cursor-pointer hover:bg-neutral-200/70 hover:border-border transition",
+                "border rounded-lg px-2 py-0.5 text-xs flex items-center gap-x-2 cursor-pointer hover:bg-neutral-200/70 hover:bg-neutral-800 hover:border-border transition",
                 {
-                  "bg-sky-100 border-sky-500": userReacted,
+                  "bg-sky-100 dark:bg-sky-900/30 text-sky-500 dark:text-sky-600 border-sky-500 dark:border-sky-600 dark:hover:bg-sky-900/50":
+                    userReacted,
                   "opacity-50 cursor-default": disabled,
                 }
               )}

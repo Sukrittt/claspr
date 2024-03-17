@@ -105,7 +105,7 @@ const AssignmentCardList: React.FC<AssignmentCardListProps> = ({
         <div className="flex flex-col gap-y-1 w-full">
           <Link
             href={`/c/${assignment.classRoomId}/a/${assignment.id}`}
-            className="font-medium text-neutral-700 hover:underline underline-offset-4 w-fit"
+            className="font-medium text-neutral-700 dark:text-foreground hover:underline underline-offset-4 w-fit"
           >
             {assignment.title}
           </Link>

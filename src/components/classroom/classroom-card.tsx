@@ -135,7 +135,7 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
         )}
       </CardHeader>
       <CardContent className="pt-6 text-sm">
-        <div className="grid grid-cols-2 gap-4 text-gray-800">
+        <div className="grid grid-cols-2 gap-4 text-gray-800 dark:text-foreground">
           {classDetails.map((details, index) => {
             if (details.action && !isTeacher) return null;
 

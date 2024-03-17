@@ -191,9 +191,10 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
         {...attributes}
         id="always-on-show"
         className={cn(
-          "py-1 px-2.5 flex items-center justify-between hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer group",
+          "py-1 px-2.5 mb-2 flex items-center justify-between hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md text-[13px] cursor-pointer group focus:outline-none",
           {
-            "bg-neutral-100 font-medium": activeFolderId === folder.id,
+            "bg-neutral-100 dark:bg-neutral-800 font-medium":
+              activeFolderId === folder.id,
           }
         )}
       >
@@ -219,9 +220,10 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
       {...attributes}
       id="always-on-show"
       className={cn(
-        "py-1 px-2.5 mb-2 flex items-center justify-between focus:outline-none hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer group",
+        "py-1 px-2.5 mb-2 flex items-center justify-between focus:outline-none hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-md text-[13px] cursor-pointer group",
         {
-          "bg-neutral-100 font-medium": activeFolderId === folder.id,
+          "bg-neutral-100 dark:bg-neutral-800 font-medium":
+            activeFolderId === folder.id,
           "cursor-grabbing bg-background/60 opacity-60": isHolding,
         }
       )}

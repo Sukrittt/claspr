@@ -40,19 +40,27 @@ export const Discussions: React.FC<ClassDiscussionsProps> = ({
   const EmptyData = {
     announcements: {
       label: "No announcements created yet.",
-      icon: <MegaphoneOff className="h-10 w-10 text-neutral-800" />,
+      icon: (
+        <MegaphoneOff className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
+      ),
     },
     general: {
       label: "No general discussions created yet.",
-      icon: <MessageSquareOff className="h-10 w-10 text-neutral-800" />,
+      icon: (
+        <MessageSquareOff className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
+      ),
     },
     questionnaires: {
       label: "No questionnaires created yet.",
-      icon: <MessageSquareX className="h-10 w-10 text-neutral-800" />,
+      icon: (
+        <MessageSquareX className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
+      ),
     },
     ideas: {
       label: "No ideas created yet.",
-      icon: <LightbulbOff className="h-10 w-10 text-neutral-800" />,
+      icon: (
+        <LightbulbOff className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
+      ),
     },
   };
 

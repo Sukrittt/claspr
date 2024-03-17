@@ -34,7 +34,7 @@ export const DiscussionDetailSkeleton = ({
           <div className="flex items-center justify-between text-xs text-muted-foreground tracking-tight">
             <div className="flex items-center gap-x-2">
               <div className="border p-1 rounded-full cursor-pointer">
-                <Smile className="h-4 w-4 text-neutral-800" />
+                <Smile className="h-4 w-4 text-neutral-800 dark:text-foreground" />
               </div>
 
               <ReactionListSkeleton />
@@ -76,7 +76,7 @@ const ReplySkeleton = () => {
         <div className="flex items-center justify-between text-xs text-muted-foreground tracking-tight">
           <div className="flex items-center gap-x-2">
             <div className="border p-1 rounded-full cursor-pointer">
-              <Smile className="h-4 w-4 text-neutral-800" />
+              <Smile className="h-4 w-4 text-neutral-800 dark:text-foreground" />
             </div>
             <ReactionListSkeleton />
           </div>
@@ -97,7 +97,7 @@ const ReplySkeleton = () => {
                     <Skeleton className="h-4 w-1/2" />
 
                     <div className="border w-fit p-1 rounded-full cursor-pointer">
-                      <Smile className="h-4 w-4 text-neutral-800" />
+                      <Smile className="h-4 w-4 text-neutral-800 dark:text-foreground" />
                     </div>
                   </div>
                 </div>
@@ -105,7 +105,7 @@ const ReplySkeleton = () => {
                 <Skeleton className="h-4 w-4 rounded-md" />
               </div>
             </div>
-            <div className="h-full w-[2px] bg-neutral-200 absolute top-6 left-[11px]" />
+            <div className="h-full w-[2px] bg-neutral-200 dark:bg-neutral-800 absolute top-6 left-[11px]" />
           </div>
         ))}
       </div>

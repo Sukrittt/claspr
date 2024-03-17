@@ -14,8 +14,8 @@ export const HelpfulUsers = ({ classroomId }: { classroomId: string }) => {
   const { data: helpfulUsers, isLoading } = useGetHelpfulUsers(classroomId);
 
   return (
-    <div className="border rounded-md px-3 py-4 pr-0">
-      <div className="flex gap-x-2 text-sm">
+    <div className="border rounded-md py-4">
+      <div className="flex gap-x-2 text-sm px-3">
         <p className="font-medium">Most Helpful</p>
         <p className="text-muted-foreground text-[11px] mt-px">Last 30 days</p>
       </div>
@@ -27,7 +27,7 @@ export const HelpfulUsers = ({ classroomId }: { classroomId: string }) => {
           <HelpfulUsersSkeleton />
         ) : !helpfulUsers || helpfulUsers.length === 0 ? (
           <div className="flex flex-col gap-y-2 items-center justify-center pt-[10vh]">
-            <UserX className="h-6 w-6 text-neutral-800" />
+            <UserX className="h-6 w-6 text-neutral-800 dark:text-muted-foreground" />
             <p className="text-muted-foreground text-[13px]">No replies yet.</p>
           </div>
         ) : (
@@ -37,12 +37,12 @@ export const HelpfulUsers = ({ classroomId }: { classroomId: string }) => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="flex flex-col gap-y-2"
+              className="flex flex-col gap-y-2 pb-6"
             >
               {helpfulUsers.map((user) => (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between border-b border-neutral-200 py-2 mr-3"
+                  className="flex items-center justify-between border-b border-neutral-200 dark:border-border py-2 px-3"
                 >
                   <div className="flex items-center gap-x-2">
                     <UserAvatar user={user} className="h-4 w-4" />
@@ -52,7 +52,11 @@ export const HelpfulUsers = ({ classroomId }: { classroomId: string }) => {
                   </div>
 
                   <div className="flex items-center gap-x-2 text-xs text-muted-foreground">
-                    <CustomTooltip text={`${user._count.replies} replies`}>
+                    <CustomTooltip
+                      text={`${user._count.replies} ${
+                        user._count.replies === 1 ? "reply" : "replies"
+                      }`}
+                    >
                       <span>{user._count.replies}</span>
                     </CustomTooltip>
                   </div>

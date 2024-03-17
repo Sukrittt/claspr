@@ -30,13 +30,13 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
   return (
     <div className="border-b px-3 py-4 flex items-center justify-between">
       <div className="flex items-center gap-x-4">
-        <div className="bg-neutral-200 rounded-md h-10 w-10 grid place-items-center">
+        <div className="bg-neutral-200 dark:bg-neutral-800 rounded-md h-10 w-10 grid place-items-center">
           <discussionDetails.icon className="h-5 w-5" />
         </div>
 
         <div className="space-y-0.5">
           <h6
-            className="font-medium tracking-tight text-base hover:underline underline-offset-4 hover:text-neutral-800 transition cursor-pointer w-fit"
+            className="font-medium tracking-tight text-base hover:underline underline-offset-4 transition cursor-pointer w-fit"
             onClick={() => {
               setActiveDiscussionId(discussion.id);
 
@@ -50,13 +50,9 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
           </h6>
           <div className="flex items-center gap-x-1 text-muted-foreground tracking-tight text-[13px]">
             <p>
-              <span className="underline underline-offset-4">
-                {discussion.creator.name}
-              </span>{" "}
+              <span className="font-semibold">{discussion.creator.name}</span>{" "}
               created this on {format(discussion.createdAt, "MMM dd, yyyy")} in{" "}
-              <span className="underline underline-offset-4">
-                {discussionDetails.label}
-              </span>
+              <span className="font-semibold">{discussionDetails.label}</span>
             </p>
 
             {discussion.discussionType === "questionnaires" && (

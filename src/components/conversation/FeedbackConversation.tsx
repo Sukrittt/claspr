@@ -31,9 +31,13 @@ export const FeedbackConversation: React.FC<FeedbackConversationProps> = ({
         }
       >
         <div
-          className={cn("p-1.5 rounded-md hover:bg-neutral-200 transition", {
-            "bg-neutral-200": conversation.feedback === "LIKE",
-          })}
+          className={cn(
+            "p-1.5 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800 transition",
+            {
+              "bg-neutral-200 dark:bg-neutral-800":
+                conversation.feedback === "LIKE",
+            }
+          )}
           onClick={() => handleGiveFeedback("LIKE")}
         >
           <ThumbsUp className="w-3 h-3" />
@@ -49,9 +53,13 @@ export const FeedbackConversation: React.FC<FeedbackConversationProps> = ({
         }
       >
         <div
-          className={cn("p-1.5 rounded-md hover:bg-neutral-200 transition", {
-            "bg-neutral-200": conversation.feedback === "DISLIKE",
-          })}
+          className={cn(
+            "p-1.5 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800 transition",
+            {
+              "bg-neutral-200 dark:bg-neutral-800":
+                conversation.feedback === "DISLIKE",
+            }
+          )}
           onClick={() => handleGiveFeedback("DISLIKE")}
         >
           <ThumbsDown

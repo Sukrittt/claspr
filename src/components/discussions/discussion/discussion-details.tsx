@@ -92,7 +92,7 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
                         className="h-6 w-6"
                       />
                       <p className="text-muted-foreground">
-                        <span className="font-semibold text-neutral-800">
+                        <span className="font-semibold text-neutral-800 dark:text-foreground">
                           {discussion.creator.name}
                         </span>{" "}
                         on {format(discussion.createdAt, "MMM d, yyyy")}
@@ -157,6 +157,12 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
               ) : (
                 <ReplyInput discussionId={discussion.id} />
               )}
+            </div>
+
+            <div className="text-muted-foreground flex justify-center gap-x-4 w-full">
+              <span>*</span>
+              <span>*</span>
+              <span>*</span>
             </div>
 
             <div className="pb-20">

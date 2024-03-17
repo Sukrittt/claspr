@@ -73,8 +73,10 @@ export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
   }, [activeTab]);
 
   return (
-    <div className="space-y-4 text-neutral-800">
-      <h3 className="tracking-tight font-medium text-[13px]">Categories</h3>
+    <div className="space-y-4">
+      <h3 className="tracking-tight text-muted-foreground font-medium text-[13px]">
+        Categories
+      </h3>
       <div className="flex flex-col gap-y-2">
         {tabs.map((tab, index) => (
           <div
@@ -93,9 +95,10 @@ export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
             }}
             key={index}
             className={cn(
-              "py-1 px-2.5 flex items-center gap-x-2 hover:bg-neutral-100 rounded-md text-[13px] cursor-pointer",
+              "py-1 px-2.5 flex items-center gap-x-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-foreground rounded-md text-[13px] cursor-pointer",
               {
-                "bg-neutral-100 font-medium": activeTab === tab.value,
+                "bg-neutral-100 dark:bg-neutral-800 font-medium":
+                  activeTab === tab.value,
               }
             )}
           >

@@ -42,7 +42,7 @@ export const MaterialContent: React.FC<MaterialContentProps> = ({ note }) => {
   );
 
   return (
-    <div className="relative">
+    <div className="relative pl-4">
       <Editor
         content={note.content}
         note={note}

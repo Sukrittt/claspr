@@ -28,7 +28,7 @@ export const MaterialCard: React.FC<MaterialCardProps> = ({
   return (
     <div className="border-b px-3 py-4 flex items-center justify-between group">
       <div className="flex items-center gap-x-4">
-        <div className="bg-neutral-200 rounded-md h-10 w-10 grid place-items-center">
+        <div className="bg-neutral-200 dark:bg-neutral-800 rounded-md h-10 w-10 grid place-items-center">
           {note.emojiUrl ? (
             <div className="h-8 w-8 relative">
               <Image
@@ -52,16 +52,17 @@ export const MaterialCard: React.FC<MaterialCardProps> = ({
               updateViews({ noteId: note.id });
               setActiveNoteId(note.id);
             }}
-            className="font-medium tracking-tight text-base hover:underline underline-offset-4 hover:text-neutral-800 transition cursor-pointer w-fit"
+            className="font-medium tracking-tight text-base hover:underline underline-offset-4 cursor-pointer w-fit"
           >
             {note.title}
           </h6>
           <div className="flex items-center gap-x-1 text-muted-foreground tracking-tight text-[13px]">
             <p>
-              <span className="underline underline-offset-4">
-                {note.creator.name}
-              </span>{" "}
-              created this on {format(note.createdAt, "MMM dd, yyyy")}
+              <span className="font-medium">{note.creator.name}</span> created
+              this on{" "}
+              <span className="font-medium">
+                {format(note.createdAt, "MMM dd, yyyy")}
+              </span>
             </p>
           </div>
         </div>

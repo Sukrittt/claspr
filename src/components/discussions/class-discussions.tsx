@@ -27,7 +27,7 @@ export const ClassDiscussions: React.FC<ClassDiscussionsProps> = ({
   if (!activeTab) {
     return (
       <div className="h-[50vh] flex flex-col items-center justify-center gap-y-2">
-        <MousePointerSquare className="h-10 w-10 text-neutral-800" />
+        <MousePointerSquare className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
         <p className="text-sm text-muted-foreground">
           Select a category to start a discussion.
         </p>

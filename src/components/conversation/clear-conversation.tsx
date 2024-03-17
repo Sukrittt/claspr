@@ -20,11 +20,11 @@ export const ClearConversation: React.FC<ClearConversationProps> = ({
       <Button
         variant="ghost"
         size="icon"
-        className="h-8 w-8"
+        className="h-8 w-8 dark:hover:bg-neutral-800 dark:hover:text-neutral-300 text-muted-foreground"
         disabled={disabled}
         onClick={() => clearConversation({ classroomId })}
       >
-        <MessageCircleOff className="w-4 h-4 text-muted-foreground cursor-pointer" />
+        <MessageCircleOff className="w-4 h-4 cursor-pointer" />
       </Button>
     </CustomTooltip>
   );

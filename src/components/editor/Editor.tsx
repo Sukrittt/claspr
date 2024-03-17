@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { motion } from "framer-motion";
 import EditorJS from "@editorjs/editorjs";
@@ -13,6 +14,8 @@ import { NoteAi } from "@/components/note/note-ai";
 import { ContainerHeightVariants } from "@/lib/motion";
 import { contentAtom, isSubmittingAtom } from "@/atoms";
 import { AIDialog } from "@/components/conversation/ai-dialog";
+
+import "./editor.css";
 
 interface EditorProps {
   classroom?: Pick<ClassRoom, "id" | "title" | "description">;
@@ -110,6 +113,9 @@ export const Editor: React.FC<EditorProps> = ({
             shortcut: "CMD+L",
             config: {
               endpoint: "/api/link",
+              onError: () => {
+                console.log("error in link upload");
+              },
             },
           },
           image: {
@@ -119,16 +125,18 @@ export const Editor: React.FC<EditorProps> = ({
               types: "image/*",
               uploader: {
                 async uploadByFile(file: File) {
-                  console.log("editor fn", file);
+                  try {
+                    const res = await uploadByFile(file);
 
-                  const res = await uploadByFile(file);
-
-                  return {
-                    success: 1,
-                    file: {
-                      url: res.url,
-                    },
-                  };
+                    return {
+                      success: 1,
+                      file: {
+                        url: res.url,
+                      },
+                    };
+                  } catch (error) {
+                    toast.error("An error occurred while uploading your image");
+                  }
                 },
               },
             },
@@ -139,14 +147,18 @@ export const Editor: React.FC<EditorProps> = ({
               types: "image/*, video/*, application/pdf, .doc, .docx",
               uploader: {
                 async uploadByFile(file: File) {
-                  const res = await uploadByFile(file);
+                  try {
+                    const res = await uploadByFile(file);
 
-                  return {
-                    success: 1,
-                    file: {
-                      url: res.url,
-                    },
-                  };
+                    return {
+                      success: 1,
+                      file: {
+                        url: res.url,
+                      },
+                    };
+                  } catch (error) {
+                    toast.error("An error occurred while uploading your file");
+                  }
                 },
               },
             },
@@ -186,8 +198,6 @@ export const Editor: React.FC<EditorProps> = ({
   };
 
   async function uploadByFile(file: File) {
-    console.log("file", file);
-
     // upload to uploadthing
     const [res] = await uploadFiles("imageUpLoader", {
       files: [file],

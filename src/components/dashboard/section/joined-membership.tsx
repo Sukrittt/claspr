@@ -72,9 +72,9 @@ export const JoinedMembership = ({
       <Link
         href={`/c/${membership.classRoom.id}`}
         className={cn(
-          "text-gray-800 dark:text-foreground tracking-tight group hover:bg-neutral-200 dark:hover:bg-neutral-700/60 transition rounded-md py-1 px-2 flex items-center justify-between",
+          "text-gray-800 dark:text-foreground tracking-tight group hover:bg-neutral-200 dark:hover:bg-neutral-800 transition rounded-md py-1 px-2 flex items-center justify-between",
           {
-            "bg-neutral-200 dark:bg-neutral-700/60 text-sm opacity-60 cursor-grabbing":
+            "bg-neutral-200 dark:bg-neutral-800 text-sm opacity-60 cursor-grabbing":
               isHolding,
           }
         )}

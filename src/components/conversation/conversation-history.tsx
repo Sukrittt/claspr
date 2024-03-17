@@ -17,6 +17,7 @@ import { ConversationDropdown } from "./conversation-dropdown";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConversationSkeleton } from "@/components/skeletons/conversation-skeleton";
+
 export const ConversationHistory = ({
   classroomId,
 }: {
@@ -68,7 +69,7 @@ export const ConversationHistory = ({
           </p>
         ) : (
           <ScrollArea className="h-[450px]">
-            <div className="flex flex-col gap-y-4">
+            <div className="flex flex-col gap-y-4 pb-8">
               {conversations?.map((conversation) => (
                 <ConversationCard
                   key={conversation.id}
@@ -124,14 +125,14 @@ const ConversationCard = ({
           </div>
         </CardHeader>
         <CardContent
-          className="pt-3 pb-9 text-gray-800 text-[15px] cursor-pointer group relative"
+          className="pt-3 pb-9 text-gray-800 dark:text-foreground text-[15px] cursor-pointer group relative"
           onClick={() => handleCopyOutput(conversation.answer)}
         >
           <Markdown>{getFilteredResponse(conversation.answer)}</Markdown>
           <div className="opacity-0 group-hover:opacity-100 transition absolute bottom-2 right-3.5">
             <div className="flex items-center gap-x-4">
               <CustomTooltip text="Click to copy">
-                <div className="p-1.5 rounded-md hover:bg-neutral-200 transition">
+                <div className="p-1.5 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800 transition">
                   {copied ? (
                     <Check className="w-3 h-3" />
                   ) : (

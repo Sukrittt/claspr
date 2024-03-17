@@ -48,7 +48,7 @@ export const shortcuts = [
         description: "Create a new folder in Study Materials tab",
       },
       {
-        keys: "Alt + s",
+        keys: "Alt + d",
         description: "Start a new discussion ini Discussions tab",
       },
     ],

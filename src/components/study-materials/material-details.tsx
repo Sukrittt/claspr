@@ -2,17 +2,17 @@ import { useAtom } from "jotai";
 import { Session } from "next-auth";
 import { FileX2 } from "lucide-react";
 
-import { MaterialContent } from "./material-content";
-import { Separator } from "@/components/ui/separator";
-import { EditorOutput } from "@/components/editor/EditorOutput";
-import { NoteRenameTitle } from "@/components/note/note-rename-title";
 import {
   activeClassFolderIdAtom,
   activeNoteIdAtom,
   classFolderAtom,
 } from "@/atoms";
+import { MaterialContent } from "./material-content";
+import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useQueryChange } from "@/hooks/use-query-change";
+import { EditorOutput } from "@/components/editor/EditorOutput";
+import { NoteRenameTitle } from "@/components/note/note-rename-title";
 
 interface MaterialDetailsProps {
   noteId: string;

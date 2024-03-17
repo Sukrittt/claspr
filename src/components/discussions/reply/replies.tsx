@@ -76,11 +76,12 @@ const ReplyCard: React.FC<ReplyCardProps> = ({
         })}
       >
         <div className="p-4 pb-2 space-y-4">
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <div className="flex items-center gap-x-2 text-[13px] pb-2">
               <UserAvatar user={reply.creator} className="h-6 w-6" />
+
               <p className="text-muted-foreground">
-                <span className="font-semibold text-neutral-800">
+                <span className="font-semibold text-neutral-800 dark:text-foreground">
                   {reply.creator.name}
                 </span>{" "}
                 on {format(reply.createdAt, "MMM d, yyyy")}
@@ -105,7 +106,9 @@ const ReplyCard: React.FC<ReplyCardProps> = ({
             </div>
           </div>
 
-          <p className="text-neutral-800 text-sm">{reply.text}</p>
+          <p className="text-neutral-800 dark:text-foreground text-sm">
+            {reply.text}
+          </p>
 
           <div className="flex items-center justify-between text-xs text-muted-foreground tracking-tight">
             <div className="flex items-center gap-x-4">
@@ -149,7 +152,7 @@ const ReplyCard: React.FC<ReplyCardProps> = ({
                 />
                 <div
                   className={cn(
-                    "h-full w-[2px] bg-neutral-200 absolute top-6 left-[11px]",
+                    "h-full w-[2px] bg-neutral-200 dark:bg-neutral-800 absolute top-6 left-[11px]",
                     {
                       "bg-green-300":
                         reply.selected && discussionType === "questionnaires",
@@ -195,15 +198,17 @@ const ReplyToReplyCard: React.FC<ReplyToReplyCardProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex gap-x-2 text-[13px]">
           <UserAvatar user={reply.creator} className="h-6 w-6" />
-          <div className="space-y-2">
+          <div className="space-y-4">
             <p className="text-muted-foreground">
-              <span className="font-semibold text-neutral-800">
+              <span className="font-semibold text-neutral-800 dark:text-foreground">
                 {reply.creator.name}
               </span>{" "}
               on {format(reply.createdAt, "MMM d, yyyy")}
             </p>
 
-            <p className="text-neutral-800 text-sm">{reply.text}</p>
+            <p className="text-neutral-800 dark:text-foreground text-sm">
+              {reply.text}
+            </p>
 
             <div className="flex items-center gap-x-4 text-xs text-muted-foreground tracking-tight">
               {discussionType === "questionnaires" &&
@@ -219,6 +224,7 @@ const ReplyToReplyCard: React.FC<ReplyToReplyCardProps> = ({
                 )}
               <ReactionLists
                 replyId={reply.id}
+                discussionId={discussionId}
                 reactions={reply.reactions}
                 session={session}
               />

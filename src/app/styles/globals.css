@@ -75,6 +75,10 @@
   }
 }
 
+.dark ::selection {
+  background-color: #202d3b;
+}
+
 #always-on-show {
   opacity: 1 !important;
 }
@@ -90,14 +94,6 @@
 
 .avatar-group:hover .avatar {
   @apply ml-0;
-}
-
-.ce-block__content,
-.ce-toolbar__content {
-  max-width: calc(100% - 30px) !important;
-}
-.cdx-block {
-  max-width: 100% !important;
 }
 
 .no-scrollbar::-webkit-scrollbar {

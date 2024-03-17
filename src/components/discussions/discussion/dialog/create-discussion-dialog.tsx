@@ -29,7 +29,7 @@ export const CreateDiscussionDialog: React.FC<CreateDiscussionDialogProps> = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "s" && (e.metaKey || e.altKey)) {
+      if (e.key === "d" && (e.metaKey || e.altKey)) {
         e.preventDefault();
         setOpen((prev) => !prev);
       }
@@ -43,9 +43,10 @@ export const CreateDiscussionDialog: React.FC<CreateDiscussionDialogProps> = ({
       <DialogTrigger asChild>
         <div>
           <CustomTooltip text="Start discussion">
-            <Button variant="ghost" size="icon" className="h-6 w-6">
-              <Plus className="h-3 w-3" />
-            </Button>
+            <div className="p-1 flex items-center justify-center rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
+              <Plus className="h-3.5 w-3.5" />
+              <div className="sr-only">Start Discussion</div>
+            </div>
           </CustomTooltip>
         </div>
       </DialogTrigger>

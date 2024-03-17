@@ -42,7 +42,7 @@ export const Materials: React.FC<MaterialsProps> = ({
   if (!activeFolder) {
     return (
       <div className="h-[60vh] flex flex-col items-center justify-center gap-y-2">
-        <FolderCheck className="h-10 w-10 text-neutral-800" />
+        <FolderCheck className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
         <p className="text-sm text-muted-foreground">
           Select or create a folder
         </p>
