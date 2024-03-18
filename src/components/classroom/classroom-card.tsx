@@ -181,9 +181,7 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
                     classroomId={classroom.id}
                     pendingAssignments={pendingAssignments}
                   />
-                  <p className="text-muted-foreground text-[13px]">
-                    {pendingAssignments?.length}
-                  </p>
+                  <p className="text-[13px]">{pendingAssignments?.length}</p>
                 </>
               )}
             </div>

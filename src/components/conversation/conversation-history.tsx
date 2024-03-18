@@ -68,7 +68,7 @@ export const ConversationHistory = ({
             Your conversations with our AI for this classroom will appear here.
           </p>
         ) : (
-          <ScrollArea className="h-[450px]">
+          <ScrollArea className="h-[67vh]">
             <div className="flex flex-col gap-y-4 pb-8">
               {conversations?.map((conversation) => (
                 <ConversationCard

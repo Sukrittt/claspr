@@ -65,7 +65,7 @@ export const PendingAssignmentsDialog: React.FC<
                   key={assignment.id}
                   className="group space-y-1 border-b pb-2"
                 >
-                  <p className="group-hover:underline group-hover:text-neutral-800 transition text-sm tracking-tight underline-offset-4">
+                  <p className="group-hover:underline group-hover:text-neutral-800 group-hover:text-foreground transition text-sm tracking-tight underline-offset-4">
                     {assignment.title}
                   </p>
                   <div className="text-muted-foreground flex items-center gap-x-1 text-xs">

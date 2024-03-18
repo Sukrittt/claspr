@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const ConversationSkeleton = ({ length = 10 }: { length?: number }) => {
   return (
-    <ScrollArea className="h-[400px]">
+    <ScrollArea className="h-[67vh]">
       <div className="w-full space-y-4">
         {Array.from({ length }).map((_, i) => (
           <ConversationCardSkeleton key={i} />

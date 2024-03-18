@@ -43,10 +43,12 @@ export const ClassMembers: React.FC<ClassMembersProps> = ({
 
         <ScrollArea className="h-[65vh]">
           <div className="flex flex-col gap-y-4">
-            <div className="border-b border-neutral-300 flex gap-x-4 px-2 pb-4 items-center">
+            <div className="border-b border-neutral-300 dark:border-border flex gap-x-4 px-2 pb-4 items-center">
               <UserAvatar user={creator} className="h-8 w-8 rounded-md" />
               <div>
-                <p className="font-medium text-neutral-700">{creator.name}</p>
+                <p className="font-medium text-neutral-700 dark:text-foreground">
+                  {creator.name}
+                </p>
 
                 <div className="flex items-center gap-x-1 text-muted-foreground text-[11px]">
                   <p>{creator.email}</p>
@@ -96,10 +98,12 @@ const MemberCard: React.FC<MemberCardProps> = ({
         animate="animate"
         exit="exit"
       >
-        <div className="border-b border-neutral-300 flex gap-x-4 px-2 pb-4">
+        <div className="border-b border-neutral-300 dark:border-border flex gap-x-4 px-2 pb-4">
           <UserAvatar user={member.user} className="h-8 w-8 rounded-md" />
           <div>
-            <p className="font-medium text-neutral-700">{member.user.name}</p>
+            <p className="font-medium text-neutral-700 dark:text-foreground">
+              {member.user.name}
+            </p>
 
             <div className="flex items-center gap-x-1 text-muted-foreground text-[11px]">
               {protectedDomain && !validEmail ? (

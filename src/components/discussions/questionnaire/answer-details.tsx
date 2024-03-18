@@ -1,4 +1,3 @@
-import { User } from "@prisma/client";
 import { CheckCircle2 } from "lucide-react";
 
 import { timeAgo } from "@/lib/utils";
@@ -16,9 +15,9 @@ export const AnswerDetails: React.FC<AnswerDetailsProps> = ({
   text,
 }) => {
   return (
-    <div className="p-4 bg-green-100 space-y-4">
+    <div className="p-4 bg-green-100 dark:bg-[#12261e]/80 space-y-4">
       <div className="flex items-center gap-x-2 text-xs">
-        <CheckCircle2 className="w-4 h-4 text-green-500" />
+        <CheckCircle2 className="w-4 h-4 text-green-500 dark:text-green-600" />
         <p className="text-green-700">
           Answered by <span className="font-medium">{answeredBy.name}</span>
         </p>

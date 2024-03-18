@@ -82,7 +82,7 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
               isEditable={session.user.id === discussion.creatorId}
             />
 
-            <div className="border rounded-md space-y-4">
+            <div className="border rounded-md space-y-4 overflow-hidden">
               <div className="p-4 pb-0 space-y-4">
                 <div>
                   <div className="flex items-center justify-between">

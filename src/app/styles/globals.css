@@ -57,8 +57,9 @@
     --accent: 0 0% 18%;
     --accent-foreground: 0 0% 84%;
 
-    --destructive: 0 79% 63%;
-    --destructive-foreground: 0 0% 84%;
+    /* --destructive: 0 79% 63%; */
+    --destructive: 0 16% 18%;
+    --destructive-foreground: 0 79% 63%;
 
     --border: 0 0% 18%;
     --input: 0 0% 18%;

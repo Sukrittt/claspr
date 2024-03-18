@@ -71,7 +71,7 @@ const ReplyCard: React.FC<ReplyCardProps> = ({
     <div>
       <div
         className={cn("border rounded-md space-y-2", {
-          "border-2 border-green-400":
+          "border-2 border-green-400 dark:border-green-600":
             reply.selected && discussionType === "questionnaires",
         })}
       >
