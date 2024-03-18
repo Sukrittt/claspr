@@ -70,7 +70,7 @@ export const SubmissionReview: React.FC<SubmissionReviewProps> = ({
                 target="_blank"
                 href={media.url}
                 key={media.id}
-                className="flex gap-x-2.5 hover:bg-neutral-100 transition items-center py-1 px-2 border rounded-md"
+                className="flex gap-x-2.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition items-center py-1 px-2 border rounded-md"
               >
                 <span>{media.label}</span>
                 <ExternalLink className="h-3 w-3 text-muted-foreground" />

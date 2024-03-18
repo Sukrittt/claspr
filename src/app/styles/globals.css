@@ -57,7 +57,6 @@
     --accent: 0 0% 18%;
     --accent-foreground: 0 0% 84%;
 
-    /* --destructive: 0 79% 63%; */
     --destructive: 0 16% 18%;
     --destructive-foreground: 0 79% 63%;
 
@@ -99,4 +98,8 @@
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.\[\&\:has\(\[aria-selected\]\)\]\:bg-accent:has([aria-selected]) {
+  background-color: transparent !important;
 }

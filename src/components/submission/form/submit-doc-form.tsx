@@ -24,6 +24,8 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileClick = () => {
+    if (isLoading || isCreatingMedia) return;
+
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -94,9 +96,11 @@ export const SubmitDocForm: React.FC<SubmitDocFormProps> = ({
       <div
         onClick={handleFileClick}
         className={cn(
-          "py-1 flex items-center justify-center font-medium text-sm tracking-tight w-full border rounded-md cursor-pointer hover:bg-neutral-100 transition",
+          "py-1 flex items-center justify-center font-medium text-sm tracking-tight w-full border rounded-md transition",
           {
             "opacity-50": isLoading || isCreatingMedia,
+            "hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer":
+              !isLoading && !isCreatingMedia,
           }
         )}
       >

@@ -84,17 +84,17 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
   const SubmissionStatusIcon = {
     [SubmissionStatus.PENDING]: (
       <CustomTooltip text="Pending evaluation">
-        <Hourglass className="h-4 w-4 text-yellow-500" />
+        <Hourglass className="h-3 w-3 text-yellow-500" />
       </CustomTooltip>
     ),
     [SubmissionStatus.APPROVED]: (
       <CustomTooltip text="Evaluated">
-        <CheckCircle2 className="h-4 w-4 text-green-500" />
+        <CheckCircle2 className="h-3 w-3 text-green-500" />
       </CustomTooltip>
     ),
     [SubmissionStatus.CHANGES_REQUESTED]: (
       <CustomTooltip text="Changes requested">
-        <FilePenLine className="h-4 w-4 text-red-500" />
+        <FilePenLine className="h-3 w-3 text-red-500" />
       </CustomTooltip>
     ),
   };
@@ -133,7 +133,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
                     <div
                       onClick={() => handleRedirect(m.url)}
                       key={m.id}
-                      className="flex items-center cursor-pointer justify-between border border-neutral-300 rounded-md py-1.5 px-1.5 text-neutral-500 hover:text-neutral-600 transition font-medium"
+                      className="flex items-center cursor-pointer justify-between border border-neutral-300 dark:border-border rounded-md py-1.5 px-1.5 text-neutral-500 dark:text-foreground hover:text-neutral-600 dark:hover:text-neutral-300 transition font-medium"
                     >
                       <div className="flex items-center gap-x-2">
                         {Icon[m.mediaType]}

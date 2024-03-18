@@ -101,7 +101,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
                   <div className="absolute right-1">
                     <Button
                       form="comment-creation-form"
-                      className="h-[22px] w-[22px]"
+                      className="h-[22px] w-[22px] dark:hover:bg-neutral-800 group"
                       disabled={disabled}
                       size="icon"
                       variant="ghost"
@@ -109,7 +109,7 @@ export const CommentInput: React.FC<CommentInputProps> = ({
                       {isLoading ? (
                         <Loader2 className="h-3 w-3 text-muted-foreground animate-spin" />
                       ) : (
-                        <ArrowUpFromDot className="h-3 w-3 text-muted-foreground" />
+                        <ArrowUpFromDot className="h-3 w-3 text-muted-foreground dark:group-hover:text-foreground transition" />
                       )}
                     </Button>
                   </div>

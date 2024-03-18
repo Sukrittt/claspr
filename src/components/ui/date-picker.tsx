@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { TimePicker } from "@/components/ui/time-picker";
-import { CustomTooltip } from "../custom/custom-tooltip";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface DatePickerProps {
   value: Date | undefined;

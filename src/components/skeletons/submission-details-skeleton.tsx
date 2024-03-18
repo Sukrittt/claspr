@@ -20,7 +20,7 @@ export const SubmissionDetailsSkeleton = ({
 
 const SubmissionDetailCard = () => {
   return (
-    <div className="flex items-center justify-between border-b text-sm px-3 py-2 cursor-pointer hover:bg-neutral-100 transition">
+    <div className="flex items-center justify-between border-b text-sm px-3 py-2">
       <div className="flex items-center gap-x-4">
         <Skeleton className="h-8 w-8 rounded-md" />
         <div className="flex flex-col gap-y-1">

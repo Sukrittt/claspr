@@ -40,15 +40,21 @@ export const Submissions: React.FC<SubmissionsProps> = ({
   const EmptyData = {
     pending: {
       label: "No submissions left for evaluation.",
-      icon: <FileClock className="h-10 w-10 text-neutral-800" />,
+      icon: (
+        <FileClock className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
+      ),
     },
     evaluated: {
       label: "All submissions have been evaluated.",
-      icon: <FileCheck2 className="h-10 w-10 text-neutral-800" />,
+      icon: (
+        <FileCheck2 className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
+      ),
     },
     "changes-requested": {
       label: "No submissions left for re-evaluation.",
-      icon: <FilePen className="h-10 w-10 text-neutral-800" />,
+      icon: (
+        <FilePen className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
+      ),
     },
   };
 
@@ -109,14 +115,16 @@ const StudentSubmission: React.FC<StudentSubmissionProps> = ({
 
   return (
     <SubmissionReview submission={submission} assignment={assignment}>
-      <div className="flex items-center justify-between border-b text-sm px-3 py-2 cursor-pointer hover:bg-neutral-100 transition">
+      <div className="flex items-center justify-between border-b text-sm px-3 py-2 cursor-pointer group">
         <div className="flex items-center gap-x-4">
           <UserAvatar
             user={submission.member.user}
             className="h-8 w-8 rounded-md"
           />
           <div>
-            <p className="font-medium">{submission.member.user.name}</p>
+            <p className="font-medium group-hover:underline underline-offset-4">
+              {submission.member.user.name}
+            </p>
             <div className="text-[12px] text-muted-foreground flex items-center gap-x-2.5">
               {submission.media.length === 0 ? (
                 <p>No work attached</p>

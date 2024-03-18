@@ -69,7 +69,7 @@ export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
           <CustomTooltip text={`${isEditable ? "Save" : "Edit"} instructions`}>
             <div
               className={cn(
-                "absolute top-4 right-4 h-8 w-8 grid place-items-center border z-50 rounded-md hover:bg-neutral-100 transition cursor-pointer",
+                "absolute top-0 right-2 h-8 w-8 grid place-items-center border z-50 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer",
                 {
                   "pointer-events-none opacity-50": isLoading,
                 }
@@ -78,12 +78,12 @@ export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
             >
               {isEditable ? (
                 isLoading ? (
-                  <Loader2 className="h-3 w-3 animate-spin" />
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  <Save className="h-4 w-4" />
+                  <Save className="h-3.5 w-3.5" />
                 )
               ) : (
-                <Pencil className="h-4 w-4" />
+                <Pencil className="h-3.5 w-3.5" />
               )}
             </div>
           </CustomTooltip>

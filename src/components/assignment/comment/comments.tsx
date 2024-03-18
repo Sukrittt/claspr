@@ -32,7 +32,9 @@ export const Comments: React.FC<CommentsProps> = ({ assignment, session }) => {
   return (
     <Card className="flex-1 flex flex-col">
       <CardHeader className="border-b py-2 pl-4 pr-3 space-y-0.5">
-        <CardTitle className="text-[13px] text-neutral-700">Comments</CardTitle>
+        <CardTitle className="text-[13px] text-neutral-700 dark:text-foreground">
+          Comments
+        </CardTitle>
         <CardDescription className="text-[13px]">
           Visible only to you and your teacher
         </CardDescription>
@@ -54,7 +56,7 @@ export const Comments: React.FC<CommentsProps> = ({ assignment, session }) => {
                 animate="animate"
                 exit="exit"
               >
-                <ScrollArea className="h-[170px] pb-4">
+                <ScrollArea className="h-[27vh] pb-4">
                   <div className="flex flex-col gap-y-4 pt-2">
                     {comments.map((comment) => (
                       <CommentCard
@@ -85,11 +87,14 @@ const CommentCard: React.FC<CommentCardProps> = ({ comment, sessionId }) => {
 
   return (
     <div className="flex gap-x-2 w-full group">
-      <UserAvatar user={comment.sender} className="h-5 w-5" />
+      <div className="mt-1">
+        <UserAvatar user={comment.sender} className="h-5 w-5" />
+      </div>
+
       <div className="space-y-0.5 w-full">
         <div className="flex items-center justify-between">
           <div className="flex items-center tracking-tight text-xs gap-x-2">
-            <p className="font-semibold text-neutral-800">
+            <p className="font-semibold text-neutral-800 dark:text-foreground">
               {getShortenedText(comment.sender.name ?? "", 20)}
             </p>
             <p className="font-medium">{timeAgo(comment.createdAt)}</p>
@@ -110,7 +115,7 @@ const CommentCard: React.FC<CommentCardProps> = ({ comment, sessionId }) => {
           )}
         </div>
 
-        <p className="text-[13px] break-format text-neutral-700">
+        <p className="text-[13px] break-format text-neutral-700 dark:text-neutral-200">
           {comment.message}
           {comment.isEdited && (
             <span className="pl-1 font-semibold text-[11px] text-muted-foreground">

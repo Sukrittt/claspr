@@ -75,7 +75,7 @@ export const CoverFileUpload: React.FC<CoverFileUploadProps> = ({
         <div
           onClick={handleFileClick}
           className={cn(
-            "py-1 flex items-center justify-center font-medium text-sm tracking-tight w-full border rounded-md cursor-pointer hover:bg-neutral-100 transition",
+            "py-1 flex items-center justify-center font-medium text-sm tracking-tight w-full border rounded-md cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition",
             {
               "opacity-50": isUploading,
             }
