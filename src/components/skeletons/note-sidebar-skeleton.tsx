@@ -13,23 +13,23 @@ export const NoteSidebarSkeleton = () => {
         <Skeleton className="h-6 w-7" />
       </div>
 
-      <ScrollArea className="h-[60vh]">
+      <ScrollArea className="h-[65vh]">
         <NoteListsSkeleton />
       </ScrollArea>
     </div>
   );
 };
 
-const NoteListsSkeleton = ({ length = 10 }: { length?: number }) => {
+const NoteListsSkeleton = ({ length = 15 }: { length?: number }) => {
   return (
     <div className="flex flex-col gap-y-2 w-full">
       {Array.from({ length }).map((_, i) => (
         <div
           key={i}
-          className="flex items-center justify-between rounded-md py-1 px-2 group hover:bg-neutral-200 transition w-full"
+          className="flex items-center justify-between rounded-md py-1 px-2 group hover:bg-neutral-200 dark:hover:bg-neutral-800/60 transition w-full"
         >
           <div className="flex items-center gap-x-2 w-full">
-            <div className="border rounded-md p-1.5 text-gray-800">
+            <div className="border rounded-md p-1.5 text-gray-800 dark:text-foreground">
               <FileText className="h-3.5 w-3.5" />
             </div>
 

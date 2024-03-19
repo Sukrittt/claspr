@@ -28,7 +28,7 @@ export const EventDropdown: React.FC<EventDropdownProps> = ({ event }) => {
         <DropdownMenuTrigger asChild>
           <div>
             <CustomTooltip text="More options">
-              <div className="text-gray-700 dark:text-gray-300 hover:bg-neutral-300 p-1 rounded-md transition cursor-pointer">
+              <div className="text-gray-700 dark:text-gray-300 hover:bg-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 p-1 rounded-md transition cursor-pointer">
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </div>
             </CustomTooltip>

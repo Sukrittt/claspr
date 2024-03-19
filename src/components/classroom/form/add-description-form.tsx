@@ -85,8 +85,8 @@ export const AddDescriptionForm = ({
         </form>
       </Form>
       <Button className="my-1 w-full" form="add-description-form">
-        Add
-        <span className="sr-only">Add Description</span>
+        Save
+        <span className="sr-only">Save</span>
       </Button>
     </div>
   );

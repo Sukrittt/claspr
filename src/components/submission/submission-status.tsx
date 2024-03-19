@@ -32,7 +32,7 @@ export const SubmissionStatus: React.FC<SubmissionStatusProps> = ({
           />
           <label
             htmlFor="late-submission"
-            className="text-sm tracking-tight text-gray-800 cursor-pointer"
+            className="text-sm tracking-tight text-gray-800 dark:text-foreground cursor-pointer"
           >
             Allow late submission?
           </label>

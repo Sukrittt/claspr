@@ -35,9 +35,9 @@ export const NoteLists: React.FC<NoteListsProps> = ({
             key={note.id}
             href={`/n/${note.id}`}
             className={cn(
-              "flex items-center justify-between rounded-md py-1 px-2 group hover:bg-neutral-200 transition",
+              "flex items-center justify-between rounded-md py-1 px-2 group hover:bg-neutral-200 dark:hover:bg-neutral-800/60 transition",
               {
-                "bg-neutral-200": note.id === activeNoteId,
+                "bg-neutral-200 dark:bg-neutral-800": note.id === activeNoteId,
               }
             )}
           >
@@ -54,12 +54,12 @@ export const NoteLists: React.FC<NoteListsProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="border rounded-md p-1.5 text-gray-800">
+                <div className="border rounded-md p-1.5 text-gray-800 dark:text-foreground">
                   <FileText className="h-3.5 w-3.5" />
                 </div>
               )}
 
-              <p className="text-sm text-neutral-800 tracking-tight">
+              <p className="text-sm text-neutral-800 dark:text-foreground tracking-tight">
                 {getShortenedText(note.title, 30)}
               </p>
             </div>

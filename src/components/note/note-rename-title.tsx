@@ -38,7 +38,7 @@ export const NoteRenameTitle: React.FC<NoteRenameTitleProps> = ({
   }, [debouncedTitle]);
 
   return disabled ? (
-    <h4 className="text-4xl font-semibold text-neutral-800 tracking-tight">
+    <h4 className="text-4xl font-semibold text-neutral-800 dark:text-foreground tracking-tight">
       {title}
     </h4>
   ) : (

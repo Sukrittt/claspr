@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Loader2, Trash } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { MinifiedNote } from "@/types";
 import { useEditNote } from "@/hooks/note";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { cn } from "@/lib/utils";
 
 type UserClassroom = {
   classroomId: string;
@@ -72,14 +72,14 @@ export const LinkClassroomForm: React.FC<LinkClassroomFormProps> = ({
         <CustomTooltip text="Remove link">
           <div
             className={cn(
-              "border rounded-md p-2 bg-neutral-100 transition cursor-pointer hover:bg-neutral-200",
+              "border rounded-md p-2 bg-neutral-100 dark:bg-neutral-800 transition cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800/60 dark:text-foreground",
               {
                 "opacity-50": isLoading || !!!selectedClassroomId,
               }
             )}
             onClick={() => setSelectedClassroomId(null)}
           >
-            <Trash className="h-3 w-3 " />
+            <Trash className="h-3 w-3" />
           </div>
         </CustomTooltip>
       </div>

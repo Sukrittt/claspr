@@ -254,7 +254,7 @@ const FolderNotes: React.FC<FolderNotesProps> = ({
                         </div>
                       </div>
                     ) : (
-                      <div className="border rounded-md p-1.5 text-gray-800">
+                      <div className="border rounded-md p-1.5 text-gray-800 dark:text-foreground">
                         <FileText className="h-3.5 w-3.5" />
                       </div>
                     )}

@@ -140,22 +140,31 @@ const DateColumn: React.FC<DateColumnProps> = ({ date, sessionId }) => {
     <div ref={setNodeRef} className="flex flex-col gap-y-4 h-full w-full">
       <div
         className={cn("rounded-xl border transition duration-300 p-4 w-full", {
-          "bg-neutral-800": isOver || isSameDay(date, new Date()),
+          "bg-neutral-800 dark:bg-neutral-300":
+            isOver || isSameDay(date, new Date()),
         })}
       >
         <div className="flex items-center justify-center h-full">
           <div className="flex flex-col gap-y-2 items-center">
             <span
-              className={cn("text-sm tracking-tight text-muted-foreground", {
-                "text-neutral-100": isOver || isSameDay(date, new Date()),
-              })}
+              className={cn(
+                "text-sm tracking-tight text-muted-foreground dark:text-foreground",
+                {
+                  "text-neutral-100 dark:text-neutral-800":
+                    isOver || isSameDay(date, new Date()),
+                }
+              )}
             >
               {format(date, "EEEE")}
             </span>
             <span
-              className={cn("text-2xl font-semibold text-neutral-800", {
-                "text-neutral-100": isOver || isSameDay(date, new Date()),
-              })}
+              className={cn(
+                "text-2xl font-semibold text-neutral-800 dark:text-foreground",
+                {
+                  "text-neutral-100 dark:text-neutral-800":
+                    isOver || isSameDay(date, new Date()),
+                }
+              )}
             >
               {format(date, "d")}
             </span>

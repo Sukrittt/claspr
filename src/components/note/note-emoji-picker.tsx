@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import { Smile, Trash } from "lucide-react";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 
@@ -25,6 +26,8 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
   noteId,
   setHasEmoji,
 }) => {
+  const { theme } = useTheme();
+
   const [selectedEmoji, setSelectedEmoji] = useState({
     name: "",
     url: emojiUrl ?? "",
@@ -32,13 +35,23 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
 
   const { mutate: updateEmoji } = useEditNote({ folderId });
 
+  const getTheme = () => {
+    if (theme === "dark") {
+      return Theme.DARK;
+    } else if (theme === "light") {
+      return Theme.LIGHT;
+    } else {
+      return Theme.AUTO;
+    }
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <span className="py-1 px-2 cursor-pointer block w-fit">
           {selectedEmoji.url ? (
             <div className="absolute left-7 -top-10">
-              <div className="border p-2 rounded-xl bg-white bg-opacity-20 backdrop-blur-lg hover:bg-neutral-200/50 transition drop-shadow-lg">
+              <div className="border p-2 rounded-xl bg-white dark:bg-neutral-800 bg-opacity-20 backdrop-blur-lg hover:bg-neutral-200/50 dark:hover:bg-neutral-800/70 transition drop-shadow-lg">
                 <div className="h-8 w-8 relative">
                   <Image
                     src={selectedEmoji.url}
@@ -50,7 +63,7 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-x-2 text-[13px] text-muted-foreground font-medium transition rounded-md hover:bg-neutral-200 hover:text-gray-700 dark:text-gray-300 py-1 px-2">
+            <div className="flex items-center gap-x-2 text-[13px] font-medium transition rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800 hover:text-gray-700 dark:hover:text-foreground py-1 px-2">
               <Smile className="h-3.5 w-3.5" />
               <span>Add icon</span>
             </div>
@@ -59,7 +72,7 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
       </PopoverTrigger>
       <PopoverContent className="w-auto bg-transparent shadow-none border-none pt-0 relative">
         <EmojiPicker
-          theme={Theme.LIGHT}
+          theme={getTheme()}
           onEmojiClick={(e) => {
             setHasEmoji(true);
 
@@ -85,7 +98,7 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
               }}
               className="absolute bottom-[38px] right-10 p-1 border rounded-md transition cursor-pointer z-50"
             >
-              <Trash className="h-4 w-4 text-destructive" />
+              <Trash className="h-4 w-4 text-destructive dark:text-foreground" />
             </div>
           </CustomTooltip>
         )}

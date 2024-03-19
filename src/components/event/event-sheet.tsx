@@ -17,6 +17,7 @@ import { EventDropdown } from "./event-dropdown";
 import { Separator } from "@/components/ui/separator";
 import { RenameEventTitle } from "./rename-event-title";
 import { useQueryChange } from "@/hooks/use-query-change";
+import { cn } from "@/lib/utils";
 
 interface EventSheetProps {
   isActive?: boolean;
@@ -50,7 +51,11 @@ export const EventSheet: React.FC<EventSheetProps> = ({
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <div className="max-w-2xl mx-auto w-full">
-          <DrawerHeader>
+          <DrawerHeader
+            className={cn("px-0", {
+              "px-4": !event.assignment,
+            })}
+          >
             <div className="flex justify-between w-full">
               <DrawerTitle className="w-full">
                 <RenameEventTitle

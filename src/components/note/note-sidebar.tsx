@@ -68,10 +68,12 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
           {sidebarState.isOpen && (
             <Link
               href="/dashboard"
-              className="text-[13px] px-2 py-1.5 flex items-center gap-x-2 rounded-md bg-neutral-200/60 cursor-pointer hover:bg-neutral-200 transition"
+              className="text-[13px] px-2 py-1.5 flex items-center gap-x-2 rounded-md bg-neutral-200/60 dark:bg-neutral-800 cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800/60 transition"
             >
               <ChevronLeft className="w-3.5 h-3.5 text-muted-foreground" />
-              <span className="font-medium text-gray-800">Go back</span>
+              <span className="font-medium text-gray-800 dark:text-foreground">
+                Go back
+              </span>
             </Link>
           )}
           {sidebarState.isOpen ? (

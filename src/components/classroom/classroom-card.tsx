@@ -109,16 +109,22 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
         {isLoading ? (
           <Skeleton className="h-4 w-1/2" />
         ) : description || classroom.description ? (
-          <div className="text-sm text-muted-foreground flex items-center gap-x-1">
-            <AddDescriptionDialog
-              classroomId={classroom.id}
-              description={description ?? classroom.description ?? ""}
-            >
-              <span className="hover:underline underline-offset-4 cursor-pointer text-[13px]">
-                {description ?? classroom.description}
-              </span>
-            </AddDescriptionDialog>
-          </div>
+          !isTeacher ? (
+            <span className="text-[13px] text-muted-foreground">
+              {description ?? classroom.description}
+            </span>
+          ) : (
+            <div className="text-sm text-muted-foreground flex items-center gap-x-1">
+              <AddDescriptionDialog
+                classroomId={classroom.id}
+                description={description ?? classroom.description ?? ""}
+              >
+                <span className="hover:underline underline-offset-4 cursor-pointer text-[13px]">
+                  {description ?? classroom.description}
+                </span>
+              </AddDescriptionDialog>
+            </div>
+          )
         ) : (
           isTeacher && (
             <CardDescription className="text-[13px] flex gap-x-1 items-center">
@@ -181,7 +187,9 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
                     classroomId={classroom.id}
                     pendingAssignments={pendingAssignments}
                   />
-                  <p className="text-[13px]">{pendingAssignments?.length}</p>
+                  <p className="text-[13px]">
+                    {pendingAssignments?.length ?? 0}
+                  </p>
                 </>
               )}
             </div>

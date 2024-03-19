@@ -125,7 +125,7 @@ function CustomCodeRenderer({ data }: any) {
 
   return (
     <pre
-      className="bg-gray-800 rounded-md p-4 cursor-pointer relative group my-4"
+      className="bg-gray-800 dark:bg-neutral-800 rounded-md p-4 cursor-pointer relative group my-4"
       onClick={handleCopyCode}
     >
       <div className="opacity-0 group-hover:opacity-100 transition absolute top-4 right-4 text-white">
@@ -145,7 +145,7 @@ function CustomAttachmentRenderer({ data }: any) {
     <Link
       href={data.file.url}
       target="_blank"
-      className="border border-neutral-300 rounded-md my-4 py-2 px-2 flex justify-between items-center group"
+      className="border border-neutral-300 dark:border-border rounded-md my-4 py-2 px-2 flex justify-between items-center group"
     >
       <div className="flex items-center gap-x-2 text-[0.875rem]">
         <File className="text-muted-foreground h-4 w-4" />
@@ -164,7 +164,7 @@ function CustomTableRenderer({ data }: any) {
   return (
     <Table className="my-4">
       <TableHeader>
-        <TableRow className="border-neutral-300">
+        <TableRow className="border-neutral-300 dark:border-border dark:hover:bg-neutral-800">
           {headings.map((heading, index) => (
             <TableHead key={index}>{heading}</TableHead>
           ))}
@@ -172,7 +172,7 @@ function CustomTableRenderer({ data }: any) {
       </TableHeader>
       <TableBody>
         {rows.map((item, index) => (
-          <TableRow key={index}>
+          <TableRow key={index} className="dark:hover:bg-neutral-800">
             {item.map((cell, i) => (
               <TableCell key={i}>{cell}</TableCell>
             ))}
@@ -184,8 +184,6 @@ function CustomTableRenderer({ data }: any) {
 }
 
 function CustomLinkRenderer({ data }: any) {
-  console.log("link data", data);
-
   return <p className="text-[0.875rem]">Link</p>;
 }
 
@@ -216,7 +214,7 @@ function CustomRawRenderer({ data }: any) {
 
   return (
     <pre
-      className="bg-gray-800 rounded-md p-4 cursor-pointer relative group my-4"
+      className="bg-gray-800 dark:bg-neutral-800 rounded-md p-4 cursor-pointer relative group my-4"
       onClick={handleCopyCode}
     >
       <div className="opacity-0 group-hover:opacity-100 transition absolute top-4 right-4 text-white">
@@ -255,7 +253,7 @@ function CustomCheckListRenderer({ data }: any) {
     <div className="flex flex-col gap-y-2 text-sm my-4">
       {items.map((item: Item, index: number) => (
         <div key={index} className="flex items-center gap-x-2">
-          <Checkbox checked={item.checked} />
+          <Checkbox checked={item.checked} className="cursor-default" />
           <p>{item.text}</p>
         </div>
       ))}
@@ -267,8 +265,12 @@ function CustomQuoteRenderer({ data }: any) {
   return (
     <div className="flex justify-center">
       <blockquote>
-        <p className="text-lg font-medium text-gray-800">{data.text}</p>
-        <cite className="text-sm text-gray-500">{data.caption}</cite>
+        <p className="text-lg font-medium text-gray-800 dark:text-foreground">
+          {data.text}
+        </p>
+        <cite className="text-sm text-gray-500 dark:text-muted-foreground">
+          {data.caption}
+        </cite>
       </blockquote>
     </div>
   );
@@ -276,7 +278,7 @@ function CustomQuoteRenderer({ data }: any) {
 
 function CustomWarningRenderer({ data }: any) {
   return (
-    <Alert className="bg-yellow-100/60 my-4">
+    <Alert className="bg-yellow-100/60 dark:bg-yellow-600/60 my-4">
       <AlertTriangle className="h-4 w-4" />
       <AlertTitle>{data.title}</AlertTitle>
       <AlertDescription>{data.message}</AlertDescription>

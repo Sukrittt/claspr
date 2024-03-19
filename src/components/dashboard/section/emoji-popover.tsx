@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
 import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import { Bookmark } from "lucide-react";
+import { useEffect, useState } from "react";
 import { SectionType } from "@prisma/client";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 
@@ -14,7 +15,6 @@ import {
 import { trpc } from "@/trpc/client";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { createdClassSections, joinedClassSections } from "@/atoms";
-import { useTheme } from "next-themes";
 
 interface EmojiPopoverProps {
   emojiUrl: string | null;

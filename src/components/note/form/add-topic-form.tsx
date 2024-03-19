@@ -165,12 +165,12 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
                   "px-5 py-1 text-[13px] rounded-md border transition",
                   {
                     "cursor-pointer": isEditing,
-                    "hover:bg-neutral-100":
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-800":
                       isEditing &&
                       !selectedTopics.some(
                         (selection) => selection.topic === topic.name
                       ),
-                    "border-sky-500 bg-sky-200 hover:bg-sky-200/80":
+                    "border-sky-500 dark:border-sky-600 bg-sky-200 dark:bg-sky-600/30 hover:bg-sky-200/80 dark:hover:bg-sky-600/50":
                       selectedTopics.some(
                         (selection) => selection.topic === topic.name
                       ),
@@ -194,12 +194,12 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
                   "px-5 py-1 text-[13px] rounded-md border transition",
                   {
                     "cursor-pointer": isEditing,
-                    "hover:bg-neutral-100":
+                    "hover:bg-neutral-100 dark:hover:bg-neutral-800":
                       isEditing &&
                       !selectedTopics.some(
                         (selection) => selection.topic === topic
                       ),
-                    "border-sky-500 bg-sky-200 hover:bg-sky-200/80":
+                    "border-sky-500 dark:border-sky-600 bg-sky-200 dark:bg-sky-600/30 hover:bg-sky-200/80 dark:hover:bg-sky-600/50":
                       selectedTopics.some(
                         (selection) => selection.topic === topic
                       ),
@@ -215,7 +215,7 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
 
       {(note.topics.length > 0 || enteredTopics.length > 0) && (
         <div
-          className="absolute -top-[53px] border p-1.5 rounded-md right-2 hover:bg-neutral-100 transition cursor-pointer"
+          className="absolute -top-[53px] border p-1.5 rounded-md right-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
           onClick={() => setIsEditing((prev) => !prev)}
         >
           <CustomTooltip
@@ -228,7 +228,7 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
             }`}
           >
             {!isEditing ? (
-              <Pen className="h-3 w-3 text-neutral-800" />
+              <Pen className="h-3 w-3 text-neutral-800 dark:text-foreground" />
             ) : selectedTopics.length === 0 ? (
               <Check className="h-3 w-3 text-success" />
             ) : (

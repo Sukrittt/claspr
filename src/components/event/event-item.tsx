@@ -35,8 +35,8 @@ export const EventItem: React.FC<EventItemProps> = ({
 
   if (isDragging) {
     return (
-      <div className="rounded-xl border py-2 px-4 tracking-tight space-y-2 cursor-pointer bg-neutral-100 transition">
-        <p className="text-sm text-neutral-800">
+      <div className="rounded-xl border py-2 px-4 tracking-tight space-y-2 cursor-pointer bg-neutral-100 dark:bg-neutral-800/60 transition">
+        <p className="text-sm text-neutral-800 dark:text-foreground">
           {getShortenedText(event.title, 50)}
         </p>
         <div className="flex items-center justify-between">
@@ -59,13 +59,13 @@ export const EventItem: React.FC<EventItemProps> = ({
       {...listeners}
       onClick={() => handleQueryChange("/calendar", { active: event.id })}
       className={cn(
-        "rounded-xl border py-2 px-4 tracking-tight space-y-2 cursor-pointer hover:bg-neutral-100 transition",
+        "rounded-xl border py-2 px-4 tracking-tight space-y-2 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition",
         {
           "opacity-60 cursor-grabbing": isHolding,
         }
       )}
     >
-      <p className="text-sm text-neutral-800">
+      <p className="text-sm text-neutral-800 dark:text-foreground">
         {getShortenedText(event.title, 50)}
       </p>
       <div className="flex items-center justify-between">

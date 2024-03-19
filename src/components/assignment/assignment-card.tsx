@@ -22,7 +22,7 @@ export const AssignmentCard = ({ classroom }: { classroom: ClassRoom }) => {
         <CardHeader className="py-3 border-b">
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-gray-800 text-sm">
+              <CardTitle className="text-gray-800 dark:text-foreground text-sm">
                 Create a new assignment
               </CardTitle>
               <CardDescription>
