@@ -47,7 +47,8 @@ export const NoteCoverImagePicker: React.FC<NoteCoverImagePickerProps> = ({
           className={cn(
             "cursor-pointer flex items-center gap-x-2 text-[13px] font-medium transition rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800/70 hover:text-gray-700 dark:hover:text-foreground py-1.5 px-2",
             {
-              "bg-neutral-100 dark:bg-neutral-800 opacity-0": hasEmoji,
+              "bg-neutral-100 dark:bg-neutral-800 opacity-0 group-hover/child:opacity-100":
+                hasEmoji,
             }
           )}
         >

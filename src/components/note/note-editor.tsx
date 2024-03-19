@@ -84,7 +84,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
             >
               <NoteCoverImagePicker
                 noteId={note.id}
-                hasCover={!!noteCover}
+                hasCover={!!noteCover?.coverImage}
                 hasEmoji={hasEmoji}
               />
             </div>

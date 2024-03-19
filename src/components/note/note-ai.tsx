@@ -249,15 +249,15 @@ export const NoteAi: React.FC<NoteAiProps> = ({
                 <div className="opacity-0 group-hover:opacity-100 transition flex gap-x-3 items-center absolute bottom-3 right-3">
                   <CustomTooltip text="Click to copy">
                     {copied ? (
-                      <Check className="w-3 h-3 hover:text-gray-800 transition" />
+                      <Check className="w-3 h-3 hover:text-gray-800 dark:hover:text-foreground transition" />
                     ) : (
-                      <Copy className="w-3 h-3 hover:text-gray-800 transition" />
+                      <Copy className="w-3 h-3 hover:text-gray-800 dark:hover:text-foreground transition" />
                     )}
                   </CustomTooltip>
                   {!isLoading && (
                     <CustomTooltip text="Move to editor">
                       <ArrowUpLeft
-                        className="w-4 h-4 hover:text-gray-800 transition"
+                        className="w-4 h-4 hover:text-gray-800 dark:hover:text-foreground transition"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleMoveToEditor(res);
@@ -266,7 +266,7 @@ export const NoteAi: React.FC<NoteAiProps> = ({
                     </CustomTooltip>
                   )}
                 </div>
-                <Markdown className="text-[15px] text-gray-800">
+                <Markdown className="text-[15px] text-gray-800 dark:text-neutral-400">
                   {getFilteredResponse(res)}
                 </Markdown>
               </div>
@@ -279,17 +279,17 @@ export const NoteAi: React.FC<NoteAiProps> = ({
                     exit="exit"
                     className="space-y-1 mt-4"
                   >
-                    <h5 className="font-semibold text-sm text-neutral-800 tracking-tight">
+                    <h5 className="font-semibold text-sm text-neutral-800 dark:text-foreground tracking-tight">
                       Next Up
                     </h5>
-                    <p className="text-[15px] text-gray-800">
+                    <p className="text-[15px] text-gray-800 dark:text-neutral-400">
                       {followUpQuestion}{" "}
                       <span
                         onClick={() => {
                           setInput(followUpQuestion);
                           handleAskAI(followUpQuestion);
                         }}
-                        className="font-medium text-muted-foreground text-sm hover:underline underline-offset-4 cursor-pointer"
+                        className="font-medium text-muted-foreground dark:text-neutral-300 text-sm hover:underline underline-offset-4 cursor-pointer"
                       >
                         Continue.
                       </span>
