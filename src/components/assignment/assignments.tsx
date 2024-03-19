@@ -90,6 +90,10 @@ const AssignmentCardList: React.FC<AssignmentCardListProps> = ({
 
   const currentDate = new Date();
   const deadlinePassed = isAfter(currentDate, assignment.dueDate);
+  const hasSubmittedLate = !!(
+    submissionDetails &&
+    isAfter(submissionDetails.createdAt, assignment.dueDate)
+  );
 
   const noOfSubmissions = assignment.submissions.length;
 
@@ -128,10 +132,14 @@ const AssignmentCardList: React.FC<AssignmentCardListProps> = ({
                 <p
                   className={cn("font-semibold", {
                     "text-green-600": !!submissionDetails,
-                    "text-destructive": !!!submissionDetails && deadlinePassed,
+                    "text-yellow-600": hasSubmittedLate,
+                    "text-destructive dark:text-red-900":
+                      !!!submissionDetails && deadlinePassed,
                   })}
                 >
-                  {submissionDetails
+                  {hasSubmittedLate
+                    ? "Late Submission"
+                    : submissionDetails
                     ? "Submitted"
                     : deadlinePassed
                     ? "Missed"

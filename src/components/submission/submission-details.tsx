@@ -4,6 +4,7 @@ import { format, isAfter } from "date-fns";
 import { ExtendedAssignment } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetSubmission } from "@/hooks/submission";
+import { calculateDateDifference } from "@/lib/utils";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface SubmissionDetailsProps {
@@ -28,6 +29,11 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = ({
 
   if (submission) {
     if (lateSubmission) {
+      const submittedLateBy = calculateDateDifference(
+        submission.createdAt,
+        assignment.dueDate
+      );
+
       return (
         <CustomTooltip
           text={`Submitted late on ${format(
@@ -36,7 +42,8 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = ({
           )}`}
         >
           <div className="text-yellow-600 hover:text-yellow-600/80 font-medium">
-            Late Submission
+            Late Submission{" "}
+            <span className="text-muted-foreground">by {submittedLateBy}</span>
           </div>
         </CustomTooltip>
       );
@@ -58,9 +65,9 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = ({
     }
   } else {
     return deadlinePassed ? (
-      <CustomTooltip text="You have not yet submitted this assignment">
+      <CustomTooltip text="No submission found">
         <div>
-          <div className="tracking-tight text-[13px] text-destructive hover:text-destructive/80 font-medium">
+          <div className="tracking-tight text-[13px] text-destructive dark:text-red-900 hover:text-red-900/80 font-medium">
             Deadline Passed
           </div>
         </div>

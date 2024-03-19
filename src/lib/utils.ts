@@ -8,6 +8,12 @@ import {
   ExtendedSectionWithClassrooms,
   ExtendedSectionWithMemberships,
 } from "@/types";
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInSeconds,
+} from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -84,3 +90,26 @@ export const getSubmissionStatusFromQuery = (queryStatus: string | null) => {
 
   return queryStatus;
 };
+
+export function calculateDateDifference(start: Date, end: Date) {
+  const daysDifference = differenceInDays(start, end);
+  if (daysDifference !== 0) {
+    if (daysDifference === 1) {
+      return `${daysDifference} day`;
+    }
+
+    return `${daysDifference} days`;
+  }
+
+  const hoursDifference = differenceInHours(start, end);
+  if (hoursDifference !== 0) {
+    return `${hoursDifference} hours`;
+  }
+
+  const minutesDifference = differenceInMinutes(start, end);
+  if (minutesDifference !== 0) {
+    return `${minutesDifference} minutes`;
+  }
+
+  return `${differenceInSeconds(start, end)} seconds`;
+}
