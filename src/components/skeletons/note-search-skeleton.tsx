@@ -15,7 +15,7 @@ export const NoteSearchSkeleton = ({ length = 8 }: { length?: number }) => {
 
 const NoteSearchItem = () => {
   return (
-    <div className="py-2 px-4 hover:bg-neutral-100 transition">
+    <div className="py-2 px-4 transition">
       <div className="flex items-center gap-x-2">
         <Skeleton className="h-8 w-8 rounded-md" />
 

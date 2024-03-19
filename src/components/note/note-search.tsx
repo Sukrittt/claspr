@@ -81,9 +81,17 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
       </CustomTooltip>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <div className="border-b relative">
+        <div
+          className={cn("relative", {
+            "border-b":
+              !isFetching &&
+              debouncedQuery &&
+              fetchedNotes &&
+              fetchedNotes.length > 0,
+          })}
+        >
           <input
-            className="px-9 text-sm h-12 outline-none w-full"
+            className="px-9 text-sm h-12 outline-none w-full dark:bg-neutral-800"
             placeholder="Search for your note..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -114,7 +122,7 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
                     handleNoteClick?.(noteId);
                     setOpen(false);
                   }}
-                  className="flex items-center gap-x-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition cursor-pointer px-4 py-2"
+                  className="flex items-center gap-x-2 hover:bg-neutral-200 dark:hover:bg-neutral-900 transition cursor-pointer px-4 py-2"
                 >
                   <div className="border rounded-md p-1.5 text-gray-800 dark:text-foreground">
                     <FileText className="h-3.5 w-3.5" />
@@ -163,7 +171,7 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
                         router.push(`/n/${note.id}`);
                       }}
                       key={note.id}
-                      className="py-2 px-4 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
+                      className="py-2 px-4 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition cursor-pointer"
                     >
                       <div className="flex items-center gap-x-2">
                         {note.emojiUrl ? (
