@@ -125,7 +125,7 @@ const ConversationCard = ({
           </div>
         </CardHeader>
         <CardContent
-          className="pt-3 pb-9 text-gray-800 dark:text-foreground text-[15px] cursor-pointer group relative"
+          className="pt-3 pb-9 text-gray-800 dark:text-neutral-400 text-[15px] cursor-pointer group relative"
           onClick={() => handleCopyOutput(conversation.answer)}
         >
           <Markdown>{getFilteredResponse(conversation.answer)}</Markdown>
