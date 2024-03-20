@@ -31,7 +31,7 @@ export const KickMemberDialog = ({ memberId }: KickMemberDialogProps) => {
       <AlertDialogTrigger asChild>
         <span
           className={cn(
-            "cursor-pointer hover:underline underline-offset-4 hover:text-destructive dark:hover:text-red-900 transition",
+            "cursor-pointer hover:underline underline-offset-4 hover:text-destructive dark:hover:text-[#eb5757] transition",
             {
               "opacity-50 cursor-default": isLoading,
             }

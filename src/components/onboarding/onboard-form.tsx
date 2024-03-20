@@ -8,6 +8,7 @@ import { ChooseRole } from "./choose-role";
 import { TextVariants } from "@/lib/motion";
 import { useMounted } from "@/hooks/use-mounted";
 import { UniversityInput } from "./university-input";
+import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
 export type OnBoardStep = "choose-role" | "enter-university";
 
@@ -28,11 +29,7 @@ export const OnboardForm = () => {
   };
 
   if (!mounted) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <Loader2 className="h-4 w-4 animate-spin" />
-      </div>
-    );
+    return <LoadingScreen fullHeight />;
   }
 
   return (
@@ -46,7 +43,7 @@ export const OnboardForm = () => {
       <div className="flex justify-between text-xs text-muted-foreground w-2/3">
         {step === "enter-university" && (
           <span
-            className="hover:underline underline-offset-4 cursor-pointer hover:text-neutral-500 transition w-full"
+            className="hover:underline underline-offset-4 cursor-pointer hover:text-neutral-500 transition"
             onClick={() => setStep("choose-role")}
           >
             Go Back
@@ -58,7 +55,7 @@ export const OnboardForm = () => {
           initial="initial"
           animate="animate"
           exit="exit"
-          className="text-right w-full"
+          className="text-right"
         >
           {getCurrentStepNumber()} of 2
         </motion.span>

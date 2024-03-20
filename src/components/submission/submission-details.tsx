@@ -67,7 +67,7 @@ export const SubmissionDetails: React.FC<SubmissionDetailsProps> = ({
     return deadlinePassed ? (
       <CustomTooltip text="No submission found">
         <div>
-          <div className="tracking-tight text-[13px] text-destructive dark:text-red-900 hover:text-red-900/80 font-medium">
+          <div className="tracking-tight text-[13px] text-destructive dark:text-[#eb5757] hover:text-[#eb5757]/80 font-medium">
             Deadline Passed
           </div>
         </div>

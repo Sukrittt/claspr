@@ -1,9 +1,9 @@
-import Image from "next/image";
 import { UserType } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { ContainerVariants } from "@/lib/motion";
 import { type OnBoardStep } from "./onboard-form";
+import { GraduationCap, Presentation } from "lucide-react";
 
 interface ChooseRoleProps {
   setRole: (role: UserType) => void;
@@ -32,8 +32,8 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
           <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-foreground">
             Select Your Role
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-            Please choose whether you are a student or a teacher.
+          <p className="mt-2 text-center text-sm text-gray-600 dark:text-neutral-400">
+            Please choose whether you are a teacher or a student.
           </p>
         </div>
         <div className="flex items-center gap-x-8">
@@ -42,13 +42,7 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
             onClick={() => handleRoleChange("TEACHER")}
           >
             <div className="flex items-center gap-x-3">
-              <Image
-                className="object-cover"
-                src="/teacher.png"
-                width={40}
-                height={40}
-                alt="Teacher"
-              />
+              <Presentation className="h-10 w-10 text-neutral-800 dark:text-neutral-400" />
               <div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-foreground">
                   Teacher
@@ -65,7 +59,7 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
             onClick={() => handleRoleChange("STUDENT")}
           >
             <div className="flex items-center gap-x-3">
-              <Image src="/student.png" width={40} height={40} alt="Student" />
+              <GraduationCap className="h-10 w-10 text-neutral-800 dark:text-neutral-400" />
               <div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-foreground">
                   Student

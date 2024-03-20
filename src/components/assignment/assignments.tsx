@@ -133,7 +133,7 @@ const AssignmentCardList: React.FC<AssignmentCardListProps> = ({
                   className={cn("font-semibold", {
                     "text-green-600": !!submissionDetails,
                     "text-yellow-600": hasSubmittedLate,
-                    "text-destructive dark:text-red-900":
+                    "text-destructive dark:text-[#eb5757]":
                       !!!submissionDetails && deadlinePassed,
                   })}
                 >
