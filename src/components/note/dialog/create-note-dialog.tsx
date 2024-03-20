@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { NoteType } from "@prisma/client";
 
@@ -27,6 +27,17 @@ export const CreateNoteDialog: React.FC<CreateNoteDialogProps> = ({
   children,
 }) => {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "s" && (e.metaKey || e.altKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

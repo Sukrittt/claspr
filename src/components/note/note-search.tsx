@@ -122,7 +122,7 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
                     handleNoteClick?.(noteId);
                     setOpen(false);
                   }}
-                  className="flex items-center gap-x-2 hover:bg-neutral-200 dark:hover:bg-neutral-900 transition cursor-pointer px-4 py-2"
+                  className="flex items-center gap-x-2 hover:bg-neutral-200 dark:hover:bg-neutral-800/60 transition cursor-pointer px-4 py-2"
                 >
                   <div className="border rounded-md p-1.5 text-gray-800 dark:text-foreground">
                     <FileText className="h-3.5 w-3.5" />

@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const AssignmentSkeleton = ({ length = 10 }: { length?: number }) => {
   return (
-    <ScrollArea className="h-[500px]">
+    <ScrollArea className="h-[75vh]">
       <div className="w-full space-y-4">
         {Array.from({ length }).map((_, i) => (
           <AssignmentSkeletonCard key={i} />

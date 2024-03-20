@@ -33,19 +33,25 @@ export const shortcuts = [
       },
       {
         keys: "Alt + c",
-        description: "Copy the code of the classroom",
+        description: "Copy the code of the classroom (Teacher)",
       },
       {
         keys: "Alt + w",
-        description: "View all submissions till now",
+        description: "View all submissions till now (Student)",
       },
       {
         keys: "Alt + g",
-        description: "View graph of a specific folder in Study Materials tab",
+        description:
+          "View graph of a specific folder in Study Materials tab (Teacher)",
+      },
+      {
+        keys: "Alt + s",
+        description:
+          "Create a note in a specific folder in Study Materials tab (Teacher)",
       },
       {
         keys: "Alt + f",
-        description: "Create a new folder in Study Materials tab",
+        description: "Create a new folder in Study Materials tab (Teacher)",
       },
       {
         keys: "Alt + d",

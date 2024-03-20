@@ -52,7 +52,7 @@ export const Assignments: React.FC<AssignmentProps> = ({
           </div>
         ) : (
           <AnimatePresence mode="wait">
-            <ScrollArea className="h-[500px]">
+            <ScrollArea className="h-[67vh]">
               <div className="flex flex-col gap-y-4">
                 {assignments?.map((assignment) => (
                   <AssignmentCardList
