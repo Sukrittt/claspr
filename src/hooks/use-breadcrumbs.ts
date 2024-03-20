@@ -13,6 +13,8 @@ export const useBreadCrumbs = () => {
         href: "/dashboard",
       };
 
+      if (newBreadCrumb.length === 0) return [dashboardBreadCrumb];
+
       return [dashboardBreadCrumb, ...newBreadCrumb];
     });
   };
