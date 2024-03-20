@@ -117,7 +117,7 @@ export const createFolder = privateProcedure
     const userLastOrderFolder = await db.folder.findMany({
       where: {
         userId: ctx.userId,
-        classroomId,
+        classroomId: classroomId ?? null,
       },
       select: {
         order: true,

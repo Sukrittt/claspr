@@ -16,7 +16,7 @@ const FolderSkeletonCard = () => {
   return (
     <div className="flex items-center justify-between group pb-2 px-6 text-gray-800 dark:text-foreground text-sm border-b focus:outline-none">
       <div className="flex items-center gap-x-3 w-full">
-        <div className="border rounded-md p-1.5">
+        <div className="border rounded-md p-1.5 flex items-center justify-center">
           <Folder className="h-3.5 w-3.5" />
         </div>
         <Skeleton className="h-3 w-1/2" />

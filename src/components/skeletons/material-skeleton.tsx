@@ -50,7 +50,7 @@ export const MaterialTabsSkeleton = ({ length = 5 }: { length?: number }) => {
       key={i}
       className="p-1.5 flex items-center gap-x-2 rounded-md text-[13px] group"
     >
-      <div className="border rounded-md p-1.5">
+      <div className="border rounded-md p-1.5 flex items-center justify-center">
         <Folder className="h-3.5 w-3.5" />
       </div>
       <Skeleton className="h-4 w-full" />

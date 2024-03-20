@@ -14,8 +14,8 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { useAtom } from "jotai";
-
 import { createPortal } from "react-dom";
+
 import { ExtendedFolder } from "@/types";
 import { classFolderAtom } from "@/atoms";
 import { MaterialTab } from "./material-tabs";
@@ -50,7 +50,7 @@ export const MaterialContext: React.FC<MaterialContextProps> = ({
     [folders]
   );
 
-  const { mutate: reorderFolder } = useReorderFolder(classroomId);
+  const { mutate: reorderFolder } = useReorderFolder();
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;

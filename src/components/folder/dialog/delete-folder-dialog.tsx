@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 import {
   AlertDialog,
@@ -12,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { useRemoveFolder } from "@/hooks/folder";
 
 type DeleteFolderDialogProps = {
@@ -39,7 +41,10 @@ export const DeleteFolderDialog = ({
     setIsDeleteOpen(open);
   };
 
-  const { mutate: removeFolder } = useRemoveFolder({ closeModal, classroomId });
+  const { mutate: removeFolder, isLoading } = useRemoveFolder({
+    closeModal,
+    classroomId,
+  });
 
   return (
     <AlertDialog open={open} onOpenChange={handleOpenChange}>
@@ -56,12 +61,17 @@ export const DeleteFolderDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
+          <Button
+            disabled={isLoading}
             onClick={() => removeFolder({ folderId })}
             className="pt-2"
           >
-            Continue
-          </AlertDialogAction>
+            {isLoading ? (
+              <Loader2 className="h-3 w-[52px] animate-spin" />
+            ) : (
+              "Continue"
+            )}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -134,14 +134,14 @@ export const FolderCard: React.FC<FolderCardProps> = ({
         style={style}
         {...listeners}
         {...attributes}
-        className="flex items-center justify-between group pb-2 px-6 text-gray-800 text-sm border-b"
+        className="flex items-center justify-between group pb-2 px-6 text-gray-800 dark:text-foreground focus:outline-none text-sm border-b"
       >
         <div className="flex items-center gap-x-3">
           <div className="border rounded-md p-1.5">
             <Folder className="h-3.5 w-3.5" />
           </div>
           <p className="text-[13px] font-medium group-hover:underline underline-offset-4 cursor-pointer">
-            {getShortenedText(folder.name, 15)}
+            {getShortenedText(folder.name, 25)}
           </p>
         </div>
         <div onClick={(e) => e.stopPropagation()}>
@@ -173,7 +173,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({
           <Folder className="h-3.5 w-3.5" />
         </div>
         <p className="text-[13px] font-medium group-hover:underline underline-offset-4 cursor-pointer">
-          {getShortenedText(folder.name, 15)}
+          {getShortenedText(folder.name, 25)}
         </p>
       </div>
       <div onClick={(e) => e.stopPropagation()}>

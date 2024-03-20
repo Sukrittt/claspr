@@ -77,41 +77,19 @@ export const useRemoveFolder = ({
   const utils = trpc.useUtils();
 
   return trpc.folder.removeFolder.useMutation({
-    onMutate: async ({ folderId }) => {
+    onSuccess: () => {
       closeModal();
-
-      await utils.folder.getFolders.cancel({ classroomId });
-
-      const prevFolders = utils.folder.getFolders.getData({
-        classroomId: undefined,
-      });
-
-      utils.folder.getFolders.setData({ classroomId }, (prev) =>
-        prev?.filter((folder) => folder.id !== folderId)
-      );
-
-      return { prevFolders };
-    },
-    onError: (error, _, ctx) => {
-      toast.error(error.message);
-
-      utils.folder.getFolders.setData({ classroomId }, ctx?.prevFolders);
-    },
-    onSettled: () => {
-      utils.folder.getFolders.invalidate();
+      utils.folder.getFolders.invalidate({ classroomId });
     },
   });
 };
 
-export const useReorderFolder = (classroomId?: string) => {
-  const utils = trpc.useUtils();
-
+export const useReorderFolder = () => {
   return trpc.folder.reorderFolder.useMutation({
     onError: () => {
       toast.error("Your changes were not saved. Please refresh your page.");
     },
-    onSettled: () => {
-      utils.folder.getFolders.invalidate({ classroomId });
-    },
+
+    // We're not invalidating the query because when multiple reordering is done, it will interrupt in between another reordering
   });
 };

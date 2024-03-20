@@ -25,7 +25,7 @@ export const CreateClassDialog = ({ sectionId }: { sectionId: string }) => {
         <DialogTrigger asChild>
           <div>
             <CustomTooltip text="Create Classroom">
-              <div className="flex items-center justify-center rounded-md text-gray-800 dark:text-foreground hover:bg-neutral-300 dark:hover:bg-neutral-800 p-1 cursor-pointer hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-400 transition">
+              <div className="flex items-center justify-center rounded-md text-gray-800 dark:text-foreground hover:bg-neutral-300 dark:hover:bg-neutral-700 p-1 cursor-pointer hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-400 transition">
                 <Plus className="h-3.5 w-3.5" />
                 <div className="sr-only">Create Classroom</div>
               </div>

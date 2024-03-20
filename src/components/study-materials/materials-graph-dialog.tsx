@@ -70,7 +70,7 @@ export const MaterialsGraphDialog: React.FC<MaterialsGraphDialogProps> = ({
           <DrawerHeader>
             <DrawerTitle>Notes Usage</DrawerTitle>
             <DrawerDescription>
-              Monitor student note usage over time
+              Monitor student&rsquo;s note usage over time
             </DrawerDescription>
           </DrawerHeader>
 
