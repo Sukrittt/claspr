@@ -21,7 +21,7 @@ export const BreadcrumbProvider: React.FC<BreadcrumbProviderProps> = ({
     if (!mounted) return;
 
     handleAddBreadcrumb([...breadcrumbs]);
-  }, [mounted]);
+  }, [mounted, breadcrumbs]);
 
   return <>{children}</>;
 };

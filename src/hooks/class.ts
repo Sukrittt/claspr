@@ -71,7 +71,10 @@ export const useEditClassroom = () => {
       toast.success("Classroom details updated successfully.");
 
       router.refresh();
+
       utils.class.getDescription.invalidate({ classroomId });
+      utils.section.getSectionsForCreatedClassrooms.invalidate();
+      utils.section.getSectionsForJoinedClassrooms.invalidate();
     },
   });
 };

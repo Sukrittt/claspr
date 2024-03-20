@@ -100,6 +100,7 @@ export const ClassroomSettingsForm: React.FC<ClassroomSettingsProps> = ({
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
+                      className="resize-none focus-visible:ring-0 focus-visible:ring-transparent"
                       disabled={isLoading}
                       placeholder="E.g: This class delves into the world of data structures."
                       value={value}
@@ -145,7 +146,11 @@ export const ClassroomSettingsForm: React.FC<ClassroomSettingsProps> = ({
         </form>
       </Form>
 
-      <Button form="classroom-edit-form" className="w-fit" disabled={isLoading}>
+      <Button
+        form="classroom-edit-form"
+        className="w-fit ml-1"
+        disabled={isLoading}
+      >
         {isLoading ? <Loader2 className="h-3 w-[22px] animate-spin" /> : "Save"}
       </Button>
     </div>
