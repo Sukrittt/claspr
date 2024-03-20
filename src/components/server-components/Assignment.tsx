@@ -2,9 +2,11 @@ import { notFound, redirect } from "next/navigation";
 
 import { getAuthSession } from "@/lib/auth";
 import { PartOfClass } from "./PartOfClass";
+import { getShortenedText } from "@/lib/utils";
 import { serverClient } from "@/trpc/server-client";
 import { TeacherView } from "@/components/assignment/page/teacher-view";
 import { StudentView } from "@/components/assignment/page/student-view";
+import { BreadcrumbProvider } from "@/components/providers/breadcrumb-provider";
 
 interface AssignmentProps {
   assignmentId: string;
@@ -33,11 +35,24 @@ export const Assignment: React.FC<AssignmentProps> = async ({
 
   return (
     <PartOfClass classroomId={classroomId}>
-      {isTeacher ? (
-        <TeacherView assignment={assignment} session={session} />
-      ) : (
-        <StudentView assignment={assignment} session={session} />
-      )}
+      <BreadcrumbProvider
+        breadcrumbs={[
+          {
+            label: assignment.classRoom.title,
+            href: `/c/${classroomId}`,
+          },
+          {
+            label: getShortenedText(assignment.title, 20),
+            href: `/c/${classroomId}/a/${assignmentId}`,
+          },
+        ]}
+      >
+        {isTeacher ? (
+          <TeacherView assignment={assignment} session={session} />
+        ) : (
+          <StudentView assignment={assignment} session={session} />
+        )}
+      </BreadcrumbProvider>
     </PartOfClass>
   );
 };

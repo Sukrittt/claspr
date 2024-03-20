@@ -7,6 +7,7 @@ import {
   ExtendedSectionWithClassrooms,
   ExtendedSectionWithMemberships,
 } from "@/types";
+import { Breadcrumb } from "./types/breadcrumb";
 import { DiscussionTab } from "@/components/discussions/discussion-tabs";
 import { AssignmentStatus } from "@/components/assignment/assignment-filter";
 
@@ -49,3 +50,11 @@ export const overDateAtom = atom<Date | null>(null);
 
 // For Reports
 export const activeReportStatusAtom = atom<ReportStatus | null>(null);
+
+// For Breadcrumbs
+export const breadcrumbsAtom = atom<Breadcrumb[]>([
+  {
+    label: "Dashboard",
+    href: "/dashboard",
+  },
+]);

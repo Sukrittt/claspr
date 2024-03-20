@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+
 import { serverClient } from "@/trpc/server-client";
 
 interface PartOfClassProps {

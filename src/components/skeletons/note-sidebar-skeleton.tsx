@@ -13,7 +13,7 @@ export const NoteSidebarSkeleton = () => {
         <Skeleton className="h-6 w-7" />
       </div>
 
-      <ScrollArea className="h-[65vh]">
+      <ScrollArea className="h-[55vh]">
         <NoteListsSkeleton />
       </ScrollArea>
     </div>
@@ -29,7 +29,7 @@ const NoteListsSkeleton = ({ length = 15 }: { length?: number }) => {
           className="flex items-center justify-between rounded-md py-1 px-2 group hover:bg-neutral-200 dark:hover:bg-neutral-800/60 transition w-full"
         >
           <div className="flex items-center gap-x-2 w-full">
-            <div className="border rounded-md p-1.5 text-gray-800 dark:text-foreground">
+            <div className="border rounded-md flex items-center justify-center p-1.5 text-gray-800 dark:text-foreground">
               <FileText className="h-3.5 w-3.5" />
             </div>
 

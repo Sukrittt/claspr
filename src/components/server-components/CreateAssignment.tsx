@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { getAuthSession } from "@/lib/auth";
 import { serverClient } from "@/trpc/server-client";
 import { AssignmentCard } from "@/components/assignment/assignment-card";
+import { BreadcrumbProvider } from "@/components/providers/breadcrumb-provider";
 
 export const CreateAssignment = async ({
   classroomId,
@@ -26,5 +27,20 @@ export const CreateAssignment = async ({
 
   if (!isTeacher) redirect(`/c/${classroomId}`);
 
-  return <AssignmentCard classroom={classroom} />;
+  return (
+    <BreadcrumbProvider
+      breadcrumbs={[
+        {
+          label: classroom.title,
+          href: `/c/${classroomId}`,
+        },
+        {
+          label: "Create",
+          href: `/c/${classroomId}/create`,
+        },
+      ]}
+    >
+      <AssignmentCard classroom={classroom} />
+    </BreadcrumbProvider>
+  );
 };

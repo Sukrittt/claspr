@@ -13,7 +13,7 @@ export default async function page({ params }: NotePageProps) {
   const { noteId } = params;
 
   return (
-    <Suspense fallback={<LoadingScreen fullHeight />}>
+    <Suspense fallback={<LoadingScreen />}>
       <Note noteId={noteId} />
     </Suspense>
   );

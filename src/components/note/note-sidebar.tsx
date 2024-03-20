@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -8,7 +9,6 @@ import {
   PanelLeftOpen,
   Plus,
 } from "lucide-react";
-import Link from "next/link";
 
 import { ExtendedNote } from "@/types";
 import {
@@ -24,6 +24,7 @@ import { useFolders } from "@/hooks/folder";
 import { Button } from "@/components/ui/button";
 import { ContainerVariants } from "@/lib/motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useBreadCrumbs } from "@/hooks/use-breadcrumbs";
 import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { CreateNoteDialog } from "./dialog/create-note-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
@@ -33,6 +34,7 @@ import { NoteSidebarSkeleton } from "@/components/skeletons/note-sidebar-skeleto
 export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
   const { data: folders, isLoading } = useFolders();
   const [sidebarState, setSidebarState] = useSidebarState();
+  const { handleChangeBreadcrumb } = useBreadCrumbs();
 
   const [activeFolderId, setActiveFolderId] = useState(note.folder.id);
 
@@ -68,6 +70,12 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
           {sidebarState.isOpen && (
             <Link
               href="/dashboard"
+              onClick={() =>
+                handleChangeBreadcrumb({
+                  href: "/dashboard",
+                  label: "Dashboard",
+                })
+              }
               className="text-[13px] px-2 py-1.5 flex items-center gap-x-2 rounded-md bg-neutral-200/60 dark:bg-neutral-800 cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800/60 transition"
             >
               <ChevronLeft className="w-3.5 h-3.5 text-muted-foreground" />

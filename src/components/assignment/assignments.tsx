@@ -45,7 +45,7 @@ export const Assignments: React.FC<AssignmentProps> = ({
           <AssignmentSkeleton />
         ) : !assignments || assignments.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center gap-y-2">
-            <ClipboardList className="h-10 w-10 text-neutral-800" />
+            <ClipboardList className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
               No assigments created yet.
             </p>

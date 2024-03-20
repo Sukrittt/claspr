@@ -8,6 +8,7 @@ import { useMounted } from "@/hooks/use-mounted";
 import { ExtendedClassroomDetails } from "@/types";
 import { ClassroomContainer } from "./classroom-container";
 import { AIDialog } from "@/components/conversation/ai-dialog";
+import { BreadcrumbProvider } from "@/components/providers/breadcrumb-provider";
 
 interface ClassroomLayoutProps {
   classroom: ExtendedClassroomDetails;
@@ -25,9 +26,8 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
   const { mutate: updateViewCount } = trpc.class.updateViewCount.useMutation();
 
   useEffect(() => {
-    if (mounted) {
-      updateViewCount({ classroomId: classroom.id });
-    }
+    if (!mounted) return;
+    updateViewCount({ classroomId: classroom.id });
   }, [mounted]);
 
   const additionalInfo =
@@ -37,13 +37,22 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
       : "");
 
   return (
-    <div className="px-20 py-6 h-[95%]">
-      <ClassroomContainer
-        classroom={classroom}
-        session={session}
-        userRole={userRole}
-      />
-      <AIDialog classroom={classroom} hasFollowUp addInfo={additionalInfo} />
-    </div>
+    <BreadcrumbProvider
+      breadcrumbs={[
+        {
+          label: classroom.title,
+          href: `/c/${classroom.id}`,
+        },
+      ]}
+    >
+      <div className="px-20 py-6 h-[95%]">
+        <ClassroomContainer
+          classroom={classroom}
+          session={session}
+          userRole={userRole}
+        />
+        <AIDialog classroom={classroom} hasFollowUp addInfo={additionalInfo} />
+      </div>
+    </BreadcrumbProvider>
   );
 };

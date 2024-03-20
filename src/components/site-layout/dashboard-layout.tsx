@@ -1,7 +1,7 @@
 import { UserType } from "@prisma/client";
 
-import { UpcomingEvents } from "../event/upcoming-events";
 import { FolderCards } from "@/components/folder/folder-cards";
+import { UpcomingEvents } from "@/components/event/upcoming-events";
 import { TeacherSection } from "@/components/dashboard/section/teacher-section";
 import { StudentSection } from "@/components/dashboard/section/student-section";
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { File, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 
 import { ExtendedFolder } from "@/types";
 import { NoteDropdown } from "./note-dropdown";
