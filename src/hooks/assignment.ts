@@ -34,7 +34,7 @@ export const useSubmitReview = ({
     onSuccess: () => {
       handleCleanups();
       utils.submission.getAssignmentSubmissions.invalidate();
-      toast.success("Your review was submitted");
+      toast.success("Review has been submitted. The student will be notified.");
     },
   });
 };

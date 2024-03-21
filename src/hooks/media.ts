@@ -12,7 +12,7 @@ export const useCreateMedia = ({ closeModal }: { closeModal: () => void }) => {
   return trpc.media.createMedia.useMutation({
     onSuccess: () => {
       closeModal();
-      toast.success("Your work has been uploaded");
+      toast.success("Your work has been uploaded. Don't forget to submit it.");
       utils.media.getUploadedMedia.invalidate();
     },
   });

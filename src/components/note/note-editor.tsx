@@ -43,7 +43,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
 
   return (
     <div className="space-y-4 group/parent">
-      <div className="space-y-4 group/child">
+      <div className="space-y-4 group/child relative">
         {isLoading ? (
           <Skeleton className="h-44 w-full rounded-none" />
         ) : noteCover?.coverImage ? (

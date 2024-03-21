@@ -48,7 +48,7 @@ export const MaterialTabsSkeleton = ({ length = 5 }: { length?: number }) => {
   return Array.from({ length }).map((_, i) => (
     <div
       key={i}
-      className="p-1.5 flex items-center gap-x-2 rounded-md text-[13px] group"
+      className="py-1 px-2.5 flex items-center gap-x-2 rounded-md text-[13px] group"
     >
       <div className="border rounded-md p-1.5 flex items-center justify-center">
         <Folder className="h-3.5 w-3.5" />

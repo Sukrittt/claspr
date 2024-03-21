@@ -80,12 +80,16 @@ export const shortcuts = [
     label: "Note Page",
     shortcuts: [
       {
-        keys: "Ctrl + \\",
+        keys: "Alt + \\",
         description: "Toggle the sidebar",
       },
       {
         keys: "Alt + f",
         description: "Create a new folder",
+      },
+      {
+        keys: "Alt + s",
+        description: "Create a new note",
       },
       {
         keys: "Alt + a",

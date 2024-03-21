@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
 import { Loader2, Pencil, Save } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { ExtendedAssignmentDetails } from "@/types";
@@ -32,14 +32,14 @@ export const AssignmentInstructions: React.FC<AssignmentInstructionsProps> = ({
   const { mutate: editContent, isLoading } =
     useEditAssignmentDetails(disableEditing);
 
-  const handleToggleEditingMode = () => {
+  const handleToggleEditingMode = useCallback(() => {
     if (!isEditable) {
       setIsEditable(true);
       return;
     }
 
     setIsSubmitting(true);
-  };
+  }, [isEditable, setIsEditable, setIsSubmitting]);
 
   const handleCreateAssignment = () => {
     if (!content) {

@@ -66,7 +66,7 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
       form.getValues("message")?.length === 0
     ) {
       form.setError("message", {
-        message: "Comment cannot be empty when the review is pending.",
+        message: "Comment cannot be empty when the evaluation is pending.",
       });
       return;
     }

@@ -20,12 +20,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
     () =>
       new QueryClient({
         defaultOptions: {
-          queries: {
-            // REMOVE THIS
-            refetchOnWindowFocus: false,
-            refetchOnReconnect: false,
-            // REMOVE THIS
-          },
           mutations: {
             onError: (error) => {
               const { message } = error as IError;

@@ -45,7 +45,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "\\" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "\\" && (e.metaKey || e.altKey)) {
         e.preventDefault();
         setSidebarState({
           isOpen: !sidebarState.isOpen,

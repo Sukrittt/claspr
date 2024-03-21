@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useCreateMedia } from "@/hooks/media";
 import { uploadFiles } from "@/lib/uploadthing";
-import { Button } from "@/components/ui/button";
 import { acceptFileExtensions } from "@/config/utils";
 
 interface SubmitDocFormProps {
