@@ -155,13 +155,7 @@ export const DeleteSectionDialog = ({
     onError: () => {
       toast.error("Your changes were not saved. Please refresh your page.");
     },
-    onSettled: () => {
-      if (sectionType === "CREATION") {
-        utils.section.getSectionsForCreatedClassrooms.invalidate();
-      } else if (sectionType === "MEMBERSHIP") {
-        utils.section.getSectionsForJoinedClassrooms.invalidate();
-      }
-    },
+    // We're not invalidating the query because when multiple reordering is done, it will interrupt in between another reordering
   });
 
   return (

@@ -164,7 +164,8 @@ export const SectionItem = ({
         <div className="flex items-center gap-x-1">
           <ChevronRight
             className={cn("w-4 h-4 transition", {
-              "rotate-90": showClassrooms || isHolding,
+              "rotate-90": showClassrooms,
+              "rotate-0": isHolding,
             })}
           />
           <div className="flex items-center gap-x-2">
@@ -208,7 +209,7 @@ export const SectionItem = ({
         </DndContext>
       </div>
       <AnimatePresence mode="wait">
-        {(showClassrooms || isHolding) && (
+        {showClassrooms && !isHolding && (
           <div
             className={cn({
               "opacity-60": isHolding,

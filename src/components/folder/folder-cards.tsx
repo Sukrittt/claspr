@@ -62,7 +62,7 @@ export const FolderCards = () => {
             <FolderSkeleton />
           ) : !folders || folders.length === 0 ? (
             <div className="pt-12 flex flex-col items-center justify-center gap-y-2">
-              <FolderX className="h-10 w-10 text-neutral-800" />
+              <FolderX className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
                 No folders created yet.
               </p>
