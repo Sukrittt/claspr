@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -40,6 +41,8 @@ type Inputs = z.infer<typeof classCreationSchema>;
 
 export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
   const router = useRouter();
+  const utils = trpc.useUtils();
+
   const [isDomainProtectionEnabled, setIsDomainProtectionEnabled] =
     useState(false);
 
@@ -54,7 +57,10 @@ export const CreateClassForm = ({ sectionId }: { sectionId: string }) => {
   const { mutate: createClass, isLoading } = trpc.class.createClass.useMutation(
     {
       onSuccess: (classRoom) => {
+        toast.success("Classroom created successfully");
         router.push(`/c/${classRoom.id}`);
+
+        utils.section.getSectionsForCreatedClassrooms.invalidate();
       },
     }
   );

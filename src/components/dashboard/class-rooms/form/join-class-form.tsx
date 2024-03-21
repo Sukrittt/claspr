@@ -37,6 +37,7 @@ type Inputs = z.infer<typeof classCreationSchema>;
 
 export const JoinClassForm = ({ sectionId }: { sectionId: string }) => {
   const router = useRouter();
+  const utils = trpc.useUtils();
 
   // react-hook-form
   const form = useForm<Inputs>({
@@ -50,6 +51,8 @@ export const JoinClassForm = ({ sectionId }: { sectionId: string }) => {
     onSuccess: (classRoom) => {
       toast.success("You are now a member of this class");
       router.push(`/c/${classRoom.id}`);
+
+      utils.section.getSectionsForJoinedClassrooms.invalidate();
     },
   });
 
