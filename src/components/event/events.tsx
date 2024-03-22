@@ -81,7 +81,7 @@ export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
   const activeEvent = params.get("active");
 
   return (
-    <ScrollArea className="h-[60vh] pr-0">
+    <ScrollArea className="h-[50vh] pr-0">
       {isLoading ? (
         <EventSkeleton />
       ) : !events || events.length === 0 ? (

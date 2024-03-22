@@ -54,6 +54,8 @@ export const getEvents = privateProcedure
       //   timeZone: "Asia/Kolkata",
       // });
 
+      console.log("CURRENT DATE", new Date());
+
       eventDateWhereClause = {
         gte: startOfDay(date),
         lte: endOfDay(date),

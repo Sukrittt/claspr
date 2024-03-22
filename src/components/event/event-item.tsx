@@ -59,7 +59,7 @@ export const EventItem: React.FC<EventItemProps> = ({
       {...listeners}
       onClick={() => handleQueryChange("/calendar", { active: event.id })}
       className={cn(
-        "rounded-xl border py-2 px-4 tracking-tight space-y-2 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition",
+        "rounded-xl border shadow-md py-2 px-4 tracking-tight space-y-2 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition",
         {
           "opacity-60 cursor-grabbing": isHolding,
         }

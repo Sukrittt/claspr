@@ -73,8 +73,8 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
   }
 
   return (
-    <div className="h-[90vh]">
-      <div className="space-y-12 py-8 px-10 h-full">
+    <div className="h-[94vh]">
+      <div className="flex flex-col gap-y-12 py-8 px-10 h-full">
         <div className="flex items-center justify-between">
           <h3 className="text-3xl tracking-tight">
             {currentMonth}, {currentYear}
