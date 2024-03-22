@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, format, isSameDay, startOfDay } from "date-fns";
+import { addDays, endOfDay, format, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -50,34 +50,27 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      if (isSameDay(date, new Date())) {
-        console.log("-----------------------------");
-        console.log(
-          "SERVER CURRENT DATE",
-          format(new Date(), "do MMM, h:mm a")
-        );
-        console.log(
-          "CLIENT FROM DATE",
-          format(startOfDay(date), "do MMM, h:mm a")
-        );
-        console.log(
-          "CLIENT END DATE",
-          format(endOfDay(date), "do MMM, h:mm a")
-        );
-        console.log(
-          "SERVER FROM DATE",
-          format(startOfDay(new Date()), "do MMM, h:mm a")
-        );
-        console.log(
-          "SERVER END DATE",
-          format(endOfDay(new Date()), "do MMM, h:mm a")
-        );
-        console.log("-----------------------------");
-      }
+      const indianTimeZone = new Date(date).toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      });
+
+      const indianDate = startOfDay(new Date(indianTimeZone));
+
+      console.log("-----------------------------");
+      console.log("SERVER CURRENT DATE", format(new Date(), "do MMM, h:mm a"));
+      console.log(
+        "CLIENT FROM DATE",
+        format(startOfDay(indianDate), "do MMM, h:mm a")
+      );
+      console.log(
+        "CLIENT END DATE",
+        format(endOfDay(indianDate), "do MMM, h:mm a")
+      );
+      console.log("-----------------------------");
 
       eventDateWhereClause = {
-        gte: startOfDay(date),
-        lte: endOfDay(date),
+        gte: startOfDay(indianDate),
+        lte: endOfDay(indianDate),
       };
     } else {
       eventDateWhereClause = {
