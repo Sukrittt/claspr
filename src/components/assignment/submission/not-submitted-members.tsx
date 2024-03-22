@@ -27,7 +27,7 @@ export const NotSubmittedMembers: React.FC<NotSubmittedMembersProps> = ({
         <NotSubmittedMembersSkeleton />
       ) : !students || students.length === 0 ? (
         <div className="h-full flex flex-col items-center justify-center gap-y-2">
-          <UsersRound className="h-10 w-10 text-neutral-800" />
+          <UsersRound className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
             All students have submitted their work.
           </p>

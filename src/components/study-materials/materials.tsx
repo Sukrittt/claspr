@@ -86,7 +86,7 @@ export const Materials: React.FC<MaterialsProps> = ({
 
           {activeFolder.notes.length === 0 ? (
             <div className="h-[50vh] flex flex-col items-center justify-center gap-y-2">
-              <FolderX className="h-10 w-10 text-neutral-800" />
+              <FolderX className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
                 No material created yet.
               </p>

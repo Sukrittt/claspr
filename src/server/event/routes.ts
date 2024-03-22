@@ -51,6 +51,7 @@ export const getEvents = privateProcedure
 
     if (date) {
       console.log("-----------------------------");
+      console.log("isInUTC", date.getTimezoneOffset() === 0);
       console.log("SERVER CURRENT DATE", format(new Date(), "do MMM, h:mm a"));
       console.log(
         "CLIENT FROM DATE",
