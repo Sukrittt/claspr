@@ -54,24 +54,19 @@ export const getEvents = privateProcedure
         timeZone: "Asia/Kolkata",
       });
 
-      const indianDate = startOfDay(new Date(indianTimeZone));
+      const utcDate = new Date(date);
+      const indianDate = new Date(indianTimeZone);
+      indianDate.setUTCHours(0, 0, 0, 0); // Set the time to the start of the day in Indian timezone
 
-      console.log("-----------------------------");
-      console.log("isInUTC", indianDate.getTimezoneOffset() === 0);
-      console.log("SERVER CURRENT DATE", format(new Date(), "do MMM, h:mm a"));
-      console.log(
-        "CLIENT FROM DATE",
-        format(startOfDay(indianDate), "do MMM, h:mm a")
-      );
-      console.log(
-        "CLIENT END DATE",
-        format(endOfDay(indianDate), "do MMM, h:mm a")
-      );
-      console.log("-----------------------------");
+      const startOfDayUTC = new Date(utcDate);
+      startOfDayUTC.setUTCHours(0, 0, 0, 0); // Set the time to the start of the day in UTC
+
+      const endOfDayUTC = new Date(utcDate);
+      endOfDayUTC.setUTCHours(23, 59, 59, 999); // Set the time to the end of the day in UTC
 
       eventDateWhereClause = {
-        gte: startOfDay(indianDate),
-        lte: endOfDay(indianDate),
+        gte: startOfDayUTC,
+        lte: endOfDayUTC,
       };
     } else {
       eventDateWhereClause = {
