@@ -50,11 +50,11 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      const indianTimeZone = new Date(date).toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
+      const ukTimeZone = new Date(date).toLocaleString("en-US", {
+        timeZone: "Europe/London",
       });
 
-      const indianDate = startOfDay(new Date(indianTimeZone));
+      const indianDate = startOfDay(new Date(ukTimeZone));
 
       console.log("-----------------------------");
       console.log("SERVER CURRENT DATE", format(new Date(), "do MMM, h:mm a"));
