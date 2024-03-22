@@ -50,27 +50,18 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      const ukTimeZone = new Date(date).toLocaleString("en-US", {
-        timeZone: "Europe/London",
-      });
-
-      const indianDate = startOfDay(new Date(ukTimeZone));
-
       console.log("-----------------------------");
       console.log("SERVER CURRENT DATE", format(new Date(), "do MMM, h:mm a"));
       console.log(
         "CLIENT FROM DATE",
-        format(startOfDay(indianDate), "do MMM, h:mm a")
+        format(startOfDay(date), "do MMM, h:mm a")
       );
-      console.log(
-        "CLIENT END DATE",
-        format(endOfDay(indianDate), "do MMM, h:mm a")
-      );
+      console.log("CLIENT END DATE", format(endOfDay(date), "do MMM, h:mm a"));
       console.log("-----------------------------");
 
       eventDateWhereClause = {
-        gte: startOfDay(indianDate),
-        lte: endOfDay(indianDate),
+        gte: startOfDay(date),
+        lte: endOfDay(date),
       };
     } else {
       eventDateWhereClause = {
