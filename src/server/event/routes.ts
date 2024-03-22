@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, startOfDay } from "date-fns";
+import { addDays, endOfDay, format, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -54,7 +54,7 @@ export const getEvents = privateProcedure
       //   timeZone: "Asia/Kolkata",
       // });
 
-      console.log("CURRENT DATE", new Date());
+      console.log("CURRENT DATE", format(new Date(), "do MMM, h:mm a"));
 
       eventDateWhereClause = {
         gte: startOfDay(date),
