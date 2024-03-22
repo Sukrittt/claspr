@@ -50,11 +50,12 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      // const indianTimeZoneDateString = new Date(date).toLocaleString("en-US", {
-      //   timeZone: "Asia/Kolkata",
-      // });
-
       console.log("CURRENT DATE", format(new Date(), "do MMM, h:mm a"));
+      console.log(
+        "CLIENT FROM DATE",
+        format(startOfDay(date), "do MMM, h:mm a")
+      );
+      console.log("CLIENT END DATE", format(endOfDay(date), "do MMM, h:mm a"));
 
       eventDateWhereClause = {
         gte: startOfDay(date),
