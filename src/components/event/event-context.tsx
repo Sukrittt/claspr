@@ -112,9 +112,7 @@ export const EventContext: React.FC<EventContextProps> = ({
 
       {createPortal(
         <DragOverlay>
-          {activeEventEl && (
-            <EventItem event={activeEventEl} isHolding sessionId={sessionId} />
-          )}
+          {activeEventEl && <EventItem event={activeEventEl} isHolding />}
         </DragOverlay>,
         document.body
       )}

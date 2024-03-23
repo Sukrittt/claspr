@@ -10,12 +10,10 @@ import { useQueryChange } from "@/hooks/use-query-change";
 interface EventItemProps {
   event: ExtendedEvent;
   isHolding?: boolean;
-  sessionId: string;
 }
 
 export const EventItem: React.FC<EventItemProps> = ({
   event,
-  sessionId,
   isHolding = false,
 }) => {
   const handleQueryChange = useQueryChange();
@@ -23,7 +21,7 @@ export const EventItem: React.FC<EventItemProps> = ({
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: event.id,
-      disabled: event.userId !== sessionId,
+      disabled: !!event.assignment,
       data: { content: event },
     });
 

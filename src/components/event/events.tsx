@@ -104,7 +104,7 @@ export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
                 isActive={event.id === activeEvent}
                 sessionId={sessionId}
               >
-                <EventItem event={event} sessionId={sessionId} />
+                <EventItem event={event} />
               </EventSheet>
             ))}
           </motion.div>
