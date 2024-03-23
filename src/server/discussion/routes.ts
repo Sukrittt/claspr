@@ -389,14 +389,14 @@ export const addReply = privateProcedure
  * To add a reaction for a discussion or reply.
  *
  * @param {object} input - The input parameters for adding a reaction.
- * @param {string} input.discussionId - An optional id of discussion.
+ * @param {string} input.discussionId - The id of the discussion.
  * @param {string} input.replyId - An optional replyId when reaction attached to a reply.
  * @param {enum} input.reactionType - An optional type of reaction to add to the discussion or reply.
  */
 export const addReaction = privateProcedure
   .input(
     z.object({
-      discussionId: z.string().optional(),
+      discussionId: z.string(),
       replyId: z.string().optional(),
       reactionType: ReactionEnum,
     })
@@ -404,12 +404,10 @@ export const addReaction = privateProcedure
   .mutation(async ({ input, ctx }) => {
     const { discussionId, reactionType, replyId } = input;
 
-
     const existingDiscussion = await db.discussion.findFirst({
       where: { id: discussionId },
       select: { id: true, classroomId: true, discussionType: true },
     });
-
 
     if (!existingDiscussion) {
       throw new TRPCError({
@@ -434,7 +432,7 @@ export const addReaction = privateProcedure
       where: {
         discussionId,
         userId: ctx.userId,
-        replyId,
+        replyId: replyId ?? null,
       },
       select: { id: true, reaction: true },
     });
@@ -448,7 +446,7 @@ export const addReaction = privateProcedure
             id: existingReaction.id,
             discussionId,
             userId: ctx.userId,
-            replyId,
+            replyId: replyId ?? null,
           },
         });
       }
@@ -462,7 +460,7 @@ export const addReaction = privateProcedure
             id: existingReaction.id,
             discussionId,
             userId: ctx.userId,
-            replyId,
+            replyId: replyId ?? null,
           },
         });
       }

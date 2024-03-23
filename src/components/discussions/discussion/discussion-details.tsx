@@ -159,11 +159,13 @@ export const DiscussionDetails: React.FC<DiscussionDetailsProps> = ({
               )}
             </div>
 
-            <div className="text-muted-foreground flex justify-center gap-x-4 w-full">
-              <span>*</span>
-              <span>*</span>
-              <span>*</span>
-            </div>
+            {discussion.replies.length > 0 && (
+              <div className="text-muted-foreground flex justify-center gap-x-4 w-full">
+                <span>*</span>
+                <span>*</span>
+                <span>*</span>
+              </div>
+            )}
 
             <div className="pb-20">
               <Replies

@@ -242,8 +242,8 @@ enum ReactionType {
 model Reaction {
   id String @id @unique @default(cuid())
 
-  discussionId String?
-  discussion   Discussion? @relation(fields: [discussionId], references: [id], onDelete: Cascade)
+  discussionId String
+  discussion   Discussion @relation(fields: [discussionId], references: [id], onDelete: Cascade)
 
   replyId String?
   reply   Reply?  @relation(fields: [replyId], references: [id], onDelete: Cascade)
