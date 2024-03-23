@@ -17,10 +17,9 @@ import { EventSkeleton } from "@/components/skeletons/event-skeleton";
 
 interface EventsProps {
   date: Date;
-  sessionId: string;
 }
 
-export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
+export const Events: React.FC<EventsProps> = ({ date }) => {
   const params = useSearchParams();
 
   const [overDate, setOverDate] = useAtom(overDateAtom);
@@ -102,7 +101,6 @@ export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
                 key={event.id}
                 event={event}
                 isActive={event.id === activeEvent}
-                sessionId={sessionId}
               >
                 <EventItem event={event} />
               </EventSheet>

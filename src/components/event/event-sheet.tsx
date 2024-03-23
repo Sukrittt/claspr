@@ -10,6 +10,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { cn } from "@/lib/utils";
 import { ExtendedEvent } from "@/types";
 import { EventEditor } from "./event-editor";
 import { useMounted } from "@/hooks/use-mounted";
@@ -17,20 +18,17 @@ import { EventDropdown } from "./event-dropdown";
 import { Separator } from "@/components/ui/separator";
 import { RenameEventTitle } from "./rename-event-title";
 import { useQueryChange } from "@/hooks/use-query-change";
-import { cn } from "@/lib/utils";
 
 interface EventSheetProps {
   isActive?: boolean;
   children: React.ReactNode;
   event: ExtendedEvent;
-  sessionId: string;
 }
 
 export const EventSheet: React.FC<EventSheetProps> = ({
   children,
   event,
   isActive = false,
-  sessionId,
 }) => {
   const mounted = useMounted();
   const [open, setOpen] = useState(false);
@@ -61,11 +59,11 @@ export const EventSheet: React.FC<EventSheetProps> = ({
                 <RenameEventTitle
                   eventId={event.id}
                   initialTitle={event.title}
-                  isEditable={event.userId === sessionId}
+                  isEditable={!!!event.assignment} //if it's not an assignment
                   date={startOfDay(event.eventDate)}
                 />
               </DrawerTitle>
-              {event.userId === sessionId && <EventDropdown event={event} />}
+              {!event.assignment && <EventDropdown event={event} />}
             </div>
 
             <div className="flex items-center gap-x-2">

@@ -172,7 +172,7 @@ const DateColumn: React.FC<DateColumnProps> = ({ date, sessionId }) => {
         </div>
       </div>
 
-      <Events date={date} sessionId={sessionId} />
+      <Events date={date} />
     </div>
   );
 };
