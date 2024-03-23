@@ -19,7 +19,7 @@ import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface ReactionListsProps {
-  discussionId?: string;
+  discussionId: string;
   replyId?: string;
   reactions: ExtendedReaction[];
   session: Session;
