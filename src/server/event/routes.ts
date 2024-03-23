@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, format, startOfDay } from "date-fns";
+import { addDays, endOfDay, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
 import { getIsPartOfClassAuth } from "@/server/class/routes";
+import { setDateWithSameTime } from "@/lib/utils";
 
 /**
  *  Fetching events for next 7 days.
@@ -54,19 +55,11 @@ export const getEvents = privateProcedure
         timeZone: "Asia/Kolkata",
       });
 
-      const utcDate = new Date(date);
       const indianDate = new Date(indianTimeZone);
-      indianDate.setUTCHours(0, 0, 0, 0); // Set the time to the start of the day in Indian timezone
-
-      const startOfDayUTC = new Date(utcDate);
-      startOfDayUTC.setUTCHours(0, 0, 0, 0); // Set the time to the start of the day in UTC
-
-      const endOfDayUTC = new Date(utcDate);
-      endOfDayUTC.setUTCHours(23, 59, 59, 999); // Set the time to the end of the day in UTC
 
       eventDateWhereClause = {
-        gte: startOfDayUTC,
-        lte: endOfDayUTC,
+        gte: startOfDay(indianDate),
+        lte: endOfDay(indianDate),
       };
     } else {
       eventDateWhereClause = {
@@ -287,6 +280,7 @@ export const createEvent = privateProcedure
  * @param {string} input.title - An optional title of the event.
  * @param {string} input.description - An optional description of the event.
  * @param {string} input.eventDate - An optional date of the event.
+ * @param {boolean} input.isMoving - An optional boolean value to determine if it's a dnd edit.
  */
 export const editEvent = privateProcedure
   .input(
@@ -295,10 +289,11 @@ export const editEvent = privateProcedure
       title: z.string().max(500).optional(),
       description: z.any().optional(),
       eventDate: z.date().optional(),
+      isMoving: z.boolean().optional(),
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const { eventId, title, description, eventDate } = input;
+    const { eventId, title, description, eventDate, isMoving } = input;
 
     const existingEvent = await db.event.findFirst({
       where: {
@@ -315,6 +310,12 @@ export const editEvent = privateProcedure
       });
     }
 
+    const updatedEventDate = eventDate
+      ? isMoving
+        ? setDateWithSameTime(eventDate, existingEvent.eventDate)
+        : eventDate
+      : existingEvent.eventDate;
+
     await db.event.update({
       where: {
         id: eventId,
@@ -323,7 +324,7 @@ export const editEvent = privateProcedure
       data: {
         title: title ?? existingEvent.title,
         description: description ?? existingEvent.description,
-        eventDate: eventDate ?? existingEvent.eventDate,
+        eventDate: updatedEventDate,
       },
     });
   });

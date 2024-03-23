@@ -9,6 +9,7 @@ import { ExtendedEvent } from "@/types";
 import { EventItem } from "./event-item";
 import { EventSheet } from "./event-sheet";
 import { ContainerVariants } from "@/lib/motion";
+import { setDateWithSameTime } from "@/lib/utils";
 import { useGetUpcomingEvents } from "@/hooks/event";
 import { activeDateAtom, overDateAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -46,9 +47,8 @@ export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
     const activeDate = activeDateObj.dateColumn;
     const activeEvent = activeDateObj.event;
 
-    const isToBeFiltered = isSameDay(date, activeDate);
-
     const isToBeAdded = isSameDay(date, overDate);
+    const isToBeFiltered = isSameDay(date, activeDate);
 
     if (isToBeFiltered) {
       setEvents((prev) => {
@@ -60,9 +60,11 @@ export const Events: React.FC<EventsProps> = ({ date, sessionId }) => {
       setEvents((prev) => {
         if (!prev) return;
 
+        const updatedEventDate = setDateWithSameTime(date, activeDate);
+
         const updatedEvent = {
           ...activeEvent,
-          eventDate: date,
+          eventDate: updatedEventDate,
         };
 
         const updatedEvents = [...prev, updatedEvent];

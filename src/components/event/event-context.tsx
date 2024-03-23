@@ -58,7 +58,7 @@ export const EventContext: React.FC<EventContextProps> = ({
 
     setActiveDateObj({
       event: activeEvent,
-      dateColumn: startOfDay(activeEvent.eventDate),
+      dateColumn: activeEvent.eventDate,
     });
 
     setActiveEventEl(activeEvent);
@@ -83,12 +83,11 @@ export const EventContext: React.FC<EventContextProps> = ({
     //CLIENT UPDATE
     setOverDate(overDate);
 
-    console.log("over date", format(overDate, "MMM do, h:mm a"));
-
     //SERVER UPDATE
     moveEvent({
       eventId: activeEventId,
       eventDate: overDate,
+      isMoving: true,
     });
 
     setActiveEventEl(null);

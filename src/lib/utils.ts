@@ -2,18 +2,20 @@ import moment from "moment";
 import { twMerge } from "tailwind-merge";
 import { type ClassValue, clsx } from "clsx";
 import { ReadonlyURLSearchParams } from "next/navigation";
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  differenceInSeconds,
+  setHours,
+  setMinutes,
+} from "date-fns";
 
 import {
   ExtendedFolder,
   ExtendedSectionWithClassrooms,
   ExtendedSectionWithMemberships,
 } from "@/types";
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  differenceInSeconds,
-} from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -112,4 +114,11 @@ export function calculateDateDifference(start: Date, end: Date) {
   }
 
   return `${differenceInSeconds(start, end)} seconds`;
+}
+
+export function setDateWithSameTime(toUpdateDate: Date, eventDate: Date) {
+  toUpdateDate = setHours(toUpdateDate, eventDate.getHours());
+  toUpdateDate = setMinutes(toUpdateDate, eventDate.getMinutes());
+
+  return toUpdateDate;
 }

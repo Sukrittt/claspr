@@ -6,7 +6,7 @@ export const EventSkeleton = ({ length = 5 }: { length?: number }) => {
       {Array.from({ length }).map((_, i) => (
         <div
           key={i}
-          className="rounded-xl border py-2 px-4 tracking-tight space-y-2"
+          className="rounded-xl border py-2 shadow-md px-4 tracking-tight space-y-2"
         >
           <Skeleton className="h-3 w-1/2" />
           <Skeleton className="h-3 w-full" />
