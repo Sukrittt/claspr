@@ -64,17 +64,20 @@ export const getEvents = privateProcedure
 
       // const indianDate = new Date(indianTimeZone);
 
+      // Get the timezone offset in minutes
       const timezoneOffset = date.getTimezoneOffset();
 
-      // If the timezone offset is zero, the date is in UTC
-      if (timezoneOffset === 0) {
-        console.log("The provided date is in UTC.");
-      } else {
-        console.log("The provided date is not in UTC.");
-      }
+      console.log(`Timezone Offset: ${timezoneOffset} minutes`);
 
-      const currDate = new Date();
-      console.log("CURRENT DATE", format(currDate, "MMMM do, h:mm a"));
+      // Example: Convert offset to hours and minutes for display
+      const hours = Math.abs(Math.floor(timezoneOffset / 60));
+      const minutes = Math.abs(timezoneOffset % 60);
+      const offsetString = `${timezoneOffset >= 0 ? "-" : "+"}${hours
+        .toString()
+        .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+
+      console.log(`Timezone Offset: ${offsetString}`);
+
       console.log("PROVIDED DATE", format(date, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
