@@ -51,11 +51,11 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      // const indianTimeZone = new Date(date).toLocaleString("en-US", {
-      //   timeZone: "Asia/Kolkata",
-      // });
+      const indianTimeZone = new Date(date).toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      });
 
-      // const indianDate = new Date(indianTimeZone);
+      const indianDate = new Date(indianTimeZone);
 
       // const timezoneOffset = date.getTimezoneOffset();
 
@@ -68,11 +68,11 @@ export const getEvents = privateProcedure
 
       const currDate = new Date();
       console.log("CURRENT DATE", format(currDate, "MMMM do, h:mm a"));
-      console.log("PROVIDED DATE", format(date, "MMMM do, h:mm a"));
+      console.log("PROVIDED DATE", format(indianDate, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
-        gte: startOfDay(date),
-        lte: endOfDay(date),
+        gte: startOfDay(indianDate),
+        lte: endOfDay(indianDate),
       };
     } else {
       eventDateWhereClause = {
