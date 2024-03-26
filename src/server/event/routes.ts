@@ -55,11 +55,16 @@ export const getEvents = privateProcedure
         timeZone: "Asia/Kolkata",
       });
 
+      const europeanTimeZone = new Date(date).toLocaleString("en-US", {
+        timeZone: "Europe/London",
+      });
+
       const indianDate = new Date(indianTimeZone);
+      const europeDate = new Date(europeanTimeZone);
 
       eventDateWhereClause = {
-        gte: startOfDay(indianDate),
-        lte: endOfDay(indianDate),
+        gte: startOfDay(europeDate),
+        lte: endOfDay(europeDate),
       };
     } else {
       eventDateWhereClause = {
