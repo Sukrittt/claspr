@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, format, startOfDay } from "date-fns";
+import {
+  addDays,
+  addHours,
+  addMinutes,
+  endOfDay,
+  format,
+  startOfDay,
+} from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -51,11 +58,11 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      const indianTimeZone = new Date(date).toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
-      });
+      // const indianTimeZone = new Date(date).toLocaleString("en-US", {
+      //   timeZone: "Asia/Kolkata",
+      // });
 
-      const indianDate = new Date(indianTimeZone);
+      // const indianDate = new Date(indianTimeZone);
 
       // const timezoneOffset = date.getTimezoneOffset();
 
@@ -66,13 +73,22 @@ export const getEvents = privateProcedure
       //   console.log("The provided date is not in UTC.");
       // }
 
+      // Add 5 hours
+      const datePlus5Hours = addHours(date, 5);
+
+      // Add 30 minutes to the datePlus5Hours
+      const datePlus5Hours30Minutes = addMinutes(datePlus5Hours, 30);
+
       const currDate = new Date();
       console.log("CURRENT DATE", format(currDate, "MMMM do, h:mm a"));
-      console.log("PROVIDED DATE", format(indianDate, "MMMM do, h:mm a"));
+      console.log(
+        "PROVIDED DATE",
+        format(datePlus5Hours30Minutes, "MMMM do, h:mm a")
+      );
 
       eventDateWhereClause = {
-        gte: startOfDay(indianDate),
-        lte: endOfDay(indianDate),
+        gte: startOfDay(datePlus5Hours30Minutes),
+        lte: endOfDay(datePlus5Hours30Minutes),
       };
     } else {
       eventDateWhereClause = {
