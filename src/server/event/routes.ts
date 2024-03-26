@@ -51,11 +51,20 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      const indianTimeZone = new Date(date).toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
-      });
+      // const indianTimeZone = new Date(date).toLocaleString("en-US", {
+      //   timeZone: "Asia/Kolkata",
+      // });
 
-      const indianDate = new Date(indianTimeZone);
+      // const indianDate = new Date(indianTimeZone);
+
+      const timezoneOffset = date.getTimezoneOffset();
+
+      // If the timezone offset is zero, the date is in UTC
+      if (timezoneOffset === 0) {
+        console.log("The provided date is in UTC.");
+      } else {
+        console.log("The provided date is not in UTC.");
+      }
 
       const currDate = new Date();
       console.log("CURRENT DATE", format(currDate, "MMMM do, h:mm a"));
