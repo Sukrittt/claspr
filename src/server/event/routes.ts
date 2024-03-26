@@ -6,6 +6,9 @@ import {
   addMinutes,
   endOfDay,
   format,
+  isAfter,
+  isBefore,
+  set,
   startOfDay,
 } from "date-fns";
 
@@ -58,31 +61,27 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      // const indianTimeZone = new Date(date).toLocaleString("en-US", {
-      //   timeZone: "Asia/Kolkata",
-      // });
+      const indianTimeZone = new Date(date).toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      });
 
-      // const indianDate = new Date(indianTimeZone);
+      const indianDate = new Date(indianTimeZone);
 
-      // Get the timezone offset in minutes
-      const timezoneOffset = date.getTimezoneOffset();
+      const startTime = set(indianDate, { hours: 0, minutes: 0, seconds: 0 });
+      const endTime = set(indianDate, { hours: 5, minutes: 29, seconds: 59 });
 
-      console.log(`Timezone Offset: ${timezoneOffset} minutes`);
+      let updatedDate = indianDate;
 
-      // Example: Convert offset to hours and minutes for display
-      const hours = Math.abs(Math.floor(timezoneOffset / 60));
-      const minutes = Math.abs(timezoneOffset % 60);
-      const offsetString = `${timezoneOffset >= 0 ? "-" : "+"}${hours
-        .toString()
-        .padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+      if (isAfter(indianDate, startTime) && isBefore(indianDate, endTime)) {
+        const newIndianDate = addDays(indianDate, 1);
+        updatedDate = newIndianDate;
+      }
 
-      console.log(`Timezone Offset: ${offsetString}`);
-
-      console.log("PROVIDED DATE", format(date, "MMMM do, h:mm a"));
+      console.log("UPDATED DATE", format(updatedDate, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
-        gte: startOfDay(date),
-        lte: endOfDay(date),
+        gte: startOfDay(updatedDate),
+        lte: endOfDay(updatedDate),
       };
     } else {
       eventDateWhereClause = {

@@ -25,8 +25,6 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
   const [overDate, setOverDate] = useAtom(overDateAtom);
   const [activeDateObj, setActiveDateObj] = useAtom(activeDateAtom);
 
-  console.log("client date", date);
-
   const { data: serverEvents, isLoading } = useGetUpcomingEvents(
     undefined,
     date
