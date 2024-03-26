@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, endOfDay, startOfDay } from "date-fns";
+import { addDays, endOfDay, format, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -55,16 +55,14 @@ export const getEvents = privateProcedure
         timeZone: "Asia/Kolkata",
       });
 
-      const europeanTimeZone = new Date(date).toLocaleString("en-US", {
-        timeZone: "Europe/London",
-      });
-
       const indianDate = new Date(indianTimeZone);
-      const europeDate = new Date(europeanTimeZone);
+
+      const currDate = new Date();
+      console.log("CURRENT DATE", format(currDate, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
-        gte: startOfDay(europeDate),
-        lte: endOfDay(europeDate),
+        gte: startOfDay(currDate),
+        lte: endOfDay(currDate),
       };
     } else {
       eventDateWhereClause = {
@@ -214,6 +212,8 @@ export const getEvents = privateProcedure
         },
       },
     };
+
+    console.log("eventDateWhereClause",eventDateWhereClause)
 
     const promises = [
       db.event.findMany({
