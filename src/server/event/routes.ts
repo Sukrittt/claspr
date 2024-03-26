@@ -61,8 +61,8 @@ export const getEvents = privateProcedure
       console.log("CURRENT DATE", format(currDate, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
-        gte: startOfDay(currDate),
-        lte: endOfDay(currDate),
+        gte: startOfDay(date),
+        lte: endOfDay(date),
       };
     } else {
       eventDateWhereClause = {
@@ -213,7 +213,7 @@ export const getEvents = privateProcedure
       },
     };
 
-    console.log("eventDateWhereClause",eventDateWhereClause)
+    console.log("eventDateWhereClause", eventDateWhereClause);
 
     const promises = [
       db.event.findMany({
