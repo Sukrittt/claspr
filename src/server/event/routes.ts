@@ -59,6 +59,7 @@ export const getEvents = privateProcedure
 
       const currDate = new Date();
       console.log("CURRENT DATE", format(currDate, "MMMM do, h:mm a"));
+      console.log("PROVIDED DATE", format(date, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
         gte: startOfDay(date),
