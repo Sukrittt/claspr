@@ -64,31 +64,22 @@ export const getEvents = privateProcedure
 
       // const indianDate = new Date(indianTimeZone);
 
-      // const timezoneOffset = date.getTimezoneOffset();
+      const timezoneOffset = date.getTimezoneOffset();
 
-      // // If the timezone offset is zero, the date is in UTC
-      // if (timezoneOffset === 0) {
-      //   console.log("The provided date is in UTC.");
-      // } else {
-      //   console.log("The provided date is not in UTC.");
-      // }
-
-      // Add 5 hours
-      const datePlus5Hours = addHours(date, 5);
-
-      // Add 30 minutes to the datePlus5Hours
-      const datePlus5Hours30Minutes = addMinutes(datePlus5Hours, 30);
+      // If the timezone offset is zero, the date is in UTC
+      if (timezoneOffset === 0) {
+        console.log("The provided date is in UTC.");
+      } else {
+        console.log("The provided date is not in UTC.");
+      }
 
       const currDate = new Date();
       console.log("CURRENT DATE", format(currDate, "MMMM do, h:mm a"));
-      console.log(
-        "PROVIDED DATE",
-        format(datePlus5Hours30Minutes, "MMMM do, h:mm a")
-      );
+      console.log("PROVIDED DATE", format(date, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
-        gte: startOfDay(datePlus5Hours30Minutes),
-        lte: endOfDay(datePlus5Hours30Minutes),
+        gte: startOfDay(date),
+        lte: endOfDay(date),
       };
     } else {
       eventDateWhereClause = {

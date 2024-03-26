@@ -27,20 +27,9 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
 
   console.log("client date", date);
 
-  const timezoneOffset = new Date(date.toISOString()).getTimezoneOffset();
-
-  // If the timezone offset is zero, the date is in UTC
-  if (timezoneOffset === 0) {
-    console.log("The date is in UTC.");
-  } else {
-    console.log("The date is not in UTC.");
-  }
-
-  console.log("---------------------");
-
   const { data: serverEvents, isLoading } = useGetUpcomingEvents(
     undefined,
-    new Date(date.toISOString())
+    date
   );
 
   const [events, setEvents] = useState<ExtendedEvent[] | undefined>(
