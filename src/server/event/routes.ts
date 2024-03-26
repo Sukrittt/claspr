@@ -68,11 +68,11 @@ export const getEvents = privateProcedure
 
       const currDate = new Date();
       console.log("CURRENT DATE", format(currDate, "MMMM do, h:mm a"));
-      console.log("PROVIDED DATE", format(addDays(date, 1), "MMMM do, h:mm a"));
+      console.log("PROVIDED DATE", format(date, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
-        gte: addDays(startOfDay(date), 1),
-        lte: addDays(endOfDay(date), 1),
+        gte: startOfDay(date),
+        lte: endOfDay(date),
       };
     } else {
       eventDateWhereClause = {
