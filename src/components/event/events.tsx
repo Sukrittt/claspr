@@ -1,6 +1,6 @@
 "use client";
 import { useAtom } from "jotai";
-import { addHours, addMinutes, format, isSameDay } from "date-fns";
+import { isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -25,13 +25,9 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
   const [overDate, setOverDate] = useAtom(overDateAtom);
   const [activeDateObj, setActiveDateObj] = useAtom(activeDateAtom);
 
-  const updatedDate = addMinutes(addHours(date, 5), 30);
-
-  console.log("updatedDate", format(updatedDate, "MMMM do, h:mm a"));
-
   const { data: serverEvents, isLoading } = useGetUpcomingEvents(
     undefined,
-    updatedDate
+    date
   );
 
   const [events, setEvents] = useState<ExtendedEvent[] | undefined>(

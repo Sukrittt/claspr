@@ -66,8 +66,11 @@ export const getEvents = privateProcedure
       // });
 
       // const indianDate = new Date(indianTimeZone);
+      const utcDateString = date.toISOString();
+      const utcDate = new Date(utcDateString);
 
-      console.log("date", format(date, "MMMM do, h:mm a"));
+      console.log("Date", format(date, "MMMM do, h:mm a"));
+      console.log("UTC Date", format(utcDate, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
         gte: startOfDay(date),
