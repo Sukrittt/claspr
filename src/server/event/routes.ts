@@ -79,7 +79,17 @@ export const getEvents = privateProcedure
       const formattedDate = format(currDate, "MMMM do, h:mm a");
       const timezone = `UTC${timezoneSign}${timezoneOffsetHours}:${timezoneOffsetMinutes}`;
 
-      console.log("UPDATED DATE", formattedDate, `(${timezone})`);
+      console.log("CURRENT DATE", formattedDate, `(${timezone})`);
+
+      const timezoneOffset2 = date.getTimezoneOffset();
+      const timezoneOffsetHours2 = Math.abs(Math.floor(timezoneOffset / 60));
+      const timezoneOffsetMinutes2 = Math.abs(timezoneOffset % 60);
+      const timezoneSign2 = timezoneOffset < 0 ? "+" : "-"; // Determine if timezone is ahead or behind UTC
+
+      const formattedDate2 = format(date, "MMMM do, h:mm a");
+      const timezone2 = `UTC${timezoneSign2}${timezoneOffsetHours2}:${timezoneOffsetMinutes2}`;
+
+      console.log("PROVIDED DATE", formattedDate2, `(${timezone2})`);
 
       eventDateWhereClause = {
         gte: startOfDay(date),
