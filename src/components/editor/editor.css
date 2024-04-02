@@ -39,7 +39,8 @@
 .dark .ce-conversion-toolbar,
 .dark .image-tool--withBackground .image-tool__image,
 .dark .tc-popover__item-icon,
-.dark .tc-popover {
+.dark .tc-popover,
+.dark .ce-toolbar__plus {
   background-color: #262626;
   color: #d6d6d6;
   border: none;

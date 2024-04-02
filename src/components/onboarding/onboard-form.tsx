@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { UserType } from "@prisma/client";
 
+import { cn } from "@/lib/utils";
 import { ChooseRole } from "./choose-role";
 import { TextVariants } from "@/lib/motion";
 import { useMounted } from "@/hooks/use-mounted";
@@ -33,14 +33,21 @@ export const OnboardForm = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col gap-y-12 items-center justify-center">
+    <div className="h-screen flex flex-col gap-y-12 items-center justify-center px-4">
       {step === "choose-role" && (
         <ChooseRole setRole={setRole} setStep={setStep} />
       )}
 
       {step === "enter-university" && role && <UniversityInput role={role} />}
 
-      <div className="flex justify-between text-xs text-muted-foreground w-2/3">
+      <div
+        className={cn(
+          "flex justify-center gap-x-4 lg:gap-x-0 lg:justify-between text-xs text-muted-foreground w-2/3",
+          {
+            "justify-between": step === "enter-university",
+          }
+        )}
+      >
         {step === "enter-university" && (
           <span
             className="hover:underline underline-offset-4 cursor-pointer hover:text-neutral-500 transition"

@@ -30,10 +30,10 @@ export const TeacherSection = () => {
   const [sectionsForJoinedClassrooms] = useAtom(joinedClassSections);
 
   return (
-    <div className="grid grid-cols-2 gap-4 h-full">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
       <Card className="space-y-4">
         <CardHeader className="border-b py-2.5 space-y-0.5">
-          <div className="flex justify-between items-end">
+          <div className="flex flex-col gap-y-2 sm:gap-y-0 sm:flex-row sm:justify-between sm:items-end">
             <div>
               <CardTitle className="text-base font-semibold">
                 Your Sections
@@ -42,7 +42,7 @@ export const TeacherSection = () => {
                 Sections containing created classrooms
               </CardDescription>
             </div>
-            <div className="flex items-center gap-x-2">
+            <div className="flex justify-end items-center gap-x-2">
               <CustomTooltip text="Collapse All">
                 <div
                   className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
@@ -70,7 +70,7 @@ export const TeacherSection = () => {
       </Card>
       <Card className="space-y-4">
         <CardHeader className="border-b py-2.5 space-y-0.5">
-          <div className="flex justify-between items-end">
+          <div className="flex flex-col gap-y-2 sm:gap-y-0 sm:flex-row sm:justify-between sm:items-end">
             <div>
               <CardTitle className="text-base font-semibold">
                 Your Sections
@@ -79,7 +79,7 @@ export const TeacherSection = () => {
                 Sections containing joined classrooms
               </CardDescription>
             </div>
-            <div className="flex items-center gap-x-2">
+            <div className="flex justify-end items-center gap-x-2">
               <CustomTooltip text="Collapse All">
                 <div
                   className="p-1 rounded-md cursor-pointer hover:text-gray-700 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"

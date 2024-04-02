@@ -190,7 +190,7 @@ export const SectionItem = ({
               e.stopPropagation();
             }}
             className={cn(
-              "flex items-center gap-x-2 opacity-0 group-hover:opacity-100 transition",
+              "flex items-center gap-x-2 opacity-100 lg:opacity-0 group-hover:opacity-100 transition",
               {
                 "opacity-100": isDropdownOpen,
               }

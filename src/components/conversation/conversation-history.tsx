@@ -112,9 +112,12 @@ const ConversationCard = ({
           <div className="flex items-center justify-between">
             <CardTitle className="text-base">{conversation.prompt}</CardTitle>
             <div
-              className={cn("group-hover:opacity-100 opacity-0 transition", {
-                "opacity-100": isDropdownOpen,
-              })}
+              className={cn(
+                "group-hover:opacity-100 opacity-100 lg:opacity-0 transition",
+                {
+                  "opacity-100": isDropdownOpen,
+                }
+              )}
             >
               <ConversationDropdown
                 isDropdownOpen={isDropdownOpen}
@@ -129,7 +132,7 @@ const ConversationCard = ({
           onClick={() => handleCopyOutput(conversation.answer)}
         >
           <Markdown>{getFilteredResponse(conversation.answer)}</Markdown>
-          <div className="opacity-0 group-hover:opacity-100 transition absolute bottom-2 right-3.5">
+          <div className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition absolute bottom-2 right-3.5">
             <div className="flex items-center gap-x-4">
               <CustomTooltip text="Click to copy">
                 <div className="p-1.5 rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-800 transition">

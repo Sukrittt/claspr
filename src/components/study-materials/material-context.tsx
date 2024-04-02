@@ -178,14 +178,16 @@ export const MaterialContext: React.FC<MaterialContextProps> = ({
         items={listOfFolderIds ?? []}
         strategy={verticalListSortingStrategy}
       >
-        {folders.map((folder, index) => (
-          <MaterialTab
-            key={folder.id}
-            folder={folder}
-            isFirstFolder={index === 0}
-            classroomId={classroomId}
-          />
-        ))}
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-1">
+          {folders.map((folder, index) => (
+            <MaterialTab
+              key={folder.id}
+              folder={folder}
+              isFirstFolder={index === 0}
+              classroomId={classroomId}
+            />
+          ))}
+        </div>
       </SortableContext>
       {createPortal(
         <DragOverlay>

@@ -73,15 +73,24 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
   }
 
   return (
-    <div className="h-[94vh]">
+    <div className="h-[94vh] w-screen">
       <div className="flex flex-col gap-y-12 py-8 px-10 h-full">
-        <div className="flex items-center justify-between">
-          <h3 className="text-3xl tracking-tight">
-            {currentMonth}, {currentYear}
-          </h3>
+        <div className="flex flex-col gap-y-4 sm:gap-y-0 sm:flex-row sm:items-center justify-between">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl sm:text-3xl tracking-tight">
+              {currentMonth}, {currentYear}
+            </h3>
+            <CreateEventDialog>
+              <div className="sm:hidden border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg">
+                <CustomTooltip text="Create Event">
+                  <Plus className="h-3.5 w-3.5" />
+                </CustomTooltip>
+              </div>
+            </CreateEventDialog>
+          </div>
           <div className="flex items-center gap-x-2 text-neutral-700 dark:text-foreground">
             <CreateEventDialog>
-              <div className="border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg">
+              <div className="hidden sm:block border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg">
                 <CustomTooltip text="Create Event">
                   <Plus className="h-3.5 w-3.5" />
                 </CustomTooltip>
@@ -95,7 +104,7 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
             </div>
             <span
               onClick={handleToday}
-              className="font-semibold tracking-tight cursor-pointer border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition py-1 text-sm px-6 rounded-lg"
+              className="font-semibold tracking-tight cursor-pointer border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition py-1 text-sm px-6 rounded-lg flex-1 text-center"
             >
               Today
             </span>

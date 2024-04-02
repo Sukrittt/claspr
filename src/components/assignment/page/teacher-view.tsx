@@ -4,6 +4,7 @@ import { Session } from "next-auth";
 import { AnimatePresence, motion } from "framer-motion";
 import { FileText, NotepadText, Speech } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
 import { ExtendedAssignmentDetails } from "@/types";
 import { Submissions } from "@/components/assignment/submission/submissions";
@@ -11,6 +12,13 @@ import { AssignmentFilter } from "@/components/assignment/assignment-filter";
 import { AssignmentDetails } from "@/components/assignment/assignment-details";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssignmentInstructions } from "@/components/assignment/assignment-instructions";
+import { AssignmentOptionsDropdown } from "@/components/assignment/assignment-options-dropdown";
+
+export type OptionType = {
+  label: string;
+  value: string;
+  icon: JSX.Element;
+};
 
 interface TeacherViewProps {
   assignment: ExtendedAssignmentDetails;
@@ -23,8 +31,26 @@ export const TeacherView: React.FC<TeacherViewProps> = ({
 }) => {
   const [tabVal, setTabVal] = useState("submissions");
 
+  const tabOptions: OptionType[] = [
+    {
+      label: "Submissions",
+      value: "submissions",
+      icon: <FileText className="h-4 w-4" />,
+    },
+    {
+      label: "Instructions",
+      value: "instructions",
+      icon: <Speech className="h-4 w-4" />,
+    },
+    {
+      label: "Details",
+      value: "details",
+      icon: <NotepadText className="h-4 w-4" />,
+    },
+  ];
+
   return (
-    <div className="px-20 py-8 h-full">
+    <div className="px-4 lg:px-20 py-8 h-full">
       <Tabs
         defaultValue="submissions"
         className="h-full"
@@ -32,25 +58,26 @@ export const TeacherView: React.FC<TeacherViewProps> = ({
         onValueChange={(val) => setTabVal(val)}
       >
         <div className="flex items-center justify-between">
-          <TabsList className="mb-2">
-            <TabsTrigger className="ml-0" value="submissions">
-              <div className="flex items-center gap-x-2">
-                <FileText className="w-4 h-4" />
-                <span>Submissions</span>
-              </div>
-            </TabsTrigger>
-            <TabsTrigger value="instructions">
-              <div className="flex items-center gap-x-2">
-                <Speech className="w-4 h-4" />
-                <span>Instructions</span>
-              </div>
-            </TabsTrigger>
-            <TabsTrigger value="details">
-              <div className="flex items-center gap-x-2">
-                <NotepadText className="w-4 h-4" />
-                <span>Details</span>
-              </div>
-            </TabsTrigger>
+          {/* FOR SMALLER SCREENS */}
+          <AssignmentOptionsDropdown
+            tabOptions={tabOptions}
+            tabValue={tabVal}
+            setTabValue={setTabVal}
+          />
+
+          <TabsList className="hidden lg:block mb-2">
+            {tabOptions.map((option, index) => (
+              <TabsTrigger
+                key={option.value}
+                className={cn({ "ml-0": index === 0 })}
+                value={option.value}
+              >
+                <div className="flex items-center gap-x-2">
+                  {option.icon}
+                  <span>{option.label}</span>
+                </div>
+              </TabsTrigger>
+            ))}
           </TabsList>
 
           <AnimatePresence mode="wait">

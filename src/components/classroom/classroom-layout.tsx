@@ -45,7 +45,7 @@ export const ClassroomLayout: React.FC<ClassroomLayoutProps> = ({
         },
       ]}
     >
-      <div className="px-20 py-6 h-[95%]">
+      <div className="px-4 lg:px-20 py-6 h-[95%]">
         <ClassroomContainer
           classroom={classroom}
           session={session}

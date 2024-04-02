@@ -253,7 +253,7 @@ export const Editor: React.FC<EditorProps> = ({
         exit="exit"
         id="editor"
         className={cn("px-4 typography-styles max-w-full", {
-          "pl-10": isNotePage,
+          "pl-0 lg:pl-10": isNotePage,
         })}
       />
 

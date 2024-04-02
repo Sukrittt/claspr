@@ -221,7 +221,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           </CustomTooltip>
         </motion.div>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Ask me anything</DialogTitle>
           <DialogDescription>
@@ -251,7 +251,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
                 <h3 className="font-semibold text-[17px] tracking-tight pb-1.5">
                   {prevInput}
                 </h3>
-                <div className="opacity-0 group-hover:opacity-100 transition flex gap-x-3 items-center absolute bottom-3 right-3">
+                <div className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition flex gap-x-3 items-center absolute bottom-3 right-3">
                   <CustomTooltip text="Click to copy">
                     {copied ? (
                       <Check className="w-3 h-3 hover:text-gray-800 dark:hover:text-foreground transition" />

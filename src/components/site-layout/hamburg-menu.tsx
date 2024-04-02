@@ -91,7 +91,7 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="flex flex-col gap-y-4 pl-3 w-[250px] md:w-[300px]"
+        className="flex flex-col gap-y-4 pl-3 w-3/4 md:w-[300px]"
       >
         <div className="pt-0 flex items-center gap-x-2">
           <UserAvatar user={session.user} className="h-6 w-6" />

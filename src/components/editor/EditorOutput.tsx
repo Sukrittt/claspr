@@ -128,7 +128,7 @@ function CustomCodeRenderer({ data }: any) {
       className="bg-gray-800 dark:bg-neutral-800 rounded-md p-4 cursor-pointer relative group my-4"
       onClick={handleCopyCode}
     >
-      <div className="opacity-0 group-hover:opacity-100 transition absolute top-4 right-4 text-white">
+      <div className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition absolute top-4 right-4 text-white">
         {copied ? (
           <Check className="w-2.5 h-2.5 duration-500" />
         ) : (

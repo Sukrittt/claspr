@@ -1,9 +1,9 @@
 import { UserType } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
+import { GraduationCap, Presentation } from "lucide-react";
 
 import { ContainerVariants } from "@/lib/motion";
 import { type OnBoardStep } from "./onboard-form";
-import { GraduationCap, Presentation } from "lucide-react";
 
 interface ChooseRoleProps {
   setRole: (role: UserType) => void;
@@ -29,22 +29,22 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
         exit="exit"
       >
         <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-foreground">
+          <h2 className="text-center text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-foreground">
             Select Your Role
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-neutral-400">
+          <p className="mt-1 sm:mt-2 text-center text-sm text-gray-600 dark:text-neutral-400">
             Please choose whether you are a teacher or a student.
           </p>
         </div>
-        <div className="flex items-center gap-x-8">
+        <div className="flex flex-col lg:flex-row gap-y-4 lg:gap-y-0 items-center gap-x-8">
           <div
             className={roleCardClass}
             onClick={() => handleRoleChange("TEACHER")}
           >
             <div className="flex items-center gap-x-3">
-              <Presentation className="h-10 w-10 text-neutral-800 dark:text-neutral-400" />
+              <Presentation className="h-8 sm:h-10 w-8 sm:w-10 text-neutral-800 dark:text-neutral-400" />
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-foreground">
+                <h3 className="text-xl font-semibold sm:font-bold text-gray-900 dark:text-foreground">
                   Teacher
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -59,9 +59,9 @@ export const ChooseRole: React.FC<ChooseRoleProps> = ({ setRole, setStep }) => {
             onClick={() => handleRoleChange("STUDENT")}
           >
             <div className="flex items-center gap-x-3">
-              <GraduationCap className="h-10 w-10 text-neutral-800 dark:text-neutral-400" />
+              <GraduationCap className="h-8 sm:h-10 w-8 sm:w-10 text-neutral-800 dark:text-neutral-400" />
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-foreground">
+                <h3 className="text-xl font-semibold sm:font-bold text-gray-900 dark:text-foreground">
                   Student
                 </h3>
                 <p className="text-sm text-muted-foreground">

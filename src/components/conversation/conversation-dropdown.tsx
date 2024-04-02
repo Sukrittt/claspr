@@ -35,7 +35,7 @@ export const ConversationDropdown: React.FC<ConversationDropdownProps> = ({
         <DropdownMenuTrigger asChild>
           <div>
             <CustomTooltip text="More options">
-              <div className="text-gray-700 dark:text-gray-300 hover:bg-neutral-400/30 p-1 rounded-md transition cursor-pointer">
+              <div className="text-gray-700 dark:text-gray-300 hover:bg-neutral-400/30 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 p-1 rounded-md transition cursor-pointer">
                 <MoreHorizontal className="h-4 w-4" />
               </div>
             </CustomTooltip>

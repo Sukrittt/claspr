@@ -77,7 +77,7 @@ export const DiscussionTabs = ({ classroomId }: { classroomId: string }) => {
       <h3 className="tracking-tight text-muted-foreground font-medium text-[13px]">
         Categories
       </h3>
-      <div className="flex flex-col gap-y-2">
+      <div className="flex flex-row lg:flex-col flex-wrap gap-y-2">
         {tabs.map((tab, index) => (
           <div
             onClick={() => {

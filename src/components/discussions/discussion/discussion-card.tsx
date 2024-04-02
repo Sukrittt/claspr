@@ -23,14 +23,14 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
 
   const discussionDetails = tabs.find(
     (tab) => tab.value === discussion.discussionType
-  )!; //It will bere there.
+  )!; //It will not be NULL in any case.
 
   const handleQueryChange = useQueryChange();
 
   return (
     <div className="border-b px-3 py-4 flex items-center justify-between">
       <div className="flex items-center gap-x-4">
-        <div className="bg-neutral-200 dark:bg-neutral-800 rounded-md h-10 w-10 grid place-items-center">
+        <div className="hidden bg-neutral-200 dark:bg-neutral-800 rounded-md h-10 w-10 sm:grid place-items-center">
           <discussionDetails.icon className="h-5 w-5" />
         </div>
 
@@ -63,13 +63,15 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
       </div>
 
       <div className="flex items-center gap-x-8">
-        <AvatarGroup
-          data={discussion.replies.map((reply) => ({
-            image: reply.creator.image,
-            name: reply.creator.name,
-            session,
-          }))}
-        />
+        <div className="hidden sm:block">
+          <AvatarGroup
+            data={discussion.replies.map((reply) => ({
+              image: reply.creator.image,
+              name: reply.creator.name,
+              session,
+            }))}
+          />
+        </div>
         <div className="flex items-center gap-x-2 text-muted-foreground">
           <MessageSquare className="h-4 w-4" />
           <span className="text-[15px]">{discussion._count.replies}</span>

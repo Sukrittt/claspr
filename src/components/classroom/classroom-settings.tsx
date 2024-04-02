@@ -32,27 +32,31 @@ export const ClassroomSettings = ({
 
         <Separator />
 
-        <ScrollArea className="h-[67vh]">
-          <ClassroomSettingsForm classroom={classroom} />
+        <ScrollArea className="h-[65vh]">
+          <div className="space-y-4">
+            <ClassroomSettingsForm classroom={classroom} />
 
-          <div className="space-y-2 pt-2">
-            <h3 className="text-base font-semibold tracking-tight">
-              Danger Zone
-            </h3>
+            <Separator />
 
-            <div className="border rounded-md p-4 flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="font-semibold text-sm">Delete this classroom</p>
-                <p className="text-xs">
-                  Once you delete a classroom, there is no going back. Please be
-                  certain.
-                </p>
+            <div className="space-y-2 pt-2">
+              <h3 className="text-base font-semibold tracking-tight">
+                Danger Zone
+              </h3>
+
+              <div className="border rounded-md p-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 sm:items-center justify-between">
+                <div className="space-y-1">
+                  <p className="font-semibold text-sm">Delete this classroom</p>
+                  <p className="text-xs">
+                    Once you delete a classroom, there is no going back. Please
+                    be certain.
+                  </p>
+                </div>
+
+                <DeleteClassDialog
+                  classroomId={classroom.id}
+                  sectionId={classroom.sectionId}
+                />
               </div>
-
-              <DeleteClassDialog
-                classroomId={classroom.id}
-                sectionId={classroom.sectionId}
-              />
             </div>
           </div>
         </ScrollArea>

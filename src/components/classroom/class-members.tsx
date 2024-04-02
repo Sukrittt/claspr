@@ -50,7 +50,7 @@ export const ClassMembers: React.FC<ClassMembersProps> = ({
                   {creator.name}
                 </p>
 
-                <div className="flex items-center gap-x-1 text-muted-foreground text-[11px]">
+                <div className="flex flex-wrap items-center gap-x-1 text-muted-foreground text-[11px]">
                   <p>{creator.email}</p>
 
                   <span>•</span>
@@ -105,7 +105,7 @@ const MemberCard: React.FC<MemberCardProps> = ({
               {member.user.name}
             </p>
 
-            <div className="flex items-center gap-x-1 text-muted-foreground text-[11px]">
+            <div className="flex flex-wrap items-center gap-x-1 text-muted-foreground text-[11px]">
               {protectedDomain && !validEmail ? (
                 <CustomTooltip text="Member's email does not match the domain of this classroom.">
                   <p className="text-yellow-500">{member.user.email}!</p>

@@ -60,7 +60,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
           />
         )}
 
-        <div className="pl-12 flex items-center gap-x-2">
+        <div className="pl-0 lg:pl-12 flex items-center gap-x-2">
           <div className="relative">
             <NoteEmojiPicker
               emojiUrl={note.emojiUrl}
@@ -92,7 +92,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
         </div>
       </div>
 
-      <div className="px-20 pt-1 relative">
+      <div className="px-6 lg:px-20 pt-1 relative">
         <NoteRenameTitle
           noteId={note.id}
           noteTitle={note.title}
@@ -135,7 +135,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
 
       <div className="p-4 pt-0">
         <ScrollArea
-          className="pr-0 pl-10 h-[45vh]"
+          className="pr-0 pl-0 lg:pl-10 h-[45vh]"
           style={{
             position: "static", // For some reason, 'static' tailwind class does not work here
           }}

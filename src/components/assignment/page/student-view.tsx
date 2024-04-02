@@ -21,8 +21,8 @@ export const StudentView: React.FC<StudentViewProps> = ({
   session,
 }) => {
   return (
-    <div className="px-20 py-8 grid grid-cols-8 gap-8">
-      <div className="col-span-5 xl:col-span-6 space-y-4 border p-4 rounded-md">
+    <div className="px-4 lg:px-20 py-8 grid grid-cols-8 gap-8">
+      <div className="col-span-8 lg:col-span-5 xl:col-span-6 space-y-4 border p-4 rounded-md">
         <div className="space-y-4">
           <div className="space-y-1">
             <h2 className="text-xl font-semibold tracking-tight">
@@ -54,7 +54,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
           </ScrollArea>
         </div>
       </div>
-      <div className="col-span-3 xl:col-span-2 w-full flex flex-col gap-y-4">
+      <div className="col-span-8 lg:col-span-3 xl:col-span-2 w-full flex flex-col gap-y-4">
         <SubmissionCard assignment={assignment} />
         <Comments assignment={assignment} session={session} />
       </div>

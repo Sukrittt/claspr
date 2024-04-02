@@ -83,7 +83,7 @@ export const UniversityInput: React.FC<UniversityInputProps> = ({ role }) => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="space-y-4 min-w-[400px]"
+        className="space-y-4 w-full sm:w-auto sm:min-w-[400px]"
         variants={ContainerVariants}
         initial="initial"
         animate="animate"

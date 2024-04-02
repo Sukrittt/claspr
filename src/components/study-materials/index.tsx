@@ -22,10 +22,10 @@ export const StudyMaterialLayout: React.FC<StudyMaterialLayoutProps> = ({
 
   return (
     <div className="grid grid-cols-8 gap-4">
-      <div className="col-span-2">
+      <div className="col-span-8 md:col-span-2">
         <MaterialTabs classroomId={classroomId} userRole={userRole} />
       </div>
-      <div className="col-span-6">
+      <div className="col-span-8 md:col-span-6">
         {activeNoteId ? (
           <MaterialDetails
             classroomId={classroomId}

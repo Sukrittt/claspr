@@ -68,7 +68,7 @@ export const MaterialCard: React.FC<MaterialCardProps> = ({
         </div>
       </div>
 
-      <div className="opacity-0 group-hover:opacity-100 transition">
+      <div className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition">
         <NoteDropdown
           note={note}
           folders={folders}

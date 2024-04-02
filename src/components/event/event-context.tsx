@@ -100,13 +100,9 @@ export const EventContext: React.FC<EventContextProps> = ({
       onDragEnd={handleDragEnd}
       collisionDetection={closestCenter}
     >
-      <div className="grid grid-cols-7 place-items-center gap-4 h-[95%]">
+      <div className="flex place-items-center gap-4 overflow-x-auto no-scrollbar h-[95%]">
         {calendarDates.map((date) => (
-          <DateColumn
-            key={date.toISOString()}
-            date={date}
-            sessionId={sessionId}
-          />
+          <DateColumn key={date.toISOString()} date={date} />
         ))}
       </div>
 
@@ -122,10 +118,9 @@ export const EventContext: React.FC<EventContextProps> = ({
 
 interface DateColumnProps {
   date: Date;
-  sessionId: string;
 }
 
-const DateColumn: React.FC<DateColumnProps> = ({ date, sessionId }) => {
+const DateColumn: React.FC<DateColumnProps> = ({ date }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: date.toISOString(),
     data: {
@@ -134,7 +129,10 @@ const DateColumn: React.FC<DateColumnProps> = ({ date, sessionId }) => {
   });
 
   return (
-    <div ref={setNodeRef} className="flex flex-col gap-y-4 h-full w-full">
+    <div
+      ref={setNodeRef}
+      className="flex flex-col gap-y-4 h-full w-full min-w-[10rem] flex-1"
+    >
       <div
         className={cn(
           "rounded-xl border shadow-md transition duration-300 p-4 w-full",

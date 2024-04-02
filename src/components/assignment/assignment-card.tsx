@@ -17,10 +17,10 @@ export const AssignmentCard = ({ classroom }: { classroom: ClassRoom }) => {
   const [stepNumber, setStepNumber] = useState(1);
 
   return (
-    <div className="grid place-items-center h-full">
-      <Card className="w-[700px]">
+    <div className="grid place-items-center h-full px-4 sm:px-0">
+      <Card className="md:w-[700px]">
         <CardHeader className="py-3 border-b">
-          <div className="flex justify-between items-start">
+          <div className="relative">
             <div>
               <CardTitle className="text-gray-800 dark:text-foreground text-sm">
                 Create a new assignment
@@ -29,12 +29,12 @@ export const AssignmentCard = ({ classroom }: { classroom: ClassRoom }) => {
                 This will be displayed to all the members of this classroom
               </CardDescription>
             </div>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-muted-foreground absolute top-0 right-0">
               {stepNumber} of {TOTAL_STEPS}
             </span>
           </div>
         </CardHeader>
-        <CardContent className="pt-3 pb-0">
+        <CardContent className="pt-3 pb-0 px-3 sm:px-6">
           <AssignmentFlow classroom={classroom} setStepNumber={setStepNumber} />
         </CardContent>
       </Card>

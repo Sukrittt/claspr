@@ -158,7 +158,7 @@ export const ClassroomCard: React.FC<ClassroomCardProps> = ({
                     <CustomTooltip text="Click to copy">
                       <div className="relative">
                         <p className="text-[13px]">{details.description}</p>
-                        <span className="opacity-0 group-hover:opacity-100 transition absolute -right-3.5 top-[5px]">
+                        <span className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition absolute -right-3.5 top-[5px]">
                           {copied ? (
                             <Check className="w-2.5 h-2.5 duration-500" />
                           ) : (

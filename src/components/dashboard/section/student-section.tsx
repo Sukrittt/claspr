@@ -24,7 +24,7 @@ export const StudentSection = () => {
   return (
     <Card className="space-y-4">
       <CardHeader className="border-b py-2.5 space-y-0.5">
-        <div className="flex justify-between items-end">
+        <div className="flex flex-col gap-y-2 sm:gap-y-0 sm:flex-row sm:justify-between sm:items-end">
           <div>
             <CardTitle className="text-base font-semibold">
               Your Sections
@@ -33,7 +33,7 @@ export const StudentSection = () => {
               Sections containing joined classrooms
             </CardDescription>
           </div>
-          <div className="flex items-center gap-x-2 pr-4">
+          <div className="flex justify-end items-center gap-x-2 pr-4">
             <CustomTooltip text="Collapse All">
               <div
                 className="p-1 rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200"

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Folder } from "lucide-react";
 import { UserType } from "@prisma/client";
 import { useFolders } from "@/hooks/folder";
+import { useSortable } from "@dnd-kit/sortable";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -17,7 +18,6 @@ import {
   classFolderAtom,
   globalLoaderAtom,
 } from "@/atoms";
-import { useSortable } from "@dnd-kit/sortable";
 import { useUpdateViewCount } from "@/hooks/note";
 import { MaterialContext } from "./material-context";
 import { useQueryChange } from "@/hooks/use-query-change";
@@ -89,10 +89,12 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({
           )}
         </div>
       </div>
-      <ScrollArea className="h-[68vh]">
+      <ScrollArea className="md:h-[68vh]">
         <div className="space-y-2">
           {isLoading ? (
-            <MaterialTabsSkeleton />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-1">
+              <MaterialTabsSkeleton />
+            </div>
           ) : !folders || folders.length === 0 ? (
             <p className="text-xs text-muted-foreground tracking-tight">
               Your folders will appear here.
@@ -205,7 +207,7 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
           <p>{getShortenedText(folder.name, 25)}</p>
         </div>
 
-        <div className="opacity-0 group-hover:opacity-100 transition">
+        <div className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition">
           <FolderDropdown folder={folder} classroomId={classroomId} />
         </div>
       </div>

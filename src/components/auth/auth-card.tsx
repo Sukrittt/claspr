@@ -19,8 +19,8 @@ interface AuthCardProps {
 export const AuthCard: React.FC<AuthCardProps> = ({ authType }) => {
   return (
     <div className="h-screen flex">
-      <div className="w-[35%]">
-        <Card className="h-full flex flex-col justify-center px-20">
+      <div className="w-full xl:w-[35%]">
+        <Card className="h-full flex flex-col justify-center px-10 sm:px-20">
           <CardHeader className="space-y-1 px-0">
             <CardTitle className="text-xl">
               {authType === "signin" ? "Welcome Back" : "Sign up"}
@@ -62,7 +62,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ authType }) => {
           </CardFooter>
         </Card>
       </div>
-      <div className="flex-1 relative bg-primary dark:bg-neutral-800 flex items-center justify-center">
+      <div className="hidden flex-1 relative bg-primary dark:bg-neutral-800 xl:flex items-center justify-center">
         <div className="space-y-2 w-1/2">
           <div className="h-10 w-10 absolute -ml-10">
             <Image src="/image.png" alt="quotes" fill priority />

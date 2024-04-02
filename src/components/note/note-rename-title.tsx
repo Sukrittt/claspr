@@ -44,7 +44,7 @@ export const NoteRenameTitle: React.FC<NoteRenameTitleProps> = ({
   ) : (
     <ReactTextareaAutosize
       placeholder="Untitled Note"
-      className="text-4xl font-semibold text-neutral-800 dark:text-foreground tracking-tight bg-transparent focus:outline-none w-full resize-none h-[46px]"
+      className="text-xl sm:text-2xl lg:text-4xl font-semibold text-neutral-800 dark:text-foreground tracking-tight bg-transparent focus:outline-none w-full resize-none h-[46px]"
       value={title}
       onChange={(e) => setTitle(e.target.value)}
     />

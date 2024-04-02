@@ -9,7 +9,7 @@ export default function Home() {
       <section
         id="hero"
         aria-labelledby="hero-heading"
-        className="flex justify-center mx-auto items-center w-full max-w-[64rem] flex-col gap-4 pb-8 pt-6 text-center md:pb-12 md:pt-10 lg:pt-48 lg:pb-10"
+        className="flex justify-center mx-auto items-center w-full max-w-[64rem] flex-col gap-4 text-center pt-48 pb-10"
       >
         <div className="flex flex-col gap-y-1 items-center">
           <div className="rounded-full w-fit text-muted-foreground text-xs py-1 px-4 border">

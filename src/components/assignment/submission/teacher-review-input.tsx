@@ -62,11 +62,11 @@ export const TeacherReviewInput: React.FC<TeacherReviewInputProps> = ({
 
   function handleCreateComment(data: Inputs) {
     if (
-      selectedReview === "PENDING" &&
+      selectedReview === "CHANGES_REQUESTED" &&
       form.getValues("message")?.length === 0
     ) {
       form.setError("message", {
-        message: "Comment cannot be empty when the evaluation is pending.",
+        message: "Message is required when changes required.",
       });
       return;
     }

@@ -7,16 +7,18 @@ import {
   Settings,
   UsersRound,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { UserType } from "@prisma/client";
 import { notFound, useSearchParams } from "next/navigation";
 
+import { cn } from "@/lib/utils";
 import { ClassMembers } from "./class-members";
 import { ClassroomCard } from "./classroom-card";
 import { ExtendedClassroomDetails } from "@/types";
-import { ClassroomControls } from "./classroom-controls";
 import { ClassroomSettings } from "./classroom-settings";
+import { ClassroomControls } from "./classroom-controls";
 import { useQueryChange } from "@/hooks/use-query-change";
+import { ClassOptionsDropdown } from "./class-options-dropdown";
 import { Assignments } from "@/components/assignment/assignments";
 import { StudyMaterialLayout } from "@/components/study-materials";
 import { UpcomingEvents } from "@/components/event/upcoming-events";
@@ -32,13 +34,19 @@ interface ClassroomContainerProps {
   userRole: UserType;
 }
 
-type ClassroomOptions =
+export type ClassroomOptions =
   | "assignments"
   | "study-materials"
   | "discussions"
   | "members"
   | "conversations"
   | "settings";
+
+export type OptionType = {
+  label: string;
+  value: ClassroomOptions;
+  icon: JSX.Element;
+};
 
 export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
   classroom,
@@ -49,9 +57,13 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
 
   const activeTab = params.get("tab") as ClassroomOptions;
   const handleQueryChange = useQueryChange();
+  const [tabValue, setTabValue] = useState<ClassroomOptions>(
+    activeTab ?? "assignments"
+  );
 
   const handleTabChange = (value: string) => {
     const typedValue = value as ClassroomOptions;
+    setTabValue(typedValue);
 
     if (typedValue === "settings" && classroom.teacherId !== session.user.id) {
       return;
@@ -82,6 +94,34 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
     });
   }, [activeTab]);
 
+  const tabOptions: OptionType[] = [
+    {
+      label: "Assignments",
+      value: "assignments",
+      icon: <ClipboardList className="h-4 w-4" />,
+    },
+    {
+      label: "Study Materials",
+      value: "study-materials",
+      icon: <LibraryBig className="h-4 w-4" />,
+    },
+    {
+      label: "Discussions",
+      value: "discussions",
+      icon: <MessageSquare className="h-4 w-4" />,
+    },
+    {
+      label: "Members",
+      value: "members",
+      icon: <UsersRound className="h-4 w-4" />,
+    },
+    {
+      label: "AI Chat",
+      value: "conversations",
+      icon: <Bot className="h-4 w-4" />,
+    },
+  ];
+
   function isValidTab(status: string) {
     if (!status) return true;
 
@@ -103,45 +143,37 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
   if (!isValidTab(activeTab)) notFound();
 
   return (
-    <Tabs
-      defaultValue={activeTab ?? "assignments"}
-      onValueChange={handleTabChange}
-      className="h-full"
-    >
+    <Tabs value={tabValue} onValueChange={handleTabChange} className="h-full">
       <div className="flex items-center justify-between">
-        <TabsList className="mb-2">
-          <TabsTrigger className="ml-0" value="assignments">
-            <div className="flex items-center gap-x-2">
-              <ClipboardList className="w-4 h-4" />
-              <span>Assignments</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger value="study-materials">
-            <div className="flex items-center gap-x-2">
-              <LibraryBig className="w-4 h-4" />
-              <span>Study materials</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger value="discussions">
-            <div className="flex items-center gap-x-2">
-              <MessageSquare className="w-4 h-4" />
-              <span>Discussions</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger value="members">
-            <div className="flex items-center gap-x-2">
-              <UsersRound className="w-4 h-4" />
-              <span>Members</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger value="conversations">
-            <div className="flex items-center gap-x-2">
-              <Bot className="w-4 h-4" />
-              <span>AI Chat</span>
-            </div>
-          </TabsTrigger>
+        {/* FOR SMALLER SCREENS */}
+        <ClassOptionsDropdown
+          tabOptions={tabOptions}
+          tabValue={tabValue}
+          setTabValue={setTabValue}
+          isTeacher={classroom.teacherId === session.user.id}
+        />
+
+        <TabsList className="mb-2 hidden xl:block">
+          {tabOptions.map((option) => (
+            <TabsTrigger
+              key={option.value}
+              className={cn("ml-0", {
+                "text-foreground": tabValue === option.value,
+              })}
+              value={option.value}
+            >
+              <div className="flex items-center gap-x-2">
+                {option.icon}
+                <span>{option.label}</span>
+              </div>
+            </TabsTrigger>
+          ))}
+
           {classroom.teacherId === session.user.id && (
-            <TabsTrigger value="settings">
+            <TabsTrigger
+              value="settings"
+              onClick={() => setTabValue("settings")}
+            >
               <div className="flex items-center gap-x-2">
                 <Settings className="w-4 h-4" />
                 <span>Settings</span>
@@ -153,7 +185,7 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
         <ClassroomControls classroom={classroom} sessionId={session.user.id} />
       </div>
       <div className="grid grid-cols-7 gap-4 h-[95%] pt-4">
-        <div className="col-span-5">
+        <div className="col-span-7 lg:col-span-5">
           {/* ASSIGNMENTS */}
           <TabsContent value="assignments" className="h-full">
             <Assignments classroomId={classroom.id} session={session} />
@@ -171,15 +203,20 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
           {/* DISCUSSIONS */}
           <TabsContent className="h-full" value="discussions">
             <div className="grid grid-cols-8 gap-4">
-              <div className="col-span-2 flex flex-col gap-y-6">
+              <div className="col-span-8 lg:col-span-2 flex flex-col gap-y-6">
                 <DiscussionTabs classroomId={classroom.id} />
-                <HelpfulUsers classroomId={classroom.id} />
+                <div className="hidden lg:block ">
+                  <HelpfulUsers classroomId={classroom.id} />
+                </div>
               </div>
-              <div className="col-span-6">
+              <div className="col-span-8 lg:col-span-6">
                 <ClassDiscussions
                   classroomId={classroom.id}
                   session={session}
                 />
+                <div className="lg:hidden">
+                  <HelpfulUsers classroomId={classroom.id} />
+                </div>
               </div>
             </div>
           </TabsContent>
@@ -207,7 +244,7 @@ export const ClassroomContainer: React.FC<ClassroomContainerProps> = ({
           )}
         </div>
 
-        <div className="col-span-2 flex flex-col gap-2 h-full pt-4">
+        <div className="col-span-7 lg:col-span-2 flex flex-col gap-2 h-full pt-4 pb-4 lg:pb-0">
           {/* CLASSROOM DETAILS */}
           <ClassroomCard classroom={classroom} sessionId={session.user.id} />
           <div className="flex-1">

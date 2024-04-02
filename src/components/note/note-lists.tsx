@@ -66,7 +66,7 @@ export const NoteLists: React.FC<NoteListsProps> = ({
 
             <div
               onClick={(e) => e.stopPropagation()}
-              className="opacity-0 group-hover:opacity-100 transition"
+              className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition"
             >
               <NoteDropdown
                 note={note}

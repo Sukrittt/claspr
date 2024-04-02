@@ -59,7 +59,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
   return (
     <aside
       className={cn(
-        "w-[350px] h-full border-r p-6 flex flex-col justify-between gap-y-8 transition-[width] duration-300",
+        "hidden w-[350px] h-full border-r p-6 xl:flex flex-col justify-between gap-y-8 transition-[width] duration-300",
         {
           "w-10": !sidebarState.isOpen,
         }

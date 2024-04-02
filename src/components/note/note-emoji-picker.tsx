@@ -52,7 +52,7 @@ export const NoteEmojiPicker: React.FC<EmojiPickerToolProps> = ({
           {selectedEmoji.url ? (
             <div className="absolute left-7 -top-10">
               <div className="border p-2 rounded-xl bg-white dark:bg-neutral-800 bg-opacity-20 backdrop-blur-lg hover:bg-neutral-200/50 dark:hover:bg-neutral-800/70 transition drop-shadow-lg">
-                <div className="h-8 w-8 relative">
+                <div className="h-6 w-6 md:h-8 md:w-8 relative">
                   <Image
                     src={selectedEmoji.url}
                     className="object-contain"

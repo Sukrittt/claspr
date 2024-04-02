@@ -102,9 +102,12 @@ const CommentCard: React.FC<CommentCardProps> = ({ comment, sessionId }) => {
 
           {sessionId === comment.sender.id && (
             <div
-              className={cn("opacity-0 group-hover:opacity-100 transition", {
-                "opacity-100": isDropdownOpen,
-              })}
+              className={cn(
+                "opactity-100 lg:opacity-0 group-hover:opacity-100 transition",
+                {
+                  "opacity-100": isDropdownOpen,
+                }
+              )}
             >
               <CommentDropdown
                 isDropdownOpen={isDropdownOpen}
