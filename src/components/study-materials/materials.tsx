@@ -64,19 +64,17 @@ export const Materials: React.FC<MaterialsProps> = ({
             {activeFolder?.name}
           </p>
           <div className="flex items-center gap-x-2">
-            {userRole === "TEACHER" && (
-              <>
-                <MaterialsGraphDialog
-                  notes={activeFolder.notes}
-                  classroomId={classroomId}
-                />
+            <MaterialsGraphDialog
+              notes={activeFolder.notes}
+              classroomId={classroomId}
+            />
 
-                <CreateNoteDialog
-                  folderId={activeFolder.id}
-                  noteType="CLASSROOM"
-                  classroomId={classroomId}
-                />
-              </>
+            {userRole === "TEACHER" && (
+              <CreateNoteDialog
+                folderId={activeFolder.id}
+                noteType="CLASSROOM"
+                classroomId={classroomId}
+              />
             )}
           </div>
         </div>

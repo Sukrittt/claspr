@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { BarChart3 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import {
   Drawer,
@@ -10,9 +10,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { FormattedNote } from "@/types/note";
-import { useGetPartOfClass } from "@/hooks/class";
 import { MaterialsGraph } from "./materials-graph";
-import { Skeleton } from "@/components/ui/skeleton";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 
 interface MaterialsGraphDialogProps {
@@ -25,11 +23,6 @@ export const MaterialsGraphDialog: React.FC<MaterialsGraphDialogProps> = ({
   classroomId,
 }) => {
   const [open, setOpen] = useState(false);
-
-  const { data: isTeacher, isLoading } = useGetPartOfClass({
-    classroomId,
-    isTeacher: true,
-  });
 
   const data = notes.map((note) => ({
     name: note.title,
@@ -46,12 +39,6 @@ export const MaterialsGraphDialog: React.FC<MaterialsGraphDialogProps> = ({
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
-
-  if (isLoading) {
-    return <Skeleton className="h-4 w-4" />;
-  }
-
-  if (!isTeacher) return null;
 
   return (
     <Drawer open={open} onOpenChange={(val) => setOpen(val)}>
