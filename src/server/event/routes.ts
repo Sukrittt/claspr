@@ -70,7 +70,16 @@ export const getEvents = privateProcedure
 
       console.log("date", format(date, "MMMM do, h:mm a"));
       console.log("indianDate", format(indianDate, "MMMM do, h:mm a"));
+
       console.log("updatedDate", format(updatedDate, "MMMM do, h:mm a"));
+      console.log(
+        "START updatedDate",
+        format(startOfDay(updatedDate), "MMMM do, h:mm a")
+      );
+      console.log(
+        "END updatedDate",
+        format(endOfDay(updatedDate), "MMMM do, h:mm a")
+      );
 
       eventDateWhereClause = {
         gte: startOfDay(updatedDate),
