@@ -222,8 +222,6 @@ export const getEvents = privateProcedure
       },
     };
 
-    console.log("eventDateWhereClause", eventDateWhereClause);
-
     const promises = [
       db.event.findMany({
         where: {

@@ -25,9 +25,17 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
   const [overDate, setOverDate] = useAtom(overDateAtom);
   const [activeDateObj, setActiveDateObj] = useAtom(activeDateAtom);
 
+  const europeanTimeZone = new Date(date).toLocaleString("en-US", {
+    timeZone: "Europe/Paris", // Adjust this to the desired European timezone
+  });
+
+  const europeanDate = new Date(europeanTimeZone);
+
+  console.log("europe date", format(europeanDate, "MMMM do, h:mm a"));
+
   const { data: serverEvents, isLoading } = useGetUpcomingEvents(
     undefined,
-    date
+    europeanDate
   );
 
   const [events, setEvents] = useState<ExtendedEvent[] | undefined>(
