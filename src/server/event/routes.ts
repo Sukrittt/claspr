@@ -67,6 +67,8 @@ export const getEvents = privateProcedure
 
       const indianDate = new Date(indianTimeZone);
 
+      console.log("date", format(date, "MMMM do, h:mm a"));
+
       eventDateWhereClause = {
         gte: startOfDay(date),
         lte: endOfDay(date),
