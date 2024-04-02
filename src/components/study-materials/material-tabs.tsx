@@ -92,7 +92,7 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({
       <ScrollArea className="md:h-[68vh]">
         <div className="space-y-2">
           {isLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-1">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-1">
               <MaterialTabsSkeleton />
             </div>
           ) : !folders || folders.length === 0 ? (
@@ -107,7 +107,11 @@ export const MaterialTabs: React.FC<MaterialsProps> = ({
                 animate="animate"
                 exit="exit"
               >
-                <MaterialContext classroomId={classroomId} folders={folders} />
+                <MaterialContext
+                  classroomId={classroomId}
+                  folders={folders}
+                  userRole={userRole}
+                />
               </motion.div>
             </AnimatePresence>
           )}
@@ -122,6 +126,7 @@ interface MaterialTabProps {
   isFirstFolder?: boolean;
   classroomId: string;
   isHolding?: boolean;
+  userRole: UserType;
 }
 
 export const MaterialTab: React.FC<MaterialTabProps> = ({
@@ -129,6 +134,7 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
   isFirstFolder = false,
   classroomId,
   isHolding = false,
+  userRole,
 }) => {
   const params = useSearchParams();
 
@@ -150,6 +156,7 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
   } = useSortable({
     id: folder.id,
     data: { content: folder },
+    disabled: userRole === "STUDENT",
   });
 
   const style = transform
@@ -207,9 +214,11 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
           <p>{getShortenedText(folder.name, 25)}</p>
         </div>
 
-        <div className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition">
-          <FolderDropdown folder={folder} classroomId={classroomId} />
-        </div>
+        {userRole === "TEACHER" && (
+          <div className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition">
+            <FolderDropdown folder={folder} classroomId={classroomId} />
+          </div>
+        )}
       </div>
     );
   }
@@ -246,13 +255,15 @@ export const MaterialTab: React.FC<MaterialTabProps> = ({
         <p>{getShortenedText(folder.name, 25)}</p>
       </div>
 
-      <div
-        className={cn("opacity-0 group-hover:opacity-100 transition", {
-          "opacity-60": isHolding,
-        })}
-      >
-        <FolderDropdown folder={folder} classroomId={classroomId} />
-      </div>
+      {userRole === "TEACHER" && (
+        <div
+          className={cn("opacity-0 group-hover:opacity-100 transition", {
+            "opacity-60": isHolding,
+          })}
+        >
+          <FolderDropdown folder={folder} classroomId={classroomId} />
+        </div>
+      )}
     </div>
   );
 };

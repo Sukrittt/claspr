@@ -15,6 +15,7 @@ import {
 } from "@dnd-kit/core";
 import { useAtom } from "jotai";
 import { createPortal } from "react-dom";
+import { UserType } from "@prisma/client";
 
 import { ExtendedFolder } from "@/types";
 import { classFolderAtom } from "@/atoms";
@@ -25,11 +26,13 @@ import { getSortedFoldersByOrder } from "@/lib/utils";
 interface MaterialContextProps {
   classroomId: string;
   folders: ExtendedFolder[];
+  userRole: UserType;
 }
 
 export const MaterialContext: React.FC<MaterialContextProps> = ({
   folders,
   classroomId,
+  userRole,
 }) => {
   const [, setFolders] = useAtom(classFolderAtom);
 
@@ -53,12 +56,16 @@ export const MaterialContext: React.FC<MaterialContextProps> = ({
   const { mutate: reorderFolder } = useReorderFolder();
 
   const handleDragStart = (event: DragStartEvent) => {
+    if (userRole === "STUDENT") return;
+
     const { active } = event;
 
     setActiveFolderEl(active.data.current?.content as ExtendedFolder);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
+    if (userRole === "STUDENT") return;
+
     const { active, over } = event;
 
     const overFolderId = active.data.current?.content?.id; // where the folder was dropped to
@@ -185,6 +192,7 @@ export const MaterialContext: React.FC<MaterialContextProps> = ({
               folder={folder}
               isFirstFolder={index === 0}
               classroomId={classroomId}
+              userRole={userRole}
             />
           ))}
         </div>
@@ -195,6 +203,7 @@ export const MaterialContext: React.FC<MaterialContextProps> = ({
             <MaterialTab
               classroomId={classroomId}
               folder={activeFolderEl}
+              userRole={userRole}
               isHolding
             />
           )}
