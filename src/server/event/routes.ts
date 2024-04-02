@@ -82,9 +82,9 @@ export const getEvents = privateProcedure
       console.log("CURRENT DATE", formattedDate, `(${timezone})`);
 
       const timezoneOffset2 = date.getTimezoneOffset();
-      const timezoneOffsetHours2 = Math.abs(Math.floor(timezoneOffset / 60));
-      const timezoneOffsetMinutes2 = Math.abs(timezoneOffset % 60);
-      const timezoneSign2 = timezoneOffset < 0 ? "+" : "-"; // Determine if timezone is ahead or behind UTC
+      const timezoneOffsetHours2 = Math.abs(Math.floor(timezoneOffset2 / 60));
+      const timezoneOffsetMinutes2 = Math.abs(timezoneOffset2 % 60);
+      const timezoneSign2 = timezoneOffset2 < 0 ? "+" : "-"; // Determine if timezone is ahead or behind UTC
 
       const formattedDate2 = format(date, "MMMM do, h:mm a");
       const timezone2 = `UTC${timezoneSign2}${timezoneOffsetHours2}:${timezoneOffsetMinutes2}`;
