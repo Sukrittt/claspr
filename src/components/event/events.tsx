@@ -1,6 +1,6 @@
 "use client";
 import { useAtom } from "jotai";
-import { isSameDay } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
