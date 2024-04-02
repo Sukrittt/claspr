@@ -28,22 +28,29 @@ export const StudentView: React.FC<StudentViewProps> = ({
             <h2 className="text-xl font-semibold tracking-tight">
               {assignment.title}
             </h2>
-            <div className="flex items-center gap-x-1 text-xs text-muted-foreground">
-              <UserAvatar user={assignment.creator} className="h-4 w-4" />
-              <span>{assignment.creator.name}</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-x-1 text-xs text-muted-foreground">
+                <UserAvatar user={assignment.creator} className="h-4 w-4" />
+                <span>{assignment.creator.name}</span>
 
-              <span>•</span>
-              <span>Updated {timeAgo(assignment.updatedAt)}</span>
+                <span>•</span>
+                <span>Updated {timeAgo(assignment.updatedAt)}</span>
 
-              <span>•</span>
-              <SubmissionDetails assignment={assignment}>
-                <span>
-                  Submit before{" "}
-                  <span className="font-semibold">
-                    {format(assignment.dueDate, "do MMM, h:mm a")}
+                <span>•</span>
+                <SubmissionDetails assignment={assignment}>
+                  <span>
+                    Submit before{" "}
+                    <span className="font-semibold">
+                      {format(assignment.dueDate, "do MMM, h:mm a")}
+                    </span>
                   </span>
+                </SubmissionDetails>
+              </div>
+              {!assignment.lateSubmission && (
+                <span className="text-xs text-neutral-500 font-medium">
+                  Late submission not allowed
                 </span>
-              </SubmissionDetails>
+              )}
             </div>
           </div>
 
