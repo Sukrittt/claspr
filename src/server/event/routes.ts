@@ -66,34 +66,15 @@ export const getEvents = privateProcedure
       });
 
       const indianDate = new Date(indianTimeZone);
+      const updatedDate = addMinutes(addHours(date, 5), 30);
 
       console.log("date", format(date, "MMMM do, h:mm a"));
       console.log("indianDate", format(indianDate, "MMMM do, h:mm a"));
-
-      const currDate = new Date();
-      const timezoneOffset = currDate.getTimezoneOffset();
-      const timezoneOffsetHours = Math.abs(Math.floor(timezoneOffset / 60));
-      const timezoneOffsetMinutes = Math.abs(timezoneOffset % 60);
-      const timezoneSign = timezoneOffset < 0 ? "+" : "-"; // Determine if timezone is ahead or behind UTC
-
-      const formattedDate = format(currDate, "MMMM do, h:mm a");
-      const timezone = `UTC${timezoneSign}${timezoneOffsetHours}:${timezoneOffsetMinutes}`;
-
-      console.log("CURRENT DATE", formattedDate, `(${timezone})`);
-
-      const timezoneOffset2 = date.getTimezoneOffset();
-      const timezoneOffsetHours2 = Math.abs(Math.floor(timezoneOffset2 / 60));
-      const timezoneOffsetMinutes2 = Math.abs(timezoneOffset2 % 60);
-      const timezoneSign2 = timezoneOffset2 < 0 ? "+" : "-"; // Determine if timezone is ahead or behind UTC
-
-      const formattedDate2 = format(date, "MMMM do, h:mm a");
-      const timezone2 = `UTC${timezoneSign2}${timezoneOffsetHours2}:${timezoneOffsetMinutes2}`;
-
-      console.log("PROVIDED DATE", formattedDate2, `(${timezone2})`);
+      console.log("updatedDate", format(updatedDate, "MMMM do, h:mm a"));
 
       eventDateWhereClause = {
-        gte: startOfDay(date),
-        lte: endOfDay(date),
+        gte: startOfDay(updatedDate),
+        lte: endOfDay(updatedDate),
       };
     } else {
       eventDateWhereClause = {
