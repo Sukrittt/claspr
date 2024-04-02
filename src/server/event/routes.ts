@@ -70,6 +70,17 @@ export const getEvents = privateProcedure
       console.log("date", format(date, "MMMM do, h:mm a"));
       console.log("indianDate", format(indianDate, "MMMM do, h:mm a"));
 
+      const currDate = new Date();
+      const timezoneOffset = currDate.getTimezoneOffset();
+      const timezoneOffsetHours = Math.abs(Math.floor(timezoneOffset / 60));
+      const timezoneOffsetMinutes = Math.abs(timezoneOffset % 60);
+      const timezoneSign = timezoneOffset < 0 ? "+" : "-"; // Determine if timezone is ahead or behind UTC
+
+      const formattedDate = format(currDate, "MMMM do, h:mm a");
+      const timezone = `UTC${timezoneSign}${timezoneOffsetHours}:${timezoneOffsetMinutes}`;
+
+      console.log("UPDATED DATE", formattedDate, `(${timezone})`);
+
       eventDateWhereClause = {
         gte: startOfDay(date),
         lte: endOfDay(date),
