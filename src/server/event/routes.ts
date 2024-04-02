@@ -67,21 +67,9 @@ export const getEvents = privateProcedure
 
       const indianDate = new Date(indianTimeZone);
 
-      const startTime = set(indianDate, { hours: 0, minutes: 0, seconds: 0 });
-      const endTime = set(indianDate, { hours: 5, minutes: 29, seconds: 59 });
-
-      let updatedDate = indianDate;
-
-      if (isAfter(indianDate, startTime) && isBefore(indianDate, endTime)) {
-        const newIndianDate = addDays(indianDate, 1);
-        updatedDate = newIndianDate;
-      }
-
-      console.log("UPDATED DATE", format(updatedDate, "MMMM do, h:mm a"));
-
       eventDateWhereClause = {
-        gte: startOfDay(updatedDate),
-        lte: endOfDay(updatedDate),
+        gte: startOfDay(date),
+        lte: endOfDay(date),
       };
     } else {
       eventDateWhereClause = {
