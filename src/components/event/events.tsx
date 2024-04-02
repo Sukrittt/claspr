@@ -1,6 +1,6 @@
 "use client";
 import { useAtom } from "jotai";
-import { format, isSameDay } from "date-fns";
+import { addHours, addMinutes, format, isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -25,17 +25,13 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
   const [overDate, setOverDate] = useAtom(overDateAtom);
   const [activeDateObj, setActiveDateObj] = useAtom(activeDateAtom);
 
-  const europeanTimeZone = new Date(date).toLocaleString("en-US", {
-    timeZone: "Europe/Paris", // Adjust this to the desired European timezone
-  });
+  const updatedDate = addMinutes(addHours(date, 5), 30);
 
-  const europeanDate = new Date(europeanTimeZone);
-
-  console.log("europe date", format(europeanDate, "MMMM do, h:mm a"));
+  console.log("updatedDate", format(updatedDate, "MMMM do, h:mm a"));
 
   const { data: serverEvents, isLoading } = useGetUpcomingEvents(
     undefined,
-    europeanDate
+    updatedDate
   );
 
   const [events, setEvents] = useState<ExtendedEvent[] | undefined>(
