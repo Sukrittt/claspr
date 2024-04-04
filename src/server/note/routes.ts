@@ -313,8 +313,8 @@ export const getNote = privateProcedure
 /**
  * To get a list of notes by it's title and topics associated with it.
  *
- * @param {object} input - The input parameters for getting notes by it's title and it's topics.
- * @param {enum} input.title - The title of the note to be fetched.
+ * @param {object} input - The input parameters for getting notes by it's title and attached topics.
+ * @param {enum} input.query - The query used for searching a note.
  * @param {enum} input.noteType - The type of note to be fetched.
  * @param {enum} input.classroomId - An optional id of the classroom.
  * @returns {Promise<Object>} - A list of note object returned from the database.
@@ -322,13 +322,13 @@ export const getNote = privateProcedure
 export const getNoteByTitle = privateProcedure
   .input(
     z.object({
-      title: z.string(),
+      query: z.string(),
       noteType: NoteTypeEnum,
       classroomId: z.string().optional(),
     })
   )
   .query(async ({ ctx, input }) => {
-    const { title, noteType, classroomId } = input;
+    const { query, noteType, classroomId } = input;
 
     if (noteType === "CLASSROOM" && classroomId) {
       const isPartOfClass = await getIsPartOfClassAuth(classroomId, ctx.userId);
@@ -342,26 +342,34 @@ export const getNoteByTitle = privateProcedure
       }
     }
 
+    const separatedQueries = query
+      .split("/")
+      .map((q) => q.trim())
+      .filter((q) => q.trim().length > 0);
+
     const notes = await db.note.findMany({
       where: {
         noteType,
         classroomId,
+        creatorId: classroomId ? undefined : ctx.userId,
         OR: [
           {
             title: {
-              contains: title,
+              contains: query,
               mode: "insensitive",
             },
           },
           {
-            topics: {
-              some: {
-                name: {
-                  contains: title,
-                  mode: "insensitive",
+            AND: separatedQueries.map((sq) => ({
+              topics: {
+                some: {
+                  name: {
+                    contains: sq,
+                    mode: "insensitive",
+                  },
                 },
               },
-            },
+            })),
           },
         ],
       },

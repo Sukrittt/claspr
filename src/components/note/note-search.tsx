@@ -41,7 +41,7 @@ export const NoteSearch: React.FC<NoteSearchProps> = ({
     isFetching,
     refetch,
   } = trpc.note.getNoteByTitle.useQuery(
-    { title: query, noteType, classroomId },
+    { query, noteType, classroomId },
     {
       enabled: false,
     }
