@@ -805,7 +805,13 @@ export const getHelpfulUsers = privateProcedure
       include: {
         _count: {
           select: {
-            replies: true,
+            replies: {
+              where: {
+                discussion: {
+                  classroomId,
+                },
+              },
+            },
           },
         },
       },
