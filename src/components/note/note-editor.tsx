@@ -118,7 +118,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
         </div>
 
         {note.classroomId && (
-          <div className="absolute -top-5 right-5 border py-0.5 px-2.5 text-xs tracking-tight rounded-full cursor-pointer hover:bg-neutral-100 transition">
+          <div className="absolute -top-5 right-5 border py-0.5 px-2.5 text-xs tracking-tight rounded-full cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">
             <CustomTooltip text="Jump to classroom">
               <Link
                 target="_blank"
