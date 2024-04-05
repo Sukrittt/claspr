@@ -96,7 +96,7 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
     }
 
     setSelectedTopics([]);
-  }, [selectedTopics, note.id, removeTopics]);
+  }, [note.id, removeTopics, selectedTopics]);
 
   // Add selected topics
   const handleAddSelectedTopic = useCallback(
@@ -181,7 +181,6 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
                   topicTitle={topic.name}
                   disabled={isEditing}
                 />
-                {/* {topic.name} */}
               </motion.div>
             ))}
           </motion.div>
@@ -191,7 +190,13 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
       {note.topics.length > 0 && (
         <div
           className="absolute -top-[53px] border p-1.5 rounded-md right-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
-          onClick={() => setIsEditing((prev) => !prev)}
+          onClick={() => {
+            setIsEditing((prev) => !prev);
+
+            if (isEditing && selectedTopics.length > 0) {
+              handleRemoveTopics();
+            }
+          }}
         >
           <CustomTooltip
             text={`${
@@ -205,12 +210,9 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
             {!isEditing ? (
               <Pen className="h-3 w-3 text-neutral-800 dark:text-foreground" />
             ) : selectedTopics.length === 0 ? (
-              <Check className="h-3 w-3 text-success" />
+              <Check className="h-3 w-3" />
             ) : (
-              <Trash
-                className="h-3 w-3 text-success"
-                onClick={handleRemoveTopics}
-              />
+              <Trash className="h-3 w-3" />
             )}
           </CustomTooltip>
         </div>
