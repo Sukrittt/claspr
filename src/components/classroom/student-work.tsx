@@ -66,7 +66,7 @@ export const StudentWork: React.FC<StudentWorkProps> = ({ classroomId }) => {
               submissions.map((submission) => (
                 <div key={submission.id} className="border-b pb-2 space-y-2">
                   <Link
-                    className="tracking-tight font-semibold hover:underline underline-offset-4 hover:text-neutral-700 transition"
+                    className="tracking-tight font-semibold hover:underline underline-offset-4 hover:text-neutral-700 dark:hover:text-neutral-400 transition"
                     href={`/c/${classroomId}/a/${submission.assignment.id}`}
                   >
                     {getShortenedText(submission.assignment.title, 30)}
@@ -78,7 +78,7 @@ export const StudentWork: React.FC<StudentWorkProps> = ({ classroomId }) => {
                         target="_blank"
                         key={media.id}
                         href={media.url}
-                        className="text-[13px] text-muted-foreground hover:text-neutral-700 transition flex items-center gap-x-2"
+                        className="text-[13px] text-muted-foreground hover:text-neutral-700 dark:hover:text-neutral-400 transition flex items-center gap-x-2 w-fit"
                       >
                         <span>{getShortenedText(media.label ?? "", 25)}</span>
                         <ExternalLink className="h-3 w-3" />
