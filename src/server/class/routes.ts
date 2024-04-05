@@ -645,19 +645,17 @@ export const getPendingAssignments = privateProcedure
     const existingClassroom = await db.classRoom.findFirst({
       where: {
         id: classroomId,
+      },
+      select: {
+        id: true,
         assignments: {
-          some: {
+          where: {
             submissions: {
               none: {
                 memberId: existingMembership.id,
               },
             },
           },
-        },
-      },
-      select: {
-        id: true,
-        assignments: {
           select: {
             id: true,
             title: true,
