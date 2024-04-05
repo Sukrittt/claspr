@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, Loader2, Pen, Plus, Trash } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -27,6 +27,8 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
   classroomId,
 }) => {
   const [topicName, setTopicName] = useState("");
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [selectedTopics, setSelectedTopics] = useState<SelectionType[]>([]);
 
@@ -73,7 +75,7 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
     );
 
     if (existingDbTopic) {
-      toast.error("This topic is already added");
+      toast.error("This topic is already in use. Please choose another one.");
       return;
     }
 
@@ -117,6 +119,12 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
     },
     [isEditing, selectedTopics]
   );
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -210,6 +218,7 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
 
       <div className="flex items-center gap-x-2">
         <Input
+          ref={inputRef}
           className="h-8"
           placeholder="E.g: Diophantine Equations"
           autoFocus

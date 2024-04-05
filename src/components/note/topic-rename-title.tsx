@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useRenameTopic } from "@/hooks/note";
+import { getShortenedText } from "@/lib/utils";
 import { useDebounce } from "@/hooks/use-debounce";
 
 interface TopicRenameTitleProps {
@@ -30,7 +31,7 @@ export const TopicRenameTitle: React.FC<TopicRenameTitleProps> = ({
   }, [debouncedTitle]);
 
   return disabled ? (
-    <p>{title}</p>
+    <p>{getShortenedText(title, 25)}</p>
   ) : (
     <input
       tabIndex={-1}
