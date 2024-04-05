@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import { ReactionType } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { ExtendedReaction } from "@/types";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { ExtendedReaction } from "@/types";
 import { listOfReactions } from "@/config/utils";
 import { ContainerVariants } from "@/lib/motion";
 import { useAddReaction } from "@/hooks/discussion";
@@ -173,9 +173,9 @@ const ReactionsDisplay: React.FC<ReactionsDisplayProps> = ({
               key={reactionType}
               onClick={() => handleReactionChange(reactionType)}
               className={cn(
-                "border rounded-lg px-2 py-0.5 text-xs flex items-center gap-x-2 cursor-pointer hover:bg-neutral-200/70 hover:bg-neutral-800 hover:border-border transition",
+                "border rounded-lg px-2 py-0.5 text-xs flex items-center gap-x-2 cursor-pointer hover:bg-neutral-200/70 dark:hover:bg-neutral-800 hover:border-border transition",
                 {
-                  "bg-sky-100 dark:bg-sky-900/30 text-sky-500 dark:text-sky-600 border-sky-500 dark:border-sky-600 dark:hover:bg-sky-900/50":
+                  "bg-sky-100 dark:bg-sky-900/30 text-sky-500 dark:text-sky-600 border-sky-500 hover:border-sky-500 dark:border-sky-600 hover:bg-sky-200 dark:hover:bg-sky-900/50":
                     userReacted,
                   "opacity-50 cursor-default": disabled,
                 }
