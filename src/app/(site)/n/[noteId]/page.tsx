@@ -3,6 +3,9 @@ import { Suspense } from "react";
 import { Note } from "@/components/server-components/Note";
 import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 interface NotePageProps {
   params: {
     noteId: string;
