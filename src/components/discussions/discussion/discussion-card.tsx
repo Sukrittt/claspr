@@ -4,6 +4,7 @@ import { Session } from "next-auth";
 import { MessageSquare } from "lucide-react";
 
 import { ExtendedDiscussion } from "@/types";
+import { getShortenedText } from "@/lib/utils";
 import { activeDiscussionIdAtom } from "@/atoms";
 import AvatarGroup from "@/components/ui/avatar-group";
 import { useQueryChange } from "@/hooks/use-query-change";
@@ -46,7 +47,7 @@ export const DiscussionCard: React.FC<DiscussionCardProps> = ({
               });
             }}
           >
-            {discussion.title}
+            {getShortenedText(discussion.title, 70)}
           </h6>
           <div className="flex items-center gap-x-1 text-muted-foreground tracking-tight text-[13px]">
             <p>
