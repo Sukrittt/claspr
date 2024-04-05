@@ -133,7 +133,7 @@ export const SubmissionCard: React.FC<SubmissionCardProps> = ({
                     <div
                       onClick={() => handleRedirect(m.url)}
                       key={m.id}
-                      className="flex items-center cursor-pointer justify-between border border-neutral-300 dark:border-border rounded-md py-1.5 px-1.5 text-neutral-500 dark:text-foreground hover:text-neutral-600 dark:hover:text-neutral-300 transition font-medium"
+                      className="flex items-center cursor-pointer justify-between border border-neutral-300 dark:border-border rounded-md py-1.5 px-1.5 text-neutral-500 dark:text-foreground hover:text-neutral-600 dark:hover:text-neutral-400 transition font-medium"
                     >
                       <div className="flex items-center gap-x-2">
                         {Icon[m.mediaType]}
