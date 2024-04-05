@@ -45,7 +45,7 @@ export const NoteSidebarSheet = ({ note }: { note: ExtendedNote }) => {
           Manage
         </span>
       </SheetTrigger>
-      <SheetContent className="space-y-4">
+      <SheetContent className="flex flex-col gap-y-4">
         <SheetHeader className="space-y-1">
           <SheetTitle>{note.title}</SheetTitle>
           <SheetDescription>
@@ -53,7 +53,7 @@ export const NoteSidebarSheet = ({ note }: { note: ExtendedNote }) => {
           </SheetDescription>
         </SheetHeader>
 
-        <div>
+        <div className="flex-1">
           {isLoading ? (
             <NoteSidebarSkeleton />
           ) : !folders || folders.length === 0 ? (
