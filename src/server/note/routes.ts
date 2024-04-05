@@ -250,6 +250,46 @@ export const removeNote = privateProcedure
   });
 
 /**
+ * To rename a topic name of a particular note.
+ *
+ * @param {object} input - The input parameters for renaming a topic name.
+ * @param {string} input.topicId - The id of the topic.
+ * @param {string} input.name - The updated name of the topic.
+ */
+export const renameTopic = privateProcedure
+  .input(
+    z.object({
+      topicId: z.string(),
+      name: z.string(),
+    })
+  )
+  .mutation(async ({ input }) => {
+    const { name, topicId } = input;
+
+    const existingTopic = await db.topic.findFirst({
+      where: {
+        id: topicId,
+      },
+    });
+
+    if (!existingTopic) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the note you are looking for.",
+      });
+    }
+
+    await db.topic.update({
+      where: {
+        id: topicId,
+      },
+      data: {
+        name,
+      },
+    });
+  });
+
+/**
  * To get a specific note.
  *
  * @param {object} input - The input parameters for getting a specific note.
@@ -290,7 +330,7 @@ export const getNote = privateProcedure
       include: {
         topics: {
           orderBy: {
-            updatedAt: "desc",
+            updatedAt: "asc",
           },
         },
         folder: {
@@ -474,17 +514,17 @@ export const updateContent = privateProcedure
  *
  * @param {object} input - The input parameters for attaching topics to a specific note.
  * @param {string} input.noteId - The id of the node.
- * @param {string[]} input.topics - An array of topic names for the note.
+ * @param {string} input.name - The name of the topic to add.
  */
-export const attachTopics = privateProcedure
+export const attachTopic = privateProcedure
   .input(
     z.object({
       noteId: z.string(),
-      topics: z.array(z.string()),
+      name: z.string(),
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const { noteId, topics } = input;
+    const { noteId, name } = input;
 
     const existingNote = await db.note.findFirst({
       where: {
@@ -501,14 +541,14 @@ export const attachTopics = privateProcedure
       });
     }
 
-    const topicRecords = topics.map((name) => ({
-      name,
-      noteId,
-    }));
-
-    await db.topic.createMany({
-      data: topicRecords,
+    const topic = await db.topic.create({
+      data: {
+        noteId,
+        name,
+      },
     });
+
+    return topic;
   });
 
 /**

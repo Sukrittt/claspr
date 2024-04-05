@@ -68,7 +68,7 @@ export const UnsplashImagePicker: React.FC<UnsplashImagePickerProps> = ({
 
         {isFetching ? (
           <div className="h-[300px] grid place-items-center">
-            <Loader2 className="h-3.5 w-3.5 animate-spin text-neutral-800" />
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-neutral-800 dark:text-neutral-500" />
           </div>
         ) : !images || images.length === 0 ? (
           <p className="text-xs text-muted-foreground text-center">

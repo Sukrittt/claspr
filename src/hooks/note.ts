@@ -254,31 +254,62 @@ export const useUpdateNoteCover = ({
   });
 };
 
-export const useAttachTopics = ({
-  closeModal,
+export const useAttachTopic = ({
   classroomId,
+  handleCleanups,
+  folderId,
 }: {
-  closeModal: () => void;
   classroomId?: string;
+  handleCleanups: () => void;
+  folderId: string;
 }) => {
   const router = useRouter();
   const utils = trpc.useUtils();
 
-  return trpc.note.attachTopics.useMutation({
-    onSuccess: () => {
-      closeModal();
+  return trpc.note.attachTopic.useMutation({
+    onSuccess: (topic) => {
       router.refresh();
+      handleCleanups();
+
+      utils.folder.getFolders.setData({ classroomId }, (prev) =>
+        prev?.map((folder) =>
+          folder.id === folderId
+            ? {
+                ...folder,
+                notes: folder.notes.map((note) =>
+                  note.id === topic.noteId
+                    ? {
+                        ...note,
+                        topics: [...note.topics, topic],
+                      }
+                    : note
+                ),
+              }
+            : folder
+        )
+      );
+    },
+    onError: () => {
+      toast.error("Your changes were not saved. Please try again.");
+    },
+    onSettled: () => {
       utils.folder.getFolders.invalidate({ classroomId });
     },
   });
 };
 
-export const useRemoveTopics = (folderId: string, classroomId?: string) => {
+export const useRemoveTopics = (
+  folderId: string,
+  handleCleanUps: () => void,
+  classroomId?: string
+) => {
   const router = useRouter();
   const utils = trpc.useUtils();
 
   return trpc.note.removeTopics.useMutation({
     onMutate: async ({ noteId, topicIds }) => {
+      handleCleanUps();
+
       await utils.folder.getFolders.cancel({ classroomId });
 
       const prevFolders = utils.folder.getFolders.getData({ classroomId });
@@ -321,4 +352,33 @@ export const useRemoveTopics = (folderId: string, classroomId?: string) => {
 
 export const useUpdateViewCount = () => {
   return trpc.note.updateViewCount.useMutation();
+};
+
+export const useRenameTopic = () => {
+  const utils = trpc.useUtils();
+  const router = useRouter();
+
+  return trpc.note.renameTopic.useMutation({
+    onMutate: async () => {
+      await utils.folder.getFolders.cancel({ classroomId: undefined });
+
+      const prevFolders = utils.folder.getFolders.getData({
+        classroomId: undefined,
+      });
+
+      return { prevFolders };
+    },
+    onError: (error, _, ctx) => {
+      toast.error(error.message);
+
+      utils.folder.getFolders.setData(
+        { classroomId: undefined },
+        ctx?.prevFolders
+      );
+    },
+    onSuccess: () => {
+      router.refresh();
+      utils.folder.getFolders.invalidate({ classroomId: undefined });
+    },
+  });
 };

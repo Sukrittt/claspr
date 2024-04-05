@@ -59,7 +59,7 @@ export const getFolders = privateProcedure
                 noteId: true,
               },
               orderBy: {
-                updatedAt: "desc",
+                updatedAt: "asc",
               },
             },
             creator: {

@@ -82,6 +82,7 @@ export const LinkInput: React.FC<LinkInputProps> = ({
                 <FormItem>
                   <FormControl>
                     <Input
+                      autoFocus
                       type="text"
                       className=""
                       placeholder="Paste an image link."

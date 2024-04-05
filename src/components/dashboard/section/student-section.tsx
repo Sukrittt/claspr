@@ -36,7 +36,7 @@ export const StudentSection = () => {
           <div className="flex justify-end items-center gap-x-2 pr-4">
             <CustomTooltip text="Collapse All">
               <div
-                className="p-1 rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200"
+                className="p-1 rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                 onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
               >
                 <CopyMinus className="w-3.5 h-3.5" />

@@ -1,51 +1,64 @@
 import { toast } from "sonner";
-import { useCallback, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
 import { Check, Loader2, Pen, Plus, Trash } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { FormattedNote } from "@/types/note";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAttachTopics, useRemoveTopics } from "@/hooks/note";
+import { useAttachTopic, useRemoveTopics } from "@/hooks/note";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { TopicRenameTitle } from "@/components/note/topic-rename-title";
 import { ContainerHeightVariants, ContainerVariants } from "@/lib/motion";
 
 interface AddTopicFormProps {
-  closeModal: () => void;
   note: FormattedNote;
   classroomId?: string;
 }
 
 type SelectionType = {
-  topicId?: string;
+  topicId: string;
   topic: string;
-  type: "SERVER" | "CLIENT";
 };
 
 export const AddTopicForm: React.FC<AddTopicFormProps> = ({
-  closeModal,
   note,
   classroomId,
 }) => {
   const [topicName, setTopicName] = useState("");
 
-  const [enteredTopics, setEnteredTopics] = useState<string[]>([]);
   const [selectedTopics, setSelectedTopics] = useState<SelectionType[]>([]);
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const { mutate: attachTopics, isLoading } = useAttachTopics({
-    closeModal,
+  const { mutate: attachTopic, isLoading } = useAttachTopic({
     classroomId,
+    handleCleanups: () => setTopicName(""),
+    folderId: note.folderId,
   });
 
-  const { mutate: removeTopics } = useRemoveTopics(note.folderId, classroomId);
+  const { mutate: removeTopics } = useRemoveTopics(
+    note.folderId,
+    () => setIsEditing(false),
+    classroomId
+  );
 
-  const handleStateUpdates = useCallback(() => {
-    setEnteredTopics((prev) => [...prev, topicName]);
-    setTopicName("");
-  }, [topicName, setEnteredTopics, setTopicName]);
+  //SERVER UPDATE
+  const handleAttachTopic = useCallback(
+    (topicName: string) => {
+      if (note.topics.length === 0) {
+        toast.error("Please add at least one topic");
+        return;
+      }
+
+      attachTopic({
+        noteId: note.id,
+        name: topicName,
+      });
+    },
+    [attachTopic, note.id, note.topics]
+  );
 
   const addTopic = useCallback(() => {
     const trimmedTopic = topicName.trim();
@@ -59,40 +72,20 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
       (topic) => topic.name.toLowerCase() === trimmedTopic.toLowerCase()
     );
 
-    const existingEnteredTopic = enteredTopics.find(
-      (t) => t.toLowerCase() === trimmedTopic.toLowerCase()
-    );
-
-    if (existingDbTopic || existingEnteredTopic) {
+    if (existingDbTopic) {
       toast.error("This topic is already added");
       return;
     }
 
-    handleStateUpdates();
-  }, [topicName, note.topics, enteredTopics, handleStateUpdates]);
+    // SERVER
+    handleAttachTopic(topicName);
+  }, [topicName, note.topics, handleAttachTopic]);
 
   // Remove topics
   const handleRemoveTopics = useCallback(() => {
-    const serverRemovalTopics = selectedTopics.filter(
-      (selection) => selection.type === "SERVER"
-    );
-
-    const clientRemoveTopics = selectedTopics.filter(
-      (selection) => selection.type === "CLIENT"
-    );
-
-    // CLIENT UPDATE
-    if (clientRemoveTopics.length > 0) {
-      const filteredTopics = enteredTopics.filter(
-        (topic) => !clientRemoveTopics.some((t) => t.topic === topic)
-      );
-
-      setEnteredTopics(filteredTopics);
-    }
-
     // SERVER UPDATE
-    if (serverRemovalTopics.length > 0) {
-      const topicIds = serverRemovalTopics.map((t) => t.topicId!);
+    if (selectedTopics.length > 0) {
+      const topicIds = selectedTopics.map((t) => t.topicId);
 
       removeTopics({
         noteId: note.id,
@@ -101,11 +94,11 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
     }
 
     setSelectedTopics([]);
-  }, [enteredTopics, selectedTopics, note.id, removeTopics]);
+  }, [selectedTopics, note.id, removeTopics]);
 
   // Add selected topics
   const handleAddSelectedTopic = useCallback(
-    (topic: string, type: "CLIENT" | "SERVER", topicId?: string) => {
+    (topic: string, topicId: string) => {
       if (!isEditing) return;
 
       const existingSelection = selectedTopics.find((t) => t.topic === topic);
@@ -118,7 +111,6 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
       const selectionObj: SelectionType = {
         topicId,
         topic,
-        type,
       };
 
       setSelectedTopics((prev) => [...prev, selectionObj]);
@@ -126,29 +118,30 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
     [isEditing, selectedTopics]
   );
 
-  //DB UPDATE
-  function handleAttachTopics() {
-    if (note.topics.length === 0 && enteredTopics.length === 0) {
-      toast.error("Please add at least one topic");
-      return;
-    }
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Delete") {
+        e.preventDefault();
 
-    attachTopics({
-      noteId: note.id,
-      topics: enteredTopics,
-    });
-  }
+        if (!isEditing || selectedTopics.length === 0) return;
+
+        handleRemoveTopics();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleRemoveTopics, isEditing, selectedTopics]);
 
   return (
     <div className="space-y-4 relative">
       <AnimatePresence mode="wait">
-        {(note.topics.length > 0 || enteredTopics.length > 0) && (
+        {note.topics.length > 0 && (
           <motion.div
             variants={ContainerHeightVariants}
             initial="initial"
             animate="animate"
             exit="exit"
-            className="flex items-center flex-wrap gap-2"
+            className="grid grid-cols-3 items-center gap-2"
           >
             {/* SERVER TOPICS */}
             {note.topics.map((topic) => (
@@ -158,9 +151,7 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
                 animate="animate"
                 exit="exit"
                 key={topic.id}
-                onClick={() =>
-                  handleAddSelectedTopic(topic.name, "SERVER", topic.id)
-                }
+                onClick={() => handleAddSelectedTopic(topic.name, topic.id)}
                 className={cn(
                   "px-5 py-1 text-[13px] rounded-md border transition",
                   {
@@ -177,43 +168,19 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
                   }
                 )}
               >
-                {topic.name}
-              </motion.div>
-            ))}
-
-            {/* CLIENT TOPICS */}
-            {enteredTopics.map((topic, index) => (
-              <motion.div
-                variants={ContainerVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                key={index}
-                onClick={() => handleAddSelectedTopic(topic, "CLIENT")}
-                className={cn(
-                  "px-5 py-1 text-[13px] rounded-md border transition",
-                  {
-                    "cursor-pointer": isEditing,
-                    "hover:bg-neutral-100 dark:hover:bg-neutral-800":
-                      isEditing &&
-                      !selectedTopics.some(
-                        (selection) => selection.topic === topic
-                      ),
-                    "border-sky-500 dark:border-sky-600 bg-sky-200 dark:bg-sky-600/30 hover:bg-sky-200/80 dark:hover:bg-sky-600/50":
-                      selectedTopics.some(
-                        (selection) => selection.topic === topic
-                      ),
-                  }
-                )}
-              >
-                {topic}
+                <TopicRenameTitle
+                  topicId={topic.id}
+                  topicTitle={topic.name}
+                  disabled={isEditing}
+                />
+                {/* {topic.name} */}
               </motion.div>
             ))}
           </motion.div>
         )}
       </AnimatePresence>
 
-      {(note.topics.length > 0 || enteredTopics.length > 0) && (
+      {note.topics.length > 0 && (
         <div
           className="absolute -top-[53px] border p-1.5 rounded-md right-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer"
           onClick={() => setIsEditing((prev) => !prev)}
@@ -244,9 +211,9 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
       <div className="flex items-center gap-x-2">
         <Input
           className="h-8"
-          disabled={isLoading}
           placeholder="E.g: Diophantine Equations"
           autoFocus
+          disabled={isLoading}
           value={topicName}
           onChange={(e) => setTopicName(e.target.value)}
           onKeyDown={(e) => {
@@ -256,18 +223,18 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
           }}
         />
         <Button className="h-8" onClick={addTopic} disabled={isLoading}>
-          <Plus className="h-4 w-4" />
+          {isLoading ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <Plus className="h-4 w-4" />
+          )}
         </Button>
       </div>
 
-      <Button
-        className="my-1 w-full"
-        disabled={isLoading}
-        onClick={handleAttachTopics}
-      >
-        {isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Save"}
+      {/* <Button className="my-1 w-full" onClick={closeModal}>
+        Save
         <span className="sr-only">Save</span>
-      </Button>
+      </Button> */}
     </div>
   );
 };

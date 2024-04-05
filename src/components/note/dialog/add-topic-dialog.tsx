@@ -27,11 +27,6 @@ export const AddTopicDialog = ({
 }: AddTopicDialogProps) => {
   const [open, setOpen] = useState(isOpen);
 
-  const closeModal = () => {
-    setOpen(false);
-    setIsAddTopicOpen(false);
-  };
-
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
     setIsAddTopicOpen(open);
@@ -49,11 +44,7 @@ export const AddTopicDialog = ({
             Attach topics to your note to make it easier to find
           </DialogDescription>
         </DialogHeader>
-        <AddTopicForm
-          note={note}
-          closeModal={closeModal}
-          classroomId={classroomId}
-        />
+        <AddTopicForm note={note} classroomId={classroomId} />
       </DialogContent>
     </Dialog>
   );

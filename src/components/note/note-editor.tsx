@@ -70,25 +70,17 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
             />
           </div>
 
-          {isLoading ? (
-            hasEmoji && (
-              <div className="absolute right-5">
-                <Skeleton className="h-6 w-24" />
-              </div>
-            )
-          ) : (
-            <div
-              className={cn({
-                "absolute top-5 right-5": hasEmoji,
-              })}
-            >
-              <NoteCoverImagePicker
-                noteId={note.id}
-                hasCover={!!noteCover?.coverImage}
-                hasEmoji={hasEmoji}
-              />
-            </div>
-          )}
+          <div
+            className={cn({
+              "absolute top-5 right-5": hasEmoji,
+            })}
+          >
+            <NoteCoverImagePicker
+              noteId={note.id}
+              hasCover={!!noteCover?.coverImage}
+              hasEmoji={hasEmoji}
+            />
+          </div>
         </div>
       </div>
 
