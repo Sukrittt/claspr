@@ -33,3 +33,9 @@ export type MinifiedConversation = Omit<
   Conversation,
   "updatedAt" | "userId" | "noteId"
 >;
+
+export type HelpfulUser = MinifiedUser & {
+  _count: {
+    replies: number;
+  };
+};

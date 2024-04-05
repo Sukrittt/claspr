@@ -12,6 +12,7 @@ export type {
   MinifiedClassroom,
   MinifiedUser,
   MinifiedConversation,
+  HelpfulUser,
 } from "./classroom";
 
 export type {

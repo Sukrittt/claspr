@@ -1,6 +1,7 @@
 import { UserX } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { HelpfulUser } from "@/types";
 import { getShortenedText } from "@/lib/utils";
 import { ContainerVariants } from "@/lib/motion";
 import { Separator } from "@/components/ui/separator";
@@ -12,6 +13,10 @@ import { HelpfulUsersSkeleton } from "@/components/skeletons/helpful-users-skele
 
 export const HelpfulUsers = ({ classroomId }: { classroomId: string }) => {
   const { data: helpfulUsers, isLoading } = useGetHelpfulUsers(classroomId);
+
+  const getSortedHelpfulUsers = (helpfulUsers: HelpfulUser[]) => {
+    return helpfulUsers.sort((a, b) => b._count.replies - a._count.replies);
+  };
 
   return (
     <div className="border rounded-md py-4">
@@ -39,7 +44,7 @@ export const HelpfulUsers = ({ classroomId }: { classroomId: string }) => {
               exit="exit"
               className="flex flex-col gap-y-2 pb-6"
             >
-              {helpfulUsers.map((user) => (
+              {getSortedHelpfulUsers(helpfulUsers).map((user) => (
                 <div
                   key={user.id}
                   className="flex items-center justify-between border-b border-neutral-200 dark:border-border py-2 px-3"

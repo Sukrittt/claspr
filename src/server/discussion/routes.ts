@@ -802,7 +802,12 @@ export const getHelpfulUsers = privateProcedure
           _count: "desc",
         },
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+
         _count: {
           select: {
             replies: {
