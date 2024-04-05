@@ -61,20 +61,15 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      // const indianTimeZone = new Date(date).toLocaleString("en-US", {
-      //   timeZone: "Asia/Kolkata",
-      // });
+      const indianTimeZone = new Date(date).toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      });
 
-      // const indianDate = new Date(indianTimeZone);
-      const utcDateString = date.toISOString();
-      const utcDate = new Date(utcDateString);
-
-      console.log("Date", format(date, "MMMM do, h:mm a"));
-      console.log("UTC Date", format(utcDate, "MMMM do, h:mm a"));
+      const indianDate = new Date(indianTimeZone);
 
       eventDateWhereClause = {
-        gte: startOfDay(date),
-        lte: endOfDay(date),
+        gte: startOfDay(indianDate),
+        lte: endOfDay(indianDate),
       };
     } else {
       eventDateWhereClause = {
