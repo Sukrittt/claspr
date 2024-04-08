@@ -49,11 +49,6 @@ export const AddTopicForm: React.FC<AddTopicFormProps> = ({
   //SERVER UPDATE
   const handleAttachTopic = useCallback(
     (topicName: string) => {
-      if (note.topics.length === 0) {
-        toast.error("Please add at least one topic");
-        return;
-      }
-
       attachTopic({
         noteId: note.id,
         name: topicName,
