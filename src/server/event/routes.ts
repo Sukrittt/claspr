@@ -61,15 +61,15 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
-      const indianTimeZone = new Date(date).toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
-      });
+      // const indianTimeZone = new Date(date).toLocaleString("en-US", {
+      //   timeZone: "Asia/Kolkata",
+      // });
 
-      const indianDate = new Date(indianTimeZone);
+      // const indianDate = new Date(indianTimeZone);
 
       eventDateWhereClause = {
-        gte: startOfDay(indianDate),
-        lte: endOfDay(indianDate),
+        gte: startOfDay(date),
+        lte: endOfDay(date),
       };
     } else {
       eventDateWhereClause = {
