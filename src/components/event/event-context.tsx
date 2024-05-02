@@ -1,7 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { format, isSameDay, startOfDay } from "date-fns";
+import {
+  eachDayOfInterval,
+  endOfWeek,
+  format,
+  isSameDay,
+  startOfDay,
+  startOfWeek,
+} from "date-fns";
 import {
   DndContext,
   DragEndEvent,
@@ -23,20 +30,26 @@ import { useEditEvent } from "@/hooks/event";
 import { activeDateAtom, overDateAtom } from "@/atoms";
 
 interface EventContextProps {
-  calendarDates: Date[];
+  // calendarDates: Date[];
+  currentDate: Date;
   sessionId: string;
 }
 
 export const EventContext: React.FC<EventContextProps> = ({
-  calendarDates,
+  // calendarDates,
+  currentDate,
   sessionId,
 }) => {
   const [activeEventEl, setActiveEventEl] = useState<ExtendedEvent | null>(
     null
   );
 
+  console.log("client component date", format(currentDate, "MMMM do, h:mm a"));
+
   const [, setOverDate] = useAtom(overDateAtom);
   const [, setActiveDateObj] = useAtom(activeDateAtom);
+
+  const [calendarDates, setCalendarDates] = useState<Date[]>([]);
 
   const { mutate: moveEvent } = useEditEvent({ closeModal: undefined });
 
@@ -92,6 +105,22 @@ export const EventContext: React.FC<EventContextProps> = ({
 
     setActiveEventEl(null);
   };
+
+  const updateCalendarDates = (currentDate: Date) => {
+    const firstDayOfWeek = startOfWeek(currentDate);
+    const lastDayOfWeek = endOfWeek(currentDate);
+
+    const datesOfWeek = eachDayOfInterval({
+      start: firstDayOfWeek,
+      end: lastDayOfWeek,
+    });
+
+    setCalendarDates(datesOfWeek);
+  };
+
+  useEffect(() => {
+    updateCalendarDates(currentDate);
+  }, [currentDate]);
 
   return (
     <DndContext
