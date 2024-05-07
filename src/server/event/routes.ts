@@ -11,6 +11,7 @@ import {
   isBefore,
   set,
   startOfDay,
+  sub,
 } from "date-fns";
 
 import { db } from "@/lib/db";
@@ -86,7 +87,10 @@ export const getEvents = privateProcedure
 
       eventDateWhereClause = {
         gte: startOfDay(updatedDate),
-        lte: endOfDay(updatedDate),
+        lte: sub(endOfDay(updatedDate), {
+          hours: 5,
+          minutes: 30,
+        }),
       };
     } else {
       eventDateWhereClause = {
