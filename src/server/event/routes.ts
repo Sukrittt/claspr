@@ -72,6 +72,7 @@ export const getEvents = privateProcedure
         "START API DATE",
         format(
           add(startOfDay(date), {
+            days: 1,
             hours: 5,
             minutes: 30,
           }),
@@ -88,6 +89,7 @@ export const getEvents = privateProcedure
 
       eventDateWhereClause = {
         gte: add(startOfDay(date), {
+          days: 1,
           hours: 5,
           minutes: 30,
         }),
