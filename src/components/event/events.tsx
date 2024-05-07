@@ -1,7 +1,7 @@
 "use client";
 import { toast } from "sonner";
 import { useAtom } from "jotai";
-import { isSameDay } from "date-fns";
+import { add, isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -39,7 +39,12 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const events = await getUpcomingEvents(date);
+        const events = await getUpcomingEvents(
+          add(date, {
+            hours: 5,
+            minutes: 30,
+          })
+        );
         setEvents(events);
       } catch (e) {
         toast.error("There was an error fetching events. Please try again.");
