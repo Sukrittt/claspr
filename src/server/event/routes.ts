@@ -63,7 +63,8 @@ export const getEvents = privateProcedure
 
     if (date) {
       const updatedDate = add(date, {
-        hours: 11,
+        hours: 5,
+        minutes: 30,
       });
 
       console.log("API DATE", format(date, "MMMM do, h:mm a"));
