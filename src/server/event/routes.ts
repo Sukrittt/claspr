@@ -71,11 +71,27 @@ export const getEvents = privateProcedure
       console.log("UPDATED API DATE", format(date, "MMMM do, h:mm a"));
       console.log(
         "START UPDATED API DATE",
-        format(startOfDay(date), "MMMM do, h:mm a")
+        format(
+          startOfDay(
+            add(date, {
+              hours: 5,
+              minutes: 30,
+            })
+          ),
+          "MMMM do, h:mm a"
+        )
       );
       console.log(
         "END UPDATED API DATE",
-        format(endOfDay(date), "MMMM do, h:mm a")
+        format(
+          endOfDay(
+            add(date, {
+              hours: 5,
+              minutes: 30,
+            })
+          ),
+          "MMMM do, h:mm a"
+        )
       );
 
       // const indianTimeZone = new Date(date).toLocaleString("en-US", {
@@ -85,8 +101,18 @@ export const getEvents = privateProcedure
       // const indianDate = new Date(indianTimeZone);
 
       eventDateWhereClause = {
-        gte: startOfDay(date),
-        lte: endOfDay(date),
+        gte: startOfDay(
+          add(date, {
+            hours: 5,
+            minutes: 30,
+          })
+        ),
+        lte: endOfDay(
+          add(date, {
+            hours: 5,
+            minutes: 30,
+          })
+        ),
       };
     } else {
       eventDateWhereClause = {
