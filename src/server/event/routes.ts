@@ -61,6 +61,7 @@ export const getEvents = privateProcedure
     let eventDateWhereClause = {};
 
     if (date) {
+      console.log("API CURRENT DATE", format(new Date(), "MMMM do, h:mm a"));
       console.log("API DATE", format(date, "MMMM do, h:mm a"));
       // const indianTimeZone = new Date(date).toLocaleString("en-US", {
       //   timeZone: "Asia/Kolkata",
