@@ -79,7 +79,10 @@ export const getEvents = privateProcedure
           "MMMM do, h:mm a"
         )
       );
-      console.log("END API DATE", format(endOfDay(date), "MMMM do, h:mm a"));
+      console.log(
+        "END API DATE",
+        format(add(endOfDay(date), { days: 1 }), "MMMM do, h:mm a")
+      );
 
       // const indianTimeZone = new Date(date).toLocaleString("en-US", {
       //   timeZone: "Asia/Kolkata",
@@ -93,7 +96,7 @@ export const getEvents = privateProcedure
           hours: 5,
           minutes: 30,
         }),
-        lte: endOfDay(date),
+        lte: add(endOfDay(date), { days: 1 }),
       };
     } else {
       eventDateWhereClause = {
