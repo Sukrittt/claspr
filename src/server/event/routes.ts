@@ -54,12 +54,7 @@ export const getEvents = privateProcedure
 
     if (date) {
       const formattedDate = format(addDays(date, 1), EVENT_DATE_FORMAT);
-      console.log("FORMATTED DATE", formattedDate);
 
-      // eventDateWhereClause = {
-      //   gte: startOfDay(formattedDate),
-      //   lte: endOfDay(formattedDate),
-      // };
       rawEventDateWhereClause = formattedDate;
     } else {
       eventDateWhereClause = {
@@ -303,7 +298,13 @@ export const editEvent = privateProcedure
         id: eventId,
         userId: ctx.userId,
       },
-      select: { id: true, title: true, description: true, eventDate: true },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        eventDate: true,
+        rawEventDate: true,
+      },
     });
 
     if (!existingEvent) {
@@ -319,6 +320,10 @@ export const editEvent = privateProcedure
         : eventDate
       : existingEvent.eventDate;
 
+    const updatedRawEventDate = eventDate
+      ? format(eventDate, EVENT_DATE_FORMAT)
+      : existingEvent.rawEventDate;
+
     await db.event.update({
       where: {
         id: eventId,
@@ -328,6 +333,7 @@ export const editEvent = privateProcedure
         title: title ?? existingEvent.title,
         description: description ?? existingEvent.description,
         eventDate: updatedEventDate,
+        rawEventDate: updatedRawEventDate,
       },
     });
   });

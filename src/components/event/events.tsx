@@ -1,5 +1,4 @@
 "use client";
-import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
@@ -9,7 +8,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ExtendedEvent } from "@/types";
 import { EventItem } from "./event-item";
 import { EventSheet } from "./event-sheet";
-// import { getUpcomingEvents } from "@/actions";
 import { ContainerVariants } from "@/lib/motion";
 import { setDateWithSameTime } from "@/lib/utils";
 import { useGetUpcomingEvents } from "@/hooks/event";
@@ -23,7 +21,6 @@ interface EventsProps {
 
 export const Events: React.FC<EventsProps> = ({ date }) => {
   const params = useSearchParams();
-  // const [loading, setLoading] = useState(false);
 
   const [overDate, setOverDate] = useAtom(overDateAtom);
   const [activeDateObj, setActiveDateObj] = useAtom(activeDateAtom);
@@ -40,22 +37,6 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
   useEffect(() => {
     if (serverEvents) setEvents(serverEvents);
   }, [serverEvents]);
-
-  // useEffect(() => {
-  //   const fetchEvents = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const events = await getUpcomingEvents(date);
-  //       setEvents(events);
-  //     } catch (e) {
-  //       toast.error("There was an error fetching events. Please try again.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchEvents();
-  // }, [date]);
 
   useEffect(() => {
     if (!activeDateObj || !overDate) return;
