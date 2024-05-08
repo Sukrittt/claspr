@@ -264,7 +264,7 @@ export const createEvent = privateProcedure
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const rawEventDate = addDays(input.eventDate, 1);
+    const rawEventDate = addOneDayIfNeeded(input.eventDate);
 
     await db.event.create({
       data: {
@@ -274,6 +274,19 @@ export const createEvent = privateProcedure
       },
     });
   });
+
+function addOneDayIfNeeded(inputEventDate: Date) {
+  const eventHour = inputEventDate.getHours();
+  const eventMinute = inputEventDate.getMinutes();
+
+  const isLateNight = eventHour < 5 || (eventHour === 5 && eventMinute <= 30);
+
+  const adjustedEventDate = isLateNight
+    ? addDays(inputEventDate, 1)
+    : inputEventDate;
+
+  return adjustedEventDate;
+}
 
 /**
  * To edit event details.
