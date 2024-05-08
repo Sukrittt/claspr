@@ -262,10 +262,12 @@ export const createEvent = privateProcedure
     })
   )
   .mutation(async ({ ctx, input }) => {
+    const rawEventDate = addDays(input.eventDate, 1);
+
     await db.event.create({
       data: {
         ...input,
-        rawEventDate: format(input.eventDate, EVENT_DATE_FORMAT),
+        rawEventDate: format(rawEventDate, EVENT_DATE_FORMAT),
         userId: ctx.userId,
       },
     });
