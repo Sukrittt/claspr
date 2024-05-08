@@ -54,7 +54,9 @@ export const getEvents = privateProcedure
 
     if (date) {
       // const formattedDate = format(addDays(date, 1), EVENT_DATE_FORMAT);
-      const formattedDate = format(date, EVENT_DATE_FORMAT);
+      const formattedDate = format(addDays(date, 1), EVENT_DATE_FORMAT);
+
+      console.log("formattedDate", formattedDate);
 
       rawEventDateWhereClause = formattedDate;
     } else {
