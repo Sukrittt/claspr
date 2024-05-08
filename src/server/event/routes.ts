@@ -332,7 +332,7 @@ export const editEvent = privateProcedure
       : existingEvent.eventDate;
 
     const updatedRawEventDate = eventDate
-      ? format(eventDate, EVENT_DATE_FORMAT)
+      ? formatRawEvent(eventDate)
       : existingEvent.rawEventDate;
 
     await db.event.update({
