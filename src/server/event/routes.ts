@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { addDays, format, startOfDay } from "date-fns";
+import { add, addDays, format, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
@@ -275,7 +275,9 @@ export const createEvent = privateProcedure
     });
   });
 
-function addOneDayIfNeeded(inputEventDate: Date) {
+function addOneDayIfNeeded(rawInputEventDate: Date) {
+  const inputEventDate = add(rawInputEventDate, { hours: 5, minutes: 30 });
+
   const eventHour = inputEventDate.getHours();
   const eventMinute = inputEventDate.getMinutes();
 
