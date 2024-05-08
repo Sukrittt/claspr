@@ -1,22 +1,12 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import {
-  add,
-  addDays,
-  addHours,
-  addMinutes,
-  endOfDay,
-  format,
-  isAfter,
-  isBefore,
-  set,
-  startOfDay,
-} from "date-fns";
+import { addDays, format, startOfDay } from "date-fns";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
-import { getIsPartOfClassAuth } from "@/server/class/routes";
 import { setDateWithSameTime } from "@/lib/utils";
+import { EVENT_DATE_FORMAT } from "@/config/utils";
+import { getIsPartOfClassAuth } from "@/server/class/routes";
 
 /**
  *  Fetching events for next 7 days.
@@ -60,34 +50,17 @@ export const getEvents = privateProcedure
 
     let assignmentWhereClause = {};
     let eventDateWhereClause = {};
+    let rawEventDateWhereClause = {};
 
     if (date) {
-      // const updatedDate = add(date, {
-      //   hours: 5,
-      //   minutes: 30,
-      // });
+      const formattedDate = format(date, EVENT_DATE_FORMAT);
+      console.log("FORMATTED DATE", formattedDate);
 
-      console.log("API DATE", format(date, "MMMM do, h:mm a"));
-      console.log("UPDATED API DATE", format(date, "MMMM do, h:mm a"));
-      console.log(
-        "START UPDATED API DATE",
-        format(startOfDay(date), "MMMM do, h:mm a")
-      );
-      console.log(
-        "END UPDATED API DATE",
-        format(endOfDay(date), "MMMM do, h:mm a")
-      );
-
-      // const indianTimeZone = new Date(date).toLocaleString("en-US", {
-      //   timeZone: "Asia/Kolkata",
-      // });
-
-      // const indianDate = new Date(indianTimeZone);
-
-      eventDateWhereClause = {
-        gte: startOfDay(date),
-        lte: endOfDay(date),
-      };
+      // eventDateWhereClause = {
+      //   gte: startOfDay(formattedDate),
+      //   lte: endOfDay(formattedDate),
+      // };
+      rawEventDateWhereClause = formattedDate;
     } else {
       eventDateWhereClause = {
         gte: startOfDay(currentDate),
@@ -242,6 +215,7 @@ export const getEvents = privateProcedure
         where: {
           assignment: assignmentWhereClause,
           eventDate: eventDateWhereClause,
+          rawEventDate: rawEventDateWhereClause,
         },
         select: eventPicks,
         orderBy: {
@@ -253,6 +227,7 @@ export const getEvents = privateProcedure
           assignmentId: null,
           userId: ctx.userId,
           eventDate: eventDateWhereClause,
+          rawEventDate: rawEventDateWhereClause,
         },
         select: eventPicks,
         orderBy: {
@@ -294,6 +269,7 @@ export const createEvent = privateProcedure
     await db.event.create({
       data: {
         ...input,
+        rawEventDate: format(input.eventDate, EVENT_DATE_FORMAT),
         userId: ctx.userId,
       },
     });

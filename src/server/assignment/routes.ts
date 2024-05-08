@@ -1,8 +1,10 @@
 import { z } from "zod";
+import { format } from "date-fns";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
+import { EVENT_DATE_FORMAT } from "@/config/utils";
 
 /**
  * To create an assignment in a classroom.
@@ -66,6 +68,7 @@ export const createAssignment = privateProcedure
         assignmentId: createdAssignment.id,
         userId: ctx.userId,
         eventDate: dueDate,
+        rawEventDate: format(dueDate, EVENT_DATE_FORMAT),
       },
     });
   });

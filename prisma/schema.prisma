@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Account {
@@ -417,9 +418,10 @@ model Media {
 model Event {
   id String @id @unique @default(cuid())
 
-  title       String
-  description Json?
-  eventDate   DateTime
+  title        String
+  description  Json?
+  rawEventDate String
+  eventDate    DateTime
 
   assignmentId String?
   assignment   Assignment? @relation(fields: [assignmentId], references: [id], onDelete: Cascade)

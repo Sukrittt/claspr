@@ -148,3 +148,5 @@ export const gradientColors = [
 ];
 
 export type GradientColor = (typeof gradientColors)[number];
+
+export const EVENT_DATE_FORMAT = "yyyy-MM-dd";

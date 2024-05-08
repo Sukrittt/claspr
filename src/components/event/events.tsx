@@ -9,10 +9,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ExtendedEvent } from "@/types";
 import { EventItem } from "./event-item";
 import { EventSheet } from "./event-sheet";
-import { getUpcomingEvents } from "@/actions";
+// import { getUpcomingEvents } from "@/actions";
 import { ContainerVariants } from "@/lib/motion";
 import { setDateWithSameTime } from "@/lib/utils";
-// import { useGetUpcomingEvents } from "@/hooks/event";
+import { useGetUpcomingEvents } from "@/hooks/event";
 import { activeDateAtom, overDateAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EventSkeleton } from "@/components/skeletons/event-skeleton";
@@ -23,36 +23,39 @@ interface EventsProps {
 
 export const Events: React.FC<EventsProps> = ({ date }) => {
   const params = useSearchParams();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const [overDate, setOverDate] = useAtom(overDateAtom);
   const [activeDateObj, setActiveDateObj] = useAtom(activeDateAtom);
 
-  // const { data: serverEvents, isLoading } = useGetUpcomingEvents(
-  //   undefined,
-  //   date
-  // );
+  const { data: serverEvents, isLoading } = useGetUpcomingEvents(
+    undefined,
+    date
+  );
 
-  const [events, setEvents] = useState<ExtendedEvent[] | undefined>([]);
+  const [events, setEvents] = useState<ExtendedEvent[] | undefined>(
+    serverEvents
+  );
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        const events = await getUpcomingEvents(date);
-        setEvents(events);
-      } catch (e) {
-        toast.error("There was an error fetching events. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (serverEvents) setEvents(serverEvents);
+  }, [serverEvents]);
 
-    fetchEvents();
-    // if (serverEvents) {
-    //   setEvents(serverEvents);
-    // }
-  }, [date]);
+  // useEffect(() => {
+  //   const fetchEvents = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const events = await getUpcomingEvents(date);
+  //       setEvents(events);
+  //     } catch (e) {
+  //       toast.error("There was an error fetching events. Please try again.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchEvents();
+  // }, [date]);
 
   useEffect(() => {
     if (!activeDateObj || !overDate) return;
@@ -97,7 +100,7 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
 
   return (
     <ScrollArea className="h-[50vh] pr-0">
-      {loading ? (
+      {isLoading ? (
         <EventSkeleton />
       ) : !events || events.length === 0 ? (
         <></>

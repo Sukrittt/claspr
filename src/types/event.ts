@@ -1,5 +1,4 @@
 import { Assignment, Event } from "@prisma/client";
-import { MinifiedUser } from ".";
 
 export type MinifiedEvent = Pick<
   Event,
