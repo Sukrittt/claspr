@@ -264,30 +264,21 @@ export const createEvent = privateProcedure
     })
   )
   .mutation(async ({ ctx, input }) => {
-    const rawEventDate = addOneDayIfNeeded(input.eventDate);
+    const rawEventDate = formatRawEvent(input.eventDate);
 
     await db.event.create({
       data: {
         ...input,
-        rawEventDate: format(rawEventDate, EVENT_DATE_FORMAT),
+        rawEventDate,
         userId: ctx.userId,
       },
     });
   });
 
-function addOneDayIfNeeded(rawInputEventDate: Date) {
+function formatRawEvent(rawInputEventDate: Date) {
   const inputEventDate = add(rawInputEventDate, { hours: 5, minutes: 30 });
 
-  const eventHour = inputEventDate.getHours();
-  const eventMinute = inputEventDate.getMinutes();
-
-  const isLateNight = eventHour < 5 || (eventHour === 5 && eventMinute <= 30);
-
-  const adjustedEventDate = isLateNight
-    ? addDays(inputEventDate, 1)
-    : inputEventDate;
-
-  return adjustedEventDate;
+  return format(inputEventDate, EVENT_DATE_FORMAT);
 }
 
 /**
