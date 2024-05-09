@@ -1,6 +1,8 @@
 import { getToken } from "next-auth/jwt";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 
+import { ratelimit } from "@/server/ratelimit";
+
 const f = createUploadthing();
 
 export const ourFileRouter = {
@@ -16,6 +18,10 @@ export const ourFileRouter = {
       const user = await getToken({ req });
 
       if (!user) throw new Error("Unauthorized");
+
+      const { success } = await ratelimit.limit(user.id);
+
+      if (!success) throw new Error("Rate limit exceeded");
 
       return { userId: user.id };
     })
