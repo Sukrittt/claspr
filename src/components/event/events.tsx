@@ -1,7 +1,7 @@
 "use client";
 import { useAtom } from "jotai";
-import { isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
+import { format, isSameDay } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -10,6 +10,7 @@ import { EventItem } from "./event-item";
 import { EventSheet } from "./event-sheet";
 import { ContainerVariants } from "@/lib/motion";
 import { setDateWithSameTime } from "@/lib/utils";
+import { EVENT_DATE_FORMAT } from "@/config/utils";
 import { useGetUpcomingEvents } from "@/hooks/event";
 import { activeDateAtom, overDateAtom } from "@/atoms";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -62,6 +63,7 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
         const updatedEvent = {
           ...activeEvent,
           eventDate: updatedEventDate,
+          rawEventDate: format(updatedEventDate, EVENT_DATE_FORMAT),
         };
 
         const updatedEvents = [...prev, updatedEvent];
