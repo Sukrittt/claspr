@@ -58,7 +58,7 @@ export const EventContext: React.FC<EventContextProps> = ({
 
     setActiveDateObj({
       event: activeEvent,
-      dateColumn: activeEvent.eventDate,
+      dateColumn: new Date(activeEvent.rawEventDate),
     });
 
     setActiveEventEl(activeEvent);
@@ -76,7 +76,7 @@ export const EventContext: React.FC<EventContextProps> = ({
     if (activeEvent.userId !== sessionId) return;
 
     const activeEventId = activeEvent.id;
-    const activeEventDate = activeEvent.eventDate;
+    const activeEventDate = new Date(activeEvent.rawEventDate);
 
     if (isSameDay(activeEventDate, overDate)) return;
 

@@ -194,6 +194,7 @@ export const getEvents = privateProcedure
       id: true,
       title: true,
       eventDate: true,
+      rawEventDate: true,
       description: true,
       createdAt: true,
       userId: true,
