@@ -39,7 +39,7 @@ export const EventItem: React.FC<EventItemProps> = ({
         </p>
         <div className="flex items-center justify-between">
           <p className="text-muted-foreground text-xs">
-            {format(new Date(event.rawEventDate), "MMMM do")}{" "}
+            {format(new Date(event.rawEventDate), "MMMM do")},{" "}
             {format(event.eventDate, "h:mm a")}
           </p>
           {event.description && (
@@ -69,7 +69,7 @@ export const EventItem: React.FC<EventItemProps> = ({
       </p>
       <div className="flex items-center justify-between">
         <p className="text-muted-foreground text-xs">
-          {format(new Date(event.rawEventDate), "MMMM do")}{" "}
+          {format(new Date(event.rawEventDate), "MMMM do")},{" "}
           {format(event.eventDate, "h:mm a")}
         </p>
         {event.description && (
