@@ -114,7 +114,7 @@ export const Editor: React.FC<EditorProps> = ({
             config: {
               endpoint: "/api/link",
               onError: () => {
-                console.log("error in link upload");
+                console.log("Error in link upload");
               },
             },
           },

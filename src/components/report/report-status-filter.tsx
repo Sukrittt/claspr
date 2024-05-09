@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
-import { notFound, useSearchParams } from "next/navigation";
+import { notFound, useSearchParams, usePathname } from "next/navigation";
 
 import {
   Select,
@@ -36,6 +36,7 @@ export const ReportStatusFilter = () => {
 
   const mounted = useMounted();
   const params = useSearchParams();
+  const pathname = usePathname();
 
   const handleQueryChange = useQueryChange();
   const activeStatus = params.get("report-status") as ReportStatus;
@@ -49,9 +50,7 @@ export const ReportStatusFilter = () => {
   useEffect(() => {
     if (activeStatus) return;
 
-    const initialUrl = "/dashboard";
-
-    handleQueryChange(initialUrl, {
+    handleQueryChange(pathname, {
       "report-status": "PENDING",
     });
   }, [activeStatus]);
@@ -64,9 +63,7 @@ export const ReportStatusFilter = () => {
     <Select
       defaultValue={activeStatus ?? "PENDING"}
       onValueChange={(val) => {
-        const initialUrl = "/dashboard";
-
-        handleQueryChange(initialUrl, { "report-status": val });
+        handleQueryChange(pathname, { "report-status": val });
         setReportStatus(val as ReportStatus);
       }}
     >
