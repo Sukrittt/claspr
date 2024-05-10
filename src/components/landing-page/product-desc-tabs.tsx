@@ -49,7 +49,7 @@ export const ProductDescTabs = () => {
       icon: FileText,
       description: "Sleek, potent, stunning. Next-level notes & docs.",
       activeIconClass: "text-yellow-500",
-      videoSrc: "/scribe-docs.mp4",
+      videoSrc: "/scribe-notes.mp4",
     },
     {
       value: "calendar",
