@@ -17,6 +17,7 @@ import { CustomTooltip } from "@/components/custom/custom-tooltip";
 type UserClassroom = {
   classroomId: string;
   title: string;
+  renamedClassroom: string | null;
 };
 
 interface LinkClassroomFormProps {
@@ -63,7 +64,7 @@ export const LinkClassroomForm: React.FC<LinkClassroomFormProps> = ({
                 key={classroom.classroomId}
                 value={classroom.classroomId}
               >
-                {classroom.title}
+                {classroom.renamedClassroom ?? classroom.title}
               </SelectItem>
             ))}
           </SelectContent>
@@ -74,7 +75,8 @@ export const LinkClassroomForm: React.FC<LinkClassroomFormProps> = ({
             className={cn(
               "border rounded-md p-2 bg-neutral-100 dark:bg-neutral-800 transition cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800/60 dark:text-foreground",
               {
-                "opacity-50": isLoading || !!!selectedClassroomId,
+                "opacity-50 cursor-default hover:bg-neutral-100 dark:hover:bg-neutral-800":
+                  isLoading || !!!selectedClassroomId,
               }
             )}
             onClick={() => setSelectedClassroomId(null)}

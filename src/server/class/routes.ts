@@ -752,26 +752,36 @@ export const getAllClassrooms = privateProcedure.query(async ({ ctx }) => {
     }),
     db.membership.findMany({
       where: membershipWhereClause,
-      select: { classRoomId: true, classRoom: { select: { title: true } } },
+      select: {
+        classRoomId: true,
+        renamedClassroom: true,
+        classRoom: { select: { title: true } },
+      },
     }),
   ];
 
   const [rawTeacher, rawMember] = await Promise.all(promises);
 
   type TeacherIds = { id: string; title: string }[];
-  type MemberIds = { classRoomId: string; classRoom: { title: string } }[];
+  type MemberIds = {
+    classRoomId: string;
+    renamedClassroom: string;
+    classRoom: { title: string };
+  }[];
 
   const teacher: TeacherIds = rawTeacher as TeacherIds;
   const member = rawMember as MemberIds;
 
   const classroomIds = [
     ...teacher.map((classroom) => ({
+      renamedClassroom: null,
       classroomId: classroom.id,
       title: classroom.title,
     })),
     ...member.map((membership) => ({
       classroomId: membership.classRoomId,
       title: membership.classRoom.title,
+      renamedClassroom: membership.renamedClassroom,
     })),
   ];
 

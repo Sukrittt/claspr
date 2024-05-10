@@ -8,8 +8,8 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { useSortable } from "@dnd-kit/sortable";
 import { ChevronRight } from "lucide-react";
+import { useSortable } from "@dnd-kit/sortable";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";

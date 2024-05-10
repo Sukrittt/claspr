@@ -85,7 +85,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
             </Link>
           )}
           {sidebarState.isOpen ? (
-            <CustomTooltip text="Ctrl + \">
+            <CustomTooltip text="Alt + \">
               <PanelLeft
                 className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition"
                 onClick={() =>
@@ -96,7 +96,7 @@ export const NoteSidebar = ({ note }: { note: ExtendedNote }) => {
               />
             </CustomTooltip>
           ) : (
-            <CustomTooltip text="Ctrl + \">
+            <CustomTooltip text="Alt + \">
               <PanelLeftOpen
                 className="cursor-pointer h-4 w-4 text-muted-foreground hover:text-neutral-700 transition absolute -left-2 top-1"
                 onClick={() =>
