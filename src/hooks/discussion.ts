@@ -138,21 +138,17 @@ interface RemoveDiscussionProps {
   classroomId: string;
   discussionType: DiscussionType;
   closeModal: () => void;
-  goBack: () => void;
 }
 
 export const useRemoveDiscussion = ({
   closeModal,
   classroomId,
   discussionType,
-  goBack,
 }: RemoveDiscussionProps) => {
   const utils = trpc.useUtils();
 
   return trpc.discussion.removeDiscussion.useMutation({
     onMutate: async ({ discussionId }) => {
-      closeModal();
-
       await utils.discussion.getDiscussions.cancel({
         classroomId,
         discussionType,
@@ -182,7 +178,7 @@ export const useRemoveDiscussion = ({
       });
     },
     onSuccess: () => {
-      goBack();
+      closeModal();
     },
   });
 };

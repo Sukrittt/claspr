@@ -1,8 +1,8 @@
 "use client";
-import qs from "query-string";
-import { useCallback, useState } from "react";
+import { useAtom } from "jotai";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { DiscussionType } from "@prisma/client";
-import { useRouter, useSearchParams } from "next/navigation";
 
 import {
   AlertDialog,
@@ -15,7 +15,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { activeDiscussionIdAtom } from "@/atoms";
 import { useRemoveDiscussion } from "@/hooks/discussion";
+import { useQueryChange } from "@/hooks/use-query-change";
 
 type DeleteDiscussionDialogProps = {
   discussionId: string;
@@ -32,14 +35,16 @@ export const DeleteDiscussionDialog = ({
   classroomId,
   discussionType,
 }: DeleteDiscussionDialogProps) => {
-  const router = useRouter();
-  const params = useSearchParams();
+  const handleQueryChange = useQueryChange();
+  const [, setActiveDiscussionId] = useAtom(activeDiscussionIdAtom);
 
   const [open, setOpen] = useState(isOpen);
 
   const closeModal = () => {
     setOpen(false);
     setIsDeleteOpen(false);
+
+    handleGoBack();
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -47,32 +52,15 @@ export const DeleteDiscussionDialog = ({
     setIsDeleteOpen(open);
   };
 
-  const handleGoBack = useCallback(() => {
-    let currentQuery = {};
+  const handleGoBack = () => {
+    const initialUrl = `/c/${classroomId}`;
 
-    if (params) {
-      currentQuery = qs.parse(params.toString());
-    }
+    handleQueryChange(initialUrl, { discussion: undefined });
+    setActiveDiscussionId(null);
+  };
 
-    const updatedQuery: any = {
-      ...currentQuery,
-      active: undefined,
-    };
-
-    const url = qs.stringifyUrl(
-      {
-        url: `/c/${classroomId}`,
-        query: updatedQuery,
-      },
-      { skipNull: true }
-    );
-
-    router.push(url);
-  }, [params]);
-
-  const { mutate: removeDiscussion } = useRemoveDiscussion({
+  const { mutate: removeDiscussion, isLoading } = useRemoveDiscussion({
     closeModal,
-    goBack: handleGoBack,
     discussionType,
     classroomId,
   });
@@ -92,12 +80,17 @@ export const DeleteDiscussionDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
+          <Button
+            disabled={isLoading}
             onClick={() => removeDiscussion({ discussionId })}
             className="pt-2"
           >
-            Continue
-          </AlertDialogAction>
+            {isLoading ? (
+              <Loader2 className="h-3 w-14 animate-spin" />
+            ) : (
+              "Continue"
+            )}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
