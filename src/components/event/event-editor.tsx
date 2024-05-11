@@ -44,6 +44,7 @@ export const EventEditor: React.FC<EventEditorProps> = ({ event }) => {
           content={event.description}
           placeholder="What is this event about?"
           getDebouncedContent
+          isNotePage
         />
       ) : (
         <EditorOutput content={event.assignment.description} />
