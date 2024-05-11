@@ -11,13 +11,13 @@ import { LoadingScreen } from "@/components/skeletons/loading-screen";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
     default: `${siteConfig.name} - The only classroom companion you'll ever need`,
     template: `${siteConfig.name} - The only classroom companion you'll ever need`,
   },
   description: siteConfig.description,
   manifest: "/manifest.json",
-  themeColor: [{ media: "(prefers-color-scheme: dark)", color: "black" }],
   keywords: [
     "Classroom management",
     "Education technology",

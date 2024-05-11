@@ -7,6 +7,7 @@ import {
   ExtendedSectionWithClassrooms,
   ExtendedSectionWithMemberships,
 } from "@/types";
+import { CalendarMode } from "./types/event";
 import { Breadcrumb } from "./types/breadcrumb";
 import { DiscussionTab } from "@/components/discussions/discussion-tabs";
 import { AssignmentStatus } from "@/components/assignment/assignment-filter";
@@ -47,6 +48,9 @@ export const activeDateAtom = atom<{
 } | null>(null);
 
 export const overDateAtom = atom<Date | null>(null);
+
+export const calendarModeAtom = atom<CalendarMode>("week");
+export const currentDateAtom = atom<Date>(new Date());
 
 // For Reports
 export const activeReportStatusAtom = atom<ReportStatus | null>(null);

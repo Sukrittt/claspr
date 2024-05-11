@@ -17,3 +17,5 @@ export type ExtendedEvent = MinifiedEvent & {
     "id" | "title" | "classRoomId" | "description"
   > | null;
 };
+
+export type CalendarMode = "week" | "month";

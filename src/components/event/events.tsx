@@ -9,12 +9,12 @@ import { ExtendedEvent } from "@/types";
 import { EventItem } from "./event-item";
 import { EventSheet } from "./event-sheet";
 import { ContainerVariants } from "@/lib/motion";
-import { setDateWithSameTime } from "@/lib/utils";
 import { EVENT_DATE_FORMAT } from "@/config/utils";
 import { useGetUpcomingEvents } from "@/hooks/event";
-import { activeDateAtom, overDateAtom } from "@/atoms";
+import { cn, setDateWithSameTime } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EventSkeleton } from "@/components/skeletons/event-skeleton";
+import { activeDateAtom, calendarModeAtom, overDateAtom } from "@/atoms";
 
 interface EventsProps {
   date: Date;
@@ -22,6 +22,7 @@ interface EventsProps {
 
 export const Events: React.FC<EventsProps> = ({ date }) => {
   const params = useSearchParams();
+  const [calendarMode] = useAtom(calendarModeAtom);
 
   const [overDate, setOverDate] = useAtom(overDateAtom);
   const [activeDateObj, setActiveDateObj] = useAtom(activeDateAtom);
@@ -82,9 +83,13 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
   const activeEvent = params.get("active");
 
   return (
-    <ScrollArea className="h-[50vh] pr-0">
+    <ScrollArea
+      className={cn("h-[50vh] pr-0", {
+        "pt-6 h-[120px]": calendarMode === "month",
+      })}
+    >
       {isLoading ? (
-        <EventSkeleton />
+        <EventSkeleton mode={calendarMode} />
       ) : !events || events.length === 0 ? (
         <></>
       ) : (
@@ -94,7 +99,7 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="space-y-4 h-full"
+            className="space-y-2 h-full"
           >
             {events.map((event) => (
               <EventSheet

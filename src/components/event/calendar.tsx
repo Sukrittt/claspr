@@ -1,76 +1,58 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import {
-  startOfMonth,
-  endOfMonth,
-  eachDayOfInterval,
-  startOfWeek,
-  endOfWeek,
-  startOfDay,
+  addMonths,
   addWeeks,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+  subMonths,
   subWeeks,
 } from "date-fns";
 
-import { EventContext } from "./event-context";
+import { EventWeekView } from "./event-week-view";
+import { EventMonthView } from "./event-month-view";
+import { calendarModeAtom, currentDateAtom } from "@/atoms";
+import { SwitchCalendarMode } from "./switch-calendar-mode";
 import { CreateEventDialog } from "./dialog/create-event-dialog";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { LoadingScreen } from "@/components/skeletons/loading-screen";
 
 export const Calendar = ({ sessionId }: { sessionId: string }) => {
-  const [calendarDates, setCalendarDates] = useState<Date[]>([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendarMode] = useAtom(calendarModeAtom);
+  const [currentDate, setCurrentDate] = useAtom(currentDateAtom);
 
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.toLocaleString("default", { month: "long" });
-
-  useEffect(() => {
-    const currentDate = new Date();
-    const firstDayOfMonth = startOfMonth(currentDate);
-    const lastDayOfMonth = endOfMonth(currentDate);
-
-    const datesOfMonth = eachDayOfInterval({
-      start: firstDayOfMonth,
-      end: lastDayOfMonth,
-    });
-    setCalendarDates(datesOfMonth);
-  }, []);
-
-  const updateCalendarDates = (newDate: Date) => {
-    const firstDayOfWeek = startOfWeek(newDate);
-    const lastDayOfWeek = endOfWeek(newDate);
-
-    const datesOfWeek = eachDayOfInterval({
-      start: firstDayOfWeek,
-      end: lastDayOfWeek,
-    });
-
-    setCalendarDates(datesOfWeek);
-  };
-
-  useEffect(() => {
-    updateCalendarDates(currentDate);
-  }, [currentDate]);
 
   const handleToday = () => {
     const today = startOfDay(new Date());
     setCurrentDate(today);
   };
 
-  const handleNextWeek = () => {
-    const nextMonthDate = startOfWeek(addWeeks(currentDate, 1));
+  const handleNext = () => {
+    let nextDate: Date;
 
-    setCurrentDate(nextMonthDate);
+    if (calendarMode === "month") {
+      nextDate = startOfMonth(addMonths(currentDate, 1));
+    } else {
+      nextDate = startOfWeek(addWeeks(currentDate, 1));
+    }
+
+    setCurrentDate(nextDate);
   };
 
-  const handlePreviousWeek = () => {
-    const previousMonthDate = startOfWeek(subWeeks(currentDate, 1));
-    setCurrentDate(previousMonthDate);
-  };
+  const handlePrevious = () => {
+    let previousDate: Date;
 
-  if (calendarDates.length === 0) {
-    return <LoadingScreen fullHeight />;
-  }
+    if (calendarMode === "month") {
+      previousDate = startOfMonth(subMonths(currentDate, 1));
+    } else {
+      previousDate = startOfWeek(subWeeks(currentDate, 1));
+    }
+
+    setCurrentDate(previousDate);
+  };
 
   return (
     <div className="h-[94vh] w-screen">
@@ -83,6 +65,7 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
               </h3>
             </div>
             <div className="flex items-center gap-x-2 text-neutral-700 dark:text-foreground">
+              <SwitchCalendarMode />
               <CreateEventDialog>
                 <div className="border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg">
                   <CustomTooltip text="Create Event">
@@ -92,7 +75,7 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
               </CreateEventDialog>
               <div
                 className="hidden sm:block border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg"
-                onClick={handlePreviousWeek}
+                onClick={handlePrevious}
               >
                 <ChevronLeft className="w-4 h-4" />
               </div>
@@ -104,7 +87,7 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
               </span>
               <div
                 className="hidden sm:block border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg"
-                onClick={handleNextWeek}
+                onClick={handleNext}
               >
                 <ChevronRight className="w-4 h-4" />
               </div>
@@ -113,7 +96,7 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
           <div className="sm:hidden flex items-center gap-x-2 text-neutral-700 dark:text-foreground">
             <div
               className="border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg"
-              onClick={handlePreviousWeek}
+              onClick={handlePrevious}
             >
               <ChevronLeft className="w-4 h-4" />
             </div>
@@ -125,14 +108,18 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
             </span>
             <div
               className="border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg"
-              onClick={handleNextWeek}
+              onClick={handleNext}
             >
               <ChevronRight className="w-4 h-4" />
             </div>
           </div>
         </div>
         <div className="space-y-2 h-full">
-          <EventContext calendarDates={calendarDates} sessionId={sessionId} />
+          {calendarMode === "month" ? (
+            <EventMonthView sessionId={sessionId} />
+          ) : (
+            <EventWeekView sessionId={sessionId} />
+          )}
         </div>
       </div>
     </div>
