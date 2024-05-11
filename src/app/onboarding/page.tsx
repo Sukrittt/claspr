@@ -1,7 +1,15 @@
 import { Suspense } from "react";
 
-import { Onboarding } from "@/components/server-components/Onboarding";
+import { SITE_DESCRIPTION, SITE_TITLE } from "@/config/site";
 import { LoadingScreen } from "@/components/skeletons/loading-screen";
+import { Onboarding } from "@/components/server-components/Onboarding";
+
+export async function generateMetadata() {
+  return {
+    title: SITE_TITLE.ONBOARDING,
+    description: SITE_DESCRIPTION.ONBOARDING,
+  };
+}
 
 export default function page() {
   return (
