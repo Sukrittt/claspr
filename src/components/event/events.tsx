@@ -43,11 +43,12 @@ export const Events: React.FC<EventsProps> = ({ date }) => {
   useEffect(() => {
     if (!activeDateObj || !overDate) return;
 
+    const activeRawDate = activeDateObj.rawDateColumn;
     const activeDate = activeDateObj.dateColumn;
     const activeEvent = activeDateObj.event;
 
     const isToBeAdded = isSameDay(date, overDate);
-    const isToBeFiltered = isSameDay(date, activeDate);
+    const isToBeFiltered = isSameDay(date, activeRawDate);
 
     if (isToBeFiltered) {
       setEvents((prev) => {

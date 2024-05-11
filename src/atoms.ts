@@ -44,6 +44,7 @@ export const activeDiscussionIdAtom = atom<string | null>(null);
 // For Calendar
 export const activeDateAtom = atom<{
   event: ExtendedEvent;
+  rawDateColumn: Date;
   dateColumn: Date;
 } | null>(null);
 
