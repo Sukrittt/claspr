@@ -68,7 +68,8 @@ export const EventSheet: React.FC<EventSheetProps> = ({
 
             <div className="flex items-center gap-x-2">
               <DrawerDescription>
-                {format(event.eventDate, "MMMM do, h:mm a")}
+                {format(new Date(event.rawEventDate), "MMMM do")},{" "}
+                {format(event.eventDate, "h:mm a")}
               </DrawerDescription>
 
               {event.assignment && (

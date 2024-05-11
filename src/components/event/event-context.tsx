@@ -61,7 +61,7 @@ export const EventContext: React.FC<EventContextProps> = ({
 
     setActiveDateObj({
       event: activeEvent,
-      dateColumn: activeEvent.eventDate,
+      dateColumn: new Date(activeEvent.rawEventDate),
     });
 
     setActiveEventEl(activeEvent);
