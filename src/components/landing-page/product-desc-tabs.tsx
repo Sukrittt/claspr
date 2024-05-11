@@ -57,7 +57,7 @@ export const ProductDescTabs = () => {
       icon: CalendarDays,
       description: "Plan, Organize, Manage. Stay Ahead.",
       activeIconClass: "text-orange-500",
-      videoSrc: "/scribe-docs.mp4", // change this to -> /scribe-calendar.mp4
+      videoSrc: "/scribe-calendar.mp4",
     },
   ];
 

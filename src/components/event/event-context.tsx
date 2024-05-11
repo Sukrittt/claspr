@@ -160,7 +160,7 @@ const DateColumn: React.FC<DateColumnProps> = ({ date, mode }) => {
         )}
         <div
           className={cn("absolute top-2 right-3", {
-            "top-[18px]": mode === "week",
+            "top-[17px]": mode === "week",
           })}
         >
           <span
