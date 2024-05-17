@@ -131,7 +131,7 @@ export const SectionItem = ({
               sectionId={section.id}
             />
             <p className="text-[13.5px]">
-              {getShortenedText(section.name, isMenu ? 15 : 25)}
+              {getShortenedText(section.name, isMenu ? 12 : 25)}
             </p>
           </div>
         </div>
@@ -183,7 +183,7 @@ export const SectionItem = ({
               />
             </div>
             <p className="text-[13.5px]">
-              {getShortenedText(section.name, isMenu ? 15 : 25)}
+              {getShortenedText(section.name, isMenu ? 12 : 25)}
             </p>
           </div>
         </div>

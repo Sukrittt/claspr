@@ -19,7 +19,7 @@ export const BreadCrumbs = () => {
 
   return (
     <Breadcrumb>
-      <BreadcrumbList>
+      <BreadcrumbList className="hidden md:flex">
         {breadcrumbs.map((breadcrumb, index) => {
           const isLastPath = index === breadcrumbs.length - 1;
 

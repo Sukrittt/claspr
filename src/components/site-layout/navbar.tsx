@@ -20,7 +20,7 @@ export const Navbar = async () => {
   if (!dbUser?.role) redirect("/onboarding");
 
   return (
-    <nav className="py-3 border-b border-slate-300 dark:border-border px-8 h-[6vh] flex items-center justify-between">
+    <nav className="py-3 border-b border-slate-300 dark:border-border px-4 sm:px-8 h-[6vh] flex items-center justify-between">
       <div className="flex items-center gap-x-4">
         {session && <HamburgMenu role={dbUser.role} session={session} />}
 

@@ -38,11 +38,11 @@ export const Assignment: React.FC<AssignmentProps> = async ({
       <BreadcrumbProvider
         breadcrumbs={[
           {
-            label: assignment.classRoom.title,
+            label: getShortenedText(assignment.classRoom.title, 25),
             href: `/c/${classroomId}`,
           },
           {
-            label: getShortenedText(assignment.title, 20),
+            label: getShortenedText(assignment.title, 25),
             href: `/c/${classroomId}/a/${assignmentId}`,
           },
         ]}

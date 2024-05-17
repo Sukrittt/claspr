@@ -115,11 +115,18 @@ export const getAssignmentSubmissions = privateProcedure
   .input(
     z.object({
       assignmentId: z.string(),
-      status: z.enum(["pending", "evaluated", "changes-requested"]),
+      status: z.enum([
+        "pending",
+        "evaluated",
+        "changes-requested",
+        "not-submitted",
+      ]),
     })
   )
   .query(async ({ input }) => {
     const { assignmentId, status } = input;
+
+    if (status === "not-submitted") return [];
 
     const submissionStatus = getSubmissionStatus(status);
 
@@ -279,6 +286,7 @@ export const unsubmit = privateProcedure
 const getSubmissionStatus = (status: FilterType): SubmissionStatus => {
   switch (status) {
     case "pending":
+    case "not-submitted":
       return "PENDING";
     case "changes-requested":
       return "CHANGES_REQUESTED";

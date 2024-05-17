@@ -9,7 +9,7 @@ export const SubmissionDetailsSkeleton = ({
 }) => {
   return (
     <ScrollArea className="h-[70vh]">
-      <div className="flex flex-col gap-y-2">
+      <div className="flex flex-col gap-y-2 pt-2 sm:pt-0">
         {Array.from({ length }).map((_, index) => (
           <SubmissionDetailCard key={index} />
         ))}
@@ -25,9 +25,9 @@ const SubmissionDetailCard = () => {
         <Skeleton className="h-8 w-8 rounded-md" />
         <div className="flex flex-col gap-y-1">
           <Skeleton className="h-3 w-[28%]" />
-          <div className="flex items-center gap-x-2.5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-y-2 sm:gap-y-0 sm:gap-x-2.5">
             <Skeleton className="h-3 w-36" />
-            <Separator orientation="vertical" className="h-4" />
+            <Separator orientation="vertical" className="h-4 hidden sm:block" />
             <Skeleton className="h-3 w-56" />
           </div>
         </div>

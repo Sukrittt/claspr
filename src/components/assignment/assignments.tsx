@@ -11,7 +11,6 @@ import { useMounted } from "@/hooks/use-mounted";
 import { useGetPartOfClass } from "@/hooks/class";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetAssignments } from "@/hooks/assignment";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserAvatar } from "@/components/custom/user-avatar";
 import { AssignmentSkeleton } from "@/components/skeletons/assignment-skeleton";
 
@@ -44,7 +43,7 @@ export const Assignments: React.FC<AssignmentProps> = ({
         {isLoading ? (
           <AssignmentSkeleton />
         ) : !assignments || assignments.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center gap-y-2">
+          <div className="h-[40vh] lg:h-full flex flex-col items-center justify-center gap-y-2">
             <ClipboardList className="h-10 w-10 text-neutral-800 dark:text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
               No assigments created yet.
@@ -52,7 +51,7 @@ export const Assignments: React.FC<AssignmentProps> = ({
           </div>
         ) : (
           <AnimatePresence mode="wait">
-            <ScrollArea className="h-[67vh]">
+            <div className="overflow-y-auto max-h-[67vh] lg:max-h-[77vh] no-scrollbar">
               <div className="flex flex-col gap-y-4">
                 {assignments?.map((assignment) => (
                   <AssignmentCardList
@@ -62,7 +61,7 @@ export const Assignments: React.FC<AssignmentProps> = ({
                   />
                 ))}
               </div>
-            </ScrollArea>
+            </div>
           </AnimatePresence>
         )}
       </motion.div>
