@@ -58,7 +58,7 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
     <div className="h-[94vh] w-screen">
       <div className="flex flex-col gap-y-12 py-8 px-10 h-full">
         <div className="flex flex-col gap-y-4">
-          <div className="flex flex-col sm:flex-row gap-y-4 sm:gap-y-0 sm:items-center sm:justify-between">
+          <div className="flex flex-col sm:flex-row gap-y-8 sm:gap-y-0 sm:items-center sm:justify-between">
             <h3 className="text-3xl text-center sm:text-left tracking-tight">
               {currentMonth}, {currentYear}
             </h3>
