@@ -179,13 +179,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({ authType }) => {
           )}
         />
         <Button type="submit" disabled={isLoading || isRegistering}>
-          {(isLoading || isRegistering) && (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+          {isLoading || isRegistering ? (
+            <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
+          ) : (
+            <>
+              {authType === "signin" ? "Sign in" : "Sign up"}
+              <span className="sr-only">
+                {authType === "signin" ? "Sign In" : "Sign Up"}
+              </span>
+            </>
           )}
-          {authType === "signin" ? "Sign in" : "Sign up"}
-          <span className="sr-only">
-            {authType === "signin" ? "Sign In" : "Sign Up"}
-          </span>
         </Button>
       </form>
     </Form>
