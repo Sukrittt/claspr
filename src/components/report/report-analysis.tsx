@@ -84,12 +84,12 @@ export const ReportAnalysis = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-end justify-between">
-        <div className="space-y-1">
-          <h1 className="font-extrabold text-2xl text-neutral-800 dark:text-foreground">
+      <div className="flex flex-col gap-y-4 sm:gap-y-0 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-0.5">
+          <h1 className="font-semibold text-xl text-neutral-800 dark:text-foreground">
             Report Analysis
           </h1>
-          <p className="text-muted-foreground tracking-tight">
+          <p className="text-muted-foreground tracking-tight text-sm">
             Analyze the reports submitted by the users.
           </p>
         </div>

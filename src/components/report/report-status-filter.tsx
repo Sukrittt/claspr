@@ -67,7 +67,7 @@ export const ReportStatusFilter = () => {
         setReportStatus(val as ReportStatus);
       }}
     >
-      <SelectTrigger className="w-[200px] font-medium text-[12px]">
+      <SelectTrigger className="w-full sm:w-[200px] font-medium text-[12px]">
         {mounted ? (
           <SelectValue placeholder="Filter assignments" />
         ) : (
