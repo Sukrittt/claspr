@@ -41,7 +41,7 @@ export const NoteSidebarSheet = ({ note }: { note: ExtendedNote }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <span className="xl:hidden absolute top-[13px] right-4 text-sm cursor-pointer dark:hover:text-neutral-400 hover:text-neutral-700 transition">
+        <span className="xl:hidden absolute top-[15px] right-4 text-sm cursor-pointer dark:hover:text-neutral-400 hover:text-neutral-700 transition">
           Manage
         </span>
       </SheetTrigger>

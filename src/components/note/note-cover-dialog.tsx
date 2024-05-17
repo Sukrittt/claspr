@@ -59,9 +59,9 @@ export const NoteCoverImagePicker: React.FC<NoteCoverImagePickerProps> = ({
         </div>
       </PopoverTrigger>
       <PopoverContent
-        className={cn("py-3.5 lg:w-[500px]", {
-          "ml-20": !hasCover,
-          "mr-5": hasCover,
+        className={cn("py-3.5 w-[350px] lg:w-[500px] lg:mr-5", {
+          "ml-0": !hasCover,
+          "mr-2": hasCover,
         })}
       >
         <Tabs defaultValue="gradient">

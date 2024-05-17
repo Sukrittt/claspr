@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { getShortenedText } from "@/lib/utils";
 import { serverClient } from "@/trpc/server-client";
 import { NoteLayout } from "@/components/note/note-layout";
 import { BreadcrumbProvider } from "@/components/providers/breadcrumb-provider";
@@ -16,7 +17,7 @@ export const Note = async ({ noteId }: { noteId: string }) => {
     <BreadcrumbProvider
       breadcrumbs={[
         {
-          label: note.title,
+          label: getShortenedText(note.title, 25),
           href: `/n/${noteId}`,
         },
       ]}

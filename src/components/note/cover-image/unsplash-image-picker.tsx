@@ -76,7 +76,7 @@ export const UnsplashImagePicker: React.FC<UnsplashImagePickerProps> = ({
           </p>
         ) : (
           <ScrollArea className="h-[300px]">
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {images.map((image) => (
                 <UnsplashImageCard
                   key={image.id}

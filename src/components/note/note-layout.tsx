@@ -13,6 +13,7 @@ export const NoteLayout: React.FC<NoteLayoutProps> = ({ note }) => {
       <NoteSidebarSheet note={note} />
 
       <NoteSidebar note={note} />
+
       <div className="flex-1">
         <NoteEditor note={note} />
       </div>
