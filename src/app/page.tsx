@@ -26,7 +26,9 @@ export default function Home() {
           Get Started
         </Link>
 
-        <ProductDescTabs />
+        <div className="hidden md:block">
+          <ProductDescTabs />
+        </div>
       </section>
 
       <Link
