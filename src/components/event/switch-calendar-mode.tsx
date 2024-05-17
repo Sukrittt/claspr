@@ -21,7 +21,7 @@ export const SwitchCalendarMode = () => {
       value={calendarMode}
       onValueChange={(val) => setCalendarMode(val as CalendarMode)}
     >
-      <SelectTrigger className="w-[100px]">
+      <SelectTrigger className="w-full sm:w-[100px]">
         {!mounted ? (
           <Skeleton className="h-3 w-3/4" />
         ) : (

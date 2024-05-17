@@ -106,9 +106,10 @@ export const EventContext: React.FC<EventContextProps> = ({
     >
       <div
         className={cn(
-          "flex place-items-center gap-4 overflow-x-auto no-scrollbar h-[95%]",
+          "flex place-items-center gap-4 overflow-x-auto no-scrollbar h-[95%] pb-4",
           {
-            "grid grid-cols-7": mode === "month",
+            "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-7":
+              mode === "month",
           }
         )}
       >
