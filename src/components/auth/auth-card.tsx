@@ -46,7 +46,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ authType }) => {
           </CardContent>
           <CardFooter className="flex flex-wrap items-center justify-between gap-2 px-0">
             <div className="text-sm text-muted-foreground">
-              <span className="mr-1 hidden sm:inline-block">
+              <span className="mr-1">
                 {authType === "signin"
                   ? "Don't have an account?"
                   : "Already have an account?"}
