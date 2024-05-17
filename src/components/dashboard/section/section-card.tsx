@@ -12,7 +12,7 @@ import { ChevronRight } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { cn } from "@/lib/utils";
+import { cn, getShortenedText } from "@/lib/utils";
 import { EmojiPopover } from "./emoji-popover";
 import { ContainerVariants } from "@/lib/motion";
 import { isCloseAllCreationToggle } from "@/atoms";
@@ -130,7 +130,9 @@ export const SectionItem = ({
               emojiUrl={section.emojiUrl}
               sectionId={section.id}
             />
-            <p className="text-[13.5px]">{section.name}</p>
+            <p className="text-[13.5px]">
+              {getShortenedText(section.name, isMenu ? 15 : 25)}
+            </p>
           </div>
         </div>
         {showClassrooms && (
@@ -180,7 +182,9 @@ export const SectionItem = ({
                 sectionType="CREATION"
               />
             </div>
-            <p className="text-[13.5px]">{section.name}</p>
+            <p className="text-[13.5px]">
+              {getShortenedText(section.name, isMenu ? 15 : 25)}
+            </p>
           </div>
         </div>
 
