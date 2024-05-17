@@ -19,17 +19,21 @@ export const BreadCrumbs = () => {
 
   return (
     <Breadcrumb>
-      <BreadcrumbList className="hidden md:flex">
+      <BreadcrumbList>
+        <BreadcrumbPage className="md:hidden">
+          <Link href="/dashboard">Dashboard</Link>
+        </BreadcrumbPage>
+
         {breadcrumbs.map((breadcrumb, index) => {
           const isLastPath = index === breadcrumbs.length - 1;
 
           return (
             <Fragment key={breadcrumb.href}>
-              <BreadcrumbItem>
+              <BreadcrumbItem className="hidden md:inline-flex">
                 {pathname === breadcrumb.href ? (
                   <BreadcrumbPage>{breadcrumb.label}</BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink asChild>
+                  <BreadcrumbLink asChild className="hidden md:block">
                     <Link
                       onClick={() =>
                         handleChangeBreadcrumb({
@@ -45,7 +49,7 @@ export const BreadCrumbs = () => {
                 )}
               </BreadcrumbItem>
               {!isLastPath && (
-                <BreadcrumbSeparator>
+                <BreadcrumbSeparator className="hidden md:block">
                   <span className="text-xs">/</span>
                 </BreadcrumbSeparator>
               )}
