@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 import { AuthForm } from "@/components/auth/auth-form";
 import { OAuthSignIn } from "@/components/auth/oauth-sign-in";
@@ -11,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { RandomizedQuote } from "./randomized-quote";
 
 interface AuthCardProps {
   authType: "signin" | "signup";
@@ -63,18 +63,7 @@ export const AuthCard: React.FC<AuthCardProps> = ({ authType }) => {
         </Card>
       </div>
       <div className="hidden flex-1 relative bg-primary dark:bg-neutral-800 xl:flex items-center justify-center">
-        <div className="space-y-2 w-1/2">
-          <div className="h-10 w-10 absolute -ml-10">
-            <Image src="/image.png" alt="quotes" fill priority />
-          </div>
-          <h1 className="text-7xl font-bold text-neutral-200 leading-tight">
-            I am not a teacher, but an awakener.
-          </h1>
-
-          <p className="text-neutral-200 dark:text-foreground font-medium">
-            ⁓ Robert Frost
-          </p>
-        </div>
+        <RandomizedQuote />
       </div>
     </div>
   );
