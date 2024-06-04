@@ -1,0 +1,144 @@
+/* DEFAULT STYLES */
+.mantine-Menu-dropdown {
+  left: auto !important;
+  right: 20px !important;
+}
+
+.nc-notifications-list-item-unread {
+  box-shadow: none !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+}
+
+.nc-notifications-list-item-unread::before {
+  background: none !important;
+}
+
+.nc-unseen-badge {
+  display: none !important;
+}
+
+.mantine-Menu-arrow {
+  border: none !important;
+  top: -4px !important;
+  left: auto !important;
+  right: 50px !important;
+  z-index: 0 !important;
+}
+
+.nc-header-mark-as-read {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.nc-footer {
+  display: none !important;
+}
+
+.nc-header {
+  gap: 5px !important;
+}
+
+.nc-header-back-button {
+  margin-left: 15px !important;
+}
+
+.nc-header-back-button svg {
+  margin-left: 0 !important;
+}
+
+.mantine-Accordion-control {
+  border-radius: 7px !important;
+}
+
+/* LIGHT THEME */
+.nc-header-title,
+.nc-notifications-list-item-title,
+.mantine-Menu-itemLabel,
+.mantine-Menu-itemIcon svg {
+  color: #262626 !important;
+}
+
+.nc-header-cog,
+.nc-header-mark-as-read,
+.nc-notifications-list-item-timestamp,
+.nc-preferences-item-channels {
+  color: #656d76 !important;
+}
+
+.nc-notifications-list-item,
+.mantine-Accordion-item,
+.mantine-UnstyledButton-root {
+  background: #fff !important;
+  transition: background 200ms !important;
+}
+
+.nc-notifications-list-item:hover,
+.mantine-Accordion-item:hover,
+.mantine-UnstyledButton-root:hover {
+  background: #f5f5f5 !important;
+}
+
+.mantine-Menu-arrow,
+.mantine-Menu-dropdown {
+  background: #fff !important;
+}
+
+.mantine-Menu-item {
+  z-index: 99999 !important;
+  background: #fff !important;
+  transition: background 200ms !important;
+  margin-bottom: 5px;
+}
+
+.mantine-Menu-item:hover {
+  background: #f5f5f5 !important;
+}
+
+/* DARK THEME */
+.dark .nc-layout-wrapper {
+  background: #202020 !important;
+}
+
+.dark .nc-header-title,
+.dark .nc-notifications-list-item-title,
+.dark .mantine-Menu-itemLabel,
+.dark .mantine-Menu-itemIcon svg {
+  color: #d6d6d6 !important;
+}
+
+.dark .nc-header-cog,
+.dark .nc-header-mark-as-read,
+.dark .nc-notifications-list-item-timestamp,
+.dark .nc-preferences-item-channels {
+  color: #636363 !important;
+}
+
+.dark .nc-notifications-list-item,
+.dark .mantine-Accordion-item,
+.dark .mantine-UnstyledButton-root {
+  background: #202020 !important;
+  transition: background 200ms !important;
+}
+
+.dark .nc-notifications-list-item:hover,
+.dark .mantine-Accordion-item:hover,
+.dark .mantine-UnstyledButton-root:hover {
+  background: #262626 !important;
+}
+
+.dark .mantine-Menu-arrow,
+.dark .mantine-Menu-dropdown {
+  background: #262626 !important;
+}
+
+.dark .mantine-Menu-item {
+  z-index: 99999 !important;
+  background: #262626 !important;
+  transition: background 200ms !important;
+  margin-bottom: 5px;
+}
+
+.dark .mantine-Menu-item:hover {
+  background: #202020 !important;
+}

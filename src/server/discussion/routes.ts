@@ -355,6 +355,7 @@ export const addReply = privateProcedure
       },
       select: {
         classroomId: true,
+        discussionType: true,
         creator: { select: { id: true, name: true, email: true } },
       },
     });
@@ -413,6 +414,7 @@ export const addReply = privateProcedure
           },
           payload: {
             message: `${ctx.username} replied to your reply.`,
+            url: `/c/${existingDiscussion.classroomId}?tab=discussions&active=${existingDiscussion.discussionType}&discussion=${discussionId}`,
           },
         });
       }
@@ -426,6 +428,7 @@ export const addReply = privateProcedure
           },
           payload: {
             message: `${ctx.username} replied to your discussion.`,
+            url: `/c/${existingDiscussion.classroomId}?tab=discussions&active=${existingDiscussion.discussionType}&discussion=${discussionId}`,
           },
         });
       }
