@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { MonitorX, Plus } from "lucide-react";
+import { Backpack, MonitorX, Plus } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import {
@@ -35,15 +35,15 @@ export const NoteSidebarSheet = ({ note }: { note: ExtendedNote }) => {
 
   const activeFolder = useMemo(
     () => folders?.find((folder) => folder.id === activeFolderId),
-    [activeFolderId, folders]
+    [activeFolderId, folders],
   );
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <span className="xl:hidden absolute top-[15px] right-4 text-sm cursor-pointer dark:hover:text-neutral-400 hover:text-neutral-700 transition">
-          Manage
-        </span>
+        <div className="absolute right-16 top-[15px] cursor-pointer transition hover:text-neutral-700 dark:hover:text-neutral-400 xl:hidden">
+          <Backpack className="h-4 w-4" />
+        </div>
       </SheetTrigger>
       <SheetContent className="flex flex-col gap-y-4">
         <SheetHeader className="space-y-1">
@@ -57,7 +57,7 @@ export const NoteSidebarSheet = ({ note }: { note: ExtendedNote }) => {
           {isLoading ? (
             <NoteSidebarSkeleton />
           ) : !folders || folders.length === 0 ? (
-            <div className="pt-20 flex flex-col items-center justify-center gap-y-2">
+            <div className="flex flex-col items-center justify-center gap-y-2 pt-20">
               <MonitorX className="h-10 w-10 text-neutral-800" />
               <div className="space-y-1 text-center">
                 <p className="text-sm text-muted-foreground">
@@ -91,7 +91,7 @@ export const NoteSidebarSheet = ({ note }: { note: ExtendedNote }) => {
                           <SelectItem key={folder.id} value={folder.id}>
                             {folder.name}
                           </SelectItem>
-                        )
+                        ),
                       )}
                     </SelectContent>
                   </Select>
@@ -121,7 +121,7 @@ export const NoteSidebarSheet = ({ note }: { note: ExtendedNote }) => {
 
         <CreateNoteDialog folderId={activeFolderId} noteType="PERSONAL">
           <Button type="button" className="mt-auto w-full">
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="mr-2 h-4 w-4" />
             Create Note
           </Button>
         </CreateNoteDialog>
