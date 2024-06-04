@@ -39,6 +39,7 @@ const enforcedUserIsAuthed = t.middleware(async ({ next }) => {
     ctx: {
       userId: session.user.id,
       email: session.user.email,
+      username: session.user.name,
     },
   });
 });

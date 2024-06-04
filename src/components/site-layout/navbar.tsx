@@ -6,6 +6,7 @@ import { getAuthSession } from "@/lib/auth";
 import { HamburgMenu } from "./hamburg-menu";
 import { BreadCrumbs } from "./bread-crumbs";
 import { buttonVariants } from "@/components/ui/button";
+import { NotificationBell } from "@/components/custom/notification-bell";
 
 export const Navbar = async () => {
   const session = await getAuthSession();
@@ -27,10 +28,12 @@ export const Navbar = async () => {
         <BreadCrumbs />
       </div>
 
-      {!session && (
+      {!session ? (
         <Link href="/sign-in" className={buttonVariants()}>
           Sign In
         </Link>
+      ) : (
+        <NotificationBell userId={session.user.id} />
       )}
     </nav>
   );

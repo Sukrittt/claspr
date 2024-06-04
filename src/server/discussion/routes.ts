@@ -6,6 +6,8 @@ import { DiscussionType, ReactionType } from "@prisma/client";
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
 import { getIsPartOfClassAuth } from "@/server/class/routes";
+import { NovuEvent, novu } from "@/lib/novu";
+import { listOfReactions } from "@/config/utils";
 
 const ReactionEnum = z.nativeEnum(ReactionType);
 const DiscussionEnum = z.nativeEnum(DiscussionType);
@@ -26,7 +28,7 @@ export const startDiscussion = privateProcedure
       title: z.string().min(3).max(100),
       content: z.any(),
       discussionType: DiscussionEnum,
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { classroomId, discussionType, title, content } = input;
@@ -98,7 +100,7 @@ export const getDiscussions = privateProcedure
     z.object({
       classroomId: z.string(),
       discussionType: DiscussionEnum,
-    })
+    }),
   )
   .query(async ({ input, ctx }) => {
     const { classroomId, discussionType } = input;
@@ -199,7 +201,7 @@ export const getDiscussionDetails = privateProcedure
     z.object({
       discussionId: z.string(),
       discussionType: DiscussionEnum,
-    })
+    }),
   )
   .query(async ({ input }) => {
     const { discussionId, discussionType } = input;
@@ -342,7 +344,7 @@ export const addReply = privateProcedure
       discussionId: z.string(),
       text: z.string().min(1).max(200),
       replyId: z.string().optional(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { discussionId, text, replyId } = input;
@@ -350,6 +352,10 @@ export const addReply = privateProcedure
     const existingDiscussion = await db.discussion.findFirst({
       where: {
         id: discussionId,
+      },
+      select: {
+        classroomId: true,
+        creator: { select: { id: true, name: true, email: true } },
       },
     });
 
@@ -362,7 +368,7 @@ export const addReply = privateProcedure
 
     const isPartOfClass = await getIsPartOfClassAuth(
       existingDiscussion.classroomId,
-      ctx.userId
+      ctx.userId,
     );
 
     if (!isPartOfClass) {
@@ -382,6 +388,49 @@ export const addReply = privateProcedure
       },
     });
 
+    if (replyId) {
+      const existingReply = await db.reply.findFirst({
+        where: { id: replyId },
+        select: {
+          creatorId: true,
+          creator: { select: { name: true, email: true } },
+        },
+      });
+
+      if (!existingReply) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "The reply you are looking for does not exist.",
+        });
+      }
+
+      if (existingReply.creatorId !== ctx.userId) {
+        await novu.trigger(NovuEvent.SCRIBE, {
+          to: {
+            subscriberId: existingReply.creatorId,
+            email: existingReply.creator.email ?? "",
+            firstName: existingReply.creator.name ?? "",
+          },
+          payload: {
+            message: `${ctx.username} replied to your reply.`,
+          },
+        });
+      }
+    } else {
+      if (existingDiscussion.creator.id !== ctx.userId) {
+        await novu.trigger(NovuEvent.SCRIBE, {
+          to: {
+            subscriberId: existingDiscussion.creator.id,
+            email: existingDiscussion.creator.email ?? "",
+            firstName: existingDiscussion.creator.name ?? "",
+          },
+          payload: {
+            message: `${ctx.username} replied to your discussion.`,
+          },
+        });
+      }
+    }
+
     return reply;
   });
 
@@ -399,14 +448,19 @@ export const addReaction = privateProcedure
       discussionId: z.string(),
       replyId: z.string().optional(),
       reactionType: ReactionEnum,
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { discussionId, reactionType, replyId } = input;
 
     const existingDiscussion = await db.discussion.findFirst({
       where: { id: discussionId },
-      select: { id: true, classroomId: true, discussionType: true },
+      select: {
+        id: true,
+        classroomId: true,
+        discussionType: true,
+        creator: { select: { id: true, name: true, email: true } },
+      },
     });
 
     if (!existingDiscussion) {
@@ -416,9 +470,24 @@ export const addReaction = privateProcedure
       });
     }
 
+    const existingReply = await db.reply.findFirst({
+      where: { id: replyId },
+      select: {
+        creatorId: true,
+        creator: { select: { name: true, email: true } },
+      },
+    });
+
+    if (!existingReply) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "The reply you are looking for does not exist.",
+      });
+    }
+
     const isPartOfClass = await getIsPartOfClassAuth(
       existingDiscussion.classroomId,
-      ctx.userId
+      ctx.userId,
     );
 
     if (!isPartOfClass) {
@@ -436,6 +505,10 @@ export const addReaction = privateProcedure
       },
       select: { id: true, reaction: true },
     });
+
+    const emoji = listOfReactions.find(
+      (reaction) => reaction.value === reactionType,
+    )?.emoji;
 
     // If the user has already reacted to the discussion or reply.
     if (existingReaction) {
@@ -463,6 +536,19 @@ export const addReaction = privateProcedure
             replyId: replyId ?? null,
           },
         });
+
+        if (existingReply.creatorId !== ctx.userId) {
+          await novu.trigger(NovuEvent.SCRIBE, {
+            to: {
+              subscriberId: existingReply.creatorId,
+              email: existingReply.creator.email ?? "",
+              firstName: existingReply.creator.name ?? "",
+            },
+            payload: {
+              message: `${ctx.username} reacted ${emoji ?? ""} to your reply.`,
+            },
+          });
+        }
       }
     }
     // If the user has not reacted to the discussion or reply.
@@ -475,6 +561,19 @@ export const addReaction = privateProcedure
           userId: ctx.userId,
         },
       });
+
+      if (existingReply.creatorId !== ctx.userId) {
+        await novu.trigger(NovuEvent.SCRIBE, {
+          to: {
+            subscriberId: existingReply.creatorId,
+            email: existingReply.creator.email ?? "",
+            firstName: existingReply.creator.name ?? "",
+          },
+          payload: {
+            message: `${ctx.username} reacted ${emoji ?? ""} to your reply.`,
+          },
+        });
+      }
     }
   });
 
@@ -494,7 +593,7 @@ export const editDiscussion = privateProcedure
       title: z.string().max(100).optional(),
       discussionType: DiscussionEnum.optional(),
       content: z.any().optional(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { discussionId, title, content, discussionType } = input;
@@ -537,7 +636,7 @@ export const removeDiscussion = privateProcedure
   .input(
     z.object({
       discussionId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { discussionId } = input;
@@ -577,7 +676,7 @@ export const editReply = privateProcedure
     z.object({
       replyId: z.string(),
       text: z.string().min(1).max(100),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { text, replyId } = input;
@@ -618,7 +717,7 @@ export const removeReply = privateProcedure
   .input(
     z.object({
       replyId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { replyId } = input;
@@ -656,7 +755,7 @@ export const getIsAnswered = privateProcedure
   .input(
     z.object({
       discussionId: z.string(),
-    })
+    }),
   )
   .query(async ({ input }) => {
     const { discussionId } = input;
@@ -706,7 +805,7 @@ export const toggleAnswerSelection = privateProcedure
   .input(
     z.object({
       replyId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input }) => {
     const { replyId } = input;
@@ -764,7 +863,7 @@ export const getHelpfulUsers = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .query(async ({ input }) => {
     const { classroomId } = input;
