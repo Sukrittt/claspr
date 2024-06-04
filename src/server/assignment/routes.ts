@@ -434,7 +434,7 @@ export const submitReview = privateProcedure
         firstName: existingSubmission.member.user.name ?? "",
       },
       payload: {
-        message: `Your submission for the assignment has been reviewed and marked as ${submissionStatus}.`,
+        message: `${ctx.username} has reviwed your work and marked it as ${submissionStatus}.`,
         url: `/c/${existingSubmission.assignment.classRoomId}/a/${assignmentId}`,
       },
     });
