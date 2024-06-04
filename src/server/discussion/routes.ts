@@ -96,7 +96,7 @@ export const startDiscussion = privateProcedure
           firstName: existingClassroom.teacher.name ?? "",
         },
         payload: {
-          message: `${ctx.username} started a discussion in your classroom.`,
+          message: `${ctx.username} started a new discussion in your classroom.`,
           url: `/c/${classroomId}?tab=discussions&active=${discussion.discussionType}&discussion=${discussion.id}`,
         },
       });
@@ -120,7 +120,7 @@ export const startDiscussion = privateProcedure
             firstName: member.user.name ?? "",
           },
           payload: {
-            message: `${ctx.username} started a discussion in your classroom.`,
+            message: `${ctx.username} started a new discussion in your classroom.`,
             url: `/c/${classroomId}?tab=discussions&active=${discussion.discussionType}&discussion=${discussion.id}`,
           },
         });
@@ -855,12 +855,19 @@ export const toggleAnswerSelection = privateProcedure
       replyId: z.string(),
     }),
   )
-  .mutation(async ({ input }) => {
+  .mutation(async ({ input, ctx }) => {
     const { replyId } = input;
 
     const existingReply = await db.reply.findFirst({
       where: {
         id: replyId,
+      },
+      select: {
+        selected: true,
+        discussionId: true,
+        discussion: { select: { classroomId: true } },
+        creatorId: true,
+        creator: { select: { name: true, email: true } },
       },
     });
 
@@ -898,6 +905,20 @@ export const toggleAnswerSelection = privateProcedure
         },
       },
     });
+
+    if (existingReply.creatorId !== ctx.userId) {
+      await novu.trigger(NovuEvent.SCRIBE, {
+        to: {
+          subscriberId: existingReply.creatorId,
+          email: existingReply.creator.email ?? "",
+          firstName: existingReply.creator.name ?? "",
+        },
+        payload: {
+          message: `${ctx.username} has ${existingReply.selected ? "selected" : "removed"} your reply as an answer.`,
+          url: `/c/${existingReply.discussion.classroomId}?tab=discussions&active=questionnaires&discussion=${existingReply.discussionId}`,
+        },
+      });
+    }
   });
 
 /**
