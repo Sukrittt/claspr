@@ -3,6 +3,7 @@ import { customAlphabet } from "nanoid";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
+import { NovuEvent, novu } from "@/lib/novu";
 import { privateProcedure } from "@/server/trpc";
 import { isTeacherAuthed } from "@/server/assignment/routes";
 
@@ -23,7 +24,7 @@ export const createClass = privateProcedure
       title: z.string().min(1).max(80),
       sectionId: z.string(),
       protectedDomain: z.string().optional(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { title, sectionId, protectedDomain } = input;
@@ -102,7 +103,7 @@ export const renameClass = privateProcedure
     z.object({
       title: z.string().min(1).max(80),
       classroomId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { classroomId, title } = input;
@@ -143,7 +144,7 @@ export const setNickName = privateProcedure
     z.object({
       title: z.string().min(1).max(80),
       membershipId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { membershipId, title } = input;
@@ -177,7 +178,7 @@ export const removeClass = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { classroomId } = input;
@@ -208,7 +209,7 @@ export const leaveClass = privateProcedure
   .input(
     z.object({
       membershipId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input }) => {
     const { membershipId } = input;
@@ -240,7 +241,7 @@ export const updateViewCount = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { classroomId } = input;
@@ -333,7 +334,7 @@ export const getClassesJoined = privateProcedure
   .input(
     z.object({
       isTeacher: z.boolean().optional().default(false),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const memberships = await db.membership.findMany({
@@ -370,7 +371,7 @@ export const joinClass = privateProcedure
     z.object({
       classCode: z.string(),
       sectionId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { classCode, sectionId } = input;
@@ -395,6 +396,7 @@ export const joinClass = privateProcedure
       where: {
         id: ctx.userId,
       },
+      select: { role: true },
     });
 
     if (!existingUser) {
@@ -409,6 +411,13 @@ export const joinClass = privateProcedure
     const existingClassRoom = await db.classRoom.findUnique({
       where: {
         classCode,
+      },
+      select: {
+        id: true,
+        title: true,
+        teacherId: true,
+        protectedDomain: true,
+        teacher: { select: { email: true, name: true } },
       },
     });
 
@@ -447,6 +456,49 @@ export const joinClass = privateProcedure
       },
     });
 
+    if (existingClassRoom.teacherId !== ctx.userId) {
+      await novu.trigger(NovuEvent.SCRIBE, {
+        to: {
+          subscriberId: existingClassRoom.teacherId,
+          email: existingClassRoom.teacher.email ?? "",
+          firstName: existingClassRoom.teacher.name ?? "",
+        },
+        payload: {
+          message: `${ctx.username} joined ${existingClassRoom.title}`,
+          url: `/c/${existingClassRoom.id}?tab=members`,
+        },
+      });
+    }
+
+    const classMembers = await db.membership.findMany({
+      where: {
+        classRoomId: existingClassRoom.id,
+        isTeacher: true,
+      },
+      select: {
+        userId: true,
+        user: { select: { email: true, name: true } },
+      },
+    });
+
+    const promises = classMembers.map(async (member) => {
+      if (member.userId !== ctx.userId) {
+        return novu.trigger(NovuEvent.SCRIBE, {
+          to: {
+            subscriberId: member.userId,
+            email: member.user.email ?? "",
+            firstName: member.user.name ?? "",
+          },
+          payload: {
+            message: `${ctx.username} joined ${existingClassRoom.title}`,
+            url: `/c/${existingClassRoom.id}?tab=members`,
+          },
+        });
+      }
+    });
+
+    await Promise.all(promises);
+
     return existingClassRoom;
   });
 
@@ -471,7 +523,7 @@ export const moveClass = privateProcedure
       sectionId: z.string(),
       containerType: z.enum(["CREATION", "MEMBERSHIP"]),
       classContainerId: z.string(), //id of classroom or membership which is being drag and dropped
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     if (input.containerType === "CREATION") {
@@ -508,7 +560,7 @@ export const getClassroom = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .query(async ({ input }) => {
     const { classroomId } = input;
@@ -563,7 +615,7 @@ export const addDescription = privateProcedure
     z.object({
       description: z.string().min(3).max(200),
       classroomId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { classroomId, description } = input;
@@ -595,7 +647,7 @@ export const getDescription = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .query(async ({ input }) => {
     const { classroomId } = input;
@@ -626,7 +678,7 @@ export const getPendingAssignments = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .query(async ({ input, ctx }) => {
     const { classroomId } = input;
@@ -690,7 +742,7 @@ export const getIsPartOfClass = privateProcedure
     z.object({
       classroomId: z.string(),
       isTeacher: z.boolean().optional(),
-    })
+    }),
   )
   .query(async ({ input, ctx }) => {
     const { classroomId, isTeacher } = input;
@@ -698,7 +750,7 @@ export const getIsPartOfClass = privateProcedure
     const isPartOfClass = await getIsPartOfClassAuth(
       classroomId,
       ctx.userId,
-      isTeacher
+      isTeacher,
     );
 
     return isPartOfClass;
@@ -797,7 +849,7 @@ export const getClassroomFolders = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const { classroomId } = input;
@@ -843,7 +895,7 @@ export const getClassroomFolders = privateProcedure
 export const getIsPartOfClassAuth = async (
   classroomId: string,
   userId: string,
-  isTeacher?: boolean
+  isTeacher?: boolean,
 ) => {
   let whereClause = {};
 
@@ -899,7 +951,7 @@ export const editClassroomDetails = privateProcedure
       title: z.string().min(3).max(200),
       domain: z.string().max(200).nullable(),
       description: z.string().max(200).nullable(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { classroomId, description, domain, title } = input;

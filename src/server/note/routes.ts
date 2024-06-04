@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { NoteType } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { NoteType } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { NovuEvent, novu } from "@/lib/novu";
 import { privateProcedure } from "@/server/trpc";
 import { getIsPartOfClassAuth } from "@/server/class/routes";
 
@@ -24,7 +25,7 @@ export const createNote = privateProcedure
       noteType: NoteTypeEnum,
       classroomId: z.string().optional(),
       folderId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { folderId, noteType, title, classroomId } = input;
@@ -33,7 +34,7 @@ export const createNote = privateProcedure
       const isTeacherInClass = await getIsPartOfClassAuth(
         classroomId,
         ctx.userId,
-        true
+        true,
       );
 
       if (!isTeacherInClass) {
@@ -81,6 +82,49 @@ export const createNote = privateProcedure
       },
     });
 
+    if (noteType === "CLASSROOM" && classroomId) {
+      const existingClassroom = await db.classRoom.findFirst({
+        where: { id: classroomId },
+        select: { title: true },
+      });
+
+      if (!existingClassroom) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "We couldn't find the classroom you are looking for.",
+        });
+      }
+
+      const classMembers = await db.membership.findMany({
+        where: {
+          classRoomId: classroomId,
+          isTeacher: false,
+        },
+        select: {
+          userId: true,
+          user: { select: { email: true, name: true } },
+        },
+      });
+
+      const promises = classMembers.map(async (member) => {
+        if (member.userId !== ctx.userId) {
+          return novu.trigger(NovuEvent.SCRIBE, {
+            to: {
+              subscriberId: member.userId,
+              email: member.user.email ?? "",
+              firstName: member.user.name ?? "",
+            },
+            payload: {
+              message: `${ctx.username} posted a new study note in ${existingClassroom.title}.`,
+              url: `/c/${classroomId}?tab=study-materials&folder=${note.folderId}&note=${note.id}`,
+            },
+          });
+        }
+      });
+
+      await Promise.all(promises);
+    }
+
     return note;
   });
 
@@ -100,7 +144,7 @@ export const editNote = privateProcedure
       title: z.string().max(200).optional(),
       emojiUrl: z.string().nullable().optional(),
       classroomId: z.string().optional().nullable(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { title, noteId, emojiUrl, classroomId } = input;
@@ -155,7 +199,7 @@ export const updateCover = privateProcedure
       noteId: z.string(),
       coverImage: z.string().optional(),
       gradientClass: z.string().optional(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { coverImage, noteId, gradientClass } = input;
@@ -199,7 +243,7 @@ export const getNoteCover = privateProcedure
   .input(
     z.object({
       noteId: z.string(),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const { noteId } = input;
@@ -222,7 +266,7 @@ export const removeNote = privateProcedure
   .input(
     z.object({
       noteId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { noteId } = input;
@@ -261,7 +305,7 @@ export const renameTopic = privateProcedure
     z.object({
       topicId: z.string(),
       name: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input }) => {
     const { name, topicId } = input;
@@ -304,7 +348,7 @@ export const getNote = privateProcedure
       noteId: z.string(),
       noteType: NoteTypeEnum,
       classroomId: z.string().optional(),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const { noteId, noteType, classroomId } = input;
@@ -365,7 +409,7 @@ export const getNoteByTitle = privateProcedure
       query: z.string(),
       noteType: NoteTypeEnum,
       classroomId: z.string().optional(),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const { query, noteType, classroomId } = input;
@@ -435,7 +479,7 @@ export const moveNote = privateProcedure
     z.object({
       noteId: z.string(),
       folderId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { noteId, folderId } = input;
@@ -478,7 +522,7 @@ export const updateContent = privateProcedure
     z.object({
       noteId: z.string(),
       content: z.any(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { noteId, content } = input;
@@ -521,7 +565,7 @@ export const attachTopic = privateProcedure
     z.object({
       noteId: z.string(),
       name: z.string(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { noteId, name } = input;
@@ -563,7 +607,7 @@ export const removeTopics = privateProcedure
     z.object({
       noteId: z.string(),
       topicIds: z.array(z.string()),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { noteId, topicIds } = input;
@@ -603,7 +647,7 @@ export const updateViewCount = privateProcedure
   .input(
     z.object({
       noteId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { noteId } = input;
@@ -625,7 +669,7 @@ export const updateViewCount = privateProcedure
     const isTeacher = await getIsPartOfClassAuth(
       existingNote.classroomId!, //When note type is not PERSONAL, classroomId WILL be defined.
       ctx.userId,
-      true
+      true,
     );
 
     if (isTeacher) return;

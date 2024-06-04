@@ -4,10 +4,10 @@ import { TRPCError } from "@trpc/server";
 import { DiscussionType, ReactionType } from "@prisma/client";
 
 import { db } from "@/lib/db";
-import { privateProcedure } from "@/server/trpc";
-import { getIsPartOfClassAuth } from "@/server/class/routes";
 import { NovuEvent, novu } from "@/lib/novu";
 import { listOfReactions } from "@/config/utils";
+import { privateProcedure } from "@/server/trpc";
+import { getIsPartOfClassAuth } from "@/server/class/routes";
 
 const ReactionEnum = z.nativeEnum(ReactionType);
 const DiscussionEnum = z.nativeEnum(DiscussionType);
@@ -36,6 +36,10 @@ export const startDiscussion = privateProcedure
     const existingClassroom = await db.classRoom.findFirst({
       where: {
         id: classroomId,
+      },
+      select: {
+        teacherId: true,
+        teacher: { select: { email: true, name: true } },
       },
     });
 
@@ -83,6 +87,47 @@ export const startDiscussion = privateProcedure
         },
       },
     });
+
+    if (existingClassroom.teacherId !== ctx.userId) {
+      await novu.trigger(NovuEvent.SCRIBE, {
+        to: {
+          subscriberId: existingClassroom.teacherId,
+          email: existingClassroom.teacher.email ?? "",
+          firstName: existingClassroom.teacher.name ?? "",
+        },
+        payload: {
+          message: `${ctx.username} started a discussion in your classroom.`,
+          url: `/c/${classroomId}?tab=discussions&active=${discussion.discussionType}&discussion=${discussion.id}`,
+        },
+      });
+    }
+    const classMembers = await db.membership.findMany({
+      where: {
+        classRoomId: classroomId,
+      },
+      select: {
+        userId: true,
+        user: { select: { email: true, name: true } },
+      },
+    });
+
+    const promises = classMembers.map(async (member) => {
+      if (member.userId !== ctx.userId) {
+        return novu.trigger(NovuEvent.SCRIBE, {
+          to: {
+            subscriberId: member.userId,
+            email: member.user.email ?? "",
+            firstName: member.user.name ?? "",
+          },
+          payload: {
+            message: `${ctx.username} started a discussion in your classroom.`,
+            url: `/c/${classroomId}?tab=discussions&active=${discussion.discussionType}&discussion=${discussion.id}`,
+          },
+        });
+      }
+    });
+
+    await Promise.all(promises);
 
     return discussion;
   });

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
+import { NovuEvent, novu } from "@/lib/novu";
 import { privateProcedure } from "@/server/trpc";
 
 /**
@@ -19,7 +20,7 @@ export const getComments = privateProcedure
       assignmentId: z.string(),
       isTeacher: z.boolean().optional().default(false),
       receiverId: z.string().optional(),
-    })
+    }),
   )
   .query(async ({ input, ctx }) => {
     const { assignmentId, isTeacher, receiverId } = input;
@@ -66,20 +67,30 @@ export const createComment = privateProcedure
       message: z.string().max(80),
       assignmentId: z.string(),
       receiverId: z.string().optional(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { assignmentId, message, receiverId } = input;
 
     const existingAssignment = await db.assignment.findFirst({
       where: { id: assignmentId },
+      select: {
+        classRoomId: true,
+        classRoom: {
+          select: {
+            title: true,
+            teacherId: true,
+            teacher: { select: { email: true, name: true } },
+          },
+        },
+      },
     });
 
     if (!existingAssignment) {
       throw new TRPCError({
         code: "NOT_FOUND",
         message:
-          "We couldn't find the assignment you are trying to commennt on.",
+          "We couldn't find the assignment you are trying to comment on.",
       });
     }
 
@@ -121,6 +132,79 @@ export const createComment = privateProcedure
         receiverId,
       },
     });
+
+    if (!receiverId) {
+      if (existingAssignment.classRoom.teacherId !== ctx.userId) {
+        await novu.trigger(NovuEvent.SCRIBE, {
+          to: {
+            subscriberId: existingAssignment.classRoom.teacherId,
+            email: existingAssignment.classRoom.teacher.email ?? "",
+            firstName: existingAssignment.classRoom.teacher.name ?? "",
+          },
+          payload: {
+            message: `${ctx.username} added a new comment to an assignment in ${existingAssignment.classRoom.title}`,
+            url: `/c/${existingAssignment.classRoomId}/a/${assignmentId}`,
+          },
+        });
+      }
+
+      const classMembers = await db.membership.findMany({
+        where: {
+          classRoomId: existingAssignment.classRoomId,
+        },
+        select: {
+          userId: true,
+          user: { select: { email: true, name: true } },
+        },
+      });
+
+      const promises = classMembers.map(async (member) => {
+        if (member.userId !== ctx.userId) {
+          return novu.trigger(NovuEvent.SCRIBE, {
+            to: {
+              subscriberId: member.userId,
+              email: member.user.email ?? "",
+              firstName: member.user.name ?? "",
+            },
+            payload: {
+              message: `${ctx.username} added a new comment to an assignment in ${existingAssignment.classRoom.title}`,
+              url: `/c/${existingAssignment.classRoomId}/a/${assignmentId}`,
+            },
+          });
+        }
+      });
+
+      await Promise.all(promises);
+
+      return;
+    }
+
+    const receiver = await db.user.findFirst({
+      where: { id: receiverId },
+      select: {
+        name: true,
+        email: true,
+      },
+    });
+
+    if (!receiver) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "We couldn't find the user you are trying to send a comment.",
+      });
+    }
+
+    await novu.trigger(NovuEvent.SCRIBE, {
+      to: {
+        subscriberId: receiverId,
+        email: receiver.email ?? "",
+        firstName: receiver.name ?? "",
+      },
+      payload: {
+        message: `${ctx.username} added a new comment to an assignment.`,
+        url: `/c/${existingAssignment.classRoomId}/a/${assignmentId}`,
+      },
+    });
   });
 
 /**
@@ -135,7 +219,7 @@ export const editComment = privateProcedure
     z.object({
       message: z.string().min(3).max(80),
       commentId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { commentId, message } = input;
@@ -178,7 +262,7 @@ export const removeComment = privateProcedure
   .input(
     z.object({
       commentId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { commentId } = input;

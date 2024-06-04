@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
+import { NovuEvent, novu } from "@/lib/novu";
 import { privateProcedure } from "@/server/trpc";
 import { EVENT_DATE_FORMAT } from "@/config/utils";
 
@@ -24,7 +25,7 @@ export const createAssignment = privateProcedure
       content: z.any(),
       dueDate: z.date().min(new Date()),
       lateSubmission: z.boolean().optional().default(false),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { classRoomId, lateSubmission, title, dueDate, content } = input;
@@ -40,7 +41,12 @@ export const createAssignment = privateProcedure
 
     const existingClassroom = await db.classRoom.findFirst({
       where: { id: classRoomId },
-      select: { id: true },
+      select: {
+        id: true,
+        title: true,
+        teacherId: true,
+        teacher: { select: { email: true, name: true } },
+      },
     });
 
     if (!existingClassroom) {
@@ -61,6 +67,48 @@ export const createAssignment = privateProcedure
         creatorId: ctx.userId,
       },
     });
+
+    if (existingClassroom.teacherId !== ctx.userId) {
+      await novu.trigger(NovuEvent.SCRIBE, {
+        to: {
+          subscriberId: existingClassroom.teacherId,
+          email: existingClassroom.teacher.email ?? "",
+          firstName: existingClassroom.teacher.name ?? "",
+        },
+        payload: {
+          message: `${ctx.username} posted a new assignment in ${existingClassroom.title}.`,
+          url: `/c/${existingClassroom.id}/a/${createdAssignment.id}`,
+        },
+      });
+    }
+
+    const classMembers = await db.membership.findMany({
+      where: {
+        classRoomId,
+      },
+      select: {
+        userId: true,
+        user: { select: { email: true, name: true } },
+      },
+    });
+
+    const promises = classMembers.map(async (member) => {
+      if (member.userId !== ctx.userId) {
+        return novu.trigger(NovuEvent.SCRIBE, {
+          to: {
+            subscriberId: member.userId,
+            email: member.user.email ?? "",
+            firstName: member.user.name ?? "",
+          },
+          payload: {
+            message: `${ctx.username} posted a new assignment in ${existingClassroom.title}.`,
+            url: `/c/${classRoomId}/a/${createdAssignment.id}`,
+          },
+        });
+      }
+    });
+
+    await Promise.all(promises);
 
     await db.event.create({
       data: {
@@ -93,7 +141,7 @@ export const editAssignmentDetails = privateProcedure
       title: z.string().max(80).optional(),
       dueDate: z.date().optional(),
       lateSubmission: z.boolean().optional().default(false).optional(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const {
@@ -176,7 +224,7 @@ export const getAssignments = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .query(async ({ input }) => {
     const { classroomId } = input;
@@ -239,7 +287,7 @@ export const getAssignment = privateProcedure
     z.object({
       assignmentId: z.string(),
       classroomId: z.string(),
-    })
+    }),
   )
   .query(async ({ input, ctx }) => {
     const { assignmentId, classroomId } = input;
@@ -314,7 +362,7 @@ export const submitReview = privateProcedure
       assignmentId: z.string(),
       message: z.string().max(80),
       submissionStatus: z.enum(["PENDING", "APPROVED", "CHANGES_REQUESTED"]),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { submissionId, assignmentId, submissionStatus, message } = input;
@@ -324,9 +372,18 @@ export const submitReview = privateProcedure
         id: submissionId,
         assignmentId,
       },
-      include: {
-        assignment: true,
-        member: true,
+      select: {
+        assignment: {
+          select: {
+            classRoomId: true,
+          },
+        },
+        member: {
+          select: {
+            userId: true,
+            user: { select: { name: true, email: true } },
+          },
+        },
       },
     });
 
@@ -369,6 +426,18 @@ export const submitReview = privateProcedure
     ];
 
     await Promise.all(promises);
+
+    await novu.trigger(NovuEvent.SCRIBE, {
+      to: {
+        subscriberId: existingSubmission.member.userId,
+        email: existingSubmission.member.user.email ?? "",
+        firstName: existingSubmission.member.user.name ?? "",
+      },
+      payload: {
+        message: `Your submission for the assignment has been reviewed and marked as ${submissionStatus}.`,
+        url: `/c/${existingSubmission.assignment.classRoomId}/a/${assignmentId}`,
+      },
+    });
   });
 
 /**
@@ -382,7 +451,7 @@ export const getNotSubmittedStudents = privateProcedure
   .input(
     z.object({
       assignmentId: z.string(),
-    })
+    }),
   )
   .query(async ({ input }) => {
     const { assignmentId } = input;
@@ -427,7 +496,7 @@ export const deleteAssignment = privateProcedure
   .input(
     z.object({
       assignmentId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { assignmentId } = input;
@@ -446,7 +515,7 @@ export const deleteAssignment = privateProcedure
 
     const isTeacher = await isTeacherAuthed(
       existingAssignment.classRoomId,
-      ctx.userId
+      ctx.userId,
     );
 
     if (!isTeacher) {

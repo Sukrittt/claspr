@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { ReportStatus, ReportType } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { NovuEvent, novu } from "@/lib/novu";
 import { privateProcedure } from "@/server/trpc";
 
 const ReportTypeEnum = z.nativeEnum(ReportType);
@@ -20,7 +21,7 @@ export const reportIssue = privateProcedure
     z.object({
       reportType: ReportTypeEnum,
       body: z.string().min(1).max(500),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { body, reportType } = input;
@@ -30,6 +31,30 @@ export const reportIssue = privateProcedure
         body,
         reportType,
         userId: ctx.userId,
+      },
+    });
+
+    const admin = await db.user.findFirst({
+      where: {
+        email: process.env.NEXT_PUBLIC_ADMIN_EMAIL,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+
+    if (!admin || admin.id === ctx.userId) return;
+
+    await novu.trigger(NovuEvent.SCRIBE, {
+      to: {
+        subscriberId: admin.id,
+        email: admin.email ?? "",
+        firstName: admin.name ?? "",
+      },
+      payload: {
+        message: `${ctx.username} created a new report - ${reportType}.`,
       },
     });
   });
@@ -46,7 +71,7 @@ export const updateReport = privateProcedure
     z.object({
       reportId: z.string(),
       reportStatus: ReportStatusEnum,
-    })
+    }),
   )
   .mutation(async ({ input }) => {
     const { reportId, reportStatus } = input;
@@ -91,7 +116,7 @@ export const removeReport = privateProcedure
   .input(
     z.object({
       reportId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input }) => {
     const { reportId } = input;
@@ -128,7 +153,7 @@ export const getReports = privateProcedure
   .input(
     z.object({
       reportStatus: ReportStatusEnum.optional(),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const { reportStatus } = input;

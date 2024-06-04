@@ -5,6 +5,7 @@ import { SubmissionStatus } from "@prisma/client";
 import { db } from "@/lib/db";
 import { FilterType } from "@/types";
 import { privateProcedure } from "@/server/trpc";
+import { NovuEvent, novu } from "@/lib/novu";
 
 /**
  * Creates a new submission for an assignment.
@@ -16,7 +17,7 @@ export const createSubmission = privateProcedure
   .input(
     z.object({
       assignmentId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { assignmentId } = input;
@@ -25,7 +26,18 @@ export const createSubmission = privateProcedure
       where: {
         id: assignmentId,
       },
-      select: { classRoomId: true, lateSubmission: true, dueDate: true },
+      select: {
+        classRoomId: true,
+        classRoom: {
+          select: {
+            teacherId: true,
+            title: true,
+            teacher: { select: { name: true, email: true } },
+          },
+        },
+        lateSubmission: true,
+        dueDate: true,
+      },
     });
 
     if (!assignment) {
@@ -93,6 +105,49 @@ export const createSubmission = privateProcedure
       },
     });
 
+    if (assignment.classRoom.teacherId !== ctx.userId) {
+      await novu.trigger(NovuEvent.SCRIBE, {
+        to: {
+          subscriberId: assignment.classRoom.teacherId,
+          email: assignment.classRoom.teacher.email ?? "",
+          firstName: assignment.classRoom.teacher.name ?? "",
+        },
+        payload: {
+          message: `${ctx.username} submitted work for ${assignment.classRoom.title}`,
+          url: `/c/${assignment.classRoomId}/a/${assignmentId}`,
+        },
+      });
+    }
+
+    const classMembers = await db.membership.findMany({
+      where: {
+        classRoomId: assignment.classRoomId,
+        isTeacher: true,
+      },
+      select: {
+        userId: true,
+        user: { select: { email: true, name: true } },
+      },
+    });
+
+    const promises = classMembers.map(async (member) => {
+      if (member.userId !== ctx.userId) {
+        return novu.trigger(NovuEvent.SCRIBE, {
+          to: {
+            subscriberId: member.userId,
+            email: member.user.email ?? "",
+            firstName: member.user.name ?? "",
+          },
+          payload: {
+            message: `${ctx.username} submitted work for ${assignment.classRoom.title}`,
+            url: `/c/${assignment.classRoomId}/a/${assignmentId}`,
+          },
+        });
+      }
+    });
+
+    await Promise.all(promises);
+
     await db.media.updateMany({
       where: {
         assignmentId,
@@ -121,7 +176,7 @@ export const getAssignmentSubmissions = privateProcedure
         "changes-requested",
         "not-submitted",
       ]),
-    })
+    }),
   )
   .query(async ({ input }) => {
     const { assignmentId, status } = input;
@@ -162,7 +217,7 @@ export const getSubmission = privateProcedure
   .input(
     z.object({
       assignmentId: z.string(),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const { assignmentId } = input;
@@ -190,7 +245,7 @@ export const getAllSubmissions = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const { classroomId } = input;
@@ -243,7 +298,7 @@ export const unsubmit = privateProcedure
     z.object({
       assignmentId: z.string(),
       submissionId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input }) => {
     const { assignmentId, submissionId } = input;

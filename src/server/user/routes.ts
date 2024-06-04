@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server";
 
 import { db } from "@/lib/db";
 import { privateProcedure, publicProcedure } from "@/server/trpc";
+import { NovuEvent, novu } from "@/lib/novu";
 
 const RoleEnum = z.nativeEnum(UserType);
 
@@ -22,7 +23,7 @@ export const registerUser = publicProcedure
       name: z.string(),
       email: z.string().email(),
       password: z.string().min(8),
-    })
+    }),
   )
   .mutation(async ({ input }) => {
     const { email, name, password } = input;
@@ -64,7 +65,7 @@ export const getUserRoleByEmail = publicProcedure
   .input(
     z.object({
       email: z.string().email(),
-    })
+    }),
   )
   .mutation(async ({ input }) => {
     const { email } = input;
@@ -99,7 +100,7 @@ export const onBoardUser = privateProcedure
       university: z.string().min(3, {
         message: "University name should be atleast 3 characters long.",
       }),
-    })
+    }),
   )
   .mutation(async ({ input, ctx }) => {
     const { role, university } = input;
@@ -169,6 +170,17 @@ export const onBoardUser = privateProcedure
       },
     });
 
+    await novu.trigger(NovuEvent.SCRIBE, {
+      to: {
+        subscriberId: ctx.userId,
+        email: ctx.email ?? "",
+        firstName: ctx.username ?? "",
+      },
+      payload: {
+        message: `Welcome to Scribe! You have successfully onboarded as a ${role}.`,
+      },
+    });
+
     const createdFolder = await db.folder.create({
       data: {
         name: "New Folder",
@@ -198,7 +210,7 @@ export const deleteAccount = publicProcedure
   .input(
     z.object({
       userId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ input }) => {
     const { userId } = input;

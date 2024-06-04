@@ -38,7 +38,7 @@ const universityInputSchema = z.object({
       (val) => {
         return val.trim().length > 0;
       },
-      { message: "University name cannot be empty" }
+      { message: "University name cannot be empty" },
     ),
 });
 
@@ -57,9 +57,7 @@ export const UniversityInput: React.FC<UniversityInputProps> = ({ role }) => {
 
   const { mutate: onBoardUser, isLoading } = trpc.user.onBoardUser.useMutation({
     onSuccess: () => {
-      toast.success("Welcome to Scribe", {
-        position: "bottom-center",
-      });
+      toast.success("Welcome to Scribe");
       router.push("/dashboard");
     },
   });
@@ -83,7 +81,7 @@ export const UniversityInput: React.FC<UniversityInputProps> = ({ role }) => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="space-y-4 w-full sm:w-auto sm:min-w-[400px]"
+        className="w-full space-y-4 sm:w-auto sm:min-w-[400px]"
         variants={ContainerVariants}
         initial="initial"
         animate="animate"
@@ -99,11 +97,11 @@ export const UniversityInput: React.FC<UniversityInputProps> = ({ role }) => {
               name="university"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-800 dark:text-gray-200 text-sm">
+                  <FormLabel className="text-sm text-gray-800 dark:text-gray-200">
                     {formLabel}
                   </FormLabel>
                   <FormControl>
-                    <div className="flex gap-x-2 items-center">
+                    <div className="flex items-center gap-x-2">
                       <Input
                         type="text"
                         className="h-[30px] text-[13px]"
