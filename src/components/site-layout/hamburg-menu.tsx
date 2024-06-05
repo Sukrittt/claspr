@@ -7,25 +7,26 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { CopyMinus, Menu } from "lucide-react";
 
-import { Logout } from "./logout";
-import { trpc } from "@/trpc/client";
-import { getShortenedText } from "@/lib/utils";
-import { UserAvatar } from "@/components/custom/user-avatar";
-import { CustomTooltip } from "@/components/custom/custom-tooltip";
-import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { SettingsDialog } from "@/components/settings/dialog/settings-dialog";
-import { MembershipContext } from "@/components/dashboard/section/membership-context";
-import { CreatedClassContext } from "@/components/dashboard/section/created-class-context";
-import { CreateSectionDialog } from "@/components/dashboard/section/dialog/create-section-dialog";
 import {
   createdClassSections,
   isCloseAllCreationToggle,
   isCloseAllMembershipToggle,
   joinedClassSections,
 } from "@/atoms";
+import { Logout } from "./logout";
+import { trpc } from "@/trpc/client";
+import { getShortenedText } from "@/lib/utils";
+import { Credits } from "@/components/custom/credits";
+import { UserAvatar } from "@/components/custom/user-avatar";
+import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { SectionSkeleton } from "@/components/skeletons/section-skeleton";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { SettingsDialog } from "@/components/settings/dialog/settings-dialog";
 import { ShortcutsDialog } from "@/components/settings/dialog/shortcuts-dialog";
 import { BugReportDialog } from "@/components/settings/dialog/bug-report-dialog";
+import { MembershipContext } from "@/components/dashboard/section/membership-context";
+import { CreatedClassContext } from "@/components/dashboard/section/created-class-context";
+import { CreateSectionDialog } from "@/components/dashboard/section/dialog/create-section-dialog";
 
 interface HamburgMenuProps {
   role: UserType;
@@ -82,7 +83,7 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
       <SheetTrigger asChild>
         <div>
           <CustomTooltip text="Ctrl + \">
-            <div className="text-neutral-700 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-800 cursor-pointer p-1 rounded-md transition">
+            <div className="cursor-pointer rounded-md p-1 text-neutral-700 transition hover:bg-neutral-200 dark:text-neutral-200 dark:hover:bg-neutral-800">
               <Menu className="h-4 w-4" />
               <span className="sr-only">Toggle Menu</span>
             </div>
@@ -91,9 +92,9 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="flex flex-col gap-y-4 pl-3 w-3/4 md:w-[300px]"
+        className="flex w-3/4 flex-col gap-y-4 pl-3 md:w-[300px]"
       >
-        <div className="pt-0 flex items-center gap-x-2">
+        <div className="flex items-center gap-x-2 pt-0">
           <UserAvatar user={session.user} className="h-6 w-6" />
 
           <div className="text-[13px] tracking-tight">
@@ -107,22 +108,22 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
         {role === "TEACHER" && (
           <div className="space-y-2 pt-2">
             <div className="flex items-center justify-between">
-              <p className="text-xs tracking-tighter font-semibold text-neutral-700">
+              <p className="text-xs font-semibold tracking-tighter text-neutral-700">
                 Your Sections
               </p>
               <div className="flex items-center gap-x-2">
                 <CustomTooltip text="Collapse All">
                   <div
-                    className="p-1 rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                    className="cursor-pointer rounded-md p-1 transition hover:bg-neutral-200 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                     onClick={() => setCloseAllCreationToggle((prev) => !!!prev)}
                   >
-                    <CopyMinus className="w-3.5 h-3.5" />
+                    <CopyMinus className="h-3.5 w-3.5" />
                   </div>
                 </CustomTooltip>
                 <CreateSectionDialog sectionType="CREATION" />
               </div>
             </div>
-            <div className="overflow-y-auto no-scrollbar max-h-[30vh]">
+            <div className="no-scrollbar max-h-[30vh] overflow-y-auto">
               <div className="flex flex-col gap-y-2">
                 {!sectionsForCreatedClassrooms ||
                 sectionsForCreatedClassrooms.length == 0 ? (
@@ -137,23 +138,23 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
 
         <div className="space-y-2 pt-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs tracking-tighter font-semibold text-neutral-700">
+            <p className="text-xs font-semibold tracking-tighter text-neutral-700">
               Your Sections
             </p>
             <div className="flex items-center gap-x-2">
               <CustomTooltip text="Collapse All">
                 <div
-                  className="p-1 rounded-md cursor-pointer hover:text-gray-700 dark:text-gray-300 transition hover:bg-neutral-200 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+                  className="cursor-pointer rounded-md p-1 transition hover:bg-neutral-200 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
                   onClick={() => setCloseAllMembershipToggle((prev) => !!!prev)}
                 >
-                  <CopyMinus className="w-3.5 h-3.5" />
+                  <CopyMinus className="h-3.5 w-3.5" />
                 </div>
               </CustomTooltip>
               <CreateSectionDialog sectionType="MEMBERSHIP" />
             </div>
           </div>
 
-          <div className="overflow-y-auto no-scrollbar max-h-[30vh]">
+          <div className="no-scrollbar max-h-[30vh] overflow-y-auto">
             <div className="flex flex-col gap-y-2">
               {!sectionsForJoinedClassrooms ||
               sectionsForJoinedClassrooms.length == 0 ? (

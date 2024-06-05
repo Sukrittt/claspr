@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 import { trpc } from "@/trpc/client";
 
@@ -15,7 +16,7 @@ export const useCreateConversation = () => {
 export const useConversation = (
   classroomId?: string,
   noteId?: string,
-  limit?: number
+  limit?: number,
 ) => {
   return trpc.conversation.getPreviousConversations.useQuery({
     classroomId,
@@ -41,7 +42,7 @@ export const useClearConversation = () => {
     onError: (error, { classroomId }, ctx) => {
       utils.conversation.getPreviousConversations.setData(
         { classroomId },
-        ctx?.prevConversations
+        ctx?.prevConversations,
       );
 
       toast.error(error.message);
@@ -73,7 +74,7 @@ export const useRemoveConversation = ({
       utils.conversation.getPreviousConversations.setData(
         { classroomId },
         (prev) =>
-          prev?.filter((conversation) => conversation.id !== conversationId)
+          prev?.filter((conversation) => conversation.id !== conversationId),
       );
 
       return { prevConversations };
@@ -83,7 +84,7 @@ export const useRemoveConversation = ({
 
       utils.conversation.getPreviousConversations.setData(
         { classroomId },
-        ctx?.prevConversations
+        ctx?.prevConversations,
       );
     },
     onSettled: () => {
@@ -112,22 +113,32 @@ export const useGiveFeedback = ({ classroomId }: { classroomId: string }) => {
                   feedback:
                     conversation.feedback === feedback ? null : feedback,
                 }
-              : conversation
-          )
+              : conversation,
+          ),
       );
 
       return { prevConversations };
     },
-    onError: (error, data, ctx) => {
+    onError: (error, _, ctx) => {
       toast.error(error.message);
 
       utils.conversation.getPreviousConversations.setData(
         { classroomId },
-        ctx?.prevConversations
+        ctx?.prevConversations,
       );
     },
     onSettled: () => {
       utils.conversation.getPreviousConversations.invalidate({ classroomId });
+    },
+  });
+};
+
+export const useUpdateCredits = () => {
+  const router = useRouter();
+
+  return trpc.conversation.updateCredits.useMutation({
+    onSuccess: () => {
+      router.refresh();
     },
   });
 };

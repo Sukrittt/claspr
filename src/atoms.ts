@@ -63,3 +63,7 @@ export const breadcrumbsAtom = atom<Breadcrumb[]>([
     href: "/dashboard",
   },
 ]);
+
+// For Credits
+export const creditsAtom = atom<number | null>(null);
+export const creditModalAtom = atom(false);

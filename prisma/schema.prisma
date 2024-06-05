@@ -55,6 +55,7 @@ model User {
 
   role       UserType?
   university String?
+  credits    Int?      @default(10)
 
   createdAt DateTime @default(now())
 
@@ -75,6 +76,22 @@ model User {
   notes           Note[]
   events          Event[]
   reports         Report[]
+  payments        Payment[]
+}
+
+model Payment {
+  id String @id @unique @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  razorpay_payment_id String
+  razorpay_order_id   String
+  razorpay_signature  String
+
+  amount    Int
+  credits   Int
+  createdAt DateTime @default(now())
 }
 
 enum SectionType {

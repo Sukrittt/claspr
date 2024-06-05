@@ -8,6 +8,7 @@ import { reportRouter } from "@/server/routers/report";
 import { folderRouter } from "@/server/routers/folder";
 import { sectionRouter } from "@/server/routers/section";
 import { commentRouter } from "@/server/routers/comment";
+import { paymentRouter } from "@/server/routers/payment";
 import { discussionRouter } from "@/server/routers/discussion";
 import { submissionRouter } from "@/server/routers/submission";
 import { assignmentRouter } from "@/server/routers/assignment";
@@ -27,6 +28,7 @@ export const appRouter = createTRPCRouter({
   folder: folderRouter,
   note: noteRouter,
   report: reportRouter,
+  payment: paymentRouter,
 });
 
 export type AppRouter = typeof appRouter;

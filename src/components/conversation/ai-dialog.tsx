@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { useAtom } from "jotai";
 import Markdown from "react-markdown";
 import { ClassRoom } from "@prisma/client";
 import { useEffect, useState } from "react";
@@ -14,20 +15,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ExtendedClassroomDetails } from "@/types";
-import { cn, getFilteredResponse } from "@/lib/utils";
-import { PromptValidatorType } from "@/types/validator";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   AiPersonal,
   previousConversationTrainingText,
   type AiPersonalType,
 } from "@/config/ai";
+import {
+  useConversation,
+  useCreateConversation,
+  useUpdateCredits,
+} from "@/hooks/conversation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ExtendedClassroomDetails } from "@/types";
+import { cn, getFilteredResponse } from "@/lib/utils";
+import { creditModalAtom, creditsAtom } from "@/atoms";
+import { PromptValidatorType } from "@/types/validator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { AiDialogVariants, ContainerVariants } from "@/lib/motion";
-import { useConversation, useCreateConversation } from "@/hooks/conversation";
 
 interface ClassAIDialogProps {
   classroom:
@@ -50,6 +56,9 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
 
+  const [credits] = useAtom(creditsAtom);
+  const [, setCreditModal] = useAtom(creditModalAtom);
+
   const [input, setInput] = useState("");
   const [res, setRes] = useState("");
   const [prevInput, setPrevInput] = useState("");
@@ -62,6 +71,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
     useConversation(classroom.id, undefined, 30);
 
   const { mutate: createConversation } = useCreateConversation();
+  const { mutate: updateCredits } = useUpdateCredits();
 
   const { mutate: handleSubmission, isLoading } = useMutation({
     mutationFn: async (userQuery: string) => {
@@ -153,6 +163,9 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           answer: accResponse,
         });
 
+        // Update the credits
+        updateCredits({ credits: 1, updateType: "SUBTRACT" });
+
         setIsGenerating(false);
       }
     },
@@ -160,6 +173,17 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
 
   const handleAskAI = (query: string) => {
     if (isGenerating) return;
+
+    if (credits === 0) {
+      toast.error(
+        "You don't have enough credits to use this feature. Please purchase more credits.",
+      );
+
+      setOpen(false);
+      setCreditModal(true);
+
+      return;
+    }
 
     setRes("");
     setPrevInput("");
@@ -210,12 +234,12 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           initial="initial"
           animate="animate"
           exit="exit"
-          className="absolute bottom-6 right-8 group"
+          className="group absolute bottom-6 right-8"
         >
           <CustomTooltip text="Ask AI">
             <div>
-              <Button className="rounded-full p-2 h-10 w-10 shadow-lg">
-                <Sparkles className="w-[18px] h-[18px] group-hover:rotate-90 transition duration-300 dark:text-neutral-800" />
+              <Button className="h-10 w-10 rounded-full p-2 shadow-lg">
+                <Sparkles className="h-[18px] w-[18px] transition duration-300 group-hover:rotate-90 dark:text-neutral-800" />
               </Button>
             </div>
           </CustomTooltip>
@@ -237,32 +261,32 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
           >
             <ScrollArea
               className={cn(
-                "transition-[height] opacity-0 border border-border rounded-md relative",
+                "relative rounded-md border border-border opacity-0 transition-[height]",
                 {
                   "h-[300px] p-5 opacity-100": res.length !== 0,
                   "h-0 cursor-default": res.length === 0,
-                }
+                },
               )}
             >
               <div
                 onClick={() => handleCopyOutput(res)}
-                className="cursor-pointer group"
+                className="group cursor-pointer"
               >
-                <h3 className="font-semibold text-[17px] tracking-tight pb-1.5">
+                <h3 className="pb-1.5 text-[17px] font-semibold tracking-tight">
                   {prevInput}
                 </h3>
-                <div className="opacity-100 lg:opacity-0 group-hover:opacity-100 transition flex gap-x-3 items-center absolute bottom-3 right-3">
+                <div className="absolute bottom-3 right-3 flex items-center gap-x-3 opacity-100 transition group-hover:opacity-100 lg:opacity-0">
                   <CustomTooltip text="Click to copy">
                     {copied ? (
-                      <Check className="w-3 h-3 hover:text-gray-800 dark:hover:text-foreground transition" />
+                      <Check className="h-3 w-3 transition hover:text-gray-800 dark:hover:text-foreground" />
                     ) : (
-                      <Copy className="w-3 h-3 hover:text-gray-800 dark:hover:text-foreground transition" />
+                      <Copy className="h-3 w-3 transition hover:text-gray-800 dark:hover:text-foreground" />
                     )}
                   </CustomTooltip>
                   {moveToEditor && !isLoading && (
                     <CustomTooltip text="Move to editor">
                       <ArrowUpLeft
-                        className="w-4 h-4 hover:text-gray-800 dark:hover:text-foreground transition"
+                        className="h-4 w-4 transition hover:text-gray-800 dark:hover:text-foreground"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleMoveToEditor(res);
@@ -282,9 +306,9 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    className="space-y-1 mt-4"
+                    className="mt-4 space-y-1"
                   >
-                    <h5 className="font-semibold text-sm text-neutral-800 dark:text-foreground tracking-tight">
+                    <h5 className="text-sm font-semibold tracking-tight text-neutral-800 dark:text-foreground">
                       Next Up
                     </h5>
                     <p className="text-[15px] text-gray-800 dark:text-neutral-400">
@@ -294,7 +318,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
                           setInput(followUpQuestion);
                           handleAskAI(followUpQuestion);
                         }}
-                        className="font-semibold text-muted-foreground dark:text-neutral-300 text-sm hover:underline underline-offset-4 cursor-pointer"
+                        className="cursor-pointer text-sm font-semibold text-muted-foreground underline-offset-4 hover:underline dark:text-neutral-300"
                       >
                         Continue.
                       </span>
@@ -312,7 +336,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
         >
           <div className="flex gap-x-2">
             <Input
-              className="focus-visible:ring-transparent h-8"
+              className="h-8 focus-visible:ring-transparent"
               placeholder="Type your prompt here."
               disabled={isLoading || isGenerating}
               value={input}
@@ -334,7 +358,7 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
               onClick={() => handleAskAI(input)}
             >
               {isLoading ? (
-                <div className="h-5 w-6 flex items-center justify-center">
+                <div className="flex h-5 w-6 items-center justify-center">
                   <Loader2 className="h-3 w-3 animate-spin" />
                 </div>
               ) : (

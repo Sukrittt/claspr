@@ -1,10 +1,9 @@
 import { z } from "zod";
-
 import { TRPCError } from "@trpc/server";
+import { FEEDBACK_STATUS } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { privateProcedure } from "@/server/trpc";
-import { FEEDBACK_STATUS } from "@prisma/client";
 
 /**
  * To facilitate improved context for future conversations, initiate a new dialogue between the user and the AI.
@@ -22,7 +21,7 @@ export const createConversation = privateProcedure
       answer: z.string(),
       classroomId: z.string().optional(),
       noteId: z.string().optional(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { prompt, classroomId, answer, noteId } = input;
@@ -52,7 +51,7 @@ export const getPreviousConversations = privateProcedure
       classroomId: z.string().optional(),
       noteId: z.string().optional(),
       limit: z.optional(z.number()),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const { classroomId, noteId, limit } = input;
@@ -88,7 +87,7 @@ export const clearConversation = privateProcedure
   .input(
     z.object({
       classroomId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { classroomId } = input;
@@ -124,7 +123,7 @@ export const removeConversation = privateProcedure
   .input(
     z.object({
       conversationId: z.string(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { conversationId } = input;
@@ -163,7 +162,7 @@ export const giveFeedback = privateProcedure
     z.object({
       conversationId: z.string(),
       feedback: FeedbackEnum,
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const { conversationId, feedback } = input;
@@ -189,6 +188,33 @@ export const giveFeedback = privateProcedure
       },
       data: {
         feedback: removeVote ? null : feedback,
+      },
+    });
+  });
+
+/**
+ * To update the credits for the user based on the type of update provided
+ *
+ * @param {object} input - The input parameters for creating a new conversation.
+ * @param {string} input.credits - The number of credits to update for the user
+ * @param {string} input.updateType - The type of update to perform on the credits. Can be "ADD" or "SUBTRACT".
+ */
+export const updateCredits = privateProcedure
+  .input(
+    z.object({
+      credits: z.number(),
+      updateType: z.enum(["ADD", "SUBTRACT"]),
+    }),
+  )
+  .mutation(async ({ ctx, input }) => {
+    const { credits, updateType } = input;
+
+    await db.user.update({
+      where: { id: ctx.userId },
+      data: {
+        credits: {
+          [updateType === "ADD" ? "increment" : "decrement"]: credits,
+        },
       },
     });
   });

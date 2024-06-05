@@ -238,7 +238,7 @@ export const Editor: React.FC<EditorProps> = ({
 
   if (!mounted) {
     return (
-      <p className="pl-4 text-muted-foreground text-sm">Just a moment...</p>
+      <p className="pl-4 text-sm text-muted-foreground">Just a moment...</p>
     );
   }
 
@@ -252,7 +252,7 @@ export const Editor: React.FC<EditorProps> = ({
         animate="animate"
         exit="exit"
         id="editor"
-        className={cn("px-4 typography-styles max-w-full", {
+        className={cn("typography-styles max-w-full px-4", {
           "pl-0 lg:pl-12": isNotePage,
         })}
       />

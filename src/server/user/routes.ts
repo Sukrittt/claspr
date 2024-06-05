@@ -6,6 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { db } from "@/lib/db";
 import { privateProcedure, publicProcedure } from "@/server/trpc";
 import { NovuEvent, novu } from "@/lib/novu";
+import { pricingStrategy } from "@/config/ai";
 
 const RoleEnum = z.nativeEnum(UserType);
 
@@ -164,6 +165,7 @@ export const onBoardUser = privateProcedure
       data: {
         role,
         university,
+        credits: pricingStrategy[role].freeCredits,
       },
       where: {
         id: ctx.userId,
