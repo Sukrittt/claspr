@@ -15,3 +15,7 @@ export const usePayment = () => {
     },
   });
 };
+
+export const usePaymentHistory = () => {
+  return trpc.payment.getPaymentHistory.useQuery();
+};

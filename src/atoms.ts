@@ -67,3 +67,4 @@ export const breadcrumbsAtom = atom<Breadcrumb[]>([
 // For Credits
 export const creditsAtom = atom<number | null>(null);
 export const creditModalAtom = atom(false);
+export const paymentHistoryModalAtom = atom(false);

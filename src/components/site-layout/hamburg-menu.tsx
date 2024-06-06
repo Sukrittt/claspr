@@ -12,6 +12,7 @@ import {
   isCloseAllCreationToggle,
   isCloseAllMembershipToggle,
   joinedClassSections,
+  paymentHistoryModalAtom,
 } from "@/atoms";
 import { Logout } from "./logout";
 import { trpc } from "@/trpc/client";
@@ -25,6 +26,7 @@ import { SettingsDialog } from "@/components/settings/dialog/settings-dialog";
 import { ShortcutsDialog } from "@/components/settings/dialog/shortcuts-dialog";
 import { BugReportDialog } from "@/components/settings/dialog/bug-report-dialog";
 import { MembershipContext } from "@/components/dashboard/section/membership-context";
+import { PaymentHistoryDialog } from "@/components/settings/dialog/payment-history-dialog";
 import { CreatedClassContext } from "@/components/dashboard/section/created-class-context";
 import { CreateSectionDialog } from "@/components/dashboard/section/dialog/create-section-dialog";
 
@@ -36,6 +38,8 @@ interface HamburgMenuProps {
 export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+
+  const [paymentHistoryModal] = useAtom(paymentHistoryModalAtom);
 
   const [, setCloseAllCreationToggle] = useAtom(isCloseAllCreationToggle);
   const [, setCloseAllMembershipToggle] = useAtom(isCloseAllMembershipToggle);
@@ -66,6 +70,11 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!paymentHistoryModal) return;
+    setIsOpen(true);
+  }, [paymentHistoryModal]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -170,6 +179,7 @@ export const HamburgMenu: React.FC<HamburgMenuProps> = ({ role, session }) => {
           <SettingsDialog sessionId={session.user.id} />
           <ShortcutsDialog />
           <BugReportDialog session={session} />
+          <PaymentHistoryDialog paymentHistoryModal={paymentHistoryModal} />
 
           <Logout />
         </div>

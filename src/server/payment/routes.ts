@@ -62,6 +62,7 @@ export const makePayment = privateProcedure
         },
         payload: {
           message: `We have received your payment of ${amount.toLocaleString()} INR.`,
+          url: "PAYMENT_HISTORY",
         },
       }),
       novu.trigger(NovuEvent.SCRIBE, {
@@ -78,3 +79,24 @@ export const makePayment = privateProcedure
 
     await Promise.all(novuPromises);
   });
+
+/**
+ * To get the payment history of the user.
+ */
+export const getPaymentHistory = privateProcedure.query(async ({ ctx }) => {
+  return db.payment.findMany({
+    where: {
+      userId: ctx.userId,
+    },
+    select: {
+      id: true,
+      razorpay_order_id: true,
+      amount: true,
+      credits: true,
+      createdAt: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+});

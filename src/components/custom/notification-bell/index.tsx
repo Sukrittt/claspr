@@ -4,15 +4,20 @@ import {
   NovuProvider,
   PopoverNotificationCenter,
 } from "@novu/notification-center";
+import { useAtom } from "jotai";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { Bell, BellDot } from "lucide-react";
+
+import { paymentHistoryModalAtom } from "@/atoms";
 
 import "./styles.css";
 
 export const NotificationBell = ({ userId }: { userId: string }) => {
   const router = useRouter();
   const { theme } = useTheme();
+
+  const [, setPaymentHistoryModal] = useAtom(paymentHistoryModalAtom);
 
   const getNotificationColorScheme = () => {
     switch (theme) {
@@ -25,7 +30,16 @@ export const NotificationBell = ({ userId }: { userId: string }) => {
   };
 
   const handleNotificationClick = (message: IMessage) => {
-    router.push(message.payload.url as string);
+    const url = message.payload.url as string;
+
+    if (!url) return;
+
+    if (url === "PAYMENT_HISTORY") {
+      setPaymentHistoryModal(true);
+      return;
+    }
+
+    router.push(url);
   };
 
   return (
