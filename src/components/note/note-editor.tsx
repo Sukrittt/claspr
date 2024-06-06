@@ -17,6 +17,7 @@ import { NoteCoverImagePicker } from "./note-cover-dialog";
 import { CoverDisplay } from "./cover-image/cover-display";
 import { useNoteCover, useUpdateNoteContent } from "@/hooks/note";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
+import { NoteSidebarSheet } from "./note-sidebar-sheet";
 
 export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
   const [content] = useAtom(contentAtom);
@@ -42,8 +43,8 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
   }, [isSubmitting]);
 
   return (
-    <div className="space-y-4 group/parent">
-      <div className="space-y-4 group/child relative">
+    <div className="group/parent space-y-4">
+      <div className="group/child relative space-y-4">
         {isLoading ? (
           <Skeleton className="h-44 w-full rounded-none" />
         ) : noteCover?.coverImage ? (
@@ -55,12 +56,12 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
           <div
             className={cn(
               "h-44 border-b bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
-              noteCover?.gradientClass
+              noteCover?.gradientClass,
             )}
           />
         )}
 
-        <div className="pl-0 lg:pl-12 flex items-center gap-x-2">
+        <div className="flex items-center gap-x-2 pl-0 lg:pl-12">
           <div className="relative">
             <NoteEmojiPicker
               emojiUrl={note.emojiUrl}
@@ -72,7 +73,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
 
           <div
             className={cn({
-              "absolute top-5 right-5": hasEmoji,
+              "absolute right-5 top-5": hasEmoji,
             })}
           >
             <NoteCoverImagePicker
@@ -84,7 +85,9 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
         </div>
       </div>
 
-      <div className="px-6 lg:px-20 pt-1 relative">
+      <div className="relative px-6 pt-1 lg:px-20">
+        <NoteSidebarSheet note={note} />
+
         <NoteRenameTitle
           noteId={note.id}
           noteTitle={note.title}
@@ -93,7 +96,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
 
         <div className="space-y-1">
           {note.topics.length > 0 && (
-            <div className="flex text-muted-foreground text-xs font-semibold tracking-tight items-center gap-x-2">
+            <div className="flex items-center gap-x-2 text-xs font-semibold tracking-tight text-muted-foreground">
               {note.topics.map((topic, index) => (
                 <div key={topic.id} className="flex items-center gap-x-2">
                   <p>{topic.name}</p>
@@ -110,7 +113,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
         </div>
 
         {note.classroomId && (
-          <div className="absolute -top-5 right-5 border py-0.5 px-2.5 text-xs tracking-tight rounded-full cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">
+          <div className="absolute -top-5 right-5 cursor-pointer rounded-full border px-2.5 py-0.5 text-xs tracking-tight transition hover:bg-neutral-100 dark:hover:bg-neutral-800">
             <CustomTooltip text="Jump to classroom">
               <Link
                 target="_blank"
@@ -127,7 +130,7 @@ export const NoteEditor = ({ note }: { note: ExtendedNote }) => {
 
       <div className="p-4 pt-0">
         <ScrollArea
-          className="pr-0 pl-0 lg:pl-10 h-[45vh]"
+          className="h-[45vh] pl-0 pr-0 lg:pl-10"
           style={{
             position: "static", // For some reason, 'static' tailwind class does not work here
           }}

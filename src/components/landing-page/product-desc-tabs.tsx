@@ -33,7 +33,7 @@ export const ProductDescTabs = () => {
       icon: Sparkles,
       description: "Ask anything. Curious Companion, Fun Follow-ups.",
       activeIconClass: "text-purple-500",
-      videoSrc: "/scribe-dashboard.mp4", // change this to -> /scribe-ai.mp4
+      videoSrc: "/scribe-ai.mp4",
     },
     {
       value: "interaction",
@@ -76,7 +76,7 @@ export const ProductDescTabs = () => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="w-[40rem] h-[20rem]"
+                className="h-[20rem] w-[40rem]"
               >
                 <video src={tab.videoSrc} muted autoPlay loop />
               </motion.div>
@@ -84,7 +84,7 @@ export const ProductDescTabs = () => {
           </PinContainer>
         </TabsContent>
       ))}
-      <TabsList className="pt-28 flex items-center justify-around w-full">
+      <TabsList className="flex w-full items-center justify-around pt-28">
         {tabLists.map((tab, index) => (
           <TabsTrigger
             key={tab.value}
@@ -93,7 +93,7 @@ export const ProductDescTabs = () => {
           >
             <div className="flex flex-col items-center gap-y-2">
               <tab.icon
-                className={cn("w-5 h-5 transition-colors", {
+                className={cn("h-5 w-5 transition-colors", {
                   [tab.activeIconClass]: activeTab === tab.value,
                 })}
               />

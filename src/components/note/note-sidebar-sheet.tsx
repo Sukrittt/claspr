@@ -41,7 +41,7 @@ export const NoteSidebarSheet = ({ note }: { note: ExtendedNote }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <div className="absolute right-16 top-[15px] cursor-pointer transition hover:text-neutral-700 dark:hover:text-neutral-400 xl:hidden">
+        <div className="absolute -top-[45px] right-8 cursor-pointer transition hover:text-neutral-700 dark:hover:text-neutral-400 xl:hidden">
           <Backpack className="h-4 w-4" />
         </div>
       </SheetTrigger>
