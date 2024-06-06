@@ -30,7 +30,7 @@ export const Navbar = async () => {
       </div>
 
       {!session ? (
-        <Link href="/sign-in" className={buttonVariants()}>
+        <Link href="/sign-in" className={buttonVariants({ size: "sm" })}>
           Sign In
         </Link>
       ) : (
