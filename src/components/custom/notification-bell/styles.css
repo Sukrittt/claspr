@@ -51,6 +51,13 @@
   border-radius: 7px !important;
 }
 
+.nc-notifications-list-item-title {
+  line-height: 20px !important;
+}
+.nc-notifications-list-item {
+  margin: 0 15px !important;
+}
+
 /* LIGHT THEME */
 .nc-header-title,
 .nc-notifications-list-item-title,

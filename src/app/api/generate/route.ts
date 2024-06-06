@@ -19,7 +19,7 @@ export async function POST(req: Request): Promise<Response> {
       "Missing OPENAI_API_KEY - make sure to add it to your .env file.",
       {
         status: 400,
-      }
+      },
     );
   }
 
@@ -42,7 +42,7 @@ export async function POST(req: Request): Promise<Response> {
       : "");
 
   const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4",
     messages: [
       {
         role: "system",

@@ -142,7 +142,8 @@
 /* MUTED TYPOGRAPHY */
 .dark .ce-conversion-toolbar__label,
 .dark .ce-popover-item__secondary-title,
-.dark .ce-delimiter:before {
+.dark .ce-delimiter:before,
+.dark .ce-paragraph[data-placeholder]:empty:before {
   color: #636363;
 }
 

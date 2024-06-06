@@ -209,6 +209,20 @@ export const updateCredits = privateProcedure
   .mutation(async ({ ctx, input }) => {
     const { credits, updateType } = input;
 
+    const existingUser = await db.user.findFirst({
+      where: { id: ctx.userId },
+      select: { credits: true },
+    });
+
+    if (!existingUser) return;
+
+    if (updateType === "SUBTRACT" && (existingUser?.credits ?? 0) < credits) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "You don't have enough credits to perform this operation.",
+      });
+    }
+
     await db.user.update({
       where: { id: ctx.userId },
       data: {

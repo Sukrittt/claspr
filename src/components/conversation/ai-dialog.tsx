@@ -347,24 +347,27 @@ export const AIDialog: React.FC<ClassAIDialogProps> = ({
                 }
               }}
             />
-            <Button
-              className="h-8"
-              disabled={
-                isLoading ||
-                isFetchingConversations ||
-                isGenerating ||
-                input.length === 0
-              }
-              onClick={() => handleAskAI(input)}
-            >
-              {isLoading ? (
-                <div className="flex h-5 w-6 items-center justify-center">
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                </div>
-              ) : (
-                "Ask"
-              )}
-            </Button>
+
+            <CustomTooltip text="1 Credit">
+              <Button
+                className="h-8"
+                disabled={
+                  isLoading ||
+                  isFetchingConversations ||
+                  isGenerating ||
+                  input.length === 0
+                }
+                onClick={() => handleAskAI(input)}
+              >
+                {isLoading ? (
+                  <div className="flex h-5 w-6 items-center justify-center">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  </div>
+                ) : (
+                  "Ask"
+                )}
+              </Button>
+            </CustomTooltip>
           </div>
         </div>
       </DialogContent>

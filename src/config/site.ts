@@ -106,10 +106,11 @@ export const features = [
   "File uploads with Uploadthing",
   "ORM with Prisma ORM",
   "Database with Supabase",
-  "Ai integration with OpenAI",
+  "Ai integration with OpenAI GPT-4",
   "Editor with Editor.js",
   "Charts with Recharts",
   "Ratelimiting with Upstash",
+  "Payments with Razorpay",
 ];
 
 export const socials = [
