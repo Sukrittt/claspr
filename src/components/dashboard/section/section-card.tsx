@@ -12,10 +12,10 @@ import { ChevronRight } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { cn, getShortenedText } from "@/lib/utils";
 import { EmojiPopover } from "./emoji-popover";
 import { ContainerVariants } from "@/lib/motion";
 import { isCloseAllCreationToggle } from "@/atoms";
+import { cn, getShortenedText } from "@/lib/utils";
 import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithClassrooms } from "@/types";
 import { ClassroomListsWithCreation } from "./classroom-lists";
@@ -131,7 +131,7 @@ export const SectionItem = ({
               sectionId={section.id}
             />
             <p className="text-[13.5px]">
-              {getShortenedText(section.name, isMenu ? 12 : 25)}
+              {getShortenedText(section.name, isMenu ? 15 : 25)}
             </p>
           </div>
         </div>
@@ -183,7 +183,7 @@ export const SectionItem = ({
               />
             </div>
             <p className="text-[13.5px]">
-              {getShortenedText(section.name, isMenu ? 12 : 25)}
+              {getShortenedText(section.name, isMenu ? 15 : 25)}
             </p>
           </div>
         </div>
