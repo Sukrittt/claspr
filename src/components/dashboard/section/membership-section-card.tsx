@@ -12,9 +12,9 @@ import { ChevronRight } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { cn } from "@/lib/utils";
 import { EmojiPopover } from "./emoji-popover";
 import { ContainerVariants } from "@/lib/motion";
+import { cn, getShortenedText } from "@/lib/utils";
 import { isCloseAllMembershipToggle } from "@/atoms";
 import { SectionDropdown } from "./section-dropdown";
 import { ExtendedSectionWithMemberships } from "@/types";
@@ -129,7 +129,7 @@ export const MembershipItem = ({
               emojiUrl={section.emojiUrl}
               sectionId={section.id}
             />
-            <p className="text-[13.5px]">{section.name}</p>
+            <p className="text-[13.5px]">{getShortenedText(section.name, isMenu ? 15 : 25)}</p>
           </div>
         </div>
         {showClassrooms && (
@@ -176,7 +176,7 @@ export const MembershipItem = ({
                 sectionId={section.id}
               />
             </div>
-            <p className="text-[13.5px]">{section.name}</p>
+            <p className="text-[13.5px]">{getShortenedText(section.name, isMenu ? 15 : 25)}</p>
           </div>
         </div>
 
