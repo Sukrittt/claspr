@@ -21,7 +21,7 @@ import { useRazorPay } from "@/hooks/useRazorpay";
 const creditsFormSchema = z.object({
   credits: z
     .string()
-    .min(1)
+    .min(1, { message: "Credits cannot be empty" })
     .refine(
       (val) => {
         return val.trim().length > 0;
