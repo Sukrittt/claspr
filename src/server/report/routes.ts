@@ -47,7 +47,7 @@ export const reportIssue = privateProcedure
 
     if (!admin || admin.id === ctx.userId) return;
 
-    await novu.trigger(NovuEvent.SCRIBE, {
+    await novu.trigger(NovuEvent.Claspr, {
       to: {
         subscriberId: admin.id,
         email: admin.email ?? "",

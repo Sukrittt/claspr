@@ -135,7 +135,7 @@ export const createComment = privateProcedure
 
     if (!receiverId) {
       if (existingAssignment.classRoom.teacherId !== ctx.userId) {
-        await novu.trigger(NovuEvent.SCRIBE, {
+        await novu.trigger(NovuEvent.Claspr, {
           to: {
             subscriberId: existingAssignment.classRoom.teacherId,
             email: existingAssignment.classRoom.teacher.email ?? "",
@@ -160,7 +160,7 @@ export const createComment = privateProcedure
 
       const promises = classMembers.map(async (member) => {
         if (member.userId !== ctx.userId) {
-          return novu.trigger(NovuEvent.SCRIBE, {
+          return novu.trigger(NovuEvent.Claspr, {
             to: {
               subscriberId: member.userId,
               email: member.user.email ?? "",
@@ -194,7 +194,7 @@ export const createComment = privateProcedure
       });
     }
 
-    await novu.trigger(NovuEvent.SCRIBE, {
+    await novu.trigger(NovuEvent.Claspr, {
       to: {
         subscriberId: receiverId,
         email: receiver.email ?? "",

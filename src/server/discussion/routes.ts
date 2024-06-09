@@ -89,7 +89,7 @@ export const startDiscussion = privateProcedure
     });
 
     if (existingClassroom.teacherId !== ctx.userId) {
-      await novu.trigger(NovuEvent.SCRIBE, {
+      await novu.trigger(NovuEvent.Claspr, {
         to: {
           subscriberId: existingClassroom.teacherId,
           email: existingClassroom.teacher.email ?? "",
@@ -113,7 +113,7 @@ export const startDiscussion = privateProcedure
 
     const promises = classMembers.map(async (member) => {
       if (member.userId !== ctx.userId) {
-        return novu.trigger(NovuEvent.SCRIBE, {
+        return novu.trigger(NovuEvent.Claspr, {
           to: {
             subscriberId: member.userId,
             email: member.user.email ?? "",
@@ -451,7 +451,7 @@ export const addReply = privateProcedure
       }
 
       if (existingReply.creatorId !== ctx.userId) {
-        await novu.trigger(NovuEvent.SCRIBE, {
+        await novu.trigger(NovuEvent.Claspr, {
           to: {
             subscriberId: existingReply.creatorId,
             email: existingReply.creator.email ?? "",
@@ -465,7 +465,7 @@ export const addReply = privateProcedure
       }
     } else {
       if (existingDiscussion.creator.id !== ctx.userId) {
-        await novu.trigger(NovuEvent.SCRIBE, {
+        await novu.trigger(NovuEvent.Claspr, {
           to: {
             subscriberId: existingDiscussion.creator.id,
             email: existingDiscussion.creator.email ?? "",
@@ -586,7 +586,7 @@ export const addReaction = privateProcedure
         });
 
         if (existingReply.creatorId !== ctx.userId) {
-          await novu.trigger(NovuEvent.SCRIBE, {
+          await novu.trigger(NovuEvent.Claspr, {
             to: {
               subscriberId: existingReply.creatorId,
               email: existingReply.creator.email ?? "",
@@ -611,7 +611,7 @@ export const addReaction = privateProcedure
       });
 
       if (existingReply.creatorId !== ctx.userId) {
-        await novu.trigger(NovuEvent.SCRIBE, {
+        await novu.trigger(NovuEvent.Claspr, {
           to: {
             subscriberId: existingReply.creatorId,
             email: existingReply.creator.email ?? "",
@@ -907,7 +907,7 @@ export const toggleAnswerSelection = privateProcedure
     });
 
     if (existingReply.creatorId !== ctx.userId) {
-      await novu.trigger(NovuEvent.SCRIBE, {
+      await novu.trigger(NovuEvent.Claspr, {
         to: {
           subscriberId: existingReply.creatorId,
           email: existingReply.creator.email ?? "",

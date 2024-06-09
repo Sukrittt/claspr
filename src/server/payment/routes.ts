@@ -54,7 +54,7 @@ export const makePayment = privateProcedure
     await Promise.all(promises);
 
     const novuPromises = [
-      novu.trigger(NovuEvent.SCRIBE, {
+      novu.trigger(NovuEvent.Claspr, {
         to: {
           subscriberId: ctx.userId,
           email: ctx.email ?? "",
@@ -65,7 +65,7 @@ export const makePayment = privateProcedure
           url: "PAYMENT_HISTORY",
         },
       }),
-      novu.trigger(NovuEvent.SCRIBE, {
+      novu.trigger(NovuEvent.Claspr, {
         to: {
           subscriberId: ctx.userId,
           email: ctx.email ?? "",

@@ -457,7 +457,7 @@ export const joinClass = privateProcedure
     });
 
     if (existingClassRoom.teacherId !== ctx.userId) {
-      await novu.trigger(NovuEvent.SCRIBE, {
+      await novu.trigger(NovuEvent.Claspr, {
         to: {
           subscriberId: existingClassRoom.teacherId,
           email: existingClassRoom.teacher.email ?? "",
@@ -483,7 +483,7 @@ export const joinClass = privateProcedure
 
     const promises = classMembers.map(async (member) => {
       if (member.userId !== ctx.userId) {
-        return novu.trigger(NovuEvent.SCRIBE, {
+        return novu.trigger(NovuEvent.Claspr, {
           to: {
             subscriberId: member.userId,
             email: member.user.email ?? "",

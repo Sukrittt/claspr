@@ -69,7 +69,7 @@ export const createAssignment = privateProcedure
     });
 
     if (existingClassroom.teacherId !== ctx.userId) {
-      await novu.trigger(NovuEvent.SCRIBE, {
+      await novu.trigger(NovuEvent.Claspr, {
         to: {
           subscriberId: existingClassroom.teacherId,
           email: existingClassroom.teacher.email ?? "",
@@ -94,7 +94,7 @@ export const createAssignment = privateProcedure
 
     const promises = classMembers.map(async (member) => {
       if (member.userId !== ctx.userId) {
-        return novu.trigger(NovuEvent.SCRIBE, {
+        return novu.trigger(NovuEvent.Claspr, {
           to: {
             subscriberId: member.userId,
             email: member.user.email ?? "",
@@ -427,7 +427,7 @@ export const submitReview = privateProcedure
 
     await Promise.all(promises);
 
-    await novu.trigger(NovuEvent.SCRIBE, {
+    await novu.trigger(NovuEvent.Claspr, {
       to: {
         subscriberId: existingSubmission.member.userId,
         email: existingSubmission.member.user.email ?? "",

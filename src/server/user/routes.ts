@@ -172,7 +172,7 @@ export const onBoardUser = privateProcedure
       },
     });
 
-    await novu.trigger(NovuEvent.SCRIBE, {
+    await novu.trigger(NovuEvent.Claspr, {
       to: {
         subscriberId: ctx.userId,
         email: ctx.email ?? "",

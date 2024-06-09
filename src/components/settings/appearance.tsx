@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import { ThemeDropdown } from "./theme-dropdown";
 
 export const Appearance = () => {
@@ -8,8 +9,8 @@ export const Appearance = () => {
           <p className="text-sm text-neutral-800 dark:text-foreground">
             Appearnance
           </p>
-          <p className="text-muted-foreground font-medium text-xs">
-            Customize how Scribe looks on your device.
+          <p className="text-xs font-medium text-muted-foreground">
+            Customize how {siteConfig.name} looks on your device.
           </p>
         </div>
 

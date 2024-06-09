@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { trpc } from "@/trpc/client";
+import { siteConfig } from "@/config/site";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ContainerVariants } from "@/lib/motion";
@@ -57,7 +58,7 @@ export const UniversityInput: React.FC<UniversityInputProps> = ({ role }) => {
 
   const { mutate: onBoardUser, isLoading } = trpc.user.onBoardUser.useMutation({
     onSuccess: () => {
-      toast.success("Welcome to Scribe");
+      toast.success(`Welcome to ${siteConfig.name}`);
       router.push("/dashboard");
     },
   });
