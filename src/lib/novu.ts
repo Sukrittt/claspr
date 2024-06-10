@@ -9,5 +9,5 @@ if (!NOVU_API_KEY) {
 export const novu = new Novu(NOVU_API_KEY);
 
 export enum NovuEvent {
-  Claspr = "claspr",
+  Claspr = "scribe",
 }

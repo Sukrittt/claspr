@@ -166,6 +166,56 @@ export default function page() {
 
       <div>
         <h1 className="text-xl font-semibold tracking-tight">
+          Cancellation policy
+        </h1>
+        <Separator className="my-2" />
+        <div className="mt-4 space-y-5">
+          <ul className="space-y-3">
+            <li className="text-sm font-light">
+              <span className="font-semibold">
+                Cancellations Made 24 Hours After Payment:
+              </span>{" "}
+              Full refund.
+            </li>
+            <li className="text-sm font-light">
+              <span className="font-semibold">
+                Cancellations Made 24-48 Hours After Payment:
+              </span>{" "}
+              50% refund.
+            </li>
+            <li className="text-sm font-light">
+              <span className="font-semibold">
+                Cancellations Made More Than 48 Hours After Payment:
+              </span>{" "}
+              No refund.
+            </li>
+            <li className="text-sm font-light">
+              <span className="font-semibold">No-Shows:</span> No refund.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <h1 className="text-xl font-semibold tracking-tight">
+          Shipping Policy
+        </h1>
+        <Separator className="my-2" />
+        <div className="mt-4 space-y-5">
+          <ul className="space-y-3">
+            <li className="text-sm font-light">
+              <span className="font-semibold">Order Processing Time:</span>{" "}
+              Orders are processed within 1-2 business days (excluding weekends
+              and holidays) after receiving your credits purchase request. You
+              will receive a notification when your purchase is successfully
+              processed.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <h1 className="text-xl font-semibold tracking-tight">
           Terms and Conditions
         </h1>
         <Separator className="my-2" />

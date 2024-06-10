@@ -33,6 +33,17 @@ export default function page() {
         ))}
       </ul>
 
+      <Separator />
+
+      <div className="flex flex-col gap-y-1">
+        <h2 className="text-xl font-semibold">Operational Address</h2>
+        <p className="text-muted-foreground">
+          South City Garden, Tollygune, Kolkata, West Bengal, India - 700053
+        </p>
+      </div>
+
+      <Separator />
+
       <div className="flex w-full items-center justify-between">
         <Link
           href="/about"
