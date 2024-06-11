@@ -204,8 +204,8 @@ export default function page() {
         <div className="mt-4 space-y-5">
           <ul className="space-y-3">
             <li className="text-sm font-light">
-              <span className="font-semibold">Order Processing Time:</span>{" "}
-              Orders are processed within 1-2 business days (excluding weekends
+              <span className="font-semibold">Order Delivering Time:</span>{" "}
+              Orders are delivered within 1-2 business days (excluding weekends
               and holidays) after receiving your credits purchase request. You
               will receive a notification when your purchase is successfully
               processed.
