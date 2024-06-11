@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 import { db } from "@/lib/db";
-import { privateProcedure } from "@/server/trpc";
 import { NovuEvent, novu } from "@/lib/novu";
+import { privateProcedure } from "@/server/trpc";
 
 /**
  * To make a payment and add credits to the user's account.
@@ -72,7 +72,7 @@ export const makePayment = privateProcedure
           firstName: ctx.username ?? "",
         },
         payload: {
-          message: `You have received ${credits} credit${credits > 1 && "s"}.`,
+          message: `You have received ${credits} credit${(credits ?? 0) === 1 ? "s" : ""}.`,
         },
       }),
     ];

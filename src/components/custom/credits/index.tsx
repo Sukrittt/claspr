@@ -13,11 +13,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { creditModalAtom, creditsAtom } from "@/atoms";
 import { CustomTooltip } from "@/components/custom/custom-tooltip";
 import { CreditsForm } from "@/components/custom/credits/credits-form";
-import { cn } from "@/lib/utils";
 
 interface CreditsProps {
   credits: number | null;
@@ -38,6 +38,17 @@ export const Credits: React.FC<CreditsProps> = ({
 
     setCredits(dbCredits);
   }, [dbCredits, setCredits]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "p" && (e.metaKey || e.altKey)) {
+        e.preventDefault();
+        setCreditModal((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [setCreditModal]);
 
   return (
     <Dialog open={creditModal} onOpenChange={(val) => setCreditModal(val)}>

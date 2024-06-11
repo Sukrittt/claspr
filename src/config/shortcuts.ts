@@ -18,6 +18,10 @@ export const shortcuts = [
         keys: "Alt + e",
         description: "Create a new event",
       },
+      {
+        keys: "Alt + p",
+        description: "Purchase credits",
+      },
     ],
   },
   {
