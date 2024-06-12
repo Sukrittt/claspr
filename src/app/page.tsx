@@ -17,7 +17,7 @@ export default function Home() {
           <h1 className="text-3xl font-medium leading-tight tracking-tighter md:text-5xl lg:text-6xl lg:leading-[1.1]">
             Organize, Engage, Elevate
           </h1>
-          <Balancer className="max-w-[46rem] text-lg text-neutral-700 dark:text-neutral-400 sm:text-xl">
+          <Balancer className="max-w-[46rem] px-4 text-lg text-neutral-700 dark:text-neutral-400 sm:px-0 sm:text-xl">
             Elevate your classroom with {siteConfig.name}. Chat with AI,
             customize, collaborate. Join the revolution!
           </Balancer>
