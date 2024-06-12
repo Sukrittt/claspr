@@ -33,7 +33,7 @@ export default function Home() {
       </section>
 
       <Link
-        href="github.com/sukrittt"
+        href="https://github.com/Sukrittt"
         target="_blank"
         className="fixed bottom-4 right-4 rounded-full border px-3 py-1 text-sm font-medium tracking-tight transition hover:bg-neutral-300 dark:hover:bg-neutral-800"
       >
