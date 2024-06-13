@@ -1,4 +1,11 @@
 /* DEFAULT STYLES */
+@media screen and (max-width: 640px) {
+  .nc-layout-wrapper {
+    width: 85% !important;
+    margin-left: 10px !important;
+  }
+}
+
 .mantine-Menu-dropdown {
   left: auto !important;
   right: 20px !important;
