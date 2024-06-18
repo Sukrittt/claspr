@@ -56,63 +56,63 @@ export const Calendar = ({ sessionId }: { sessionId: string }) => {
 
   return (
     <div className="h-[94vh] w-screen">
-      <div className="flex flex-col gap-y-12 py-8 px-10 h-full">
+      <div className="flex h-full flex-col gap-y-12 px-10 py-8">
         <div className="flex flex-col gap-y-4">
-          <div className="flex flex-col sm:flex-row gap-y-8 sm:gap-y-0 sm:items-center sm:justify-between">
-            <h3 className="text-3xl text-center sm:text-left tracking-tight">
+          <div className="flex flex-col gap-y-8 sm:flex-row sm:items-center sm:justify-between sm:gap-y-0">
+            <h3 className="text-center text-3xl tracking-tight sm:text-left">
               {currentMonth}, {currentYear}
             </h3>
             <div className="flex items-center gap-x-2 text-neutral-700 dark:text-foreground">
               <SwitchCalendarMode />
               <CreateEventDialog>
-                <div className="border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg">
+                <div className="cursor-pointer rounded-lg border p-1.5 transition hover:bg-neutral-100 dark:hover:bg-neutral-800/60">
                   <CustomTooltip text="Create Event">
                     <Plus className="h-3.5 w-3.5" />
                   </CustomTooltip>
                 </div>
               </CreateEventDialog>
               <div
-                className="hidden sm:block border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg"
+                className="hidden cursor-pointer rounded-lg border p-1.5 transition hover:bg-neutral-100 dark:hover:bg-neutral-800/60 sm:block"
                 onClick={handlePrevious}
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="h-4 w-4" />
               </div>
               <span
                 onClick={handleToday}
-                className="hidden sm:block font-semibold tracking-tight cursor-pointer border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition py-1 text-sm px-6 rounded-lg flex-1 text-center"
+                className="hidden flex-1 cursor-pointer rounded-lg border px-6 py-1 text-center text-sm font-semibold tracking-tight transition hover:bg-neutral-100 dark:hover:bg-neutral-800/60 sm:block"
               >
                 Today
               </span>
               <div
-                className="hidden sm:block border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg"
+                className="hidden cursor-pointer rounded-lg border p-1.5 transition hover:bg-neutral-100 dark:hover:bg-neutral-800/60 sm:block"
                 onClick={handleNext}
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="h-4 w-4" />
               </div>
             </div>
           </div>
-          <div className="sm:hidden flex items-center gap-x-2 text-neutral-700 dark:text-foreground">
+          <div className="flex items-center gap-x-2 text-neutral-700 dark:text-foreground sm:hidden">
             <div
-              className="border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg"
+              className="cursor-pointer rounded-lg border p-1.5 transition hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
               onClick={handlePrevious}
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="h-4 w-4" />
             </div>
             <span
               onClick={handleToday}
-              className="font-semibold tracking-tight cursor-pointer border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition py-1 text-sm px-6 rounded-lg flex-1 text-center"
+              className="flex-1 cursor-pointer rounded-lg border px-6 py-1 text-center text-sm font-semibold tracking-tight transition hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
             >
               Today
             </span>
             <div
-              className="border hover:bg-neutral-100 dark:hover:bg-neutral-800/60 transition p-1.5 cursor-pointer rounded-lg"
+              className="cursor-pointer rounded-lg border p-1.5 transition hover:bg-neutral-100 dark:hover:bg-neutral-800/60"
               onClick={handleNext}
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="h-4 w-4" />
             </div>
           </div>
         </div>
-        <div className="space-y-2 h-full">
+        <div className="h-full space-y-2">
           {calendarMode === "month" ? (
             <EventMonthView sessionId={sessionId} />
           ) : (

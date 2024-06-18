@@ -155,7 +155,8 @@
 .dark .image-tool__image-preloader,
 .dark .link-tool__input-holder--error .link-tool__input,
 .dark .image-tool--loading .image-tool__image,
-.dark .cdx-attaches {
+.dark .cdx-attaches,
+.dark .ce-toolbar__settings-btn {
   background-color: #262626;
 }
 
@@ -166,7 +167,8 @@
 /* BORDER STYLES */
 .dark .link-tool__input-holder--error .link-tool__input,
 .dark .image-tool--loading .image-tool__image,
-.dark .cdx-attaches {
+.dark .cdx-attaches,
+.dark .ce-toolbar__settings-btn {
   border: 1px solid #2e2e2e;
 }
 

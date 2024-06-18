@@ -28,7 +28,7 @@ const eventUpdationSchema = z.object({
       (val) => {
         return val.trim().length > 0;
       },
-      { message: "Event name cannot be empty" }
+      { message: "Event name cannot be empty" },
     ),
 });
 
@@ -96,7 +96,11 @@ export const EditEventForm: React.FC<EditEventFormProps> = ({
                       {...field}
                     />
                   </FormControl>
-                  <DatePicker value={eventDate} setValue={setEventDate} />
+                  <DatePicker
+                    className="-left-[260px] sm:-left-40"
+                    value={eventDate}
+                    setValue={setEventDate}
+                  />
                 </div>
                 <FormMessage />
               </FormItem>

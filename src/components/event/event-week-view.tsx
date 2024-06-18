@@ -30,8 +30,8 @@ export const EventWeekView = ({ sessionId }: { sessionId: string }) => {
 
   if (calendarDates.length === 0) {
     return (
-      <div className="h-[65vh] flex items-center justify-center text-gray-700 dark:text-gray-300 text-sm">
-        <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" />
+      <div className="flex h-[65vh] items-center justify-center text-sm text-gray-700 dark:text-gray-300">
+        <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
         Getting things ready...
       </div>
     );
@@ -44,6 +44,7 @@ export const EventWeekView = ({ sessionId }: { sessionId: string }) => {
         initial="initial"
         animate="animate"
         exit="exit"
+        className="h-full"
       >
         <EventContext
           calendarDates={calendarDates}

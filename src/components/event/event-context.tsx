@@ -35,7 +35,7 @@ export const EventContext: React.FC<EventContextProps> = ({
   mode,
 }) => {
   const [activeEventEl, setActiveEventEl] = useState<ExtendedEvent | null>(
-    null
+    null,
   );
 
   const [, setOverDate] = useAtom(overDateAtom);
@@ -48,7 +48,7 @@ export const EventContext: React.FC<EventContextProps> = ({
       activationConstraint: {
         distance: 8,
       },
-    })
+    }),
   );
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -106,11 +106,11 @@ export const EventContext: React.FC<EventContextProps> = ({
     >
       <div
         className={cn(
-          "flex place-items-center gap-4 overflow-x-auto no-scrollbar h-[95%] pb-4",
+          "no-scrollbar flex h-full place-items-center gap-4 overflow-x-auto pb-4",
           {
             "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-7":
               mode === "month",
-          }
+          },
         )}
       >
         {calendarDates.map((date) => (
@@ -122,7 +122,7 @@ export const EventContext: React.FC<EventContextProps> = ({
         <DragOverlay>
           {activeEventEl && <EventItem event={activeEventEl} isHolding />}
         </DragOverlay>,
-        document.body
+        document.body,
       )}
     </DndContext>
   );
@@ -144,14 +144,14 @@ const DateColumn: React.FC<DateColumnProps> = ({ date, mode }) => {
   return (
     <div
       ref={setNodeRef}
-      className="flex flex-col gap-y-4 h-full w-full min-w-[10rem] flex-1"
+      className="flex h-full w-full min-w-[10rem] flex-1 flex-col gap-y-4"
     >
       <div
         className={cn(
-          "rounded-xl border shadow-md transition duration-300 p-4 w-full relative",
+          "relative w-full rounded-xl border p-4 shadow-md transition duration-300",
           {
             "h-[150px] pl-2": mode === "month",
-          }
+          },
         )}
       >
         {mode === "week" && (
@@ -160,16 +160,16 @@ const DateColumn: React.FC<DateColumnProps> = ({ date, mode }) => {
           </span>
         )}
         <div
-          className={cn("absolute top-2 right-3", {
+          className={cn("absolute right-3 top-2", {
             "top-[17px]": mode === "week",
           })}
         >
           <span
             className={cn(
-              "py-0.5 px-1 rounded-md transition text-sm text-neutral-800 dark:text-foreground",
+              "rounded-md px-1 py-0.5 text-sm text-neutral-800 transition dark:text-foreground",
               {
                 "bg-[#f15550]": isOver || isSameDay(date, new Date()),
-              }
+              },
             )}
           >
             {format(date, "d")}

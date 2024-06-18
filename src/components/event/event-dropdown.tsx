@@ -28,32 +28,32 @@ export const EventDropdown: React.FC<EventDropdownProps> = ({ event }) => {
         <DropdownMenuTrigger asChild>
           <div>
             <CustomTooltip text="More options">
-              <div className="text-gray-700 dark:text-gray-300 hover:bg-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 p-1 rounded-md transition cursor-pointer">
+              <div className="cursor-pointer rounded-md p-1 text-gray-700 transition hover:bg-neutral-300 dark:text-gray-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </div>
             </CustomTooltip>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="min-w-40">
+        <DropdownMenuContent className="mr-4 min-w-40 sm:mr-0">
           <DropdownMenuItem
-            className="text-gray-700 dark:text-gray-300 text-[13px]"
+            className="text-[13px] text-gray-700 dark:text-gray-300"
             onClick={() => setIsEditOpen(true)}
           >
-            <Pen className="h-3.5 w-3.5 mr-2" />
+            <Pen className="mr-2 h-3.5 w-3.5" />
             Edit
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-gray-700 dark:text-gray-300 text-[13px]"
+            className="text-[13px] text-gray-700 dark:text-gray-300"
             onClick={() => setIsDeleteOpen(true)}
           >
-            <Trash className="h-3.5 w-3.5 mr-2" />
+            <Trash className="mr-2 h-3.5 w-3.5" />
             Delete
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-gray-700 dark:text-gray-300 text-[13px]"
+            className="text-[13px] text-gray-700 dark:text-gray-300"
             onClick={() => setIsInfoOpen(true)}
           >
-            <Info className="h-3.5 w-3.5 mr-2" />
+            <Info className="mr-2 h-3.5 w-3.5" />
             About
           </DropdownMenuItem>
         </DropdownMenuContent>

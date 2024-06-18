@@ -23,18 +23,10 @@ export const RenameEventTitle: React.FC<RenameEventTitleProps> = ({
   const { mutate: renameEvent } = useEditEvent({ closeModal: undefined, date });
 
   useEffect(() => {
-    if (title === initialTitle) return;
-
-    setTitle(initialTitle);
-  }, [initialTitle]);
-
-  useEffect(() => {
-    if (title === initialTitle) return;
+    if (!isEditable || title === initialTitle) return;
 
     const formattedTitle =
-      debouncedTitle.length === 0
-        ? "Untitled Discussion"
-        : debouncedTitle.trim();
+      debouncedTitle.length === 0 ? "Untitled Event" : debouncedTitle.trim();
 
     renameEvent({ eventId, title: formattedTitle });
   }, [debouncedTitle]);
@@ -42,7 +34,7 @@ export const RenameEventTitle: React.FC<RenameEventTitleProps> = ({
   return isEditable ? (
     <ReactTextareaAutosize
       placeholder="Untitled Event"
-      className="bg-transparent focus:outline-none w-full resize-none"
+      className="w-full resize-none bg-transparent focus:outline-none"
       value={title}
       onChange={(e) => setTitle(e.target.value)}
     />
