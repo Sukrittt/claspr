@@ -1,25 +1,13 @@
-import OpenAI from "openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
-
 import { AiPersonal } from "@/config/ai";
 import { PromptValidator } from "@/types/validator";
 
-// Create an OpenAI API client (that's edge friendly!)
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "",
-});
-
-// IMPORTANT! Set the runtime to edge: https://vercel.com/docs/functions/edge-functions/edge-runtime
-export const runtime = "edge";
-
 export async function POST(req: Request): Promise<Response> {
-  // Check if the OPENAI_API_KEY is set, if not return 400
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === "") {
+  const apiKey = process.env.GROQ_API_KEY;
+
+  if (!apiKey || apiKey === "") {
     return new Response(
-      "Missing OPENAI_API_KEY - make sure to add it to your .env file.",
-      {
-        status: 400,
-      },
+      "Missing GROQ_API_KEY - make sure to add it to your .env file.",
+      { status: 400 },
     );
   }
 
@@ -32,7 +20,7 @@ export async function POST(req: Request): Promise<Response> {
   const validTitle = classTitle && classTitle !== "";
   const predefinedPrompt = personal ?? AiPersonal.TEACHER;
 
-  const content =
+  const systemContent =
     `${predefinedPrompt} ` +
     (validTitle
       ? `This is the classroom name provided by the teacher: ${classDescription} `
@@ -41,29 +29,79 @@ export async function POST(req: Request): Promise<Response> {
       ? `This is the classroom description provided by the teacher: ${classTitle} `
       : "");
 
-  const response = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [
+  try {
+    const response = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
       {
-        role: "system",
-        content,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            { role: "system", content: systemContent },
+            { role: "user", content: prompt },
+          ],
+          temperature: customTemperature,
+          top_p: 1,
+          stream: true,
+        }),
       },
-      {
-        role: "user",
-        content: prompt,
+    );
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("Groq API error:", response.status, error);
+      return new Response(error, { status: response.status });
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) {
+      return new Response("Failed to get response stream", { status: 500 });
+    }
+
+    const stream = new ReadableStream({
+      async start(controller) {
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
+
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              const data = line.slice(6).trim();
+              if (data === "[DONE]") continue;
+              try {
+                const parsed = JSON.parse(data);
+                const text =
+                  parsed.choices?.[0]?.delta?.content || "";
+                if (text) {
+                  controller.enqueue(new TextEncoder().encode(text));
+                }
+              } catch {
+                // skip unparseable chunks
+              }
+            }
+          }
+        }
+
+        controller.close();
       },
-    ],
-    temperature: customTemperature,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    stream: true,
-    n: 1,
-  });
+    });
 
-  // Convert the response into a friendly text-stream
-  const stream = OpenAIStream(response);
-
-  // Respond with the stream
-  return new StreamingTextResponse(stream);
+    return new Response(stream, {
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  } catch (error) {
+    console.error("Generate route error:", error);
+    return new Response("Internal server error", { status: 500 });
+  }
 }
